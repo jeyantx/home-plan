@@ -97,7 +97,8 @@ OPENINGS = [
  ('W-06','G','GW-01', 61.0,65.0,'window',None,None, 3.5,3.5,'Kitchen window over counter'),
  ('V-02','G','GW-01', 69.5,71.5,'vent',None,None, 1.5,6.0,'Toilet 2 ventilator'),
  ('W-07','G','GW-07', 85.0,89.0,'window',None,None, 4.0,3.0,'Bedroom 2 side window to side garden'),
- ('W-08','G','GW-08', 13.0,17.5,'window',None,None, 4.0,3.0,'Bedroom 2 back window to back garden'),
+ ('W-08','G','GW-08', 14.75,19.25,'window',None,None, 4.0,3.0,'Bedroom 2 back window to back garden'),
+ ('D-10','G','GW-08', 10.75,13.5,'door','a','-', 7.0,0,'Bedroom 2 back door to back garden'),
  ('GT-01','G','FRONT', 0.375,15.0,'gate',None,None, 6.0,0,'Main gate, 14\'7" (sliding)'),
  ('GT-02','G','FRONT', 15.75,20.25,'gate',None,None, 6.0,0,'Side gate, 4\'6", leads to staircase 1'),
  ('D-07','F','FW-05', 10.5,13.5,'door','a','+', 7.0,0,'Bedroom 3 door, from landing'),
@@ -117,6 +118,7 @@ BRANCH_NOTES='''<section class="ask"><h2>Update 17 Oct: approved changes only</h
 <li><b>GW-16</b>, the wall between toilet 2 and the stair hall, is a 4½" partition.</li>
 <li><b>53' rule:</b> PW-03 to FW-02 is exactly 53'. That fixes the spiral stair and bedroom 3 block in place, so the stair hall absorbs the 2' from the living room and is now 12'3" deep.</li>
 <li>Foyer, house position, bedroom 2 (13'9") and garden door D-05 are as before.</li>
+<li><b>Bedroom 2 back door D-10</b> to the back garden; window W-08 moves to the west part of that wall.</li>
 <li>The bikes are shown in the parking.</li>
 </ol></section>
 '''
@@ -134,7 +136,7 @@ TAGPOS={'GW-01':(3.125,53.0),'GW-05':(20.625,51.0),'GW-07':(9.875,91.5),'BW-01':
         'FW-01':(9.875,94.0),'FW-03':(20.625,92.0),'FW-02':(18.4,73.5),'FW-04':(19.0,97.0),'FW-05':(18.0,80.06),'PW-03':(19.4,19.94),'PW-01':(5.0,15.69),'PW-05':(6.0,77.69),
         'GW-15':(18.4,80.44),'GW-14':(5.0,67.81),'GW-10':(13.94,34.6),'GW-09':(9.06,43.0),'BW-03':(1.19,98.0),'BW-02':(0.6,89.19)}
 OPENTAGOFF={'W-01':-0.75,'V-01':-0.75,'W-02':0.9,'W-03':-1.0,'W-04':-1.0,'W-05':-1.0,'W-06':-1.0,'V-02':-1.0,'W-07':-1.0,'W-08':0.8,'D-01':-1.4,'D-02':-2.2,'D-03':-1.6,
-            'O-01':-0.8,'D-04':-2.6,'D-05':-1.5,'D-06':1.7,'D-07':1.7,'D-08':1.6,'D-09':-1.6,'W-09':-0.8,'W-10':-1.0,'W-11':0.8,'W-12':-0.85}
+            'O-01':-0.8,'D-04':-2.6,'D-05':-1.5,'D-06':1.7,'D-07':1.7,'D-08':1.6,'D-09':-1.6,'W-09':-0.8,'W-10':-1.0,'W-11':0.8,'W-12':-0.85,'D-10':0.9}
 SPC=(17.0,76.875); SPR=3.0
 CH_G_E=[0,30.75,40.5,41.25,46.75,58.75,59.125,67.625,68.0,73.0,73.75,89.0,106.0]
 CH_G_W=[0,4.333,16.0,19.5,30.75,31.5,36.0,36.375,46.375,46.75,58.75,59.125,68.0,80.25,80.625,94.375,95.125,105.0]
