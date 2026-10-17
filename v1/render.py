@@ -310,7 +310,7 @@ def draw_furniture(fl,_late=False):
         elif k=='store':
             R_(x1,x2,y1,y2,'url(#hatchS)','#5a4128',0.08)
             text((x1+x2)/2,(y1+y2)/2,'STORE',0.4,weight=700,fill='#3a2a1a',rot=-90)
-            line(x1,16.6,x1,18.9,'#fff',0.14); line(x1,16.6,x1,18.9,'#8a4b12',0.06,extra='stroke-dasharray="0.2 0.1"')
+            line(x1,y1+1.5,x1,y2-1.5,'#fff',0.14); line(x1,y1+1.5,x1,y2-1.5,'#8a4b12',0.06,extra='stroke-dasharray="0.2 0.1"')
         # code tag
         cx,cy=(x1+x2)/2,(y1+y2)/2
         if k not in ('fridge','tvwall','store','acout'):
