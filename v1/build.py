@@ -3,9 +3,8 @@ from model import *
 from render import ground, first, svg, fmt, area
 S0=svg(ground,'f0'); S1=svg(first,'f1')
 def poly_area(P): return area(P)
-gf_poly=[(8.5,30.75),(21,30.75),(21,95.0),(9.5,95.0),(9.5,75.75),(2.75,75.75),(2.75,40.5),(8.5,40.5)]
-gf=poly_area(gf_poly); porch=5.75*9.75
-ffb=11.5*24.25
+gf=poly_area(GF_OUTLINE); porch=poly_area(rooms_G_porch()) if False else poly_area([r for r in ROOMS['G'] if r[0]=='G-02'][0][2])
+ffb=poly_area(FF_OUTLINE)
 land=poly_area(PLOT)
 rooms={f:{r[0]:(r[1],r[2]) for r in ROOMS[f]} for f in ROOMS}
 def ra(f,i): return poly_area(rooms[f][i][1])
@@ -30,7 +29,9 @@ TN={'door':'Door','double':'Double door','window':'Window','vent':'Ventilator','
 op_rows=''
 for oid,f,wid,a,b,typ,hinge,swing,h,sill,note in OPENINGS:
     op_rows+=f'<tr><td class="c">{oid}</td><td>{TN[typ]}</td><td>{"front line" if wid=="FRONT" else wid}</td><td>{fmt(b-a)} x {fmt(h)}</td><td>{fmt(sill) if sill else "–"}</td><td>{esc(note)}</td></tr>'
-panel=f'''
+import model as _m
+BN=getattr(_m,'BRANCH_NOTES','')
+panel=BN+f'''
 <section><h2>How to read this plan</h2>
 <ul>
 <li><b>X</b> is feet from the east boundary, from 0 to 21. <b>Y</b> is feet from the road, from 0 to 106. For example, "GW-05 at Y 50'" names one exact spot.</li>

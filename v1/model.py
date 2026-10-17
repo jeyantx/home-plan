@@ -107,6 +107,11 @@ OPENINGS = [
  ('W-11','F','FW-04', 13.0,17.5,'window',None,None, 4.0,3.0,'Bedroom 3 back window'),
 ]
 
+# ---------- building outlines (outer wall faces) for built-up area ----------
+GF_OUTLINE=[(8.5,30.75),(21,30.75),(21,95.0),(9.5,95.0),(9.5,75.75),(2.75,75.75),(2.75,40.5),(8.5,40.5)]
+FF_OUTLINE=R(9.5,21.0,73.0,97.25)
+BRANCH_NOTES=''
+
 # ---------- existing features ----------
 BOREWELL=(6.0, back_y(6.0)-25.0)   # given: 25' from the back (south) boundary, 6' from the east boundary
 
