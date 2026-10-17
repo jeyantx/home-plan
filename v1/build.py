@@ -64,8 +64,9 @@ panel=BN+f'''
 <tr><td>Land</td><td class="n">{land:,.0f} sq ft · {land/435.6:.2f} cents</td></tr>
 <tr><td>Ground floor built-up, outer faces</td><td class="n">{gf:,.0f}</td></tr>
 <tr><td>Porch, covered by the floor above</td><td class="n">{porch:,.0f}</td></tr>
+<tr class="tot"><td>Ground floor including porch (excluding parking)</td><td class="n">{gf+porch:,.0f}</td></tr>
 <tr><td>First floor built-up, bedroom block</td><td class="n">{ffb:,.0f}</td></tr>
-<tr class="tot"><td>Total built-up, both floors</td><td class="n">{gf+ffb:,.0f}</td></tr>
+<tr class="tot"><td>Total built-up, both floors, including porch</td><td class="n">{gf+porch+ffb:,.0f}</td></tr>
 <tr><td>Open terrace, terrace corner and balcony 2 (clear)</td><td class="n">{terr:,.0f}</td></tr>
 <tr><td>Open terrace alone, for the future hall</td><td class="n">{ra("F","F-02"):,.0f}</td></tr>
 <tr><td>Gardens, side and back</td><td class="n">{garden:,.0f}</td></tr>

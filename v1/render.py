@@ -151,6 +151,11 @@ def spiral(top=False):
         E(f'<line x1="{x}" y1="{y}" x2="{x+SPR*math.cos(a):.3f}" y2="{y+SPR*math.sin(a):.3f}" stroke="#6b3a1c" stroke-width="0.03" opacity="{0.4 if top else 1}"/>')
     E(f'<circle cx="{x}" cy="{y}" r="0.25" fill="#3a2a1c"/>')
 def vehicles():
+    import model as _m
+    cx1,cx2,cy1,cy2=getattr(_m,'CAR',(11.25,17.25,13.75,28.75))
+    rect(cx1,cx2,cy1,cy2,'#fafafa','#555',0.06,extra='rx="1.0"'); rect(cx1+0.5,cx2-0.5,cy1+8.25,cy1+9.75,'#a9bccd','#555',0.03); rect(cx1+0.5,cx2-0.5,cy1+2.25,cy1+3.45,'#a9bccd','#555',0.03)
+    text((cx1+cx2)/2,cy1+5.75,'CAR 6\' x 15\'',0.42,weight=600,fill='#666')
+    return
     rect(11.25,17.25,13.75,28.75,'#fafafa','#555',0.06,extra='rx="1.0"'); rect(11.75,16.75,22.0,23.5,'#a9bccd','#555',0.03); rect(11.75,16.75,16.0,17.2,'#a9bccd','#555',0.03)
     text(14.25,19.5,'CAR 6\' x 15\'',0.42,weight=600,fill='#666')
     for yc in (8.0,14.5,21.0):
@@ -163,9 +168,11 @@ def tree():
     a=S(12.75,5.0); b=S(12.75,7.5); E(f'<line x1="{a[0]}" y1="{a[1]}" x2="{b[0]}" y2="{b[1]}" stroke="#5b3a1a" stroke-width="0.15" marker-end="url(#arrT)"/>')
     text(12.75,9.0,'NEEM TREE (to confirm)\ntrunk 1\'6", 3\'6" from road, 7\'6" from west',0.34,weight=600,fill='#2b5d2e')
 def porch_steps():
-    rect(3.0,8.25,30.75,33.25,'#d8cdbb','#7a6a55',0.04)
-    for k in (1,2): y=30.75+k*2.5/3; line(3.0,y,8.25,y,'#7a6a55',0.03)
-    text(5.6,32.0,'3 steps up',0.32,fill='#5a4a35')
+    import model as _m
+    y0=getattr(_m,'PORCH_STEPS_Y',30.75)
+    rect(3.0,8.25,y0,y0+2.5,'#d8cdbb','#7a6a55',0.04)
+    for k in (1,2): y=y0+k*2.5/3; line(3.0,y,8.25,y,'#7a6a55',0.03)
+    text(5.6,y0+1.25,'3 steps up',0.32,fill='#5a4a35')
 def chain(fl,X,ys,labels=True,cls='dim'):
     E(f'<g class="{cls}">')
     line(X,ys[0],X,ys[-1],'#555',0.03)
@@ -211,6 +218,8 @@ def ground():
     hchain(CH_G_BACK_Y,[1.375,9.5,10.25,20.25,21.0])
     E('</g>')
     E('<g class="L-rooms">'); room_labels('G')
+    import model as _m
+    for X,Y,t,sz in getattr(_m,'EXTRA_TEXT',[]): text(X,Y,t,sz,weight=600,fill='#555')
     text(SPC[0]-2.75,SPC[1]-3.95,'ST-2 spiral stair',0.34,weight=600,fill='#3a1f0c')
     text(19.25,10.2,'ST-1A',0.36,weight=700,fill='#fff'); text(19.25,17.75,'ST-1L',0.32,weight=700,fill='#3a1f0c')
     E('</g>')
