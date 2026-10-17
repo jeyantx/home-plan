@@ -26,9 +26,11 @@ for f,fl in (('G','Ground'),('F','First')):
         L=max(x2-x1,y2-y1)
         wall_rows+=f'<tr><td class="c">{wid}</td><td>{esc(desc)}</td><td>{KN[k]}</td><td>{fmt(L)}</td><td>{fmt(h)}</td></tr>'
 TN={'door':'Door','double':'Double door','window':'Window','vent':'Ventilator','arch':'Open arch','gate':'Gate','fold':'Folding glass window'}
+import model as _mm
 op_rows=''
+furn_rows=''.join(f'<tr><td class="c">{f[0]}</td><td>{esc(f[2])}</td><td>{"Ground" if f[1]=="G" else "First"}</td><td>{fmt(f[3+1]-f[3])} x {fmt(f[6]-f[5])}</td><td>{esc(f[9])}</td></tr>' for f in getattr(_mm,'FURNITURE',[]))
 for oid,f,wid,a,b,typ,hinge,swing,h,sill,note in OPENINGS:
-    op_rows+=f'<tr><td class="c">{oid}</td><td>{TN[typ]}</td><td>{"front line" if wid=="FRONT" else wid}</td><td>{fmt(b-a)} x {fmt(h)}</td><td>{fmt(sill) if sill else "–"}</td><td>{esc(note)}</td></tr>'
+    op_rows+=f'<tr><td class="c">{oid}</td><td>{TN[typ]}</td><td>{"front line" if wid=="FRONT" else wid}</td><td>{fmt(b-a)} x {fmt(h)}</td><td>{fmt(sill) if sill else "–"}</td><td>{esc(note)}<br><span class="lbl">{esc(getattr(_mm,"SPEC",{}).get(oid,""))}</span></td></tr>'
 import model as _m
 BN=getattr(_m,'BRANCH_NOTES','')
 panel=BN+f'''
@@ -91,7 +93,8 @@ panel=BN+f'''
 <ul><li><b>Neem tree.</b> At the position you gave, the trunk is 4' from staircase 1 and directly in front of the car's spot. Please confirm or correct it.</li></ul></section>
 <section><h2>Rooms and areas</h2><table class="t"><tr><th>Code</th><th>Name</th><th>Floor</th><th>Inside size</th><th class="n">sq ft</th></tr>{room_rows}</table></section>
 <section><h2>Walls</h2><table class="t"><tr><th>Code</th><th>Where</th><th>Type</th><th>Length</th><th>Height</th></tr>{wall_rows}</table></section>
-<section><h2>Doors, windows, ventilators, gates</h2><table class="t"><tr><th>Code</th><th>Type</th><th>Wall</th><th>Width x height</th><th>Sill</th><th>Note</th></tr>{op_rows}</table></section>
+<section><h2>Furniture and fixtures (proposal)</h2><table class="t"><tr><th>Code</th><th>Item</th><th>Floor</th><th>Size</th><th>Where</th></tr>{furn_rows}</table></section>
+<section><h2>Doors, windows, ventilators, gates</h2><table class="t"><tr><th>Code</th><th>Type</th><th>Wall</th><th>Width x height</th><th>Sill</th><th>Note and type</th></tr>{op_rows}</table></section>
 '''
 page=open('/Users/jeyant-10189/Work/Personal/own/home-plan/homeplan-4-my-reading.html').read()
 style=page[page.index('<style>'):page.index('</style>')+8]
@@ -100,7 +103,7 @@ style=style.replace('</style>','''
 .layers{display:inline-flex;gap:12px;align-items:center;font-size:13px;color:var(--muted)}
 .layers label{display:inline-flex;gap:5px;align-items:center;cursor:pointer}
 td.c{font-weight:700;white-space:nowrap;color:var(--accent)}
-.hide-L-rooms .L-rooms,.hide-L-walls .L-walls,.hide-L-open .L-open,.hide-L-dims .L-dims{display:none}
+.hide-L-furn .L-furn,.hide-L-rooms .L-rooms,.hide-L-walls .L-walls,.hide-L-open .L-open,.hide-L-dims .L-dims{display:none}
 #measure[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:600}
 .mread{font-variant-numeric:tabular-nums;font-size:13px;color:var(--ink);background:var(--chip);border:1px solid var(--line);border-radius:8px;padding:5px 10px;min-height:30px;display:none;align-items:center}
 .mread.on{display:inline-flex}
@@ -136,6 +139,7 @@ out=f'''<!doctype html>
   <label><input type="checkbox" data-layer="L-walls" checked>Wall codes</label>
   <label><input type="checkbox" data-layer="L-open" checked>Door and window codes</label>
   <label><input type="checkbox" data-layer="L-dims" checked>Dimensions</label>
+  <label><input type="checkbox" data-layer="L-furn" checked>Furniture</label>
  </div>
  <div id="mread" class="mread" aria-live="polite"></div>
  <div class="tools" role="group" aria-label="Zoom">

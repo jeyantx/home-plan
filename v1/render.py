@@ -205,9 +205,70 @@ def borewell():
     E(f'<g class="bore"><circle cx="{x:.3f}" cy="{y:.3f}" r="0.55" fill="#dff1ff" stroke="#1a6ea0" stroke-width="0.08"/><circle cx="{x:.3f}" cy="{y:.3f}" r="0.18" fill="#1a6ea0"/></g>')
     E(f'<g class="L-rooms"><text x="{x:.3f}" y="{y+1.05:.3f}" font-size="0.36" font-weight="700" fill="#1a6ea0" text-anchor="middle">BOREWELL (existing)</text>'
       f'<text x="{x:.3f}" y="{y+1.5:.3f}" font-size="0.3" fill="#1a6ea0" text-anchor="middle">6\' from east · 25\' from back</text></g>')
+
+def draw_furniture(fl):
+    import model as _m
+    items=[f for f in getattr(_m,'FURNITURE',[]) if f[1]==fl]
+    if not items: return
+    E('<g class="L-furn">')
+    for fid,f,name,x1,x2,y1,y2,k,side,note in items:
+        w,d=x2-x1,y2-y1
+        def R_(a1,a2,b1,b2,fill,stroke='#6b5a48',sw=0.035,extra=''): rect(a1,a2,b1,b2,fill,stroke,sw,extra=extra)
+        if k=='bed':
+            R_(x1,x2,y1,y2,'#ffffff','#555',0.05)
+            hd=0.35; pl=1.1
+            if side=='x2': R_(x2-hd,x2,y1,y2,'#7a5a43'); R_(x2-hd-pl,x2-hd-0.1,y1+0.25,y1+d/2-0.1,'#f3f3f3','#999',0.03); R_(x2-hd-pl,x2-hd-0.1,y1+d/2+0.1,y2-0.25,'#f3f3f3','#999',0.03); R_(x1+0.1,x2-hd-pl-0.2,y1+0.08,y2-0.08,'#9fb7c9','#7d97ab',0.03)
+            if side=='x1': R_(x1,x1+hd,y1,y2,'#7a5a43'); R_(x1+hd+0.1,x1+hd+pl,y1+0.25,y1+d/2-0.1,'#f3f3f3','#999',0.03); R_(x1+hd+0.1,x1+hd+pl,y1+d/2+0.1,y2-0.25,'#f3f3f3','#999',0.03); R_(x1+hd+pl+0.2,x2-0.1,y1+0.08,y2-0.08,'#9fb7c9','#7d97ab',0.03)
+            if side=='y2': R_(x1,x2,y2-hd,y2,'#7a5a43'); R_(x1+0.25,x1+w/2-0.1,y2-hd-pl,y2-hd-0.1,'#f3f3f3','#999',0.03); R_(x1+w/2+0.1,x2-0.25,y2-hd-pl,y2-hd-0.1,'#f3f3f3','#999',0.03); R_(x1+0.08,x2-0.08,y1+0.1,y2-hd-pl-0.2,'#9fb7c9','#7d97ab',0.03)
+            if side=='y1': R_(x1,x2,y1,y1+hd,'#7a5a43'); R_(x1+0.25,x1+w/2-0.1,y1+hd+0.1,y1+hd+pl,'#f3f3f3','#999',0.03); R_(x1+w/2+0.1,x2-0.25,y1+hd+0.1,y1+hd+pl,'#f3f3f3','#999',0.03); R_(x1+0.08,x2-0.08,y1+hd+pl+0.2,y2-0.1,'#9fb7c9','#7d97ab',0.03)
+        elif k=='sofa':
+            R_(x1,x2,y1,y2,'#7f97c2','#4f6a96',0.05,extra='rx="0.25"')
+            if side=='x1': R_(x1,x1+0.75,y1,y2,'#5d77a5','#4f6a96'); R_(x1+0.75,x2,y1,y1+0.6,'#5d77a5','#4f6a96'); R_(x1+0.75,x2,y2-0.6,y2,'#5d77a5','#4f6a96')
+            n=3
+            for i in range(1,n): yy=y1+0.6+i*(d-1.2)/n; line(x1+0.8,yy,x2-0.1,yy,'#4f6a96',0.03)
+        elif k=='table': R_(x1,x2,y1,y2,'#a07a52','#6b4f32',0.04,extra='rx="0.3"')
+        elif k=='chair': R_(x1,x2,y1,y2,'#c9a77f','#6b4f32',0.03,extra='rx="0.2"')
+        elif k in ('cab','desk'): R_(x1,x2,y1,y2,'#c9a77f' if k=='cab' else '#b48a5f','#6b4f32',0.04)
+        elif k=='ward':
+            R_(x1,x2,y1,y2,'#d9c3a3','#6b4f32',0.05); line(x1,y1,x2,y2,'#6b4f32',0.03); line(x1,y2,x2,y1,'#6b4f32',0.03)
+        elif k=='shelf':
+            R_(x1,x2,y1,y2,'#d9c3a3','#6b4f32',0.04)
+            for i in range(1,4): yy=y1+i*d/4; line(x1,yy,x2,yy,'#6b4f32',0.025)
+        elif k in ('counter','counter2'):
+            R_(x1,x2,y1,y2,'#3b3f45' if k=='counter' else '#6d727a','#222',0.04)
+            if side=='sink':
+                cy=(y1+y2)/2-0.5; R_(x1+0.3,x2-0.3,cy-1.0,cy+1.0,'#cfe3f2','#9ab',0.03,extra='rx="0.2"')
+            if side=='hob':
+                cx=(x1+x2)/2
+                for dx in (-0.55,0.55):
+                    for dy in (-0.45,0.45):
+                        a=S(cx+dx,(y1+y2)/2+dy); E(f'<circle cx="{a[0]:.3f}" cy="{a[1]:.3f}" r="0.3" fill="none" stroke="#ddd" stroke-width="0.05"/>')
+        elif k=='fridge':
+            R_(x1,x2,y1,y2,'#eef2f5','#777',0.04); text((x1+x2)/2,(y1+y2)/2,'FRIDGE',0.32,weight=700,fill='#666')
+        elif k=='over': R_(x1,x2,y1,y2,'none','#555',0.04,extra='stroke-dasharray="0.2 0.12"')
+        elif k=='tv':
+            R_(x1,x2,y1,y2,'#8b6a45','#5a4128',0.04); R_(x1+0.15,x1+0.35,y1+0.6,y2-0.6,'#222','#111',0.02)
+        elif k=='wc':
+            R_(x1,x2,y1,y2,'none','none',0)
+            if side=='x2': R_(x2-0.6,x2,y1+0.1,y2-0.1,'#f4f6f8','#777',0.04); cx,cy,rx,ry=x2-1.25,(y1+y2)/2,0.65,0.55
+            else: R_(x1,x1+0.6,y1+0.1,y2-0.1,'#f4f6f8','#777',0.04); cx,cy,rx,ry=x1+1.25,(y1+y2)/2,0.65,0.55
+            a=S(cx,cy); E(f'<ellipse cx="{a[0]:.3f}" cy="{a[1]:.3f}" rx="{rx}" ry="{ry}" fill="#f4f6f8" stroke="#777" stroke-width="0.04"/>')
+        elif k=='basin':
+            R_(x1,x2,y1,y2,'#f4f6f8','#777',0.04); a=S((x1+x2)/2,(y1+y2)/2); E(f'<ellipse cx="{a[0]:.3f}" cy="{a[1]:.3f}" rx="{w/2-0.2:.3f}" ry="{d/2-0.2:.3f}" fill="#dceaf3" stroke="#89a" stroke-width="0.03"/>')
+        elif k=='shower':
+            R_(x1,x2,y1,y2,'url(#hatchW)','#6c8fa8',0.04); a=S((x1+x2)/2,(y1+y2)/2); E(f'<circle cx="{a[0]:.3f}" cy="{a[1]:.3f}" r="0.15" fill="#6c8fa8"/>')
+        elif k=='wm':
+            R_(x1,x2,y1,y2,'#f4f6f8','#777',0.04); a=S((x1+x2)/2,(y1+y2)/2); E(f'<circle cx="{a[0]:.3f}" cy="{a[1]:.3f}" r="0.65" fill="#dceaf3" stroke="#777" stroke-width="0.04"/>')
+        # code tag
+        cx,cy=(x1+x2)/2,(y1+y2)/2
+        if k not in ('fridge',):
+            x,y=S(cx,cy); E(f'<text x="{x:.3f}" y="{y+0.11:.3f}" font-size="0.3" font-weight="700" fill="#2b2b2b" text-anchor="middle" stroke="#fff" stroke-width="0.08" paint-order="stroke">{fid}</text>')
+    E('</g>')
+
 def ground():
     W=walls_of('G')
     draw_plot('G'); draw_rooms('G'); porch_steps(); tree(); vehicles()
+    draw_furniture('G')
     stair_A(); stair_L(); stair_B(op=0.45,dash='stroke-dasharray="0.2 0.12"')
     text(14.6,20.6,'flight 1B overhead (+7\'6" to +11\'6")',0.3,fill='#6b3a1c')
     spiral()
@@ -235,7 +296,7 @@ def first():
     W=walls_of('F')
     draw_plot('F')
     draw_walls('G',ghost=True)
-    draw_rooms('F'); 
+    draw_rooms('F'); draw_furniture('F')
     stair_A(op=0.35,dash='stroke-dasharray="0.2 0.12"'); stair_L(); stair_B()
     spiral(top=True)
     draw_walls('F')
@@ -260,6 +321,7 @@ DEFS='''<defs>
 <pattern id="hatchP" width="0.22" height="0.22" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="0.22" height="0.22" fill="#f4f1ea"/><line x1="0" y1="0" x2="0" y2="0.22" stroke="#666" stroke-width="0.04"/></pattern>
 <pattern id="hatchC" width="0.28" height="0.28" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)"><rect width="0.28" height="0.28" fill="#f6f6f1"/><line x1="0" y1="0" x2="0" y2="0.28" stroke="#6b7d63" stroke-width="0.05"/></pattern>
 <pattern id="hatchX" width="0.3" height="0.3" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="0.3" height="0.3" fill="#eeeeee"/><line x1="0" y1="0" x2="0" y2="0.3" stroke="#aaa" stroke-width="0.04"/></pattern>
+<pattern id="hatchW" width="0.3" height="0.3" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="0.3" height="0.3" fill="#e3eef5"/><line x1="0" y1="0" x2="0" y2="0.3" stroke="#a9c1d2" stroke-width="0.04"/></pattern>
 <marker id="arrW" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L6,3 L0,6 z" fill="#fff"/></marker>
 <marker id="arrT" markerWidth="5" markerHeight="5" refX="2.5" refY="2.5" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L5,2.5 L0,5 z" fill="#5b3a1a"/></marker>
 </defs>'''
