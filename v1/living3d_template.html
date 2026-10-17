@@ -41,7 +41,6 @@ canvas{display:block;width:100%;height:100%}
 <div id="app">
 <header>
  <div><h1>Living room · Japandi 3D</h1><div class="sub">↑↓ walk · ←→ turn · A/D slide · W/S tilt · Q/E lower/raise · Shift faster · Drag to look around · Scroll to walk · Right-drag to slide · Hover for names</div></div>
- <span class="lbl">Option</span><div class="seg" id="optSeg"><button data-o="0">1 · Warm oak</button><button data-o="1">2 · Soft stone</button><button data-o="2">3 · Sage calm</button></div>
  <span class="lbl">Light</span><div class="seg" id="lightSeg"><button data-l="day">Day</button><button data-l="eve">Evening</button></div>
  <span class="lbl">View</span><div class="seg" id="camSeg"><button data-c="0">Entry</button><button data-c="1">Corner</button><button data-c="2">From sofa</button><button data-c="3">From TV</button><button data-c="4">From kitchen</button><button data-c="5">Top</button></div>
  <span class="lbl">Lens</span><div class="seg" id="lensSeg"><button data-f="60">Eye 60°</button><button data-f="75">Wide 75°</button></div>
@@ -275,24 +274,25 @@ for(const [x,y] of [[LX1+0.5,51.0],[LX1+0.5,55.8],[LX2-0.45,49.2],[LX2-0.45,56.3
   const s=new THREE.SpotLight('#ffd7a3',0,m(16),0.75,0.6,2);s.position.set(mx(x),m(BZ-0.05),m(y));s.target.position.set(mx(x),0,m(y));s.castShadow=true;s.shadow.mapSize.set(512,512);s.shadow.bias=-0.0005;s.shadow.radius=4;scene.add(s,s.target);downs.push(s)}
 
 // ---------------- TV, showcase and book wall unit FU-05 (pieces butt together; no overlapping faces) ----------------
-const tv={x1:18.917,x2:20.25,y1:47.25,y2:58.25}, towerW=2.75, sideT=0.25, backT=0.1, baseH=1.6;
+const tv={x1:18.917,x2:20.25,y1:LY1,y2:LY2}, towerW=3.0, sideT=0.25, backT=0.1, baseH=1.6;   // wall to wall, 12'
 const towerLights=[];
-function tower(y1,y2,label){
+function tower(y1,y2,label,wallEnd){   // wallEnd: which end meets the room wall ('y1' or 'y2'); only the inner end gets a post
   const t=`FU-05 · ${label} · civil-work masonry niches, plastered and painted; oak-veneer shelves`;
-  box(tv.x1,tv.x2,y1,y1+sideT,0,BZ,MAT.white,{tip:t});box(tv.x1,tv.x2,y2-sideT,y2,0,BZ,MAT.white,{tip:t});
-  box(tv.x1,tv.x2-backT,y1+sideT,y2-sideT,0,baseH,MAT.oak,{tip:'FU-05 · base cupboard, oak-veneer shutters'});
-  box(tv.x1-0.005,tv.x1,y1+sideT+0.03,(y1+y2)/2-0.02,0.12,baseH-0.06,MAT.oakDark,{cast:false,tip:'Shutter'});box(tv.x1-0.005,tv.x1,(y1+y2)/2+0.02,y2-sideT-0.03,0.12,baseH-0.06,MAT.oakDark,{cast:false,tip:'Shutter'});
-  box(tv.x2-backT,tv.x2,y1+sideT,y2-sideT,0,BZ,MAT.accent,{tip:t+' · niche back in accent paint'});
-  for(const z of [3.3,5.0,6.7,8.2]){box(tv.x1+0.02,tv.x2-backT,y1+sideT,y2-sideT,z,z+0.11,MAT.oak,{tip:t});
-    ledStrips.push(box(tv.x1+0.18,tv.x1+0.24,y1+sideT+0.1,y2-sideT-0.1,z-0.03,z,MAT.led,{cast:false,tip:'LED strip under the shelf'}))}
+  const a=wallEnd==='y1'?y1+0.005:y1+sideT, b=wallEnd==='y2'?y2-0.005:y2-sideT;      // clear span between wall and post
+  if(wallEnd==='y1') box(tv.x1,tv.x2,y2-sideT,y2,0,BZ,MAT.white,{tip:t}); else box(tv.x1,tv.x2,y1,y1+sideT,0,BZ,MAT.white,{tip:t});
+  box(tv.x1,tv.x2-backT,a,b,0,baseH,MAT.oak,{tip:'FU-05 · base cupboard, oak-veneer shutters'});
+  const mid=(a+b)/2;box(tv.x1-0.005,tv.x1,a+0.03,mid-0.02,0.12,baseH-0.06,MAT.oakDark,{cast:false,tip:'Shutter'});box(tv.x1-0.005,tv.x1,mid+0.02,b-0.03,0.12,baseH-0.06,MAT.oakDark,{cast:false,tip:'Shutter'});
+  box(tv.x2-backT,tv.x2,a,b,0,BZ,MAT.accent,{tip:t+' · niche back in accent paint'});
+  for(const z of [3.3,5.0,6.7,8.2]){box(tv.x1+0.02,tv.x2-backT,a,b,z,z+0.11,MAT.oak,{tip:t});
+    ledStrips.push(box(tv.x1+0.18,tv.x1+0.24,a+0.1,b-0.1,z-0.03,z,MAT.led,{cast:false,tip:'LED strip under the shelf'}))}
   const tl=new THREE.PointLight('#ffd7a3',0,m(7),2);tl.position.set(mx(tv.x1+0.4),m(5.8),m((y1+y2)/2));scene.add(tl);towerLights.push(tl);
   const r=rng(Math.round(y1*10));
-  for(const z of [baseH,3.41,5.11,6.81]){let y=y1+sideT+0.15;while(y<y2-sideT-0.5){const k=r();
-    if(k<0.45){const n=3+Math.floor(r()*4);for(let i=0;i<n&&y<y2-sideT-0.2;i++){const h=0.65+r()*0.35;box(tv.x1+0.35,tv.x2-backT-0.15,y,y+0.13,z+0.001,z+h,std({color:['#b5a891','#d9d2c3','#6f6a60','#a2826a','#e8e3d8'][Math.floor(r()*5)],roughness:0.75}),{tip:'Books'});y+=0.14}y+=0.25}
+  for(const z of [baseH,3.41,5.11,6.81]){let y=a+0.15;while(y<b-0.5){const k=r();
+    if(k<0.45){const n=3+Math.floor(r()*4);for(let i=0;i<n&&y<b-0.2;i++){const h=0.65+r()*0.35;box(tv.x1+0.35,tv.x2-backT-0.15,y,y+0.13,z+0.001,z+h,std({color:['#b5a891','#d9d2c3','#6f6a60','#a2826a','#e8e3d8'][Math.floor(r()*5)],roughness:0.75}),{tip:'Books'});y+=0.14}y+=0.25}
     else if(k<0.75){cyl(tv.x1+0.65,y+0.3,z+0.001,z+0.5+r()*0.4,0.2,std({color:['#e9e4da','#cdbfa8','#2b2b2b'][Math.floor(r()*3)],roughness:0.55}),{tip:'Ceramic vase',rTop:0.11});y+=0.7}
     else{y+=0.5}}}
 }
-tower(tv.y1,tv.y1+towerW,'left tower');tower(tv.y2-towerW,tv.y2,'right tower');
+tower(tv.y1,tv.y1+towerW,'left tower','y1');tower(tv.y2-towerW,tv.y2,'right tower','y2');
 const cy1=tv.y1+towerW,cy2=tv.y2-towerW;
 box(tv.x2-0.12,tv.x2,cy1,cy2,0,BZ,MAT.tvPanel,{tip:'FU-05 · centre wall in oak veneer with 3 mm grooves (mid-range)'});
 for(let y=cy1+0.5;y<cy2-0.1;y+=0.5) box(tv.x2-0.125,tv.x2-0.12,y-0.008,y+0.008,0.05,BZ-0.05,MAT.oakDark,{cast:false,tip:'Groove in the oak panel'});
@@ -352,9 +352,10 @@ function curtain(y1,y2){const w=y2-y1,h=BZ-0.12,segW=Math.round(w*14),segH=24;
   named(me,'Sheer curtain · crepe georgette, ripple-fold on a ceiling track');me.userData.curtain=true;
   box(LX1+0.36,LX1+0.48,y1,y2,BZ-0.08,BZ-0.012,MAT.blackMetal,{tip:'Curtain track'})}
 for(const o of P.openings.filter(o=>o.wall==='GW-01'&&o.type==='window'&&o.b<LY2&&o.a>LY1)){curtain(o.a-1.3,o.a+0.25);curtain(o.b-0.25,o.b+1.3)}
-{const cx=11.9,cy=52.75,hub=8.6;cyl(cx,cy,hub+0.3,CEIL,0.045,MAT.blackMetal,{tip:'Ceiling fan, 48", wood-finish blades'});cyl(cx,cy,hub,hub+0.35,0.3,MAT.blackMetal,{tip:'Ceiling fan'});
- const fan=new THREE.Group();fan.position.set(mx(cx),m(hub+0.1),m(cy));scene.add(fan);
- for(let i=0;i<3;i++){const bl=new THREE.Mesh(new THREE.BoxGeometry(m(1.9),m(0.035),m(0.4)),MAT.oak);bl.position.set(m(1.25),0,0);const g=new THREE.Group();g.rotation.y=i*Math.PI*2/3+0.4;g.add(bl);bl.castShadow=true;fan.add(g);named(bl,'Ceiling fan blade')}}
+function ceilingFan(cx,cy,rot){const hub=8.6;cyl(cx,cy,hub+0.3,CEIL,0.045,MAT.blackMetal,{tip:'Ceiling fan, 48", wood-finish blades'});cyl(cx,cy,hub,hub+0.35,0.3,MAT.blackMetal,{tip:'Ceiling fan'});
+  const fan=new THREE.Group();fan.position.set(mx(cx),m(hub+0.1),m(cy));scene.add(fan);
+  for(let i=0;i<3;i++){const bl=new THREE.Mesh(new THREE.BoxGeometry(m(1.9),m(0.035),m(0.4)),MAT.oak);bl.position.set(m(1.25),0,0);const g=new THREE.Group();g.rotation.y=i*Math.PI*2/3+rot;g.add(bl);bl.castShadow=true;fan.add(g);named(bl,'Ceiling fan blade')}}
+ceilingFan(8.4,52.75,0.4);ceilingFan(15.3,52.75,1.1);   // two fans along the length of the hall, 6'11" apart
 function art(x1,x2,z1,z2,seed,palette){
   const fy=LY1;   // GW-12 face, frames hang facing into the living room
   box(x1,x2,fy+0.012,fy+0.11,z1,z2,MAT.oakDark,{tip:'Photo frame, oak, 1" profile'});
@@ -395,10 +396,6 @@ const gtao=new GTAOPass(scene,camera,1,1);gtao.output=GTAOPass.OUTPUT.Default;gt
 const OPTIONS=[
  {name:'Warm oak',floor:'oak',wall:'#f6e1d1',accent:'#e9cfbd',accentWall:'niche',sofa:'#b49a80',rug:'#d8c7a6',curtain:'#b9987a',
   notes:['Floor: light-oak wood-look porcelain planks, 8" x 48" (shown with a real oak-floor scan)','Walls: light peach emulsion (all interior walls); TV niches a shade deeper; ceiling and band in white','TV wall: civil-work niches, oak-veneer centre wall and console (mid-range)','Sofa: wooden frame in walnut-tone stain with mild-brown cushions; terracotta and cream throw cushions; jute rug','Curtains: light-brown sheer (latte); dark brown would make this low-daylight room gloomy','Art: two framed textured canvases on GW-12'],sw:['#cfae86','#f2ede4','#d9cfc0','#c49a6c']},
- {name:'Soft stone',curtain:'#f3eee6',floor:'stone',floorCol:'#d8cfc2',tx:1,ty:2,tileFt:2,wall:'#f4f1ec',accent:'#cfc6b8',accentWall:'east',sofa:'#a7a39b',rug:'#ddd1bb',
-  notes:['Floor: matte warm-beige 2\' x 4\' vitrified tiles','Walls: off-white; window wall in greige','TV wall: civil niches, oak-veneer centre','Sofa: warm grey linen'],sw:['#d8cfc2','#f4f1ec','#cfc6b8','#9c9890']},
- {name:'Sage calm',curtain:'#f3eee6',floor:'stone',floorCol:'#cdcac3',tx:2,ty:2,tileFt:2,wall:'#f3f2ee',accent:'#a9b5a0',accentWall:'tv',sofa:'#ece6da',rug:'#c4baa4',
-  notes:['Floor: light grey matte 2\' x 2\' tiles (lowest cost)','Walls: white; TV wall in sage green paint','TV wall: sage paint with oak shelves and console','Sofa: cream linen'],sw:['#cdcac3','#f3f2ee','#a9b5a0','#e6dfd2']},
 ];
 const panel=document.getElementById('panel');let curOpt=0,curLight='day';
 function applyOption(i){const o=OPTIONS[i];curOpt=i;
@@ -411,14 +408,13 @@ function applyOption(i){const o=OPTIONS[i];curOpt=i;
   else{Object.assign(MAT.tvPanel,{map:T.oakPanel.map,normalMap:T.oakPanel.normalMap,roughnessMap:T.oakPanel.roughnessMap,roughness:0.8});MAT.tvPanel.color.set('#ffffff')}
   MAT.tvPanel.needsUpdate=true;
   scene.traverse(n=>{if(n.isMesh&&n.userData.wall&&touchesLiving(n.userData.wall)) n.material=(o.accentWall==='east'&&n.userData.wall.id==='GW-01')?MAT.accent:MAT.wall});
-  panel.innerHTML=`<h2>Option ${i+1} · ${o.name}</h2><div>${o.sw.map(c=>`<span class="sw" style="background:${c}"></span>`).join('')}</div><ul>${o.notes.map(n=>`<li>${n}</li>`).join('')}</ul>
+  panel.innerHTML=`<h2>Japandi · ${o.name}</h2><div>${o.sw.map(c=>`<span class="sw" style="background:${c}"></span>`).join('')}</div><ul>${o.notes.map(n=>`<li>${n}</li>`).join('')}</ul>
   <h2>Same in all options</h2><ul>
   <li><b>Ceiling:</b> no false ceiling. A civil-work band 1'3" wide and 7" deep runs round the edge. Its inner edge has a cove pocket with a warm LED strip, and it carries 6 recessed downlights. Clear height is 10' in the middle and 9'5" under the band.</li>
   <li><b>TV wall FU-05:</b> two masonry niche towers with oak shelves, LED strips and oak base cupboards; an oak-veneer centre wall with grooves; a floating console; a 55" TV.</li>
   <li><b>Windows:</b> UPVC sliding, MS grill, granite sill. Sheer crepe-georgette curtains in ripple folds hang from a track on the band.</li>
   <li><b>Kitchen glass W-12:</b> black bi-fold frames with an oak ledge. <b>Arch O-01:</b> round-top plastered arch.</li>
   </ul><h2>Textures</h2><div>Real CC0 scans from Poly Haven, stored locally in <code>3d/assets</code>. Use <b>Photo</b> for a ray-traced, near-photographic still.</div>`;
-  document.querySelectorAll('#optSeg button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.o===i));
   try{localStorage.setItem('lr3d-opt',i)}catch(e){}
   renderer.shadowMap.needsUpdate=true;rebuildPhoto();invalidate();
 }
@@ -450,7 +446,6 @@ function setView(i){const v=VIEWS[i];camera.position.set(mx(v.p[0]),m(v.p[1]),m(
   document.querySelectorAll('#camSeg button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.c===i));invalidate()}
 function applyLook(){pitch=Math.max(-1.55,Math.min(1.55,pitch));camera.rotation.set(pitch,yaw,0)}
 function setLens(f){hfov=f;applyFov();document.querySelectorAll('#lensSeg button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.f===f));try{localStorage.setItem('lr3d-lens',f)}catch(e){};invalidate()}
-document.querySelectorAll('#optSeg button').forEach(b=>b.onclick=()=>applyOption(+b.dataset.o));
 document.querySelectorAll('#lightSeg button').forEach(b=>b.onclick=()=>applyLight(b.dataset.l));
 document.querySelectorAll('#camSeg button').forEach(b=>b.onclick=()=>setView(+b.dataset.c));
 document.querySelectorAll('#lensSeg button').forEach(b=>b.onclick=()=>setLens(+b.dataset.f));
@@ -489,7 +484,7 @@ renderer.domElement.addEventListener('pointerleave',()=>tipEl.style.display='non
 // ---------------- start ----------------
 function resize(){const w=view.clientWidth,h=view.clientHeight;renderer.setSize(w,h,false);composer.setSize(w,h);gtao.setSize(w,h);camera.aspect=w/h;applyFov();invalidate()}
 addEventListener('resize',resize);resize();
-let so=0,sl='day',sf=75;try{so=+(localStorage.getItem('lr3d-opt')||0);sl=localStorage.getItem('lr3d-light')||'day';sf=+(localStorage.getItem('lr3d-lens')||75)}catch(e){}
+let so=0,sl='day',sf=75;try{so=0;sl=localStorage.getItem('lr3d-light')||'day';sf=+(localStorage.getItem('lr3d-lens')||75)}catch(e){}
 applyOption(so);applyLight(sl);setLens(sf);setView(0);
 // ---------------- navigation: look in place, walk with collision ----------------
 // Keys: Up/Down walk · Left/Right turn · A/D slide · W/S tilt up/down · Q/E lower/raise · Shift faster
