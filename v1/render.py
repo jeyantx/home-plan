@@ -1,4 +1,4 @@
-import math, json
+import math, json, html as _H
 from model import *
 TOP=107.0
 def S(X,Y): return (X, TOP-Y)
@@ -23,15 +23,17 @@ def text(X,Y,s,size=0.5,weight=400,fill='#222',anchor='middle',rot=0,cls=''):
     for i,l in enumerate(lines):
         E(f'<tspan x="{x:.3f}" y="{y+(i-(n-1)/2)*size*1.2+size*0.35:.3f}">{l.replace("&","&amp;")}</tspan>')
     E('</text>')
-def tag(X,Y,s,kind='wall',rot=0):
+def tip(s): return _H.escape(s,quote=True)
+def tag(X,Y,s,kind='wall',rot=0,tipText=None):
     x,y=S(X,Y); w=len(s)*0.25+0.3; h=0.5
     col={'wall':('#ffffff','#5b5b5b','#333'),'door':('#fff4e8','#a35a1b','#7a3e0c'),'win':('#e8f2ff','#2f6fb0','#1f4f86'),'room':('#2f6f4f','#2f6f4f','#fff')}[kind]
     tr=f' transform="rotate({rot} {x:.3f} {y:.3f})"' if rot else ''
-    E(f'<g class="tag-{kind}"{tr}><rect x="{x-w/2:.3f}" y="{y-h/2:.3f}" width="{w:.3f}" height="{h:.3f}" rx="0.12" fill="{col[0]}" stroke="{col[1]}" stroke-width="0.03"/>'
+    dt=f' data-tip="{tip(tipText)}"' if tipText else ''
+    E(f'<g class="tag-{kind}"{tr}{dt}><rect x="{x-w/2:.3f}" y="{y-h/2:.3f}" width="{w:.3f}" height="{h:.3f}" rx="0.12" fill="{col[0]}" stroke="{col[1]}" stroke-width="0.03"/>'
       f'<text x="{x:.3f}" y="{y+0.13:.3f}" font-size="0.36" font-weight="700" fill="{col[2]}" text-anchor="middle">{s}</text></g>')
 
 FILL={'out':'#e9e8e4','porch':'#efe7da','in':'#fbf6ea','bed':'#fbf0dd','wet':'#dcEEF2','kit':'#e9f1fb','garden':'#cfe7bf','terr':'#ecebe6'}
-WALLFILL={'outer':'url(#hatch)','part':'url(#hatchP)','comp':'url(#hatchC)','para':'url(#hatchC)','pillar':'#6b6b6b'}
+WALLFILL={'planter':'#8a8f86','outer':'url(#hatch)','part':'url(#hatchP)','comp':'url(#hatchC)','para':'url(#hatchC)','pillar':'#6b6b6b'}
 
 def walls_of(fl): return {w[0]:w for w in WALLS[fl]}
 def draw_plot(fl):
@@ -42,7 +44,9 @@ def draw_plot(fl):
     E(f'<polygon points="{pts([(1.0,106.0),(21,105.0),(21,104.625),(1.375,105.6)])}" fill="url(#hatchX)" stroke="#888" stroke-width="0.03"/>')
 def draw_rooms(fl,labels=True):
     for rid,name,P,k in ROOMS[fl]:
-        E(f'<polygon points="{pts(P)}" fill="{FILL[k]}"/>')
+        xs=[p[0] for p in P]; ys=[p[1] for p in P]
+        sz=f"{fmt(max(xs)-min(xs))} x {fmt(max(ys)-min(ys))}" if len(P)==4 else "irregular"
+        E(f'<polygon points="{pts(P)}" fill="{FILL[k]}" data-tip="{tip(rid+" · "+name+" · "+sz+" · "+format(area(P),".0f")+" sq ft")}"/>')
 def room_labels(fl,skip=()):
     for rid,name,P,k in ROOMS[fl]:
         xs=[p[0] for p in P]; ys=[p[1] for p in P]
@@ -63,21 +67,31 @@ def room_labels(fl,skip=()):
 def draw_walls(fl,ghost=False):
     for wid,x1,x2,y1,y2,k,h,desc in WALLS[fl]:
         if ghost: rect(x1,x2,y1,y2,'#cfcbc2',extra='opacity="0.6"'); continue
-        rect(x1,x2,y1,y2,WALLFILL[k],'#333',0.035)
+        KN={'outer':'9" outer','part':'4½" partition','comp':'4½" compound','para':'4½" parapet','pillar':'pillar','planter':'planter pillar'}
+        rect(x1,x2,y1,y2,WALLFILL[k],'#333',0.035,extra=f'data-tip="{tip(wid+" · "+desc+" · "+KN.get(k,k)+" · "+fmt(max(x2-x1,y2-y1)))}"')
+        if k=='planter':
+            c=S((x1+x2)/2,(y1+y2)/2)
+            for dx,dy,col in ((0,0,'#d6336c'),(-0.35,0.25,'#e8590c'),(0.35,0.25,'#ae3ec9'),(0,-0.38,'#f06595')):
+                E(f'<circle cx="{c[0]+dx:.3f}" cy="{c[1]+dy:.3f}" r="0.32" fill="{col}" stroke="#2f7d32" stroke-width="0.08" pointer-events="none"/>')
 def wall_tags(fl):
     for wid,x1,x2,y1,y2,k,h,desc in WALLS[fl]:
-        if k=='pillar': continue
+        if k in ('pillar','planter'): continue
         horiz=(x2-x1)>(y2-y1)
         X,Y=TAGPOS.get(wid,((x1+x2)/2,(y1+y2)/2))
-        tag(X,Y,wid,'wall',0 if horiz else -90)
+        tag(X,Y,wid,'wall',0 if horiz else -90,tipText=wid+' · '+desc)
 
 def opening(o,W):
     oid,fl,wid,a,b,typ,hinge,swing,h,sill,note=o
     if wid=='FRONT':
         rect(a,b,0,0.75,'#e3f0d8')
         line(a,0.375,b,0.375,'#2f5d3a',0.12)
-        line(a+0.3,1.1,b-0.3,1.1,'#2f5d3a',0.03,extra='stroke-dasharray="0.25 0.15"')
-        return
+        if swing:
+            W=dict(W); W['FRONT']=('FRONT',0,21,0,0.75,'comp',6,'front line')
+            typ='door' if hinge else 'double'
+            if not hinge: hinge=None
+        else:
+            line(a+0.3,1.1,b-0.3,1.1,'#2f5d3a',0.03,extra='stroke-dasharray="0.25 0.15"')
+            return
     _,x1,x2,y1,y2,k,hh,desc=W[wid]
     horiz=(x2-x1)>(y2-y1)
     # gap
@@ -119,12 +133,13 @@ def opening_tags(fl,W):
     for o in OPENINGS:
         oid,f,wid,a,b,typ,hinge,swing,h,sill,note=o
         if f!=fl: continue
-        if wid=='FRONT': tag((a+b)/2,1.75,oid,'door'); continue
+        tt=oid+' · '+note+' · '+fmt(b-a)+' wide'
+        if wid=='FRONT': tag((a+b)/2,2.6 if swing else 1.75,oid,'door',tipText=tt); continue
         _,x1,x2,y1,y2,k,hh,desc=W[wid]; horiz=(x2-x1)>(y2-y1)
         off=OPENTAGOFF.get(oid,0.75)
         if horiz: X,Y=(a+b)/2,(y1+y2)/2+off
         else: X,Y=(x1+x2)/2+off,(a+b)/2
-        tag(X,Y,oid,'win' if typ in('window','vent') else 'door')
+        tag(X,Y,oid,'win' if typ in('window','vent') else 'door',tipText=tt)
 
 # stairs
 A0,A1=4.333,16.0; AX1,AX2=17.5,21.0; LY1,LY2=16.0,19.5; BX1,BX2=11.667,17.5
@@ -206,13 +221,14 @@ def borewell():
     E(f'<g class="L-rooms"><text x="{x:.3f}" y="{y+1.05:.3f}" font-size="0.36" font-weight="700" fill="#1a6ea0" text-anchor="middle">BOREWELL (existing)</text>'
       f'<text x="{x:.3f}" y="{y+1.5:.3f}" font-size="0.3" fill="#1a6ea0" text-anchor="middle">6\' from east · 25\' from back</text></g>')
 
-def draw_furniture(fl):
+def draw_furniture(fl,_late=False):
     import model as _m
-    items=[f for f in getattr(_m,'FURNITURE',[]) if f[1]==fl]
+    items=[f for f in getattr(_m,'FURNITURE',[]) if f[1]==fl and (f[7]=='store')==bool(_late)]
     if not items: return
     E('<g class="L-furn">')
     for fid,f,name,x1,x2,y1,y2,k,side,note in items:
         w,d=x2-x1,y2-y1
+        E(f'<g class="fu" data-tip="{tip(fid+" · "+name+" · "+fmt(w)+" x "+fmt(d)+" · "+note)}">')
         def R_(a1,a2,b1,b2,fill,stroke='#6b5a48',sw=0.035,extra=''): rect(a1,a2,b1,b2,fill,stroke,sw,extra=extra)
         if k=='bed':
             R_(x1,x2,y1,y2,'#ffffff','#555',0.05)
@@ -259,10 +275,47 @@ def draw_furniture(fl):
             R_(x1,x2,y1,y2,'url(#hatchW)','#6c8fa8',0.04); a=S((x1+x2)/2,(y1+y2)/2); E(f'<circle cx="{a[0]:.3f}" cy="{a[1]:.3f}" r="0.15" fill="#6c8fa8"/>')
         elif k=='wm':
             R_(x1,x2,y1,y2,'#f4f6f8','#777',0.04); a=S((x1+x2)/2,(y1+y2)/2); E(f'<circle cx="{a[0]:.3f}" cy="{a[1]:.3f}" r="0.65" fill="#dceaf3" stroke="#777" stroke-width="0.04"/>')
+        elif k=='tvwall':
+            R_(x1,x2,y1,y2,'#a07a52','#5a4128',0.05)
+            n=6
+            for i in range(1,n):
+                yy=y1+i*d/n; line(x1,yy,x2,yy,'#5a4128',0.025)
+            R_(x1+0.08,x1+0.3,y1+d*0.33,y1+d*0.67,'#1d1d1d','#000',0.02)
+            text((x1+x2)/2-0.05,y1+d*0.15,'shelves',0.26,fill='#3a2a1a',rot=-90); text((x1+x2)/2-0.05,y1+d*0.85,'showcase',0.26,fill='#3a2a1a',rot=-90)
+        elif k=='store2':
+            R_(x1,x2,y1,y2,'#cfb48f','#5a4128',0.06)
+            for i in range(1,4): yy=y1+i*d/4; line(x1,yy,x2,yy,'#5a4128',0.03)
+            line(x1,y1,x2,y2,'#5a4128',0.025); line(x1,y2,x2,y1,'#5a4128',0.025)
+        elif k=='iwc':
+            R_(x1,x2,y1,y2,'#f4f6f8','#777',0.04,extra='rx="0.2"')
+            a=S((x1+x2)/2,(y1+y2)/2+0.2); E(f'<ellipse cx="{a[0]:.3f}" cy="{a[1]:.3f}" rx="0.45" ry="0.7" fill="#dceaf3" stroke="#777" stroke-width="0.04"/>')
+            for dx in (-0.6,0.6):
+                b=S((x1+x2)/2+dx,y1+0.45); E(f'<rect x="{b[0]-0.22:.3f}" y="{b[1]-0.3:.3f}" width="0.44" height="0.6" rx="0.1" fill="#bfc8cf"/>')
+        elif k=='acin':
+            R_(x1,x2,y1,y2,'#ffffff','#2f6fb0',0.05,extra='rx="0.1"'); line(x1+0.15,y1+0.2,x1+0.15,y2-0.2,'#2f6fb0',0.03)
+        elif k=='acout':
+            R_(x1,x2,y1,y2,'#e8edf2','#2f6fb0',0.05); a=S((x1+x2)/2,(y1+y2)/2+0.35); E(f'<circle cx="{a[0]:.3f}" cy="{a[1]:.3f}" r="0.5" fill="none" stroke="#2f6fb0" stroke-width="0.05"/>')
+            text((x1+x2)/2,(y1+y2)/2-0.75,'AC',0.3,weight=700,fill='#2f6fb0')
+        elif k=='sinkbowl':
+            R_(x1,x2,y1,y2,'#cfe3f2','#6c8fa8',0.04,extra='rx="0.2"'); a=S((x1+x2)/2,(y1+y2)/2); E(f'<circle cx="{a[0]:.3f}" cy="{a[1]:.3f}" r="0.1" fill="#6c8fa8"/>')
+        elif k=='hob':
+            R_(x1,x2,y1,y2,'#1f1f1f','#000',0.04)
+            for dy in (-0.45,0.45):
+                a=S((x1+x2)/2,(y1+y2)/2+dy); E(f'<circle cx="{a[0]:.3f}" cy="{a[1]:.3f}" r="0.33" fill="none" stroke="#e8590c" stroke-width="0.06"/>')
+            R_(x1-0.02,x1+0.6,y1,y2,'none','#999',0.04,extra='stroke-dasharray="0.12 0.08"')
+        elif k=='washpad':
+            R_(x1,x2,y1,y2,'#d7dde2','#6c7a86',0.04); a=S((x1+x2)/2,(y1+y2)/2)
+            E(f'<rect x="{a[0]-0.2:.3f}" y="{a[1]-0.2:.3f}" width="0.4" height="0.4" fill="#6c7a86"/>')
+            text((x1+x2)/2,y2-0.45,'tap',0.28,fill='#334')
+        elif k=='store':
+            R_(x1,x2,y1,y2,'url(#hatchS)','#5a4128',0.08)
+            text((x1+x2)/2,(y1+y2)/2,'STORE',0.4,weight=700,fill='#3a2a1a',rot=-90)
+            line(x1,16.6,x1,18.9,'#fff',0.14); line(x1,16.6,x1,18.9,'#8a4b12',0.06,extra='stroke-dasharray="0.2 0.1"')
         # code tag
         cx,cy=(x1+x2)/2,(y1+y2)/2
-        if k not in ('fridge',):
-            x,y=S(cx,cy); E(f'<text x="{x:.3f}" y="{y+0.11:.3f}" font-size="0.3" font-weight="700" fill="#2b2b2b" text-anchor="middle" stroke="#fff" stroke-width="0.08" paint-order="stroke">{fid}</text>')
+        if k not in ('fridge','tvwall','store','acout'):
+            x,y=S(cx,cy); E(f'<text x="{x:.3f}" y="{y+0.11:.3f}" font-size="0.28" font-weight="700" fill="#2b2b2b" text-anchor="middle" stroke="#fff" stroke-width="0.08" paint-order="stroke">{fid}</text>')
+        E('</g>')
     E('</g>')
 
 def ground():
@@ -270,16 +323,17 @@ def ground():
     draw_plot('G'); draw_rooms('G'); porch_steps(); tree(); vehicles()
     draw_furniture('G')
     stair_A(); stair_L(); stair_B(op=0.45,dash='stroke-dasharray="0.2 0.12"')
+    E('<g opacity="0.72">'); draw_furniture('G',_late=True); E('</g>')
     text(14.6,20.6,'flight 1B overhead (+7\'6" to +11\'6")',0.3,fill='#6b3a1c')
     spiral()
     draw_walls('G')
-    for p in ((0,0.75),(15.0,15.75),(20.25,21.0)): rect(p[0],p[1],0,0.75,'#6b6b6b')
     for o in OPENINGS:
         if o[1]=='G': opening(o,W)
     E('<g class="L-dims">')
     chain('G',-1.3,CH_G_E)
     chain('G',22.6,CH_G_W)
-    hchain(-0.9,[0,2.75,3.5,9.25,13.75,14.125,20.25,21.0])
+    import model as _m2
+    hchain(-0.9,getattr(_m2,'CH_G_FRONT',[0,2.75,3.5,9.25,13.75,14.125,20.25,21.0]))
     hchain(CH_G_BACK_Y,[1.375,9.5,10.25,20.25,21.0])
     E('</g>')
     E('<g class="L-rooms">'); room_labels('G')
@@ -321,6 +375,7 @@ DEFS='''<defs>
 <pattern id="hatchP" width="0.22" height="0.22" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="0.22" height="0.22" fill="#f4f1ea"/><line x1="0" y1="0" x2="0" y2="0.22" stroke="#666" stroke-width="0.04"/></pattern>
 <pattern id="hatchC" width="0.28" height="0.28" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)"><rect width="0.28" height="0.28" fill="#f6f6f1"/><line x1="0" y1="0" x2="0" y2="0.28" stroke="#6b7d63" stroke-width="0.05"/></pattern>
 <pattern id="hatchX" width="0.3" height="0.3" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="0.3" height="0.3" fill="#eeeeee"/><line x1="0" y1="0" x2="0" y2="0.3" stroke="#aaa" stroke-width="0.04"/></pattern>
+<pattern id="hatchS" width="0.35" height="0.35" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="0.35" height="0.35" fill="#e6d6bd"/><line x1="0" y1="0" x2="0" y2="0.35" stroke="#a8875e" stroke-width="0.05"/></pattern>
 <pattern id="hatchW" width="0.3" height="0.3" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="0.3" height="0.3" fill="#e3eef5"/><line x1="0" y1="0" x2="0" y2="0.3" stroke="#a9c1d2" stroke-width="0.04"/></pattern>
 <marker id="arrW" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L6,3 L0,6 z" fill="#fff"/></marker>
 <marker id="arrT" markerWidth="5" markerHeight="5" refX="2.5" refY="2.5" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L5,2.5 L0,5 z" fill="#5b3a1a"/></marker>
