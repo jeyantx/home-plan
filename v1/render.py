@@ -58,10 +58,8 @@ def room_labels(fl,skip=()):
         E(f'<g class="lbl-room"><text x="{x:.3f}" y="{y-size*0.55:.3f}" font-size="{size*0.72:.3f}" font-weight="700" fill="#2f6f4f" text-anchor="middle">{rid}</text>'
           f'<text x="{x:.3f}" y="{y+size*0.35:.3f}" font-size="{size:.3f}" font-weight="700" fill="#1f2a24" text-anchor="middle">{name.upper()}</text>'
           f'<text x="{x:.3f}" y="{y+size*1.3:.3f}" font-size="{size*0.8:.3f}" fill="#333" text-anchor="middle">{dims}</text></g>')
-LABELPOS={'G-01':(8.0,23.0),'G-02':(5.6,37.6),'G-03':(6.2,44.6),'G-04':(11.5,55.4),'G-05':(14.8,41.0),'G-06':(11.5,33.6),'G-07':(17.2,33.4),
-          'G-08':(8.0,66.6),'G-09':(16.9,66.0),'G-10':(12.8,71.4),'G-11':(6.0,73.0),'G-12':(15.25,88.2),'G-13':(1.55,36.0),'G-14':(5.0,96.0),'G-15':(15.2,100.6),
-          'F-01':(7.4,18.6),'F-02':(11.9,47.0),'F-03':(6.3,77.2),'F-04':(13.0,78.0),'F-05':(15.25,91.5),'F-06':(12.05,83.2),'F-07':(17.25,82.4)}
-LABELSIZE={'G-13':0.36,'G-06':0.4,'G-07':0.42,'G-11':0.42,'G-03':0.42,'G-02':0.42,'F-06':0.36,'F-07':0.42,'G-10':0.42,'F-04':0.45,'F-03':0.42,'F-01':0.45,'G-09':0.45,'G-01':0.6,'F-02':0.8}
+
+
 def draw_walls(fl,ghost=False):
     for wid,x1,x2,y1,y2,k,h,desc in WALLS[fl]:
         if ghost: rect(x1,x2,y1,y2,'#cfcbc2',extra='opacity="0.6"'); continue
@@ -72,10 +70,7 @@ def wall_tags(fl):
         horiz=(x2-x1)>(y2-y1)
         X,Y=TAGPOS.get(wid,((x1+x2)/2,(y1+y2)/2))
         tag(X,Y,wid,'wall',0 if horiz else -90)
-TAGPOS={'GW-01':(3.125,53.6),'GW-05':(20.625,51.0),'GW-07':(9.875,91.0),'BW-01':(0.19,50.0),'GW-04':(19.0,31.125),'GW-13':(6.2,60.94),'GW-12':(17.6,46.56),
-        'GW-03':(8.875,33.6),'GW-02':(3.6,40.875),'GW-11':(19.0,36.19),'GW-08':(11.0,94.625),'GW-06':(8.2,75.375),'PW-02':(2.94,40.0),'PW-04':(20.81,40.0),
-        'FW-01':(9.875,94.0),'FW-03':(20.625,92.0),'FW-02':(18.4,73.375),'FW-04':(19.0,96.875),'FW-05':(18.0,79.94),'PW-03':(19.4,19.94),'PW-01':(5.0,15.69),'PW-05':(6.0,80.19),
-        'GW-15':(18.4,80.31),'GW-14':(5.0,69.81),'GW-10':(13.94,34.6),'GW-09':(9.06,43.0),'BW-03':(1.19,98.0),'BW-02':(0.6,89.19)}
+
 def opening(o,W):
     oid,fl,wid,a,b,typ,hinge,swing,h,sill,note=o
     if wid=='FRONT':
@@ -98,6 +93,16 @@ def opening(o,W):
     elif typ=='vent':
         for f in (0.35,0.65):
             v=v1+(v2-v1)*f; p,q=P(a,v),P(b,v); line(p[0],p[1],q[0],q[1],'#2f6fb0',0.035,extra='stroke-dasharray="0.15 0.1"')
+    elif typ=='fold':
+        n=6; pts_=[]
+        for i in range(n+1):
+            u=a+i*(b-a)/n; v=v1+(v2-v1)*(0.25 if i%2==0 else 0.75); pts_.append(P(u,v))
+        E(f'<polyline points="{pts(pts_)}" fill="none" stroke="#2f6fb0" stroke-width="0.06"/>')
+        cv=v1-0.35   # curtain on the living side (lower Y)
+        wav=[]
+        for i in range(25):
+            u=a+i*(b-a)/24; wav.append(P(u,cv+0.12*(1 if i%2 else -1)))
+        E(f'<polyline points="{pts(wav)}" fill="none" stroke="#b05a8a" stroke-width="0.04"/>')
     elif typ=='arch':
         for v in (v1,v2): p,q=P(a,v),P(b,v); line(p[0],p[1],q[0],q[1],'#777',0.03,extra='stroke-dasharray="0.2 0.12"')
     else:
@@ -120,8 +125,7 @@ def opening_tags(fl,W):
         if horiz: X,Y=(a+b)/2,(y1+y2)/2+off
         else: X,Y=(x1+x2)/2+off,(a+b)/2
         tag(X,Y,oid,'win' if typ in('window','vent') else 'door')
-OPENTAGOFF={'W-01':-0.75,'V-01':-0.75,'W-02':0.9,'W-03':-1.0,'W-04':-1.0,'W-05':-1.0,'W-06':-1.0,'V-02':-1.0,'W-07':-1.0,'W-08':0.8,'D-01':-1.4,'D-02':-2.2,'D-03':-1.6,
-            'O-01':-0.8,'D-04':-2.6,'D-05':-1.5,'D-06':1.7,'D-07':1.7,'D-08':1.6,'D-09':-1.6,'W-09':-0.8,'W-10':-1.0,'W-11':0.8}
+
 # stairs
 A0,A1=4.333,16.0; AX1,AX2=17.5,21.0; LY1,LY2=16.0,19.5; BX1,BX2=11.667,17.5
 def stair_A(op=1,dash=''):
@@ -137,7 +141,7 @@ def stair_B(op=1,dash=''):
     for i in range(1,n): x=BX2-i*(BX2-BX1)/n; line(x,LY1,x,LY2,'#6b3a1c',0.03)
     a=S(BX2-0.4,(LY1+LY2)/2); b=S(BX1+0.4,(LY1+LY2)/2)
     E(f'<line x1="{a[0]:.3f}" y1="{a[1]:.3f}" x2="{b[0]:.3f}" y2="{b[1]:.3f}" stroke="#fff" stroke-width="0.08" marker-end="url(#arrW)"/></g>')
-SPC=(17.0,76.75); SPR=3.0
+
 def spiral(top=False):
     x,y=S(*SPC)
     dash='stroke-dasharray="0.25 0.15"' if top else ''
@@ -185,6 +189,11 @@ def sides():
     x,y=S(-2.2,-2.2)
     E(f'<g transform="translate({x},{y})"><circle r="1.1" fill="#fff" stroke="#2f6f4f" stroke-width="0.06"/><polygon points="0,1.0 -0.38,-0.55 0,-0.22 0.38,-0.55" fill="#2f6f4f"/><text y="-1.35" font-size="0.5" font-weight="700" text-anchor="middle" fill="#2f6f4f">N ↓</text></g>')
 
+def borewell():
+    x,y=S(*BOREWELL)
+    E(f'<g class="bore"><circle cx="{x:.3f}" cy="{y:.3f}" r="0.55" fill="#dff1ff" stroke="#1a6ea0" stroke-width="0.08"/><circle cx="{x:.3f}" cy="{y:.3f}" r="0.18" fill="#1a6ea0"/></g>')
+    E(f'<g class="L-rooms"><text x="{x:.3f}" y="{y+1.05:.3f}" font-size="0.36" font-weight="700" fill="#1a6ea0" text-anchor="middle">BOREWELL (existing)</text>'
+      f'<text x="{x:.3f}" y="{y+1.5:.3f}" font-size="0.3" fill="#1a6ea0" text-anchor="middle">6\' from east · 25\' from back</text></g>')
 def ground():
     W=walls_of('G')
     draw_plot('G'); draw_rooms('G'); porch_steps(); tree(); vehicles()
@@ -196,15 +205,16 @@ def ground():
     for o in OPENINGS:
         if o[1]=='G': opening(o,W)
     E('<g class="L-dims">')
-    chain('G',-1.3,[0,30.75,40.5,41.25,46.75,60.75,61.125,69.625,70.0,75.0,75.75,89.0,106.0])
-    chain('G',22.6,[0,4.333,16.0,19.5,30.75,31.5,36.0,36.375,46.375,46.75,60.75,61.125,70.0,80.125,80.5,94.25,95.0,105.0])
+    chain('G',-1.3,CH_G_E)
+    chain('G',22.6,CH_G_W)
     hchain(-0.9,[0,2.75,3.5,9.25,13.75,14.125,20.25,21.0])
-    hchain(104.0,[1.375,9.5,10.25,20.25,21.0])
+    hchain(CH_G_BACK_Y,[1.375,9.5,10.25,20.25,21.0])
     E('</g>')
     E('<g class="L-rooms">'); room_labels('G')
-    text(14.25,72.8,'ST-2 spiral stair',0.34,weight=600,fill='#3a1f0c')
+    text(SPC[0]-2.75,SPC[1]-3.95,'ST-2 spiral stair',0.34,weight=600,fill='#3a1f0c')
     text(19.25,10.2,'ST-1A',0.36,weight=700,fill='#fff'); text(19.25,17.75,'ST-1L',0.32,weight=700,fill='#3a1f0c')
     E('</g>')
+    borewell()
     E('<g class="L-walls">'); wall_tags('G'); E('</g>')
     E('<g class="L-open">'); opening_tags('G',W); E('</g>')
     sides()
@@ -219,13 +229,13 @@ def first():
     for o in OPENINGS:
         if o[1]=='F': opening(o,W)
     E('<g class="L-dims">')
-    chain('F',22.6,[15.5,20.125,73.0,73.75,79.75,80.125,84.375,84.75,96.5,97.25])
+    chain('F',22.6,CH_F_W)
     hchain(14.3,[2.75,3.125,11.667,17.5,21.0])
-    hchain(98.6,[9.5,10.25,13.875,14.25,20.25,21.0])
+    hchain(CH_F_BACK_Y,[9.5,10.25,13.875,14.25,20.25,21.0])
     E('</g>')
     E('<g class="L-rooms">'); room_labels('F')
     text(14.6,17.75,'ST-1B',0.36,weight=700,fill='#fff'); text(19.25,17.75,'ST-1L',0.32,weight=700,fill='#3a1f0c')
-    text(14.0,72.2,'ST-2 arrives',0.32,weight=600,fill='#3a1f0c')
+    text(SPC[0]-3.0,SPC[1]-4.55,'ST-2 arrives',0.32,weight=600,fill='#3a1f0c')
     text(10.5,8.0,'below: parking, gates, neem tree',0.45,fill='#888')
     E('</g>')
     E('<g class="L-walls">'); wall_tags('F'); E('</g>')

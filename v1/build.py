@@ -26,7 +26,7 @@ for f,fl in (('G','Ground'),('F','First')):
     for wid,x1,x2,y1,y2,k,h,desc in WALLS[f]:
         L=max(x2-x1,y2-y1)
         wall_rows+=f'<tr><td class="c">{wid}</td><td>{esc(desc)}</td><td>{KN[k]}</td><td>{fmt(L)}</td><td>{fmt(h)}</td></tr>'
-TN={'door':'Door','double':'Double door','window':'Window','vent':'Ventilator','arch':'Open arch','gate':'Gate'}
+TN={'door':'Door','double':'Double door','window':'Window','vent':'Ventilator','arch':'Open arch','gate':'Gate','fold':'Folding glass window'}
 op_rows=''
 for oid,f,wid,a,b,typ,hinge,swing,h,sill,note in OPENINGS:
     op_rows+=f'<tr><td class="c">{oid}</td><td>{TN[typ]}</td><td>{"front line" if wid=="FRONT" else wid}</td><td>{fmt(b-a)} x {fmt(h)}</td><td>{fmt(sill) if sill else "–"}</td><td>{esc(note)}</td></tr>'
@@ -84,6 +84,7 @@ panel=f'''
 <li><b>Dining G-09:</b> 4-seat table and a crockery shelf on GW-05.</li>
 <li><b>Toilets:</b> WC, wash basin, shower area and geyser in each.</li>
 </ul></section>
+<section><h2>Existing on site</h2><ul><li><b>Borewell</b> at X 6', Y {BOREWELL[1]:.1f}', which is 6' from the east boundary and 25' from the back wall, in the side garden G-14.</li></ul></section>
 <section><h2>Still open</h2>
 <ul><li><b>Neem tree.</b> At the position you gave, the trunk is 4' from staircase 1 and directly in front of the car's spot. Please confirm or correct it.</li></ul></section>
 <section><h2>Rooms and areas</h2><table class="t"><tr><th>Code</th><th>Name</th><th>Floor</th><th>Inside size</th><th class="n">sq ft</th></tr>{room_rows}</table></section>
@@ -112,12 +113,14 @@ for(const cb of document.querySelectorAll('.layers input')){
   cb.addEventListener('change',ap); ap();
 }
 </script>''')
+import subprocess as _sp
+BRANCH=_sp.run(['git','rev-parse','--abbrev-ref','HEAD'],capture_output=True,text=True).stdout.strip() or 'main'
 out=f'''<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Home Plan v1</title>
 {style}</head><body>
 <header>
- <div><h1>Home plan · version 1</h1><div class="sub">Clean 2D plan with named walls, rooms and openings. Road and gates face north, at the bottom.</div></div>
+ <div><h1>Home plan · {BRANCH}</h1><div class="sub">Clean 2D plan with named walls, rooms and openings. Road and gates face north, at the bottom.</div></div>
  <div class="seg" role="group" aria-label="View">
   <button data-view="f0">Ground floor</button><button data-view="f1">First floor</button><button data-view="both">Side by side</button>
  </div>
@@ -146,5 +149,7 @@ out=f'''<!doctype html>
 </main>
 {script}
 </body></html>'''
-open('/Users/jeyant-10189/Work/Personal/own/home-plan/home-plan-v1.html','w').write(out)
+import subprocess
+br=subprocess.run(['git','rev-parse','--abbrev-ref','HEAD'],capture_output=True,text=True).stdout.strip() or 'main'
+open(f'/Users/jeyant-10189/Work/Personal/own/home-plan/home-plan-{br}.html','w').write(out)
 print(len(out)//1024,'KB', 'land',round(land),'gf',round(gf),'ffb',ffb,'terr',round(terr),'garden',round(garden))
