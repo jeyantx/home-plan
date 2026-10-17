@@ -102,7 +102,7 @@ OPENINGS = [
  ('GT-01','G','FRONT', 0.75,12.0,'gate',None,'+', 6.0,0,'Large gate, 11\'3", double leaf, east of the planter pillar'),
  ('GT-02','G','FRONT', 13.5,20.25,'gate',None,'+', 6.0,0,'Small gate, 6\'9", double leaf, opens inward, west of the planter pillar'),
  ('D-07','F','FW-05', 10.5,13.5,'door','a','+', 7.0,0,'Bedroom 3 door, from landing'),
- ('D-08','F','FW-06', 81.0,83.5,'door','a','+', 7.0,0,'Toilet 3 door, from bedroom 3 lobby'),
+ ('D-08','F','FW-06', 82.0,84.25,'door','b','+', 7.0,0,'Toilet 3 door, 2\'3", from bedroom 3 lobby; moved south so its swing clears the WC and basin'),
  ('D-09','F','FW-01', 74.25,77.25,'door','a','-', 7.0,0,'Landing door to terrace corner'),
  ('W-09','F','FW-02', 13.0,16.5,'window',None,None, 4.0,3.0,'Landing window to terrace'),
  ('W-10','F','FW-01', 88.5,92.5,'window',None,None, 4.0,3.0,'Bedroom 3 side window'),
@@ -116,6 +116,7 @@ BRANCH_NOTES='''<section class="ask"><h2>Proposal v4: for final review</h2>
 <ol>
 <li><b>Hover</b> over any item to see its name.</li>
 <li><b>Toilet 2:</b> Indian pan FU-26 against GW-01 (the V-02 wall) in the corner, user facing south. Ventilator V-02 is moved over it. Bucket and tap FU-57 are west of the pan, on the user's right hand. The shower FU-28 has its own 3'3" x 2'6" area along GW-06. Basin FU-27 is in the dry corner by the door.</li>
+<li><b>Toilet 3:</b> door D-08 is now 2'3" wide and moved toward the bedroom end. Basin FU-42 is right beside the door. The WC FU-41 is on the landing-side wall, facing south. The shower FU-43 takes the whole west end, 2'3" x 4'3" (was 1'9" x 2'3"), with geyser FU-60, curtain FU-61 and exhaust fan FU-62 ducted to the roof.</li>
 <li><b>Wardrobes</b> FU-09.1, FU-09.2, FU-34 and FU-39 are 16" deep. The bedroom 1 L-wardrobe is now 6'5" long in total.</li>
 <li><b>FU-25 cupboard</b> is 10' x 2'6", full height. Arch O-01 now ends at the cupboard face, so the GW-13 stub by the west wall is exactly as deep as the cupboard.</li>
 <li><b>Small gate GT-02</b> opens inward. Its east leaf, fully open, just reaches the tree trunk, so limit it to about 80°.</li>
@@ -139,14 +140,14 @@ BOREWELL=(6.0, back_y(6.0)-25.0)   # given: 25' from the back (south) boundary, 
 # ---------- drawing positions (layout specific) ----------
 LABELPOS={'G-01':(8.0,24.5),'G-02':(5.6,37.6),'G-03':(6.2,44.6),'G-04':(11.5,53.0),'G-05':(11.45,39.4),'G-06':(11.5,33.6),'G-07':(17.2,33.4),
           'G-08':(8.0,63.4),'G-09':(15.6,64.6),'G-10':(15.0,71.0),'G-11':(8.05,68.6),'G-12':(16.2,92.8),'G-13':(1.55,36.0),'G-14':(5.0,94.0),'G-15':(15.2,100.2),
-          'F-01':(7.4,18.6),'F-02':(11.9,47.0),'F-03':(5.6,75.4),'F-04':(12.15,78.0),'F-05':(15.9,95.3),'F-06':(12.05,82.9),'F-07':(17.25,82.5)}
-LABELSIZE={'G-09':0.34,'G-11':0.3,'G-05':0.42,'G-12':0.42,'F-05':0.42,'G-09':0.4,'G-13':0.36,'G-06':0.4,'G-07':0.42,'G-11':0.42,'G-03':0.42,'G-02':0.42,'F-06':0.36,'F-07':0.42,'G-10':0.42,'F-04':0.45,'F-03':0.42,'F-01':0.45,'G-09':0.45,'G-01':0.6,'F-02':0.8}
+          'F-01':(7.4,18.6),'F-02':(11.9,47.0),'F-03':(5.6,75.4),'F-04':(12.15,78.0),'F-05':(15.9,95.3),'F-06':(12.05,82.9),'F-07':(16.4,83.75)}
+LABELSIZE={'F-07':0.3,'G-09':0.34,'G-11':0.3,'G-05':0.42,'G-12':0.42,'F-05':0.42,'G-09':0.4,'G-13':0.36,'G-06':0.4,'G-07':0.42,'G-11':0.42,'G-03':0.42,'G-02':0.42,'F-06':0.36,'F-07':0.42,'G-10':0.42,'F-04':0.45,'F-03':0.42,'F-01':0.45,'G-09':0.45,'G-01':0.6,'F-02':0.8}
 TAGPOS={'GW-01':(3.125,53.0),'GW-05':(20.625,51.0),'GW-07':(9.875,91.5),'BW-01':(0.19,50.0),'GW-04':(19.0,31.125),'GW-13':(12.62,58.94),'GW-12':(17.6,46.56),
         'GW-03':(8.875,33.6),'GW-02':(3.6,40.875),'GW-11':(19.0,36.19),'GW-08':(11.0,94.75),'GW-06':(8.2,73.375),'GW-16':(10.06,72.2),'PW-02':(2.94,40.0),'PW-04':(20.81,40.0),
         'FW-01':(9.875,94.0),'FW-03':(20.625,92.0),'FW-02':(18.4,73.5),'FW-04':(19.0,97.0),'FW-05':(18.0,80.06),'PW-03':(19.4,19.94),'PW-01':(5.0,15.69),'PW-05':(6.0,77.69),
         'GW-15':(18.4,80.44),'GW-14':(5.0,67.81),'GW-10':(13.94,34.6),'GW-09':(9.06,43.0),'BW-03':(1.19,98.0),'BW-02':(0.6,89.19)}
 OPENTAGOFF={'W-01':-0.75,'V-01':-0.75,'W-02':0.9,'W-03':-1.0,'W-04':-1.0,'W-05':-1.0,'W-06':-1.0,'V-02':-1.0,'W-07':-1.0,'W-08':0.8,'D-01':-1.4,'D-02':-2.2,'D-03':-1.6,
-            'O-01':-0.8,'D-04':-2.6,'D-05':-1.5,'D-06':1.7,'D-07':1.7,'D-08':1.6,'D-09':-1.6,'W-09':-0.8,'W-10':-1.0,'W-11':0.8,'W-12':-0.85,'D-10':0.9}
+            'O-01':-0.8,'D-04':-2.6,'D-05':-1.5,'D-06':1.7,'D-07':1.7,'D-08':-1.4,'D-09':-1.6,'W-09':-0.8,'W-10':-1.0,'W-11':0.8,'W-12':-0.85,'D-10':0.9}
 SPC=(17.0,76.875); SPR=3.0
 CH_G_E=[0,30.75,40.5,41.25,46.75,58.75,59.125,67.625,68.0,73.0,73.75,89.0,106.0]
 CH_G_W=[0,4.333,16.0,19.5,30.75,31.5,36.0,36.375,46.375,46.75,58.75,59.125,68.0,80.25,80.625,94.375,95.125,105.0]
@@ -198,9 +199,12 @@ FURNITURE = [
  ('FU-38','F','Side table',18.75,20.25,94.25,95.75,'cab',None,'Bedroom 3'),
  ('FU-39','F','Sliding wardrobe with loft',14.5,20.25,84.875,86.2083,'ward',None,'Bedroom 3, 5\'9" x 1\'4", on FW-07'),
  ('FU-40','F','Study desk',10.25,11.75,88.5,92.5,'desk',None,'Bedroom 3, under W-10'),
- ('FU-41','F','Western WC',18.0,20.25,80.5,82.0,'wc','x2','Toilet 3'),
- ('FU-42','F','Wash basin',17.0,18.4,83.1,84.5,'basin',None,'Toilet 3'),
- ('FU-43','F','Shower area',18.5,20.25,82.25,84.5,'shower',None,'Toilet 3, exhaust fan (no outside wall)'),
+ ('FU-41','F','Western WC',16.25,17.75,80.25,82.5,'wc','y1','Toilet 3, cistern on FW-05, faces south; 2\' clear in front'),
+ ('FU-42','F','Wash basin, wall-hung',14.5,15.9,80.25,81.35,'basin',None,'Toilet 3, on FW-05 right beside the door; mirror above'),
+ ('FU-43','F','Shower area',18.0,20.25,80.25,84.5,'shower',None,'Toilet 3, 2\'3" x 4\'3" across the west end (was 1\'9" x 2\'3"); floor trap in the middle'),
+ ('FU-60','F','Geyser',19.8,20.25,81.5,82.9,'geyser',None,'Toilet 3, on FW-03 above the shower, bottom at about 6\'3"'),
+ ('FU-61','F','Shower curtain rod',17.95,18.05,80.25,84.5,'curtain',None,'Toilet 3, keeps the WC side dry'),
+ ('FU-62','F','Exhaust fan, ducted to roof',18.6,19.6,82.9,83.9,'fan',None,'Toilet 3 has no outside wall: ceiling exhaust fan with a duct up through the roof slab'),
  ('FU-44','G','AC indoor unit',9.25,9.92,37.25,40.25,'acin',None,'Bedroom 1, on GW-03 above window W-02, about 7\'6" high'),
  ('FU-45','G','AC outdoor unit',9.0,11.67,29.58,30.75,'acout',None,'Bedroom 1, on GW-04 parking face, bracket above window W-01 (about 7\'6"); pipe runs inside the study corner'),
  ('FU-46','G','AC indoor unit',10.25,10.92,81.75,84.75,'acin',None,'Bedroom 2, on GW-07 facing the bed'),

@@ -266,7 +266,8 @@ def draw_furniture(fl,_late=False):
             R_(x1,x2,y1,y2,'#8b6a45','#5a4128',0.04); R_(x1+0.15,x1+0.35,y1+0.6,y2-0.6,'#222','#111',0.02)
         elif k=='wc':
             R_(x1,x2,y1,y2,'none','none',0)
-            if side=='x2': R_(x2-0.6,x2,y1+0.1,y2-0.1,'#f4f6f8','#777',0.04); cx,cy,rx,ry=x2-1.25,(y1+y2)/2,0.65,0.55
+            if side=='y1': R_(x1+0.1,x2-0.1,y1,y1+0.6,'#f4f6f8','#777',0.04); cx,cy,rx,ry=(x1+x2)/2,y1+1.3,0.55,0.65
+            elif side=='x2': R_(x2-0.6,x2,y1+0.1,y2-0.1,'#f4f6f8','#777',0.04); cx,cy,rx,ry=x2-1.25,(y1+y2)/2,0.65,0.55
             else: R_(x1,x1+0.6,y1+0.1,y2-0.1,'#f4f6f8','#777',0.04); cx,cy,rx,ry=x1+1.25,(y1+y2)/2,0.65,0.55
             a=S(cx,cy); E(f'<ellipse cx="{a[0]:.3f}" cy="{a[1]:.3f}" rx="{rx}" ry="{ry}" fill="#f4f6f8" stroke="#777" stroke-width="0.04"/>')
         elif k=='basin':
@@ -307,6 +308,9 @@ def draw_furniture(fl,_late=False):
             a=S((x1+x2)/2,(y1+y2)/2); E(f'<circle cx="{a[0]:.3f}" cy="{a[1]:.3f}" r="0.36" fill="#5aa0d6" stroke="#2f6fb0" stroke-width="0.04"/>')
         elif k=='geyser':
             R_(x1,x2,y1,y2,'#ffffff','#999',0.04); text((x1+x2)/2,(y1+y2)/2,'G',0.3,weight=700,fill='#c0392b')
+        elif k=='fan':
+            a=S((x1+x2)/2,(y1+y2)/2); E(f'<circle cx="{a[0]:.3f}" cy="{a[1]:.3f}" r="0.45" fill="#fff" stroke="#555" stroke-width="0.04"/>')
+            line(x1+0.2,y1+0.2,x2-0.2,y2-0.2,'#555',0.04); line(x1+0.2,y2-0.2,x2-0.2,y1+0.2,'#555',0.04)
         elif k=='curtain':
             line((x1+x2)/2,y1,(x1+x2)/2,y2,'#b05a8a',0.05,extra='stroke-dasharray="0.15 0.08"')
         elif k=='washpad':
@@ -319,7 +323,7 @@ def draw_furniture(fl,_late=False):
             line(x1,y1+1.5,x1,y2-1.5,'#fff',0.14); line(x1,y1+1.5,x1,y2-1.5,'#8a4b12',0.06,extra='stroke-dasharray="0.2 0.1"')
         # code tag
         cx,cy=(x1+x2)/2,(y1+y2)/2
-        if k not in ('fridge','tvwall','store','acout','curtain','geyser','bucket'):
+        if k not in ('fridge','tvwall','store','acout','curtain','geyser','bucket','fan'):
             x,y=S(cx,cy); E(f'<text x="{x:.3f}" y="{y+0.11:.3f}" font-size="0.28" font-weight="700" fill="#2b2b2b" text-anchor="middle" stroke="#fff" stroke-width="0.08" paint-order="stroke">{fid}</text>')
         E('</g>')
     E('</g>')
