@@ -161,9 +161,9 @@ CH_F_BACK_Y=98.6
 FURNITURE = [
  ('FU-01','G','Shoe rack',7.25,8.5,33.5,36.5,'cab',None,'Porch, 3\' x 1\'3", against GW-03'),
  ('FU-02','G','Console with mirror',8.0,8.875,43.5,46.25,'cab',None,'Foyer, keys and mirror'),
- ('FU-03.1','G','3-seat sofa',3.5,6.0,48.0,54.25,'sofa','x1','Living, 6\'3" x 2\'6", back to GW-01 under the windows'),
- ('FU-03.2','G','2-seat sofa',6.0,10.25,54.25,56.75,'sofa','y2','Living, 4\'3" x 2\'6", starts where FU-03.1 ends so both seats are free; 2\' walkway behind it'),
- ('FU-04','G','Coffee table',6.75,9.75,49.5,53.0,'table',None,'Living, 3\' x 3\'6"'),
+ ('FU-03.1','G','3-seat sofa',3.5,6.0,50.0,56.25,'sofa','x1','Living, 6\'3" x 2\'6", back to GW-01 under the windows, moved toward GW-13'),
+ ('FU-03.2','G','2-seat sofa',6.0,10.25,56.25,58.75,'sofa','y2','Living, 4\'3" x 2\'6", back against GW-13 (below the folding glass sill); starts where FU-03.1 ends so every seat is free'),
+ ('FU-04','G','Coffee table',7.0,10.0,51.25,54.75,'table',None,'Living, 3\' x 3\'6", centred in the L'),
  ('FU-05','G','TV, showcase and bookshelf wall unit',18.917,20.25,47.25,58.25,'tvwall',None,'Living, 11\' x 1\'4", full height on GW-05: TV in the middle, showcase and book shelves on both sides'),
  ('FU-06','G','Queen bed',13.75,20.25,41.25,46.25,'bed','x2','Bedroom 1, 6\'6" x 5\', head to GW-05 (east-west), side against GW-12'),
  ('FU-09.1','G','Wardrobe, part 1',17.25,20.25,36.375,37.7083,'ward',None,'Bedroom 1, 3\' x 1\'4" on GW-11, with loft'),
