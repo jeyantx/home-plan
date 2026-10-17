@@ -75,7 +75,7 @@ RectAreaLightUniformsLib.init();
 const scene=new THREE.Scene();
 const camera=new THREE.PerspectiveCamera(60,1,0.05,300);
 camera.rotation.order='YXZ'; let yaw=0, pitch=0;   // first-person look: the camera turns in place
-const wallMeshes=[];
+const wallMeshes=[], ceilingMeshes=[];
 let dirty=true,hqDone=false,lastChange=0;
 let photo=false, pt=null; const PHOTO_SAMPLES=256;
 function invalidate(){dirty=true;if(photo&&pt)pt.updateCamera()}
@@ -236,9 +236,9 @@ function slab(pts,mat,z,tip,down=false){
 for(const r of P.rooms.G){
   if(['out','garden','covered'].includes(r.kind)) continue;
   slab(r.pts,COMMON.has(r.id)?MAT.floor:MAT.otherFloor,0,`${r.id} · ${r.name}`);
-  slab(r.pts,MAT.ceiling,CEIL-0.001,null,true);
+  ceilingMeshes.push(slab(r.pts,MAT.ceiling,CEIL-0.001,null,true));
 }
-box(2.75,21,30.75,95.125,CEIL,CEIL+0.45,MAT.white);
+ceilingMeshes.push(box(2.75,21,30.75,95.125,CEIL,CEIL+0.45,MAT.white));
 box(2.75,21,30.75,95.125,-1,-0.03,MAT.wallOut,{cast:false});
 {const hS=0.33,d=0.04;   // 4" tile skirting in the living room
  box(LX1,LX1+d,LY1,LY2,0,hS,MAT.skirt,{tip:'Tile skirting, 4"'});box(LX1+d,18.9,LY1,LY1+d,0,hS,MAT.skirt,{tip:'Tile skirting, 4"'});box(LX1+d,18.9,LY2-d,LY2,0,hS,MAT.skirt,{tip:'Tile skirting, 4"'});}
@@ -333,7 +333,17 @@ box(s2.x2-1.3,s2.x2-0.35,s2.y2-1.35,s2.y2-0.85,1.42,2.3,cushMat('#efe6d6'),{roun
  for(const [lx,ly] of [[f.x1+0.24,f.y1+0.24],[f.x2-0.24,f.y1+0.24],[f.x1+0.24,f.y2-0.24],[f.x2-0.24,f.y2-0.24]]) box(lx-0.06,lx+0.06,ly-0.06,ly+0.06,0,1.18,MAT.oak,{tip});
  cyl(f.x1+1.1,f.y1+0.9,1.31,1.58,0.24,std({color:'#e7e1d6',roughness:0.45}),{tip:'Ceramic bowl',rTop:0.34});
  box(f.x2-1.1,f.x2-0.35,f.y2-1.2,f.y2-0.45,1.31,1.37,std({color:'#5f5a52',roughness:0.8}),{tip:'Books'});}
-box(6.0,11.6,49.5,56.1,0,0.025,MAT.rug,{cast:false,tip:'Jute rug, 5\'7" x 6\'7"'});
+{// two-tone rug: light sand-peach centre, wide walnut-brown border, thin caramel line; jute weave texture
+ const rx1=6.0,rx2=11.6,ry1=49.5,ry2=56.1, W=rx2-rx1, H=ry2-ry1;
+ const t=canvasTex(1024,Math.round(1024*H/W),(g,w,h)=>{const r=rng(77),b=Math.round(w*0.11),l=Math.round(w*0.018);
+   g.fillStyle='#6e4a32';g.fillRect(0,0,w,h);                                   // dark border
+   g.fillStyle='#b8835a';g.fillRect(b-l*2,b-l*2,w-2*(b-l*2),h-2*(b-l*2));       // caramel line
+   g.fillStyle='#e6cfb8';g.fillRect(b,b,w-2*b,h-2*b);                           // light centre
+   for(let i=0;i<14000;i++){const v=(r()-.5)*0.08;g.fillStyle=v>0?`rgba(255,255,255,${v})`:`rgba(0,0,0,${-v})`;g.fillRect(r()*w,r()*h,2,2)}   // woven speckle
+ },1);t.repeat.set(1,1);
+ const nm=T.jute.normalMap.clone();nm.repeat.set(m(W)/0.27,m(H)/0.27);nm.needsUpdate=true;
+ const rug=box(rx1,rx2,ry1,ry2,0,0.03,std({map:t,normalMap:nm,roughness:1}),{cast:false,tip:'Rug, two-tone: sand-peach centre, walnut-brown border · 5\'7" x 6\'7"'});
+ rug.userData.keepUV=true;}
 const lampX=4.8,lampY=48.9;cyl(lampX,lampY,0,0.05,0.42,MAT.blackMetal,{tip:'Paper floor lamp'});cyl(lampX,lampY,0.05,4.4,0.025,MAT.blackMetal,{tip:'Paper floor lamp'});
 const shadeMesh=new THREE.Mesh(new THREE.SphereGeometry(m(0.72),32,24),MAT.paper);shadeMesh.position.set(mx(lampX),m(5.0),m(lampY));scene.add(shadeMesh);named(shadeMesh,'Paper floor lamp');
 const lampLight=new THREE.PointLight('#ffc98a',0,m(16),2);lampLight.position.copy(shadeMesh.position);lampLight.castShadow=true;lampLight.shadow.mapSize.set(512,512);lampLight.shadow.bias=-0.002;shadeMesh.castShadow=false;scene.add(lampLight);
@@ -395,7 +405,7 @@ const gtao=new GTAOPass(scene,camera,1,1);gtao.output=GTAOPass.OUTPUT.Default;gt
 // ---------------- options, light, views, lens ----------------
 const OPTIONS=[
  {name:'Warm oak',floor:'oak',wall:'#f6e1d1',accent:'#e9cfbd',accentWall:'niche',sofa:'#b49a80',rug:'#d8c7a6',curtain:'#b9987a',
-  notes:['Floor: light-oak wood-look porcelain planks, 8" x 48" (shown with a real oak-floor scan)','Walls: light peach emulsion (all interior walls); TV niches a shade deeper; ceiling and band in white','TV wall: civil-work niches, oak-veneer centre wall and console (mid-range)','Sofa: wooden frame in walnut-tone stain with mild-brown cushions; terracotta and cream throw cushions; jute rug','Curtains: light-brown sheer (latte); dark brown would make this low-daylight room gloomy','Art: two framed textured canvases on GW-12'],sw:['#cfae86','#f2ede4','#d9cfc0','#c49a6c']},
+  notes:['Floor: light-oak wood-look porcelain planks, 8" x 48" (shown with a real oak-floor scan)','Walls: light peach emulsion (all interior walls); TV niches a shade deeper; ceiling and band in white','TV wall: civil-work niches, oak-veneer centre wall and console (mid-range)','Sofa: wooden frame in walnut-tone stain with mild-brown cushions; terracotta and cream throw cushions','Rug: two-tone, sand-peach centre with a walnut-brown border and a thin caramel line','Curtains: light-brown sheer (latte); dark brown would make this low-daylight room gloomy','Art: two framed textured canvases on GW-12'],sw:['#cfae86','#f2ede4','#d9cfc0','#c49a6c']},
 ];
 const panel=document.getElementById('panel');let curOpt=0,curLight='day';
 function applyOption(i){const o=OPTIONS[i];curOpt=i;
@@ -441,7 +451,7 @@ const VIEWS=[
 ];
 let hfov=75;
 function applyFov(){const a=camera.aspect||1;camera.fov=THREE.MathUtils.radToDeg(2*Math.atan(Math.tan(THREE.MathUtils.degToRad(hfov)/2)/a));camera.updateProjectionMatrix()}
-function setView(i){const v=VIEWS[i];camera.position.set(mx(v.p[0]),m(v.p[1]),m(v.p[2]));
+function setView(i){const v=VIEWS[i];ceilingMeshes.forEach(c=>c.visible=i!==5);renderer.shadowMap.needsUpdate=true;camera.position.set(mx(v.p[0]),m(v.p[1]),m(v.p[2]));
   const d=new THREE.Vector3(mx(v.t[0]),m(v.t[1]),m(v.t[2])).sub(camera.position);yaw=Math.atan2(-d.x,-d.z);pitch=Math.atan2(d.y,Math.hypot(d.x,d.z));applyLook();
   document.querySelectorAll('#camSeg button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.c===i));invalidate()}
 function applyLook(){pitch=Math.max(-1.55,Math.min(1.55,pitch));camera.rotation.set(pitch,yaw,0)}
