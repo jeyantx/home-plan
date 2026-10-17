@@ -44,7 +44,7 @@ canvas{display:block;width:100%;height:100%}
  <div><h1>Living room · Japandi 3D</h1><div class="sub">↑↓ walk · ←→ turn · A/D slide · W/S tilt · Q/E lower/raise · Shift faster · Drag to look around · Scroll to walk · Right-drag to slide · Hover for names</div></div>
  <span class="lbl">Light</span><div class="seg" id="lightSeg"><button data-l="day">Day</button><button data-l="eve">Evening</button></div>
  <span class="lbl">View</span><div class="seg" id="camSeg"><button data-c="0">Entry</button><button data-c="1">Corner</button><button data-c="2">From sofa</button><button data-c="3">From TV</button><button data-c="4">From kitchen</button><button data-c="5">Top</button></div>
- <span class="lbl">Rug</span><div class="seg" id="rugSeg"><button data-r="sofa"><i style="background:#b49a80"></i>Sofa seat</button><button data-r="oak"><i style="background:#ad8b66"></i>Floor oak</button><button data-r="sand"><i style="background:#cbb497"></i>Sand</button><button data-r="cream"><i style="background:#e2d6c2"></i>Cream</button><button data-r="grey"><i style="background:#a59d93"></i>Warm grey</button></div>
+ <span class="lbl">Grill</span><div class="seg" id="grillSeg"><button data-g="GR-1">GR-1 Bars</button><button data-g="GR-2">GR-2 Grid</button><button data-g="GR-3">GR-3 Flat lines</button><button data-g="GR-4">GR-4 Slats</button><button data-g="GR-5">GR-5 Shoji</button><button data-g="GR-6">GR-6 Diamond</button></div>
  <span class="lbl">Lens</span><div class="seg" id="lensSeg"><button data-f="60">Eye 60°</button><button data-f="75">Wide 75°</button></div>
  <button class="btn" id="photoBtn" aria-pressed="false" title="Ray-traced photo of the current view. Uses the graphics card heavily for about a minute, then stops by itself.">Photo</button>
  <button class="btn" id="saveBtn" title="Save the current image as PNG">Save image</button>
@@ -65,6 +65,7 @@ import {RenderPass} from 'three/addons/postprocessing/RenderPass.js';
 import {GTAOPass} from 'three/addons/postprocessing/GTAOPass.js';
 import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';
 import {createBambooPlant} from './models/bamboo-plant.js';
+import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
 
 const P=window.PLAN, F=0.3048, CEIL=10.0, EYE=5.25;
 const m=v=>v*F, mx=v=>-v*F;   // plan X grows toward the west = three -x, so the world is not mirrored
@@ -117,6 +118,7 @@ const MAT={
   white:std({color:'#f6f4f0',roughness:0.9,normalMap:T.paint.normalMap,normalScale:paintN}),
   upvc:std({color:'#f2f2f0',roughness:0.35}),
   blackMetal:std({color:'#1d1e21',roughness:0.4,metalness:0.7}),
+  grill:std({color:'#1d1e21',roughness:0.45,metalness:0.6,side:THREE.DoubleSide}),
   glassRaster:std({color:'#dfe9ee',roughness:0.04,metalness:0,transparent:true,opacity:0.14,depthWrite:false}),
   glassPhoto:phys({color:'#ffffff',roughness:0.02,metalness:0,transmission:1,thickness:0.006,ior:1.5}),
   oak:std({map:T.oak.map,normalMap:T.oak.normalMap,normalScale:new THREE.Vector2(0.4,0.4),roughnessMap:T.oak.roughnessMap,roughness:0.8}),
@@ -191,6 +193,48 @@ function boxAlong(horiz,w,u1,u2,v1,v2,z1,z2,mat,o){
   if(horiz) return box(w.x1+u1,w.x1+u2,w.y1+v1,w.y1+v2,z1,z2,mat,o);
   return box(w.x1+v1,w.x1+v2,w.y1+u1,w.y1+u2,z1,z2,mat,o)}
 const glassMeshes=[];
+// ---------------- hall window grills: six designs, picked in the toolbar (Grill) ----------------
+const GRILL_WINS=['W-04','W-05'], grillMeshes=[];
+const GRILLS={
+ 'GR-1':'plain vertical round bars, 12 mm @ 5", one middle flat',
+ 'GR-2':'square grid, 12 mm square bars @ 6" x 6"',
+ 'GR-3':'horizontal flats, 40 x 6 mm on edge @ 4"',
+ 'GR-4':'vertical flat slats, 40 x 6 mm on edge @ 4", two cross flats',
+ 'GR-5':'shoji (Japanese) grid, 12 mm square bars, 12" wide x 6" tall panes',
+ 'GR-6':'diamond lattice, 12 mm square bars at 45 deg @ 6"'};
+// members in the window plane: u along the wall, z height, centred at depth vc (feet); each design merged into one geometry
+function grillGeos(U1,U2,Z1,Z2,vc){
+  const fr=0.08,a=U1+fr,b=U2-fr,c=Z1+fr,d=Z2-fr,r12=0.04,fl=0.02,fd=0.13;
+  const one=(u1,z1,u2,z2,wd,dp,round)=>{const L=Math.hypot(u2-u1,z2-z1);if(L<0.01)return null;
+    const g=round?new THREE.CylinderGeometry(wd/2,wd/2,L,10).rotateZ(-Math.PI/2):new THREE.BoxGeometry(L,wd,dp);
+    return g.rotateZ(Math.atan2(z2-z1,u2-u1)).translate((u1+u2)/2,(z1+z2)/2,vc)};
+  const frame=()=>[one(U1,Z1+fr/2,U2,Z1+fr/2,fr,0.03),one(U1,Z2-fr/2,U2,Z2-fr/2,fr,0.03),one(U1+fr/2,c,U1+fr/2,d,fr,0.03),one(U2-fr/2,c,U2-fr/2,d,fr,0.03)];
+  const even=(lo,hi,step)=>{const n=Math.max(1,Math.round((hi-lo)/step)),out=[];for(let i=1;i<n;i++)out.push(lo+(hi-lo)*i/n);return out};
+  const V=(xs,wd,dp,round)=>xs.map(u=>one(u,c,u,d,wd,dp,round)), H=(zs,wd,dp)=>zs.map(z=>one(a,z,b,z,wd,dp));
+  const diag=step=>{const out=[];for(const sgn of [1,-1]){for(let k=-(b-a)-(d-c);k<(b-a)+(d-c);k+=step){
+      // line z-c = sgn*(u-a) + k, clipped to the inner rectangle
+      const pts=[];const zu=u=>c+sgn*(u-a)+k, uz=z=>a+(z-c-k)*sgn;
+      for(const u of [a,b]){const z=zu(u);if(z>=c-1e-6&&z<=d+1e-6)pts.push([u,z])}
+      for(const z of [c,d]){const u=uz(z);if(u>a+1e-6&&u<b-1e-6)pts.push([u,z])}
+      if(pts.length>=2)out.push(one(pts[0][0],pts[0][1],pts[1][0],pts[1][1],0.04,0.04))}}return out};
+  const sets={
+   'GR-1':[...V(even(a,b,0.42),r12,0,true),...H([(c+d)/2],0.08,0.03)],
+   'GR-2':[...V(even(a,b,0.5),0.04,0.04),...H(even(c,d,0.5),0.04,0.04)],
+   'GR-3':H(even(c,d,0.33),fl,fd),
+   'GR-4':[...V(even(a,b,0.33),fl,fd),...H([c+(d-c)/3,c+2*(d-c)/3],0.13,0.02)],
+   'GR-5':[...V(even(a,b,1.0),0.04,0.04),...H(even(c,d,0.5),0.04,0.04)],
+   'GR-6':diag(0.5*Math.SQRT2)};
+  const geos={};for(const k in sets)geos[k]=mergeGeometries([...frame(),...sets[k]].filter(Boolean));return geos}
+function grillMesh(o,w,horiz,u1,u2,z1,z2,vc){
+  const geos=grillGeos(u1,u2,z1,z2,vc),M=new THREE.Matrix4();
+  if(horiz)M.set(-F,0,0,-w.x1*F, 0,F,0,0, 0,0,F,w.y1*F, 0,0,0,1);else M.set(0,0,-F,-w.x1*F, 0,F,0,0, F,0,0,w.y1*F, 0,0,0,1);
+  for(const k in geos)geos[k].applyMatrix4(M);
+  const me=new THREE.Mesh(geos['GR-1'],MAT.grill);me.castShadow=true;me.receiveShadow=true;me.userData.keepUV=true;me.userData.geos=geos;me.userData.win=o.id;
+  scene.add(me);named(me,'');grillMeshes.push(me);return me}
+function setGrill(k){if(!GRILLS[k])k='GR-1';
+  for(const me of grillMeshes){me.geometry=me.userData.geos[k];me.userData.tip=`${me.userData.win} grill ${k} · MS, black powder-coat · ${GRILLS[k]}`}
+  document.querySelectorAll('#grillSeg button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.g===k));
+  try{localStorage.setItem('lr3d-grill',k)}catch(e){};renderer.shadowMap.needsUpdate=true;if(photo&&pt)pt.setScene(scene,camera);invalidate()}
 function buildOpening(o,w,horiz,s0){
   const T=horiz?w.y2-w.y1:w.x2-w.x1, u1=o.a-s0,u2=o.b-s0, tip=`${o.id} · ${o.note}${P.spec[o.id]?' · '+P.spec[o.id]:''}`;
   if(o.type==='window'||o.type==='vent'){
@@ -200,8 +244,10 @@ function buildOpening(o,w,horiz,s0){
     boxAlong(horiz,w,u1+e,u1+fw,v0,v1,z1+fw,z2-fw,MAT.upvc,{tip});boxAlong(horiz,w,u2-fw,u2-e,v0,v1,z1+fw,z2-fw,MAT.upvc,{tip});
     if(o.type==='window'){const mid=(u1+u2)/2;boxAlong(horiz,w,mid-0.07,mid+0.07,v0+0.02,v1-0.02,z1+fw,z2-fw,MAT.upvc,{tip});}
     const gl=boxAlong(horiz,w,u1+fw,u2-fw,v0+0.13,v0+0.16,z1+fw,z2-fw,MAT.glass,{tip,cast:false});glassMeshes.push(gl);
-    const vo=T-0.04;for(let u=u1+0.33;u<u2-0.2;u+=0.42) cyl(...along(horiz,w,u,vo-0.05),z1,z2,0.03,MAT.blackMetal,{tip:'MS safety grill, 12 mm bars'});
-    boxAlong(horiz,w,u1,u2,vo-0.08,vo-0.02,z1+o.h*0.5-0.04,z1+o.h*0.5+0.04,MAT.blackMetal,{tip:'MS safety grill'});
+    const vo=T-0.04;
+    if(GRILL_WINS.includes(o.id)) grillMesh(o,w,horiz,u1,u2,z1,z2,vo-0.08);
+    else{for(let u=u1+0.33;u<u2-0.2;u+=0.42) cyl(...along(horiz,w,u,vo-0.05),z1,z2,0.03,MAT.blackMetal,{tip:'MS safety grill, 12 mm bars'});
+    boxAlong(horiz,w,u1,u2,vo-0.08,vo-0.02,z1+o.h*0.5-0.04,z1+o.h*0.5+0.04,MAT.blackMetal,{tip:'MS safety grill'});}
     boxAlong(horiz,w,u1-0.12,u2+0.12,-0.1,T*0.35-0.012,z1-0.06,z1+0.012,MAT.granite,{tip:'Granite window sill'});
   } else if(o.type==='fold'){
     const z1=o.sill,z2=o.sill+o.h,n=4,v0=T*0.4;
@@ -336,23 +382,16 @@ box(s2.x2-1.3,s2.x2-0.35,s2.y2-1.35,s2.y2-0.85,1.42,2.3,cushMat('#efe6d6'),{roun
  for(const [lx,ly] of [[f.x1+0.24,f.y1+0.24],[f.x2-0.24,f.y1+0.24],[f.x1+0.24,f.y2-0.24],[f.x2-0.24,f.y2-0.24]]) box(lx-0.06,lx+0.06,ly-0.06,ly+0.06,0,1.18,MAT.oak,{tip});
  cyl(f.x1+1.1,f.y1+0.9,1.31,1.58,0.24,std({color:'#e7e1d6',roughness:0.45}),{tip:'Ceramic bowl',rTop:0.34});
  box(f.x2-1.1,f.x2-0.35,f.y2-1.2,f.y2-0.45,1.31,1.37,std({color:'#5f5a52',roughness:0.8}),{tip:'Books'});}
-// two-tone rug: dark-brown border, centre colour picked in the toolbar (Rug); jute weave texture
-const RUG={sofa:['#b49a80','sofa-seat brown'],oak:['#ad8b66','floor oak'],sand:['#cbb497','sand'],cream:['#e2d6c2','cream'],grey:['#a59d93','warm grey']};
-let rugMesh,rugTex;
-{const rx1=6.0,rx2=11.6,ry1=49.5,ry2=56.1, W=rx2-rx1, H=ry2-ry1;
- rugTex=canvasTex(1024,Math.round(1024*H/W),()=>{},1);rugTex.repeat.set(1,1);
+{// two-tone rug: sofa-seat brown centre, dark-brown border; jute weave texture
+ const rx1=6.0,rx2=11.6,ry1=49.5,ry2=56.1, W=rx2-rx1, H=ry2-ry1;
+ const t=canvasTex(1024,Math.round(1024*H/W),(g,w,h)=>{const r=rng(77),b=Math.round(w*0.077);
+   g.fillStyle='#6e4a32';g.fillRect(0,0,w,h);                                   // border: dark brown
+   g.fillStyle='#b49a80';g.fillRect(b,b,w-2*b,h-2*b);                           // centre: sofa-seat brown
+   for(let i=0;i<14000;i++){const v=(r()-.5)*0.08;g.fillStyle=v>0?`rgba(255,255,255,${v})`:`rgba(0,0,0,${-v})`;g.fillRect(r()*w,r()*h,2,2)}   // woven speckle
+ },1);t.repeat.set(1,1);
  const nm=T.jute.normalMap.clone();nm.repeat.set(m(W)/0.27,m(H)/0.27);nm.needsUpdate=true;
- rugMesh=box(rx1,rx2,ry1,ry2,0,0.03,std({map:rugTex,normalMap:nm,roughness:1}),{cast:false,tip:'Rug'});
- rugMesh.userData.keepUV=true;}
-function setRug(k){if(!RUG[k])k='sofa';const c=rugTex.image,g=c.getContext('2d'),w=c.width,h=c.height,r=rng(77),b=Math.round(w*0.077);
-  g.fillStyle='#6e4a32';g.fillRect(0,0,w,h);                                   // border: dark brown
-  g.fillStyle=RUG[k][0];g.fillRect(b,b,w-2*b,h-2*b);                           // centre: chosen colour
-  for(let i=0;i<14000;i++){const v=(r()-.5)*0.08;g.fillStyle=v>0?`rgba(255,255,255,${v})`:`rgba(0,0,0,${-v})`;g.fillRect(r()*w,r()*h,2,2)}   // woven speckle
-  rugTex.needsUpdate=true;rugMesh.userData.tip=`Rug, two-tone: ${RUG[k][1]} centre, dark-brown border · 5'7" x 6'7"`;
-  document.querySelectorAll('#rugSeg button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.r===k));
-  try{localStorage.setItem('lr3d-rug',k)}catch(e){};if(photo&&pt)pt.updateMaterials();invalidate()}
-{let k='sofa';try{k=localStorage.getItem('lr3d-rug')||k}catch(e){};setRug(k)}
-document.querySelectorAll('#rugSeg button').forEach(x=>x.onclick=()=>setRug(x.dataset.r));
+ const rug=box(rx1,rx2,ry1,ry2,0,0.03,std({map:t,normalMap:nm,roughness:1}),{cast:false,tip:'Rug, two-tone: sofa-seat brown centre, dark-brown border · 5\'7" x 6\'7"'});
+ rug.userData.keepUV=true;}
 const lampX=4.8,lampY=48.9;cyl(lampX,lampY,0,0.05,0.42,MAT.blackMetal,{tip:'Paper floor lamp'});cyl(lampX,lampY,0.05,4.4,0.025,MAT.blackMetal,{tip:'Paper floor lamp'});
 const shadeMesh=new THREE.Mesh(new THREE.SphereGeometry(m(0.72),32,24),MAT.paper);shadeMesh.position.set(mx(lampX),m(5.0),m(lampY));scene.add(shadeMesh);named(shadeMesh,'Paper floor lamp');
 const lampLight=new THREE.PointLight('#ffc98a',0,m(16),2);lampLight.position.copy(shadeMesh.position);lampLight.castShadow=true;lampLight.shadow.mapSize.set(512,512);lampLight.shadow.bias=-0.002;shadeMesh.castShadow=false;scene.add(lampLight);
@@ -424,7 +463,7 @@ const gtao=new GTAOPass(scene,camera,1,1);gtao.output=GTAOPass.OUTPUT.Default;gt
 // ---------------- options, light, views, lens ----------------
 const OPTIONS=[
  {name:'Warm oak',floor:'oak',wall:'#f6e1d1',accent:'#e9cfbd',accentWall:'niche',sofa:'#b49a80',rug:'#d8c7a6',curtain:'#b9987a',
-  notes:['Floor: light-oak wood-look porcelain planks, 8" x 48" (shown with a real oak-floor scan)','Walls: light peach emulsion (all interior walls); TV niches a shade deeper; ceiling and band in white','TV wall: civil-work niches, oak-veneer centre wall and console (mid-range)','Sofa: wooden frame in walnut-tone stain with mild-brown cushions; terracotta and cream throw cushions','Rug: two-tone, dark-brown border; centre colour chosen with the Rug buttons (sofa seat, floor oak, sand, cream, warm grey)','Curtains: light-brown sheer (latte); dark brown would make this low-daylight room gloomy','Art: two framed textured canvases on GW-12'],sw:['#cfae86','#f2ede4','#d9cfc0','#c49a6c']},
+  notes:['Floor: light-oak wood-look porcelain planks, 8" x 48" (shown with a real oak-floor scan)','Walls: light peach emulsion (all interior walls); TV niches a shade deeper; ceiling and band in white','TV wall: civil-work niches, oak-veneer centre wall and console (mid-range)','Sofa: wooden frame in walnut-tone stain with mild-brown cushions; terracotta and cream throw cushions','Rug: two-tone, sofa-seat brown centre with a narrow dark-brown border','Curtains: light-brown sheer (latte); dark brown would make this low-daylight room gloomy','Art: two framed textured canvases on GW-12'],sw:['#cfae86','#f2ede4','#d9cfc0','#c49a6c']},
 ];
 const panel=document.getElementById('panel');let curOpt=0,curLight='day';
 function applyOption(i){const o=OPTIONS[i];curOpt=i;
@@ -441,7 +480,7 @@ function applyOption(i){const o=OPTIONS[i];curOpt=i;
   <h2>Same in all options</h2><ul>
   <li><b>Ceiling:</b> no false ceiling. A civil-work band 1'3" wide and 7" deep runs round the edge. Its inner edge has a cove pocket with a warm LED strip, and it carries 6 recessed downlights. Clear height is 10' in the middle and 9'5" under the band.</li>
   <li><b>TV wall FU-05:</b> two masonry niche towers with oak shelves, LED strips and oak base cupboards; an oak-veneer centre wall with grooves; a floating console; a 55" TV.</li>
-  <li><b>Windows:</b> UPVC sliding, MS grill, granite sill. Sheer crepe-georgette curtains in ripple folds hang from a track on the band.</li>
+  <li><b>Windows:</b> UPVC sliding, MS grill (hall windows W-04, W-05: pick GR-1 to GR-6 with the Grill buttons), granite sill. Sheer crepe-georgette curtains in ripple folds hang from a track on the band.</li>
   <li><b>Kitchen glass W-12:</b> black bi-fold frames with an oak ledge. <b>Arch O-01:</b> round-top plastered arch.</li>
   </ul><h2>Textures</h2><div>Real CC0 scans from Poly Haven, stored locally in <code>3d/assets</code>. Use <b>Photo</b> for a ray-traced, near-photographic still.</div>`;
   try{localStorage.setItem('lr3d-opt',i)}catch(e){}
@@ -515,6 +554,8 @@ function resize(){const w=view.clientWidth,h=view.clientHeight;renderer.setSize(
 addEventListener('resize',resize);resize();
 let so=0,sl='day',sf=75;try{so=0;sl=localStorage.getItem('lr3d-light')||'day';sf=+(localStorage.getItem('lr3d-lens')||75)}catch(e){}
 applyOption(so);applyLight(sl);setLens(sf);setView(0);
+{let g='GR-1';try{g=localStorage.getItem('lr3d-grill')||g}catch(e){};setGrill(g)}
+document.querySelectorAll('#grillSeg button').forEach(x=>x.onclick=()=>setGrill(x.dataset.g));
 // ---------------- navigation: look in place, walk with collision ----------------
 // Keys: Up/Down walk · Left/Right turn · A/D slide · W/S tilt up/down · Q/E lower/raise · Shift faster
 // Mouse: drag = look around (camera stays put) · scroll = walk · right-drag = slide sideways / up-down
