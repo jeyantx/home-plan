@@ -40,7 +40,7 @@ canvas{display:block;width:100%;height:100%}
 </head><body>
 <div id="app">
 <header>
- <div><h1>Living room · Japandi 3D</h1><div class="sub">Arrow keys: walk and turn · A/D: step sideways · Shift: faster · Drag to look · Hover for names · Photo = ray-traced still</div></div>
+ <div><h1>Living room · Japandi 3D</h1><div class="sub">↑↓ walk · ←→ turn · A/D slide · W/S tilt · Q/E lower/raise · Shift faster · Drag to look around · Scroll to walk · Right-drag to slide · Hover for names</div></div>
  <span class="lbl">Option</span><div class="seg" id="optSeg"><button data-o="0">1 · Warm oak</button><button data-o="1">2 · Soft stone</button><button data-o="2">3 · Sage calm</button></div>
  <span class="lbl">Light</span><div class="seg" id="lightSeg"><button data-l="day">Day</button><button data-l="eve">Evening</button></div>
  <span class="lbl">View</span><div class="seg" id="camSeg"><button data-c="0">Entry</button><button data-c="1">Corner</button><button data-c="2">From sofa</button><button data-c="3">From TV</button><button data-c="4">From kitchen</button><button data-c="5">Top</button></div>
@@ -55,7 +55,6 @@ canvas{display:block;width:100%;height:100%}
 <script>window.PLAN=__PLAN__;</script>
 <script type="module">
 import * as THREE from 'three';
-import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {RoomEnvironment} from 'three/addons/environments/RoomEnvironment.js';
 import {RoundedBoxGeometry} from 'three/addons/geometries/RoundedBoxGeometry.js';
 import {RectAreaLightUniformsLib} from 'three/addons/lights/RectAreaLightUniformsLib.js';
@@ -76,8 +75,8 @@ view.appendChild(renderer.domElement);
 RectAreaLightUniformsLib.init();
 const scene=new THREE.Scene();
 const camera=new THREE.PerspectiveCamera(60,1,0.05,300);
-const controls=new OrbitControls(camera,renderer.domElement);
-controls.enableDamping=true; controls.dampingFactor=0.1;
+camera.rotation.order='YXZ'; let yaw=0, pitch=0;   // first-person look: the camera turns in place
+const wallMeshes=[];
 let dirty=true,hqDone=false,lastChange=0;
 let photo=false, pt=null; const PHOTO_SAMPLES=256;
 function invalidate(){dirty=true;if(photo&&pt)pt.updateCamera()}
@@ -182,7 +181,7 @@ function buildWall(w){
   const g=new THREE.ExtrudeGeometry(shape,{depth:T,bevelEnabled:false,steps:1,curveSegments:24});g.scale(F,F,F);
   const me=new THREE.Mesh(g,MAT.wall);
   if(horiz){me.rotation.y=Math.PI;me.position.set(mx(w.x1),0,m(w.y2))}else{me.rotation.y=-Math.PI/2;me.position.set(mx(w.x1),0,m(w.y1))}
-  me.castShadow=true;me.receiveShadow=true;scene.add(me);named(me,`${w.id} · ${w.desc}`);me.userData.wall=w;
+  me.castShadow=true;me.receiveShadow=true;scene.add(me);named(me,`${w.id} · ${w.desc}`);me.userData.wall=w;wallMeshes.push(me);
   for(const o of ops) buildOpening(o,w,horiz,s0);
 }
 function along(horiz,w,u,v){return horiz?[w.x1+u,w.y1+v]:[w.x1+v,w.y1+u]}
@@ -375,6 +374,8 @@ for(const f of P.furniture){ if(f.fl!=='G'||['FU-03.1','FU-03.2','FU-04','FU-05'
   box(f.x1,f.x2,f.y1,f.y2,0,h,kmat[f.kind]||std({color:'#e6e2da',roughness:0.8}),{tip:`${f.id} · ${f.name}`});
 }
 scene.traverse(n=>{if(n.isMesh&&!n.userData.curtain&&!n.userData.keepUV) metreUV(n.geometry)});
+scene.updateMatrixWorld(true);   // wall positions ready for collision before the first frame
+scene.traverse(n=>{if(n.isMesh&&typeof n.userData.tip==='string'&&n.userData.tip.startsWith('FU-05'))wallMeshes.push(n)});   // the TV wall unit is solid too
 
 // ---------------- light ----------------
 let skyTex=null;
@@ -435,7 +436,7 @@ function applyLight(mode){const day=mode==='day';curLight=mode;
 }
 // level eye-height views: vertical lines stay vertical, like an interior photo
 const VIEWS=[
- {p:[5.3,EYE,47.4],t:[19.0,EYE,56.0]},    // entry, from the foyer
+ {p:[7.0,EYE,47.3],t:[19.0,EYE,56.0]},    // entry, from the foyer
  {p:[18.3,EYE,58.2],t:[5.0,EYE,47.6]},    // corner by the arch, looking at sofa, windows and foyer
  {p:[4.9,3.7,53.2],t:[19.5,3.9,52.75]},   // seated on the 3-seater, looking at the TV wall
  {p:[18.2,EYE,47.6],t:[4.0,EYE,57.0]},    // from the TV wall corner
@@ -444,8 +445,10 @@ const VIEWS=[
 ];
 let hfov=75;
 function applyFov(){const a=camera.aspect||1;camera.fov=THREE.MathUtils.radToDeg(2*Math.atan(Math.tan(THREE.MathUtils.degToRad(hfov)/2)/a));camera.updateProjectionMatrix()}
-function setView(i){const v=VIEWS[i];camera.position.set(mx(v.p[0]),m(v.p[1]),m(v.p[2]));controls.target.set(mx(v.t[0]),m(v.t[1]),m(v.t[2]));controls.update();
+function setView(i){const v=VIEWS[i];camera.position.set(mx(v.p[0]),m(v.p[1]),m(v.p[2]));
+  const d=new THREE.Vector3(mx(v.t[0]),m(v.t[1]),m(v.t[2])).sub(camera.position);yaw=Math.atan2(-d.x,-d.z);pitch=Math.atan2(d.y,Math.hypot(d.x,d.z));applyLook();
   document.querySelectorAll('#camSeg button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.c===i));invalidate()}
+function applyLook(){pitch=Math.max(-1.55,Math.min(1.55,pitch));camera.rotation.set(pitch,yaw,0)}
 function setLens(f){hfov=f;applyFov();document.querySelectorAll('#lensSeg button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.f===f));try{localStorage.setItem('lr3d-lens',f)}catch(e){};invalidate()}
 document.querySelectorAll('#optSeg button').forEach(b=>b.onclick=()=>applyOption(+b.dataset.o));
 document.querySelectorAll('#lightSeg button').forEach(b=>b.onclick=()=>applyLight(b.dataset.l));
@@ -488,25 +491,44 @@ function resize(){const w=view.clientWidth,h=view.clientHeight;renderer.setSize(
 addEventListener('resize',resize);resize();
 let so=0,sl='day',sf=75;try{so=+(localStorage.getItem('lr3d-opt')||0);sl=localStorage.getItem('lr3d-light')||'day';sf=+(localStorage.getItem('lr3d-lens')||75)}catch(e){}
 applyOption(so);applyLight(sl);setLens(sf);setView(0);
-controls.addEventListener('change',invalidate);
-// keyboard: Up/Down walk, Left/Right turn, A/D step sideways, Shift = faster
-const keys=new Set(), NAV=['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','KeyW','KeyS','KeyA','KeyD','ShiftLeft','ShiftRight'];
-addEventListener('keydown',e=>{if(NAV.includes(e.code)){keys.add(e.code);if(e.code.startsWith('Arrow'))e.preventDefault()}});
+// ---------------- navigation: look in place, walk with collision ----------------
+// Keys: Up/Down walk · Left/Right turn · A/D slide · W/S tilt up/down · Q/E lower/raise · Shift faster
+// Mouse: drag = look around (camera stays put) · scroll = walk · right-drag = slide sideways / up-down
+const keys=new Set(), NAV=['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','KeyW','KeyS','KeyA','KeyD','KeyQ','KeyE','ShiftLeft','ShiftRight'];
+addEventListener('keydown',e=>{if(e.target.closest&&e.target.closest('input,textarea'))return;if(NAV.includes(e.code)){keys.add(e.code);if(e.code.startsWith('Arrow'))e.preventDefault()}});
 addEventListener('keyup',e=>keys.delete(e.code));addEventListener('blur',()=>keys.clear());
-const up=new THREE.Vector3(0,1,0);let lastT=performance.now();
+const UP=new THREE.Vector3(0,1,0), colRay=new THREE.Raycaster();
+function fwdVec(){return new THREE.Vector3(-Math.sin(yaw),0,-Math.cos(yaw))}
+function rightVec(){return new THREE.Vector3(Math.cos(yaw),0,-Math.sin(yaw))}
+// move by a horizontal step unless a wall is within 0.3 m; rays at knee and eye height, so windows block too
+function tryMove(step){const len=step.length();if(!len)return;const dir=step.clone().normalize();
+  for(const h of [0.35,camera.position.y]){colRay.set(new THREE.Vector3(camera.position.x,h,camera.position.z),dir);colRay.far=len+0.3;if(colRay.intersectObjects(wallMeshes,false).length)return}
+  camera.position.add(step)}
+function moveVertical(dz){camera.position.y=Math.max(0.4,Math.min(m(CEIL)-0.15,camera.position.y+dz))}
+let lastT=performance.now();
 function walk(){const now=performance.now(),dt=Math.min(0.05,(now-lastT)/1000);lastT=now;
-  if(!keys.size||![...keys].some(k=>!k.startsWith('Shift')))return;
-  const fast=keys.has('ShiftLeft')||keys.has('ShiftRight'), speed=(fast?2.6:1.3)*dt, turn=(fast?1.6:1.0)*dt;
-  const dir=new THREE.Vector3().subVectors(controls.target,camera.position), fwd=dir.clone().setY(0).normalize(), right=new THREE.Vector3().crossVectors(fwd,up).normalize(), mv=new THREE.Vector3();
-  if(keys.has('ArrowUp')||keys.has('KeyW'))mv.add(fwd);if(keys.has('ArrowDown')||keys.has('KeyS'))mv.sub(fwd);
-  if(keys.has('KeyD'))mv.add(right);if(keys.has('KeyA'))mv.sub(right);
-  if(mv.lengthSq()){mv.normalize().multiplyScalar(speed);camera.position.add(mv);controls.target.add(mv)}
-  const yaw=(keys.has('ArrowLeft')?1:0)-(keys.has('ArrowRight')?1:0);
-  if(yaw){dir.applyAxisAngle(up,yaw*turn);controls.target.copy(camera.position).add(dir)}
-  controls.update();invalidate()}
+  if(![...keys].some(k=>!k.startsWith('Shift')))return;
+  const fast=keys.has('ShiftLeft')||keys.has('ShiftRight'),sp=(fast?2.6:1.3)*dt,tr=(fast?1.6:1.0)*dt;
+  const mv=new THREE.Vector3();
+  if(keys.has('ArrowUp'))mv.add(fwdVec());if(keys.has('ArrowDown'))mv.sub(fwdVec());
+  if(keys.has('KeyD'))mv.add(rightVec());if(keys.has('KeyA'))mv.sub(rightVec());
+  if(mv.lengthSq())tryMove(mv.normalize().multiplyScalar(sp));
+  if(keys.has('ArrowLeft'))yaw+=tr;if(keys.has('ArrowRight'))yaw-=tr;
+  if(keys.has('KeyW'))pitch+=tr*0.8;if(keys.has('KeyS'))pitch-=tr*0.8;
+  if(keys.has('KeyE'))moveVertical(sp*0.7);if(keys.has('KeyQ'))moveVertical(-sp*0.7);
+  applyLook();invalidate()}
+{const el=renderer.domElement;let drag=null;
+ el.addEventListener('contextmenu',e=>e.preventDefault());
+ el.addEventListener('pointerdown',e=>{drag={x:e.clientX,y:e.clientY,b:e.button};el.setPointerCapture(e.pointerId)});
+ el.addEventListener('pointermove',e=>{if(!drag)return;const dx=e.clientX-drag.x,dy=e.clientY-drag.y;drag.x=e.clientX;drag.y=e.clientY;
+   if(drag.b===2||e.shiftKey){tryMove(rightVec().multiplyScalar(-dx*0.006));moveVertical(dy*0.006)}   // slide
+   else{const k=THREE.MathUtils.degToRad(hfov)/el.clientWidth;yaw+=dx*k;pitch+=dy*k;applyLook()}     // look around in place (Street View style)
+   invalidate()});
+ const end=e=>{drag=null};el.addEventListener('pointerup',end);el.addEventListener('pointercancel',end);
+ el.addEventListener('wheel',e=>{e.preventDefault();tryMove(fwdVec().multiplyScalar(-e.deltaY*0.004));invalidate()},{passive:false});}
 document.getElementById('loading').remove();
 renderer.setAnimationLoop(()=>{
-  walk();controls.update();
+  walk();
   if(photo&&pt){
     if(building||document.hidden) return;            // ray tracing pauses in a hidden tab
     if(pt.samples>=PHOTO_SAMPLES){ if(saveReq){pt.renderSample();doSave();saveReq=false} statusEl.textContent=`Photo done: ${Math.floor(pt.samples)} samples. Save image, or move to start a new one.`; return }   // stop: no GPU use once finished
@@ -517,7 +539,7 @@ renderer.setAnimationLoop(()=>{
   else if(!hqDone&&now-lastChange>220){composer.render();hqDone=true;}
   if(saveReq&&hqDone){composer.render();doSave();saveReq=false}
 });
-window.__ready=true;
+window.__ready=true;window.__nav={cam:camera,step:(n)=>{for(let i=0;i<n;i++)tryMove(fwdVec().multiplyScalar(0.05))}};
 window.__bench=()=>{const gl=renderer.getContext();const t=(f,n)=>{gl.finish();const a=performance.now();for(let i=0;i<n;i++)f();gl.finish();return ((performance.now()-a)/n).toFixed(1)+' ms'};
   return {fast:t(()=>renderer.render(scene,camera),20),softShadows:t(()=>composer.render(),5),texturesPending:pending}};
 window.__photo=()=>({on:photo,building,samples:pt?Math.floor(pt.samples):0,compiling:pt?.isCompiling});
