@@ -55,11 +55,11 @@ import {GTAOPass} from 'three/addons/postprocessing/GTAOPass.js';
 import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';
 
 const P=window.PLAN, F=0.3048, CEIL=10.0, BAND_W=1.25, BAND_D=0.6;   // feet
-const m=v=>v*F;
+const m=v=>v*F, mx=v=>-v*F;   // plan X grows toward the west = three -x (keeps east on the right side of the world)
 const view=document.getElementById('view');
 const renderer=new THREE.WebGLRenderer({antialias:true});
-renderer.setPixelRatio(Math.min(devicePixelRatio,2));
-renderer.shadowMap.enabled=true; renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));
+renderer.shadowMap.enabled=true; renderer.shadowMap.type=THREE.PCFSoftShadowMap; renderer.shadowMap.autoUpdate=false; renderer.shadowMap.needsUpdate=true;
 renderer.toneMapping=THREE.ACESFilmicToneMapping; renderer.toneMappingExposure=1.0;
 view.appendChild(renderer.domElement);
 RectAreaLightUniformsLib.init();
@@ -70,6 +70,7 @@ const camera=new THREE.PerspectiveCamera(55,1,0.05,200);
 const controls=new OrbitControls(camera,renderer.domElement);
 controls.enableDamping=true; controls.dampingFactor=0.08;
 
+let dirty=true,hqDone=false,lastChange=0;function invalidate(){dirty=true}
 // ---------------- procedural textures ----------------
 function rng(seed){let s=seed>>>0;return()=>{s=(s*1664525+1013904223)>>>0;return s/4294967296}}
 function canvasTex(w,h,draw,repeatX=1,repeatY=1,srgb=true){
@@ -119,7 +120,7 @@ MAT.wallOut=std({color:'#ece6dc',roughness:0.95});
 MAT.white=std({color:'#f7f6f3',roughness:0.9});
 MAT.upvc=std({color:'#f4f4f2',roughness:0.4});
 MAT.blackMetal=std({color:'#1e1f22',roughness:0.45,metalness:0.6});
-MAT.glass=new THREE.MeshPhysicalMaterial({color:'#ffffff',roughness:0.03,metalness:0,transmission:0.92,thickness:0.01,ior:1.5,transparent:true,opacity:1});
+MAT.glass=std({color:'#dfe9ee',roughness:0.05,metalness:0.0,transparent:true,opacity:0.16,envMapIntensity:1.5,depthWrite:false});
 MAT.oak=std({map:oak('#c8a27a',3),roughness:0.55});
 MAT.oakDark=std({map:oak('#9a7350',4),roughness:0.55});
 MAT.teak=std({map:oak('#7a4f2c',6),roughness:0.5});
@@ -143,9 +144,9 @@ const tipTargets=[];
 function named(mesh,tip){mesh.userData.tip=tip;tipTargets.push(mesh);return mesh}
 function box(x1,x2,y1,y2,z1,z2,mat,o={}){ // plan x, plan y, height z (feet)
   const g=o.round?new RoundedBoxGeometry(m(x2-x1),m(z2-z1),m(y2-y1),3,m(o.round)):new THREE.BoxGeometry(m(x2-x1),m(z2-z1),m(y2-y1));
-  const me=new THREE.Mesh(g,mat);me.position.set(m((x1+x2)/2),m((z1+z2)/2),m((y1+y2)/2));
+  const me=new THREE.Mesh(g,mat);me.position.set(mx((x1+x2)/2),m((z1+z2)/2),m((y1+y2)/2));
   me.castShadow=o.cast!==false;me.receiveShadow=true;scene.add(me);if(o.tip)named(me,o.tip);return me}
-function cyl(x,y,z1,z2,r,mat,o={}){const g=new THREE.CylinderGeometry(m(o.rTop??r),m(r),m(z2-z1),o.seg||24);const me=new THREE.Mesh(g,mat);me.position.set(m(x),m((z1+z2)/2),m(y));me.castShadow=true;me.receiveShadow=true;scene.add(me);if(o.tip)named(me,o.tip);return me}
+function cyl(x,y,z1,z2,r,mat,o={}){const g=new THREE.CylinderGeometry(m(o.rTop??r),m(r),m(z2-z1),o.seg||24);const me=new THREE.Mesh(g,mat);me.position.set(mx(x),m((z1+z2)/2),m(y));me.castShadow=true;me.receiveShadow=true;scene.add(me);if(o.tip)named(me,o.tip);return me}
 const wallsG=Object.fromEntries(P.walls.G.map(w=>[w.id,w]));
 const roomsG=Object.fromEntries(P.rooms.G.map(r=>[r.id,r]));
 const fuG=Object.fromEntries(P.furniture.filter(f=>f.fl==='G').map(f=>[f.id,f]));
@@ -170,7 +171,7 @@ function buildWall(w){
   const g=new THREE.ExtrudeGeometry(shape,{depth:T,bevelEnabled:false,steps:1});g.scale(F,F,F);
   const inLiving=touchesLiving(w);
   const me=new THREE.Mesh(g,inLiving?[MAT.wall,MAT.wall]:[MAT.white,MAT.white]);
-  if(horiz){me.position.set(m(w.x1),0,m(w.y1))}else{me.rotation.y=-Math.PI/2;me.position.set(m(w.x2),0,m(w.y1))}
+  if(horiz){me.rotation.y=Math.PI;me.position.set(mx(w.x1),0,m(w.y2))}else{me.rotation.y=-Math.PI/2;me.position.set(mx(w.x1),0,m(w.y1))}
   me.castShadow=true;me.receiveShadow=true;scene.add(me);named(me,`${w.id} · ${w.desc}`);me.userData.wall=w;
   for(const o of ops) buildOpening(o,w,horiz,s0);
 }
@@ -211,10 +212,10 @@ function buildOpening(o,w,horiz,s0){
     const open=o.id==='D-02'?0.55:(o.id==='D-06'?0.4:0);
     for(const [a,b,h] of leaves){const len=b-a, hingeU=h==='a'?a:b;
       const leaf=new THREE.Mesh(new THREE.BoxGeometry(m(len),m(o.h-0.05),m(th)),mat);leaf.castShadow=true;leaf.receiveShadow=true;
-      const piv=new THREE.Group();const p=along(horiz,w,hingeU,T/2,0);piv.position.set(m(p[0]),0,m(p[1]));
+      const piv=new THREE.Group();const p=along(horiz,w,hingeU,T/2,0);piv.position.set(mx(p[0]),0,m(p[1]));
       leaf.position.set(m((h==='a'?1:-1)*len/2),m((o.h-0.05)/2),0);piv.add(leaf);
-      if(!horiz) piv.rotation.y=-Math.PI/2;
-      const sgn=(o.swing==='+'?1:-1)*(h==='a'?-1:1);piv.rotation.y+=sgn*open;
+      piv.rotation.y=horiz?Math.PI:-Math.PI/2;
+      const sgn=-(o.swing==='+'?1:-1)*(h==='a'?-1:1);piv.rotation.y+=sgn*open;
       scene.add(piv);named(leaf,tip);
       if(o.id==='D-01'){for(const zz of [2.2,4.6]) {const pan=new THREE.Mesh(new THREE.BoxGeometry(m(len*0.6),m(1.8),m(0.04)),MAT.oakDark);pan.position.set(m((h==='a'?1:-1)*len/2),m(zz),m(th/2+0.02));piv.add(pan)}}
       const hd=new THREE.Mesh(new THREE.BoxGeometry(m(0.08),m(0.5),m(0.08)),MAT.blackMetal);hd.position.set(m((h==='a'?1:-1)*(len-0.3)),m(3.3),m(th/2+0.06));piv.add(hd);
@@ -225,7 +226,7 @@ P.walls.G.forEach(buildWall);
 
 // ---------------- floors, ceilings, skirting ----------------
 function polyShapeMesh(pts,mat,z,tip,down=false){ // up-facing floor, or down-facing ceiling
-  const s=new THREE.Shape(pts.map(p=>new THREE.Vector2(m(p[0]),down?m(p[1]):-m(p[1]))));const g=new THREE.ShapeGeometry(s);g.rotateX(down?Math.PI/2:-Math.PI/2);
+  const s=new THREE.Shape(pts.map(p=>new THREE.Vector2(mx(p[0]),down?m(p[1]):-m(p[1]))));const g=new THREE.ShapeGeometry(s);g.rotateX(down?Math.PI/2:-Math.PI/2);
   const me=new THREE.Mesh(g,mat);me.position.y=m(z);me.receiveShadow=true;scene.add(me);if(tip)named(me,tip);return me}
 for(const r of P.rooms.G){
   if(['out','garden','covered'].includes(r.kind)) continue;
@@ -258,10 +259,10 @@ const bandTip='Ceiling band, civil work: 1\'3" wide, 7" drop, plastered and pain
 box(LX1,LX2,LY1,LY1+BAND_W,bandZ1,CEIL,MAT.white,{tip:bandTip});box(LX1,LX2,LY2-BAND_W,LY2,bandZ1,CEIL,MAT.white,{tip:bandTip});
 box(LX1,LX1+BAND_W,LY1+BAND_W,LY2-BAND_W,bandZ1,CEIL,MAT.white,{tip:bandTip});box(LX2-BAND_W,LX2,LY1+BAND_W,LY2-BAND_W,bandZ1,CEIL,MAT.white,{tip:bandTip});
 // cove lip and LED strips
-const coveLights=[];
+const coveLights=[], towerLights=[];
 function cove(x1,x2,y1,y2,rotY){box(x1,x2,y1,y2,bandZ1+0.02,bandZ1+0.22,MAT.white,{tip:bandTip});
   const strip=box(x1,x2,y1,y2,bandZ1+0.22,bandZ1+0.25,MAT.led,{cast:false,tip:'Warm LED strip in the cove (2700K)'});
-  const w=Math.max(x2-x1,y2-y1);const L=new THREE.RectAreaLight('#ffcf94',0,m(w),m(0.25));L.position.set(m((x1+x2)/2),m(bandZ1+0.3),m((y1+y2)/2));L.lookAt(m((x1+x2)/2),m(CEIL+3),m((y1+y2)/2));scene.add(L);coveLights.push(L)}
+  const w=Math.max(x2-x1,y2-y1);const L=new THREE.RectAreaLight('#ffcf94',0,m(w),m(0.25));L.position.set(mx((x1+x2)/2),m(bandZ1+0.3),m((y1+y2)/2));L.lookAt(mx((x1+x2)/2),m(CEIL+3),m((y1+y2)/2));scene.add(L);coveLights.push(L)}
 const ci=0.18;
 cove(LX1+BAND_W,LX2-BAND_W,LY1+BAND_W-ci,LY1+BAND_W,0);cove(LX1+BAND_W,LX2-BAND_W,LY2-BAND_W,LY2-BAND_W+ci,0);
 cove(LX1+BAND_W-ci,LX1+BAND_W,LY1+BAND_W,LY2-BAND_W,0);cove(LX2-BAND_W,LX2-BAND_W+ci,LY1+BAND_W,LY2-BAND_W,0);
@@ -269,7 +270,7 @@ cove(LX1+BAND_W-ci,LX1+BAND_W,LY1+BAND_W,LY2-BAND_W,0);cove(LX2-BAND_W,LX2-BAND_
 const downs=[];
 for(const [x,y] of [[LX1+0.62,50.0],[LX1+0.62,55.5],[LX2-0.62,49.5],[LX2-0.62,56.0],[9.0,LY1+0.62],[15.0,LY1+0.62]]){
   const d=cyl(x,y,bandZ1-0.01,bandZ1+0.01,0.22,MAT.led,{tip:'Recessed LED downlight in the band (warm white)'});d.castShadow=false;
-  const s=new THREE.SpotLight('#ffd7a3',0,m(14),0.7,0.6,2);s.position.set(m(x),m(bandZ1-0.05),m(y));s.target.position.set(m(x),0,m(y));s.castShadow=false;scene.add(s,s.target);downs.push(s)}
+  const s=new THREE.SpotLight('#ffd7a3',0,m(14),0.7,0.6,2);s.position.set(mx(x),m(bandZ1-0.05),m(y));s.target.position.set(mx(x),0,m(y));s.castShadow=false;scene.add(s,s.target);downs.push(s)}
 
 // TV, showcase and book wall unit (FU-05), civil work with oak
 const tv={x1:18.917,x2:20.25,y1:47.25,y2:58.25};
@@ -280,7 +281,8 @@ function tower(y1,y2,label){
   box(tv.x2-0.12,tv.x2,y1,y2,0,bandZ1,MAT.accent,{tip:t+' · niche back in accent paint'});
   box(tv.x1-0.02,tv.x2,y1,y2,0,1.6,MAT.oak,{tip:'FU-05 · base cupboard, oak-laminate shutters'});
   for(const z of [1.6,3.3,5.0,6.7,8.4]){box(tv.x1,tv.x2-0.12,y1+0.25,y2-0.25,z,z+0.12,MAT.oak,{tip:t});
-    const st=new THREE.RectAreaLight('#ffd7a3',0,m(y2-y1-0.5),m(0.1));st.position.set(m(tv.x1+0.6),m(z-0.02),m((y1+y2)/2));st.rotation.set(-Math.PI/2,0,Math.PI/2);scene.add(st);coveLights.push(st)}
+    box(tv.x1+0.2,tv.x1+0.3,y1+0.3,y2-0.3,z-0.03,z,MAT.led,{cast:false,tip:'LED strip under the shelf'})}
+  const tl=new THREE.PointLight('#ffd7a3',0,m(7),2);tl.position.set(mx(tv.x1+0.5),m(5),m((y1+y2)/2));scene.add(tl);towerLights.push(tl);
   // decor
   const r=rng(Math.round(y1*10));
   for(const z of [1.72,3.42,5.12,6.82]){let y=y1+0.4;while(y<y2-0.6){const k=r();
@@ -324,20 +326,20 @@ const rugMesh=box(6.0,11.5,48.25,55.75,0,0.03,MAT.rug,{cast:false,tip:'Jute-cott
 // corner: plant and paper floor lamp
 cyl(4.5,55.6,0,1.2,0.55,MAT.pot,{tip:'Planter, ceramic',rTop:0.62});
 {const r=rng(11);for(let i=0;i<26;i++){const a=r()*Math.PI*2,h=1.3+r()*3.2,rad=0.15+r()*0.7;const lf=new THREE.Mesh(new THREE.SphereGeometry(m(0.38),10,8),MAT.leaf);lf.scale.set(1,0.25,0.55);
-  lf.position.set(m(4.5+Math.cos(a)*rad),m(1.2+h),m(55.6+Math.sin(a)*rad));lf.rotation.set(r()*1.2,a,r()*0.8);lf.castShadow=true;scene.add(lf);named(lf,'Fiddle-leaf fig plant')}
+  lf.position.set(mx(4.5+Math.cos(a)*rad),m(1.2+h),m(55.6+Math.sin(a)*rad));lf.rotation.set(r()*1.2,a,r()*0.8);lf.castShadow=true;scene.add(lf);named(lf,'Fiddle-leaf fig plant')}
  cyl(4.5,55.6,1.2,4.0,0.04,MAT.oakDark,{tip:'Plant stem'});}
 const lampX=5.6,lampY=57.9;cyl(lampX,lampY,0,0.06,0.45,MAT.blackMetal,{tip:'Floor lamp'});cyl(lampX,lampY,0.06,4.4,0.03,MAT.blackMetal,{tip:'Floor lamp'});
-const shadeMesh=new THREE.Mesh(new THREE.SphereGeometry(m(0.75),24,18),MAT.paper);shadeMesh.position.set(m(lampX),m(5.0),m(lampY));scene.add(shadeMesh);named(shadeMesh,'Paper floor lamp');
-const lampLight=new THREE.PointLight('#ffc98a',0,m(16),2);lampLight.position.copy(shadeMesh.position);lampLight.castShadow=true;lampLight.shadow.mapSize.set(1024,1024);scene.add(lampLight);
+const shadeMesh=new THREE.Mesh(new THREE.SphereGeometry(m(0.75),24,18),MAT.paper);shadeMesh.position.set(mx(lampX),m(5.0),m(lampY));scene.add(shadeMesh);named(shadeMesh,'Paper floor lamp');
+const lampLight=new THREE.PointLight('#ffc98a',0,m(16),2);lampLight.position.copy(shadeMesh.position);lampLight.castShadow=false;scene.add(lampLight);
 // curtains on the east windows, hung from the band
 function curtain(y1,y2){const w=y2-y1,h=bandZ1-0.1;const g=new THREE.PlaneGeometry(m(w),m(h),60,1);const p=g.attributes.position;
   for(let i=0;i<p.count;i++){const yy=p.getX(i);p.setZ(i,Math.sin(yy/m(0.28)*Math.PI)*m(0.09))}g.computeVertexNormals();
-  const me=new THREE.Mesh(g,MAT.curtain);me.rotation.y=Math.PI/2;me.position.set(m(LX1+0.45),m(h/2+0.06),m((y1+y2)/2));me.castShadow=true;me.receiveShadow=true;scene.add(me);named(me,'Sheer linen curtain on a ceiling track');
+  const me=new THREE.Mesh(g,MAT.curtain);me.rotation.y=Math.PI/2;me.position.set(mx(LX1+0.45),m(h/2+0.06),m((y1+y2)/2));me.castShadow=true;me.receiveShadow=true;scene.add(me);named(me,'Sheer linen curtain on a ceiling track');
   box(LX1+0.38,LX1+0.52,y1,y2,bandZ1-0.08,bandZ1,MAT.blackMetal,{tip:'Curtain track'})}
 for(const o of P.openings.filter(o=>o.wall==='GW-01'&&o.type==='window'&&o.b<LY2&&o.a>LY1)){curtain(o.a-1.3,o.a+0.2);curtain(o.b-0.2,o.b+1.3)}
 // ceiling fan (Japandi, wood blades)
 {const cx=12.0,cy=52.75,hub=8.6;cyl(cx,cy,hub+0.3,CEIL,0.05,MAT.blackMetal,{tip:'Ceiling fan, 48", wood-finish blades'});cyl(cx,cy,hub,hub+0.35,0.32,MAT.blackMetal,{tip:'Ceiling fan'});
- const fan=new THREE.Group();fan.position.set(m(cx),m(hub+0.1),m(cy));scene.add(fan);
+ const fan=new THREE.Group();fan.position.set(mx(cx),m(hub+0.1),m(cy));scene.add(fan);
  for(let i=0;i<3;i++){const bl=new THREE.Mesh(new THREE.BoxGeometry(m(1.9),m(0.04),m(0.42)),MAT.oak);bl.position.set(m(1.25),0,0);const g=new THREE.Group();g.rotation.y=i*Math.PI*2/3;g.add(bl);bl.castShadow=true;fan.add(g);named(bl,'Ceiling fan blade')}}
 // switch plates
 box(LX2-0.02,LX2,47.6,48.1,4.0,4.4,MAT.white,{tip:'Switch board'});box(9.3,9.8,LY1,LY1+0.02,4.0,4.4,MAT.white,{tip:'Switch board'});
@@ -354,10 +356,10 @@ for(const f of P.furniture){ if(f.fl!=='G') continue; if(['FU-03.1','FU-03.2','F
 
 // ---------------- lights ----------------
 const hemi=new THREE.HemisphereLight('#dfeaff','#b8a98f',0.6);scene.add(hemi);
-const sun=new THREE.DirectionalLight('#fff1dc',4.2);sun.castShadow=true;sun.shadow.mapSize.set(4096,4096);sun.shadow.bias=-0.0004;sun.shadow.normalBias=0.02;
+const sun=new THREE.DirectionalLight('#fff1dc',4.2);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);sun.shadow.bias=-0.0004;sun.shadow.normalBias=0.02;
 const sc=sun.shadow.camera;sc.left=-12;sc.right=12;sc.top=12;sc.bottom=-12;sc.near=1;sc.far=80;
-const target=new THREE.Object3D();target.position.set(m(12),0,m(52));scene.add(target);sun.target=target;
-sun.position.set(m(12)-22,30,m(52)+9);scene.add(sun);
+const target=new THREE.Object3D();target.position.set(mx(12),0,m(52));scene.add(target);sun.target=target;
+sun.position.set(mx(12)+22,30,m(52)+9);   // sun from the east-south-eastscene.add(sun);
 
 // ---------------- post-processing ----------------
 const composer=new EffectComposer(renderer);composer.addPass(new RenderPass(scene,camera));
@@ -389,12 +391,13 @@ function applyOption(i){const o=OPTIONS[i];
   </ul><div style="margin-top:8px;color:#5d646d">The textures are procedural and only approximate the real tiles. Colours and sizes are what matter.</div>`;
   document.querySelectorAll('#optSeg button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.o===i));
   try{localStorage.setItem('lr3d-opt',i)}catch(e){}
+  renderer.shadowMap.needsUpdate=true;invalidate();
 }
 function applyLight(mode){const day=mode==='day';
   sun.intensity=day?4.2:0;hemi.intensity=day?0.55:0.04;scene.environmentIntensity=day?0.55:0.06;
   scene.background=new THREE.Color(day?'#cfe3f6':'#0d1626');
-  coveLights.forEach(l=>l.intensity=day?0:9);downs.forEach(s=>s.intensity=day?0:22);
-  MAT.led.emissiveIntensity=day?0:3;MAT.paper.emissiveIntensity=day?0:1.6;lampLight.intensity=day?0:14;
+  coveLights.forEach(l=>{l.intensity=day?0:9;l.visible=!day});towerLights.forEach(l=>{l.intensity=day?0:2.5;l.visible=!day});downs.forEach(s=>{s.intensity=day?0:22;s.visible=!day});
+  MAT.led.emissiveIntensity=day?0:3;MAT.paper.emissiveIntensity=day?0:1.6;lampLight.intensity=day?0:14;lampLight.visible=!day;sun.visible=day;renderer.shadowMap.needsUpdate=true;invalidate();
   renderer.toneMappingExposure=day?1.0:1.15;
   document.querySelectorAll('#lightSeg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.l===mode));
   try{localStorage.setItem('lr3d-light',mode)}catch(e){}
@@ -406,29 +409,37 @@ const VIEWS=[
  {p:[16.0,5.3,66.0],t:[11.8,3.8,50.0]},  // from the open area through the arch
  {p:[11.9,30,52.75],t:[11.9,0,52.76]},   // top
 ];
-function setView(i){const v=VIEWS[i];camera.position.set(m(v.p[0]),m(v.p[1]),m(v.p[2]));controls.target.set(m(v.t[0]),m(v.t[1]),m(v.t[2]));controls.update();
-  document.querySelectorAll('#camSeg button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.c===i))}
+function setView(i){const v=VIEWS[i];camera.position.set(mx(v.p[0]),m(v.p[1]),m(v.p[2]));controls.target.set(mx(v.t[0]),m(v.t[1]),m(v.t[2]));controls.update();
+  document.querySelectorAll('#camSeg button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.c===i));invalidate()}
 document.querySelectorAll('#optSeg button').forEach(b=>b.onclick=()=>applyOption(+b.dataset.o));
 document.querySelectorAll('#lightSeg button').forEach(b=>b.onclick=()=>applyLight(b.dataset.l));
 document.querySelectorAll('#camSeg button').forEach(b=>b.onclick=()=>setView(+b.dataset.c));
 const nb=document.getElementById('notesBtn');nb.onclick=()=>{const h=panel.classList.toggle('hidden');nb.setAttribute('aria-pressed',!h)};
-const aoBtn=document.getElementById('aoBtn');aoBtn.onclick=()=>{useAO=!useAO;aoBtn.textContent='Soft shadows: '+(useAO?'on':'off');aoBtn.setAttribute('aria-pressed',useAO)};
+const aoBtn=document.getElementById('aoBtn');aoBtn.onclick=()=>{useAO=!useAO;aoBtn.textContent='Soft shadows: '+(useAO?'on':'off');aoBtn.setAttribute('aria-pressed',useAO);invalidate()};
 let so=0,sl='day';try{so=+(localStorage.getItem('lr3d-opt')||0);sl=localStorage.getItem('lr3d-light')||'day'}catch(e){}
 applyOption(so);applyLight(sl);setView(0);
 
 // ---------------- hover names ----------------
 const tipEl=document.getElementById('tip'),ray=new THREE.Raycaster(),mouse=new THREE.Vector2();
-renderer.domElement.addEventListener('pointermove',e=>{const r=renderer.domElement.getBoundingClientRect();mouse.set((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);ray.setFromCamera(mouse,camera);
+let hoverPending=false;renderer.domElement.addEventListener('pointermove',e=>{if(hoverPending||e.buttons)return;hoverPending=true;requestAnimationFrame(()=>hoverPending=false);const r=renderer.domElement.getBoundingClientRect();mouse.set((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);ray.setFromCamera(mouse,camera);
   const hit=ray.intersectObjects(tipTargets,false)[0];if(!hit){tipEl.style.display='none';return}
   const s=hit.object.userData.tip,i=s.indexOf(' · ');tipEl.innerHTML=i>0?'<b>'+s.slice(0,i)+'</b> · '+s.slice(i+3).replace(/ · /g,'<br>'):s;
   tipEl.style.display='block';tipEl.style.left=Math.min(e.clientX+14,innerWidth-330)+'px';tipEl.style.top=(e.clientY+14)+'px'});
 renderer.domElement.addEventListener('pointerleave',()=>tipEl.style.display='none');
 
 // ---------------- resize and loop ----------------
-function resize(){const w=view.clientWidth,h=view.clientHeight;renderer.setSize(w,h,false);composer.setSize(w,h);gtao.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix()}
+function resize(){const w=view.clientWidth,h=view.clientHeight;renderer.setSize(w,h,false);composer.setSize(w,h);gtao.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix();invalidate()}
 addEventListener('resize',resize);resize();
 document.getElementById('loading').remove();
-renderer.setAnimationLoop(()=>{controls.update();useAO?composer.render():renderer.render(scene,camera)});
+controls.addEventListener('change',invalidate);
+renderer.setAnimationLoop(()=>{
+  controls.update();
+  const now=performance.now();
+  if(dirty){renderer.render(scene,camera);dirty=false;lastChange=now;hqDone=false;}
+  else if(!hqDone&&now-lastChange>220){ if(useAO) composer.render(); else renderer.render(scene,camera); hqDone=true; }
+});
 window.__ready=true;
+window.__bench=()=>{const gl=renderer.getContext();const t=(f,n)=>{gl.finish();const a=performance.now();for(let i=0;i<n;i++)f();gl.finish();return ((performance.now()-a)/n).toFixed(1)+' ms'};
+  return {fast:t(()=>renderer.render(scene,camera),20),softShadows:t(()=>composer.render(),5),calls:renderer.info.render.calls,triangles:renderer.info.render.triangles}};
 </script>
 </body></html>
