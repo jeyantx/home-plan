@@ -303,6 +303,12 @@ def draw_furniture(fl,_late=False):
             for dy in (-0.45,0.45):
                 a=S((x1+x2)/2,(y1+y2)/2+dy); E(f'<circle cx="{a[0]:.3f}" cy="{a[1]:.3f}" r="0.33" fill="none" stroke="#e8590c" stroke-width="0.06"/>')
             R_(x1-0.02,x1+0.6,y1,y2,'none','#999',0.04,extra='stroke-dasharray="0.12 0.08"')
+        elif k=='bucket':
+            a=S((x1+x2)/2,(y1+y2)/2); E(f'<circle cx="{a[0]:.3f}" cy="{a[1]:.3f}" r="0.36" fill="#5aa0d6" stroke="#2f6fb0" stroke-width="0.04"/>')
+        elif k=='geyser':
+            R_(x1,x2,y1,y2,'#ffffff','#999',0.04); text((x1+x2)/2,(y1+y2)/2,'G',0.3,weight=700,fill='#c0392b')
+        elif k=='curtain':
+            line((x1+x2)/2,y1,(x1+x2)/2,y2,'#b05a8a',0.05,extra='stroke-dasharray="0.15 0.08"')
         elif k=='washpad':
             R_(x1,x2,y1,y2,'#d7dde2','#6c7a86',0.04); a=S((x1+x2)/2,(y1+y2)/2)
             E(f'<rect x="{a[0]-0.2:.3f}" y="{a[1]-0.2:.3f}" width="0.4" height="0.4" fill="#6c7a86"/>')
@@ -313,7 +319,7 @@ def draw_furniture(fl,_late=False):
             line(x1,y1+1.5,x1,y2-1.5,'#fff',0.14); line(x1,y1+1.5,x1,y2-1.5,'#8a4b12',0.06,extra='stroke-dasharray="0.2 0.1"')
         # code tag
         cx,cy=(x1+x2)/2,(y1+y2)/2
-        if k not in ('fridge','tvwall','store','acout'):
+        if k not in ('fridge','tvwall','store','acout','curtain','geyser','bucket'):
             x,y=S(cx,cy); E(f'<text x="{x:.3f}" y="{y+0.11:.3f}" font-size="0.28" font-weight="700" fill="#2b2b2b" text-anchor="middle" stroke="#fff" stroke-width="0.08" paint-order="stroke">{fid}</text>')
         E('</g>')
     E('</g>')

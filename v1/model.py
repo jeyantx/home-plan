@@ -121,7 +121,7 @@ BRANCH_NOTES='''<section class="ask"><h2>Proposal v3: furniture, fixtures, types
 <li><b>Side garden tap area FU-53</b> is in the corner of BW-02 and BW-03.</li>
 <li><b>Store FU-56</b> is only at the low end of staircase 1. The top part stays open, and the car is back in its earlier place.</li>
 <li><b>Small gate GT-02</b> is double leaf, 6'9", and opens out toward the road. There is no west wall, just a gate post BW-06 at the boundary.</li>
-<li><b>Toilet 2:</b> being redesigned from online research (next update).</li>
+<li><b>Toilet 2</b>, from online research of small Indian toilets: the Indian pan FU-26 is in the north-east corner under ventilator V-02, facing south, screened by the open door. Bucket and health faucet FU-57 are on the user's left. The shower FU-28 is in the far south-east corner with geyser FU-58. Basin FU-27 is in the dry corner by the door, with a curtain rod FU-59 between. Pipes run in the 9" outer walls only. Sources: studiomatrx.org layout guides, NBC 2016 minimum 2.8 m² for a combined bath and WC (this room is about 2.97 m²).</li>
 </ol></section>
 <section class="ask"><h2>Layout (final): approved changes</h2>
 <ol>
@@ -139,9 +139,9 @@ BOREWELL=(6.0, back_y(6.0)-25.0)   # given: 25' from the back (south) boundary, 
 
 # ---------- drawing positions (layout specific) ----------
 LABELPOS={'G-01':(8.0,24.5),'G-02':(5.6,37.6),'G-03':(6.2,44.6),'G-04':(11.5,53.0),'G-05':(11.45,39.4),'G-06':(11.5,33.6),'G-07':(17.2,33.4),
-          'G-08':(8.0,63.4),'G-09':(16.3,66.7),'G-10':(15.0,71.0),'G-11':(6.0,70.6),'G-12':(16.2,92.8),'G-13':(1.55,36.0),'G-14':(5.0,94.0),'G-15':(15.2,100.2),
+          'G-08':(8.0,63.4),'G-09':(16.3,66.7),'G-10':(15.0,71.0),'G-11':(7.25,68.75),'G-12':(16.2,92.8),'G-13':(1.55,36.0),'G-14':(5.0,94.0),'G-15':(15.2,100.2),
           'F-01':(7.4,18.6),'F-02':(11.9,47.0),'F-03':(5.6,75.4),'F-04':(12.15,78.0),'F-05':(15.9,95.3),'F-06':(12.05,82.9),'F-07':(17.25,82.5)}
-LABELSIZE={'G-05':0.42,'G-12':0.42,'F-05':0.42,'G-09':0.4,'G-13':0.36,'G-06':0.4,'G-07':0.42,'G-11':0.42,'G-03':0.42,'G-02':0.42,'F-06':0.36,'F-07':0.42,'G-10':0.42,'F-04':0.45,'F-03':0.42,'F-01':0.45,'G-09':0.45,'G-01':0.6,'F-02':0.8}
+LABELSIZE={'G-11':0.3,'G-05':0.42,'G-12':0.42,'F-05':0.42,'G-09':0.4,'G-13':0.36,'G-06':0.4,'G-07':0.42,'G-11':0.42,'G-03':0.42,'G-02':0.42,'F-06':0.36,'F-07':0.42,'G-10':0.42,'F-04':0.45,'F-03':0.42,'F-01':0.45,'G-09':0.45,'G-01':0.6,'F-02':0.8}
 TAGPOS={'GW-01':(3.125,53.0),'GW-05':(20.625,51.0),'GW-07':(9.875,91.5),'BW-01':(0.19,50.0),'GW-04':(19.0,31.125),'GW-13':(12.62,58.94),'GW-12':(17.6,46.56),
         'GW-03':(8.875,33.6),'GW-02':(3.6,40.875),'GW-11':(19.0,36.19),'GW-08':(11.0,94.75),'GW-06':(8.2,73.375),'GW-16':(10.06,72.2),'PW-02':(2.94,40.0),'PW-04':(20.81,40.0),
         'FW-01':(9.875,94.0),'FW-03':(20.625,92.0),'FW-02':(18.4,73.5),'FW-04':(19.0,97.0),'FW-05':(18.0,80.06),'PW-03':(19.4,19.94),'PW-01':(5.0,15.69),'PW-05':(6.0,77.69),
@@ -181,9 +181,12 @@ FURNITURE = [
  ('FU-19.2','G','Overhead shelves, east',3.5,4.75,65.0,67.625,'over',None,'Kitchen, above the east counter beside the window (dashed)'),
  ('FU-19.3','G','Overhead shelves, east',3.5,4.75,59.125,61.0,'over',None,'Kitchen, above the east counter beside the window (dashed)'),
  ('FU-25','G','Store cupboard, full height',17.75,20.25,59.5,67.5,'store2',None,'Open area, 8\' x 2\'6", floor to ceiling, on GW-05 (no separate store room)'),
- ('FU-26','G','Indian WC',3.75,5.75,68.5,70.75,'iwc',None,'Toilet 2, Indian (squat) pan'),
- ('FU-27','G','Wash basin',7.75,9.25,71.6,73.0,'basin',None,'Toilet 2'),
- ('FU-28','G','Shower area',3.5,6.75,71.0,73.0,'shower',None,'Toilet 2, geyser above'),
+ ('FU-26','G','Indian WC (Orissa pan)',4.5,6.0,69.0,70.92,'iwc',None,'Toilet 2, 1\'11" x 1\'5½" pan in the NE corner under ventilator V-02; user faces south; screened by the open door'),
+ ('FU-57','G','Bucket, tap and health faucet',3.55,4.45,69.3,70.2,'bucket',None,'Toilet 2, on the user\'s left against GW-01; bib tap about 1\'9" high, health faucet about 10" high'),
+ ('FU-27','G','Wash basin, wall-hung',7.9,9.4,71.85,73.0,'basin',None,'Toilet 2, 1\'6" x 1\'2" on GW-06 in the dry corner by the door; mirror above; rim 2\'8"'),
+ ('FU-28','G','Shower area',3.5,6.5,70.75,73.0,'shower',None,'Toilet 2, 3\' x 2\'3" in the far SE corner; rose on GW-06 at 6\'9"; floor trap near the east wall; floor slopes 1:60'),
+ ('FU-58','G','Geyser',5.5,6.9,72.55,73.0,'geyser',None,'Toilet 2, on GW-06 above the shower, bottom at about 6\'3"'),
+ ('FU-59','G','Shower curtain rod',6.65,6.75,70.75,73.0,'curtain',None,'Toilet 2, keeps the basin side dry'),
  ('FU-29','G','Washing machine',3.25,5.25,74.25,76.25,'wm',None,'Side garden utility, covered by the terrace corner'),
  ('FU-30','G','Wash basin with tap',5.5,7.0,74.25,75.5,'basin',None,'Side garden, next to garden door D-05'),
  ('FU-31','G','Queen bed',13.75,20.25,85.0,90.0,'bed','x2','Bedroom 2, head to GW-05'),
