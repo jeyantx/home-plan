@@ -1,0 +1,256 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1422" height="440" viewBox="0 0 1422 440">
+<defs><marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#8a4b08"/></marker></defs>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="60" y="30" font-size="16" font-weight="bold" font-family="Helvetica,Arial">OPTION 4 - GROUND FLOOR (phase 1), corrected to the 16'9" inside width</text>
+<text x="60" y="48" font-size="10" fill="#444" font-family="Helvetica,Arial">2 bedrooms, living + dining, kitchen with a door to a 137 sqft garden, store, 3 toilets in the house. Straight stair along the west wall with cupboards under it.</text>
+<text x="60" y="70" font-size="9" font-weight="bold" fill="#555" font-family="Helvetica,Arial">ROAD / GATE (NORTH) on the left.  Top edge = EAST neighbour house (our new 9" wall).  Bottom edge = WEST apartment (existing wall).  Right = BACK (existing wall).</text>
+<text x="60" y="432.0" font-size="8.5" fill="#555" font-family="Helvetica,Arial">Plot 106' x 21' (20' at back). East: 6" compound wall + 1'3" setback. West: 1' setback from the apartment wall. Outer walls 9", partitions 6". Inside width 16'9" at the front, 15'9" at the back. Positions are feet from the front boundary.</text>
+<polygon points="60.0,130.0 1332.0,130.0 1332.0,370.0 60.0,382.0" fill="#eef5e6" stroke="#333" stroke-width="1.5"/>
+<rect x="60.0" y="130.0" width="1272.0" height="6.0" fill="#555" stroke="#555" stroke-width="1"/>
+<rect x="60.0" y="130.0" width="6.0" height="18.0" fill="#444" stroke="#444" stroke-width="1"/>
+<rect x="60.0" y="268.0" width="6.0" height="114.0" fill="#444" stroke="#444" stroke-width="1"/>
+<rect x="1326.0" y="130.0" width="6.0" height="240.0" fill="#555" stroke="#555" stroke-width="1"/>
+<line x1="60.0" y1="382.0" x2="1332.0" y2="370.0" stroke="#555" stroke-width="3"/>
+<line x1="63.0" y1="148.0" x2="63.0" y2="268.0" stroke="#8a4b08" stroke-width="3"/>
+<text x="73.2" y="208.0" font-size="7.5" text-anchor="start" font-weight="normal" fill="#222" font-family="Helvetica,Arial" transform="rotate(90 73.2 208.0)">GATE 10' sliding</text>
+<polygon points="228.0,136.0 1326.0,136.0 1326.0,151.0 228.0,151.0" fill="#d9ead3" stroke="none" stroke-width="1"/>
+<text x="780.0" y="146.2" font-size="6.5" text-anchor="middle" font-weight="normal" fill="#3a7a3a" font-family="Helvetica,Arial">east setback 1'3" (plus our 6" compound wall)</text>
+<polygon points="228.0,368.4 1326.0,358.1 1326.0,370.1 228.0,380.4" fill="#d9ead3" stroke="none" stroke-width="1"/>
+<text x="780.0" y="371.6" font-size="6.5" text-anchor="middle" font-weight="normal" fill="#3a7a3a" font-family="Helvetica,Arial">west setback 1' from the apartment wall</text>
+<circle cx="111.0" cy="292.0" r="9.0" fill="#5b3a1a"/>
+<circle cx="138.0" cy="292.0" r="66.0" fill="none" stroke="#2f7d32" stroke-width="1" stroke-dasharray="4 3"/>
+<text x="144.0" y="217.6" font-size="7.5" text-anchor="middle" font-weight="normal" fill="#2f7d32" font-family="Helvetica,Arial">NEEM TREE: trunk 3'6" from road, 7'6" from west,</text>
+<text x="144.0" y="228.4" font-size="7.5" text-anchor="middle" font-weight="normal" fill="#2f7d32" font-family="Helvetica,Arial">leans in to ~8'. Slab above starts at 14'.</text>
+<polygon points="66.0,136.0 348.0,136.0 348.0,379.3 66.0,381.9" fill="#e4e4e4" stroke="none" stroke-width="1"/>
+<polygon points="228.0,151.0 348.0,151.0 348.0,367.3 228.0,368.4" fill="#d4d4d4" stroke="#888" stroke-width="0.8" stroke-dasharray="5 3"/>
+<text x="288.0" y="169.6" font-size="7.5" text-anchor="middle" font-weight="normal" fill="#555" font-family="Helvetica,Arial">covered portico (slab above, 14' to 24')</text>
+<rect x="156.0" y="160.0" width="180.0" height="84.0" fill="#fff" stroke="#333" stroke-width="1"/>
+<text x="246.0" y="205.6" font-size="8" text-anchor="middle" font-weight="bold" fill="#222" font-family="Helvetica,Arial">CAR 15' x 7'</text>
+<rect x="234.0" y="253.6" width="72.0" height="18.0" fill="#fff" stroke="#333" stroke-width="0.8"/>
+<rect x="234.0" y="276.4" width="72.0" height="18.0" fill="#fff" stroke="#333" stroke-width="0.8"/>
+<rect x="234.0" y="299.2" width="72.0" height="18.0" fill="#fff" stroke="#333" stroke-width="0.8"/>
+<text x="270.0" y="250.0" font-size="7" text-anchor="middle" font-weight="normal" fill="#222" font-family="Helvetica,Arial"></text>
+<text x="327.6" y="283.6" font-size="6.5" text-anchor="middle" font-weight="normal" fill="#222" font-family="Helvetica,Arial">3 two-</text>
+<text x="327.6" y="293.2" font-size="6.5" text-anchor="middle" font-weight="normal" fill="#222" font-family="Helvetica,Arial">wheelers</text>
+<polygon points="174.0,311.9 309.0,310.7 309.0,358.7 174.0,359.9" fill="#f3d9b1" stroke="#8a4b08" stroke-width="1"/>
+<line x1="181.9" y1="311.8" x2="181.9" y2="359.8" stroke="#8a4b08" stroke-width="0.6"/>
+<line x1="189.9" y1="311.8" x2="189.9" y2="359.8" stroke="#8a4b08" stroke-width="0.6"/>
+<line x1="197.8" y1="311.7" x2="197.8" y2="359.7" stroke="#8a4b08" stroke-width="0.6"/>
+<line x1="205.8" y1="311.6" x2="205.8" y2="359.6" stroke="#8a4b08" stroke-width="0.6"/>
+<line x1="213.7" y1="311.5" x2="213.7" y2="359.5" stroke="#8a4b08" stroke-width="0.6"/>
+<line x1="221.6" y1="311.5" x2="221.6" y2="359.5" stroke="#8a4b08" stroke-width="0.6"/>
+<line x1="229.6" y1="311.4" x2="229.6" y2="359.4" stroke="#8a4b08" stroke-width="0.6"/>
+<line x1="237.5" y1="311.3" x2="237.5" y2="359.3" stroke="#8a4b08" stroke-width="0.6"/>
+<line x1="245.5" y1="311.3" x2="245.5" y2="359.3" stroke="#8a4b08" stroke-width="0.6"/>
+<line x1="253.4" y1="311.2" x2="253.4" y2="359.2" stroke="#8a4b08" stroke-width="0.6"/>
+<line x1="261.4" y1="311.1" x2="261.4" y2="359.1" stroke="#8a4b08" stroke-width="0.6"/>
+<line x1="269.3" y1="311.0" x2="269.3" y2="359.0" stroke="#8a4b08" stroke-width="0.6"/>
+<line x1="277.2" y1="311.0" x2="277.2" y2="359.0" stroke="#8a4b08" stroke-width="0.6"/>
+<line x1="285.2" y1="310.9" x2="285.2" y2="358.9" stroke="#8a4b08" stroke-width="0.6"/>
+<line x1="293.1" y1="310.8" x2="293.1" y2="358.8" stroke="#8a4b08" stroke-width="0.6"/>
+<line x1="301.1" y1="310.7" x2="301.1" y2="358.7" stroke="#8a4b08" stroke-width="0.6"/>
+<polygon points="309.0,310.7 348.0,310.3 348.0,358.3 309.0,358.7" fill="#f3d9b1" stroke="#8a4b08" stroke-width="1"/>
+<text x="328.8" y="332.1" font-size="6.5" text-anchor="middle" font-weight="normal" fill="#222" font-family="Helvetica,Arial">land.</text>
+<text x="240.0" y="330.5" font-size="7" text-anchor="middle" font-weight="bold" fill="#222" font-family="Helvetica,Arial">EXTERNAL STAIR to hall (phase 2): 4' wide, 18 x 7"</text>
+<text x="240.0" y="342.5" font-size="6.5" text-anchor="middle" font-weight="normal" fill="#8a4b08" font-family="Helvetica,Arial">store under the upper half</text>
+<rect x="228.0" y="166.0" width="96.0" height="72.0" fill="none" stroke="#1a6ea0" stroke-width="1" stroke-dasharray="3 2"/>
+<text x="276.0" y="232.0" font-size="7" text-anchor="middle" font-weight="normal" fill="#1a6ea0" font-family="Helvetica,Arial">SUMP below (12,000 L)</text>
+<rect x="78.0" y="316.0" width="78.0" height="53.5" fill="none" stroke="#8a2b2b" stroke-width="1" stroke-dasharray="3 2"/>
+<text x="117.0" y="370.0" font-size="7" text-anchor="middle" font-weight="normal" fill="#8a2b2b" font-family="Helvetica,Arial">SEPTIC TANK below</text>
+<rect x="348.0" y="151.0" width="588.0" height="9.0" fill="#444" stroke="#444" stroke-width="1"/>
+<polygon points="348.0,358.3 936.0,352.7 936.0,361.7 348.0,367.3" fill="#444" stroke="#444" stroke-width="1"/>
+<rect x="348.0" y="160.0" width="9.0" height="198.3" fill="#444" stroke="#444" stroke-width="1"/>
+<rect x="927.0" y="160.0" width="9.0" height="192.8" fill="#444" stroke="#444" stroke-width="1"/>
+<rect x="357.0" y="160.0" width="144.0" height="126.0" fill="#fff3f3" stroke="none" stroke-width="1"/>
+<text x="429.0" y="199.0" font-size="9" text-anchor="middle" font-weight="bold" fill="#222" font-family="Helvetica,Arial">BEDROOM 1 (parents)</text>
+<text x="429.0" y="232.0" font-size="7.5" text-anchor="middle" font-weight="normal" fill="#222" font-family="Helvetica,Arial">12' x 10'6" = 126 sqft</text>
+<rect x="357.0" y="286.0" width="204.0" height="6.0" fill="#777" stroke="#777" stroke-width="1"/>
+<rect x="501.0" y="160.0" width="6.0" height="90.0" fill="#777" stroke="#777" stroke-width="1"/>
+<rect x="507.0" y="160.0" width="54.0" height="84.0" fill="#e0eef0" stroke="none" stroke-width="1"/>
+<text x="534.0" y="178.0" font-size="7.5" text-anchor="middle" font-weight="bold" fill="#222" font-family="Helvetica,Arial">TOILET 1</text>
+<text x="534.0" y="211.0" font-size="6.0" text-anchor="middle" font-weight="normal" fill="#222" font-family="Helvetica,Arial">4'6" x 7' common</text>
+<rect x="507.0" y="244.0" width="54.0" height="6.0" fill="#777" stroke="#777" stroke-width="1"/>
+<rect x="507.0" y="250.0" width="54.0" height="36.0" fill="#f0f0f0" stroke="none" stroke-width="1"/>
+<text x="534.0" y="264.4" font-size="6.5" text-anchor="middle" font-weight="normal" fill="#222" font-family="Helvetica,Arial">BR1</text>
+<text x="534.0" y="275.2" font-size="6.5" text-anchor="middle" font-weight="normal" fill="#222" font-family="Helvetica,Arial">wardrobe</text>
+<rect x="561.0" y="160.0" width="6.0" height="126.0" fill="#777" stroke="#777" stroke-width="1"/>
+<polygon points="357.0,292.0 561.0,292.0 561.0,356.3 357.0,358.2" fill="#fbf6ea" stroke="none" stroke-width="1"/>
+<text x="458.4" y="310.0" font-size="7.5" text-anchor="middle" font-weight="bold" fill="#222" font-family="Helvetica,Arial">FOYER 17' x 5'6"</text>
+<text x="458.4" y="322.0" font-size="6.5" text-anchor="middle" font-weight="normal" fill="#222" font-family="Helvetica,Arial">shoe rack, wash basin</text>
+<polygon points="567.0,160.0 741.0,160.0 741.0,354.6 567.0,356.2" fill="#fbf6ea" stroke="none" stroke-width="1"/>
+<text x="654.0" y="196.0" font-size="10" text-anchor="middle" font-weight="bold" fill="#222" font-family="Helvetica,Arial">LIVING + DINING</text>
+<text x="654.0" y="209.2" font-size="7.5" text-anchor="middle" font-weight="normal" fill="#222" font-family="Helvetica,Arial">14'6" x 16'6" = 239 sqft (+ foyer 94 = 333 open)</text>
+<text x="612.0" y="256.0" font-size="7" text-anchor="middle" font-weight="normal" fill="#777" font-family="Helvetica,Arial">living 8'6"</text>
+<text x="702.0" y="256.0" font-size="7" text-anchor="middle" font-weight="normal" fill="#777" font-family="Helvetica,Arial">dining 6' (table 3' x 6')</text>
+<line x1="672.0" y1="166.0" x2="672.0" y2="307.2" stroke="#bbb" stroke-width="0.8" stroke-dasharray="3 3"/>
+<rect x="741.0" y="160.0" width="6.0" height="149.6" fill="#777" stroke="#777" stroke-width="1"/>
+<polygon points="678.0,316.2 758.4,315.4 758.4,354.4 678.0,355.2" fill="#f3d9b1" stroke="#8a4b08" stroke-width="1"/>
+<line x1="688.0" y1="316.1" x2="688.0" y2="355.1" stroke="#8a4b08" stroke-width="0.6"/>
+<line x1="698.1" y1="316.0" x2="698.1" y2="355.0" stroke="#8a4b08" stroke-width="0.6"/>
+<line x1="708.2" y1="315.9" x2="708.2" y2="354.9" stroke="#8a4b08" stroke-width="0.6"/>
+<line x1="718.2" y1="315.8" x2="718.2" y2="354.8" stroke="#8a4b08" stroke-width="0.6"/>
+<line x1="728.2" y1="315.7" x2="728.2" y2="354.7" stroke="#8a4b08" stroke-width="0.6"/>
+<line x1="738.3" y1="315.6" x2="738.3" y2="354.6" stroke="#8a4b08" stroke-width="0.6"/>
+<line x1="748.4" y1="315.5" x2="748.4" y2="354.5" stroke="#8a4b08" stroke-width="0.6"/>
+<polygon points="758.4,315.4 794.4,315.1 794.4,354.1 758.4,354.4" fill="#f3d9b1" stroke="#8a4b08" stroke-width="1"/>
+<polygon points="794.4,315.1 874.8,314.3 874.8,353.3 794.4,354.1" fill="#f3d9b1" stroke="#8a4b08" stroke-width="1"/>
+<line x1="804.5" y1="315.0" x2="804.5" y2="354.0" stroke="#8a4b08" stroke-width="0.6"/>
+<line x1="814.5" y1="314.9" x2="814.5" y2="353.9" stroke="#8a4b08" stroke-width="0.6"/>
+<line x1="824.6" y1="314.8" x2="824.6" y2="353.8" stroke="#8a4b08" stroke-width="0.6"/>
+<line x1="834.6" y1="314.7" x2="834.6" y2="353.7" stroke="#8a4b08" stroke-width="0.6"/>
+<line x1="844.7" y1="314.6" x2="844.7" y2="353.6" stroke="#8a4b08" stroke-width="0.6"/>
+<line x1="854.7" y1="314.5" x2="854.7" y2="353.5" stroke="#8a4b08" stroke-width="0.6"/>
+<line x1="864.8" y1="314.4" x2="864.8" y2="353.4" stroke="#8a4b08" stroke-width="0.6"/>
+<polygon points="874.8,314.3 927.0,313.8 927.0,352.8 874.8,353.3" fill="#f3d9b1" stroke="#8a4b08" stroke-width="1"/>
+<line x1="686.4" y1="335.6" x2="864.0" y2="334.3" stroke="#8a4b08" stroke-width="1" marker-end="url(#arr)"/>
+<text x="776.4" y="331.4" font-size="6.5" text-anchor="middle" font-weight="normal" fill="#222" font-family="Helvetica,Arial">landing</text>
+<text x="900.0" y="330.3" font-size="6.5" text-anchor="middle" font-weight="normal" fill="#222" font-family="Helvetica,Arial">arrival</text>
+<text x="900.0" y="341.1" font-size="6.5" text-anchor="middle" font-weight="normal" fill="#222" font-family="Helvetica,Arial">above</text>
+<text x="720.0" y="348.8" font-size="6.5" text-anchor="middle" font-weight="bold" fill="#5a3005" font-family="Helvetica,Arial">INTERNAL STAIR 3'3" wide: 9 + 9 risers x 7", treads 10"</text>
+<polygon points="678.0,310.2 794.4,309.1 794.4,315.1 678.0,316.2" fill="#777" stroke="#777" stroke-width="1"/>
+<text x="732.0" y="303.1" font-size="6.5" text-anchor="middle" font-weight="normal" fill="#8a4b08" font-family="Helvetica,Arial">cupboards under flight 1 (dining side), tall store under flight 2 (passage side)</text>
+<rect x="747.0" y="160.0" width="48.0" height="114.0" fill="#f0f0f0" stroke="none" stroke-width="1"/>
+<text x="771.0" y="193.0" font-size="7.5" text-anchor="middle" font-weight="bold" fill="#222" font-family="Helvetica,Arial">STORE</text>
+<text x="771.0" y="226.0" font-size="6.0" text-anchor="middle" font-weight="normal" fill="#222" font-family="Helvetica,Arial">4' x 9'6" = 38 sqft</text>
+<rect x="795.0" y="160.0" width="6.0" height="114.0" fill="#777" stroke="#777" stroke-width="1"/>
+<rect x="801.0" y="160.0" width="126.0" height="114.0" fill="#eaf3ff" stroke="none" stroke-width="1"/>
+<text x="864.0" y="193.0" font-size="9" text-anchor="middle" font-weight="bold" fill="#222" font-family="Helvetica,Arial">KITCHEN</text>
+<text x="864.0" y="226.0" font-size="7.5" text-anchor="middle" font-weight="normal" fill="#222" font-family="Helvetica,Arial">10'6" x 9'6" = 100 sqft</text>
+<text x="864.0" y="245.2" font-size="6.5" text-anchor="middle" font-weight="normal" fill="#555" font-family="Helvetica,Arial">L counter on east + back wall, door to garden</text>
+<rect x="747.0" y="274.0" width="180.0" height="6.0" fill="#777" stroke="#777" stroke-width="1"/>
+<polygon points="741.0,309.6 927.0,307.8 927.0,313.8 741.0,315.6" fill="#777" stroke="#777" stroke-width="1"/>
+<polygon points="747.0,280.0 927.0,280.0 927.0,307.8 747.0,309.5" fill="#f7f7f7" stroke="none" stroke-width="1"/>
+<text x="836.4" y="292.5" font-size="6.5" text-anchor="middle" font-weight="bold" fill="#555" font-family="Helvetica,Arial">PASSAGE 3'3" (full height under arrival landing at the back)</text>
+<polygon points="936.0,160.0 1080.0,160.0 1080.0,306.4 936.0,307.7" fill="#cfe9c3" stroke="#2f7d32" stroke-width="1"/>
+<text x="1008.0" y="223.6" font-size="11" text-anchor="middle" font-weight="bold" fill="#1e5a20" font-family="Helvetica,Arial">GARDEN</text>
+<text x="1008.0" y="238.0" font-size="8" text-anchor="middle" font-weight="normal" fill="#222" font-family="Helvetica,Arial">12' x 12'9" = 153 sqft open to sky</text>
+<text x="1008.0" y="250.0" font-size="7" text-anchor="middle" font-weight="normal" fill="#222" font-family="Helvetica,Arial">(137 sqft after the utility)</text>
+<rect x="936.0" y="160.0" width="54.0" height="54.0" fill="#f0f0f0" stroke="#888" stroke-width="0.8"/>
+<text x="963.0" y="178.0" font-size="7" text-anchor="middle" font-weight="bold" fill="#222" font-family="Helvetica,Arial">UTILITY</text>
+<text x="963.0" y="188.8" font-size="6.5" text-anchor="middle" font-weight="normal" fill="#222" font-family="Helvetica,Arial">4'6" x 4'6"</text>
+<text x="963.0" y="199.6" font-size="6.5" text-anchor="middle" font-weight="normal" fill="#222" font-family="Helvetica,Arial">wash. machine</text>
+<polygon points="936.0,307.7 1080.0,306.4 1080.0,351.4 936.0,352.7" fill="#e9e9e9" stroke="#888" stroke-width="0.8" stroke-dasharray="4 2"/>
+<text x="1008.0" y="330.5" font-size="6.5" text-anchor="middle" font-weight="normal" fill="#555" font-family="Helvetica,Arial">covered walk 3'3" (bridge above)</text>
+<rect x="1080.0" y="151.0" width="180.0" height="9.0" fill="#444" stroke="#444" stroke-width="1"/>
+<polygon points="1080.0,351.4 1260.0,349.7 1260.0,358.7 1080.0,360.4" fill="#444" stroke="#444" stroke-width="1"/>
+<rect x="1080.0" y="160.0" width="9.0" height="191.4" fill="#444" stroke="#444" stroke-width="1"/>
+<rect x="1251.0" y="160.0" width="9.0" height="189.8" fill="#444" stroke="#444" stroke-width="1"/>
+<rect x="1089.0" y="160.0" width="162.0" height="126.0" fill="#fff3f3" stroke="none" stroke-width="1"/>
+<text x="1170.0" y="199.0" font-size="9" text-anchor="middle" font-weight="bold" fill="#222" font-family="Helvetica,Arial">BEDROOM 2</text>
+<text x="1170.0" y="232.0" font-size="7.5" text-anchor="middle" font-weight="normal" fill="#222" font-family="Helvetica,Arial">13'6" x 10'6" = 142 sqft</text>
+<rect x="1089.0" y="286.0" width="162.0" height="6.0" fill="#777" stroke="#777" stroke-width="1"/>
+<polygon points="1089.0,292.0 1155.0,292.0 1155.0,350.7 1089.0,351.3" fill="#f7f7f7" stroke="none" stroke-width="1"/>
+<text x="1122.0" y="310.0" font-size="6.5" text-anchor="middle" font-weight="bold" fill="#222" font-family="Helvetica,Arial">LOBBY +</text>
+<text x="1122.0" y="320.8" font-size="6.5" text-anchor="middle" font-weight="normal" fill="#222" font-family="Helvetica,Arial">wardrobe 5'6"</text>
+<rect x="1155.0" y="292.0" width="6.0" height="58.7" fill="#777" stroke="#777" stroke-width="1"/>
+<polygon points="1161.0,292.0 1251.0,292.0 1251.0,349.8 1161.0,350.6" fill="#d6ecef" stroke="none" stroke-width="1"/>
+<text x="1206.0" y="310.0" font-size="7.5" text-anchor="middle" font-weight="bold" fill="#222" font-family="Helvetica,Arial">BATH 2 (big)</text>
+<text x="1206.0" y="320.8" font-size="6.5" text-anchor="middle" font-weight="normal" fill="#222" font-family="Helvetica,Arial">7'6" x 5'3" = 39 sqft</text>
+<polygon points="1260.0,151.0 1326.0,151.0 1326.0,358.1 1260.0,358.7" fill="#cfe9c3" stroke="#2f7d32" stroke-width="1"/>
+<text x="1292.4" y="202.0" font-size="8" text-anchor="middle" font-weight="bold" fill="#1e5a20" font-family="Helvetica,Arial" transform="rotate(-90 1292.4 202.0)">REAR YARD</text>
+<text x="1304.4" y="202.0" font-size="6.5" text-anchor="middle" font-weight="normal" fill="#222" font-family="Helvetica,Arial" transform="rotate(-90 1304.4 202.0)">5'6" x 18' = 99 sqft: borewell, clothes line</text>
+<circle cx="1292.4" cy="310.0" r="5" fill="none" stroke="#1a6ea0" stroke-width="1.2"/>
+<line x1="348.0" y1="295.6" x2="390.0" y2="295.6" stroke="#8a4b08" stroke-width="1.2"/>
+<path d="M390.0,295.6 A42.0,42.0 0 0 0 348.0,337.6" fill="none" stroke="#8a4b08" stroke-width="0.8"/>
+<text x="363.6" y="292.0" font-size="6.5" text-anchor="start" font-weight="normal" fill="#222" font-family="Helvetica,Arial">MAIN DOOR 3'6"</text>
+<line x1="408.0" y1="286.0" x2="408.0" y2="250.0" stroke="#8a4b08" stroke-width="1.2"/>
+<path d="M408.0,250.0 A36.0,36.0 0 0 0 444.0,286.0" fill="none" stroke="#8a4b08" stroke-width="0.8"/>
+<line x1="561.0" y1="172.0" x2="591.0" y2="172.0" stroke="#8a4b08" stroke-width="1.2"/>
+<path d="M591.0,172.0 A30.0,30.0 0 0 0 561.0,202.0" fill="none" stroke="#8a4b08" stroke-width="0.8"/>
+<line x1="747.0" y1="178.0" x2="777.0" y2="178.0" stroke="#8a4b08" stroke-width="1.2"/>
+<path d="M777.0,178.0 A30.0,30.0 0 0 0 747.0,208.0" fill="none" stroke="#8a4b08" stroke-width="0.8"/>
+<line x1="852.0" y1="274.0" x2="852.0" y2="304.0" stroke="#8a4b08" stroke-width="1.2"/>
+<path d="M852.0,304.0 A30.0,30.0 0 0 1 882.0,274.0" fill="none" stroke="#8a4b08" stroke-width="0.8"/>
+<line x1="927.0" y1="172.0" x2="963.0" y2="172.0" stroke="#8a4b08" stroke-width="1.2"/>
+<path d="M963.0,172.0 A36.0,36.0 0 0 0 927.0,208.0" fill="none" stroke="#8a4b08" stroke-width="0.8"/>
+<text x="940.8" y="168.4" font-size="6.5" text-anchor="start" font-weight="normal" fill="#222" font-family="Helvetica,Arial">kitchen -> garden</text>
+<line x1="927.0" y1="309.6" x2="963.0" y2="309.6" stroke="#8a4b08" stroke-width="1.2"/>
+<path d="M963.0,309.6 A36.0,36.0 0 0 0 927.0,345.6" fill="none" stroke="#8a4b08" stroke-width="0.8"/>
+<line x1="1080.0" y1="308.2" x2="1116.0" y2="308.2" stroke="#8a4b08" stroke-width="1.2"/>
+<path d="M1116.0,308.2 A36.0,36.0 0 0 0 1080.0,344.2" fill="none" stroke="#8a4b08" stroke-width="0.8"/>
+<line x1="1104.0" y1="286.0" x2="1104.0" y2="256.0" stroke="#8a4b08" stroke-width="1.2"/>
+<path d="M1104.0,256.0 A30.0,30.0 0 0 0 1134.0,286.0" fill="none" stroke="#8a4b08" stroke-width="0.8"/>
+<line x1="1170.0" y1="286.0" x2="1170.0" y2="316.0" stroke="#8a4b08" stroke-width="1.2"/>
+<path d="M1170.0,316.0 A30.0,30.0 0 0 1 1200.0,286.0" fill="none" stroke="#8a4b08" stroke-width="0.8"/>
+<line x1="1251.0" y1="172.0" x2="1287.0" y2="172.0" stroke="#8a4b08" stroke-width="1.2"/>
+<path d="M1287.0,172.0 A36.0,36.0 0 0 0 1251.0,208.0" fill="none" stroke="#8a4b08" stroke-width="0.8"/>
+<text x="1264.8" y="168.4" font-size="6.5" text-anchor="start" font-weight="normal" fill="#222" font-family="Helvetica,Arial">to yard</text>
+<rect x="348.0" y="178.0" width="2.4" height="72.0" fill="#cfe8ff" stroke="#2b6cb0" stroke-width="1"/>
+<rect x="348.0" y="310.0" width="2.4" height="42.3" fill="#cfe8ff" stroke="#2b6cb0" stroke-width="1"/>
+<rect x="927.0" y="202.0" width="2.4" height="60.0" fill="#cfe8ff" stroke="#2b6cb0" stroke-width="1"/>
+<rect x="1080.0" y="178.0" width="2.4" height="84.0" fill="#cfe8ff" stroke="#2b6cb0" stroke-width="1"/>
+<rect x="1251.0" y="190.0" width="2.4" height="72.0" fill="#cfe8ff" stroke="#2b6cb0" stroke-width="1"/>
+<rect x="588.0" y="160.0" width="96.0" height="2.4" fill="#cfe8ff" stroke="#2b6cb0" stroke-width="1"/>
+<rect x="816.0" y="160.0" width="84.0" height="2.4" fill="#cfe8ff" stroke="#2b6cb0" stroke-width="1"/>
+<text x="750.0" y="156.4" font-size="6.5" text-anchor="middle" font-weight="normal" fill="#2b6cb0" font-family="Helvetica,Arial">high windows on the east wall (sill 7'), above the setback</text>
+<rect x="1176.0" y="348.0" width="60.0" height="2.4" fill="#cfe8ff" stroke="#2b6cb0" stroke-width="1"/>
+<rect x="228.0" y="151.0" width="9.0" height="9.0" fill="#222" stroke="#222" stroke-width="1"/>
+<rect x="228.0" y="359.4" width="9.0" height="9.0" fill="#222" stroke="#222" stroke-width="1"/>
+<rect x="348.0" y="151.0" width="9.0" height="9.0" fill="#222" stroke="#222" stroke-width="1"/>
+<rect x="348.0" y="358.3" width="9.0" height="9.0" fill="#222" stroke="#222" stroke-width="1"/>
+<rect x="501.0" y="151.0" width="9.0" height="9.0" fill="#222" stroke="#222" stroke-width="1"/>
+<rect x="501.0" y="356.8" width="9.0" height="9.0" fill="#222" stroke="#222" stroke-width="1"/>
+<rect x="567.0" y="151.0" width="9.0" height="9.0" fill="#222" stroke="#222" stroke-width="1"/>
+<rect x="567.0" y="356.2" width="9.0" height="9.0" fill="#222" stroke="#222" stroke-width="1"/>
+<rect x="741.0" y="151.0" width="9.0" height="9.0" fill="#222" stroke="#222" stroke-width="1"/>
+<rect x="741.0" y="354.6" width="9.0" height="9.0" fill="#222" stroke="#222" stroke-width="1"/>
+<rect x="927.0" y="151.0" width="9.0" height="9.0" fill="#222" stroke="#222" stroke-width="1"/>
+<rect x="927.0" y="352.8" width="9.0" height="9.0" fill="#222" stroke="#222" stroke-width="1"/>
+<text x="612.0" y="388.8" font-size="7.5" text-anchor="middle" font-weight="normal" fill="#333" font-family="Helvetica,Arial">Black squares = RCC columns in the side walls (6 per side). Beams span the 16'9". The hall above is column-free.</text>
+<line x1="60.0" y1="98.8" x2="348.0" y2="98.8" stroke="#555" stroke-width="0.8"/>
+<line x1="60.0" y1="95.2" x2="60.0" y2="102.4" stroke="#555" stroke-width="0.8"/>
+<line x1="348.0" y1="95.2" x2="348.0" y2="102.4" stroke="#555" stroke-width="0.8"/>
+<text x="204.0" y="92.8" font-size="8" text-anchor="middle" font-weight="normal" fill="#444" font-family="Helvetica,Arial">parking 24'</text>
+<line x1="348.0" y1="98.8" x2="567.0" y2="98.8" stroke="#555" stroke-width="0.8"/>
+<line x1="348.0" y1="95.2" x2="348.0" y2="102.4" stroke="#555" stroke-width="0.8"/>
+<line x1="567.0" y1="95.2" x2="567.0" y2="102.4" stroke="#555" stroke-width="0.8"/>
+<text x="457.5" y="92.8" font-size="8" text-anchor="middle" font-weight="normal" fill="#444" font-family="Helvetica,Arial">bedroom 1 + toilet 18'3"</text>
+<line x1="567.0" y1="98.8" x2="747.0" y2="98.8" stroke="#555" stroke-width="0.8"/>
+<line x1="567.0" y1="95.2" x2="567.0" y2="102.4" stroke="#555" stroke-width="0.8"/>
+<line x1="747.0" y1="95.2" x2="747.0" y2="102.4" stroke="#555" stroke-width="0.8"/>
+<text x="657.0" y="92.8" font-size="8" text-anchor="middle" font-weight="normal" fill="#444" font-family="Helvetica,Arial">living / dining 15'</text>
+<line x1="747.0" y1="98.8" x2="936.0" y2="98.8" stroke="#555" stroke-width="0.8"/>
+<line x1="747.0" y1="95.2" x2="747.0" y2="102.4" stroke="#555" stroke-width="0.8"/>
+<line x1="936.0" y1="95.2" x2="936.0" y2="102.4" stroke="#555" stroke-width="0.8"/>
+<text x="841.5" y="92.8" font-size="8" text-anchor="middle" font-weight="normal" fill="#444" font-family="Helvetica,Arial">store / kitchen / stair 15'9"</text>
+<line x1="936.0" y1="98.8" x2="1080.0" y2="98.8" stroke="#555" stroke-width="0.8"/>
+<line x1="936.0" y1="95.2" x2="936.0" y2="102.4" stroke="#555" stroke-width="0.8"/>
+<line x1="1080.0" y1="95.2" x2="1080.0" y2="102.4" stroke="#555" stroke-width="0.8"/>
+<text x="1008.0" y="92.8" font-size="8" text-anchor="middle" font-weight="normal" fill="#444" font-family="Helvetica,Arial">garden 12'</text>
+<line x1="1080.0" y1="98.8" x2="1260.0" y2="98.8" stroke="#555" stroke-width="0.8"/>
+<line x1="1080.0" y1="95.2" x2="1080.0" y2="102.4" stroke="#555" stroke-width="0.8"/>
+<line x1="1260.0" y1="95.2" x2="1260.0" y2="102.4" stroke="#555" stroke-width="0.8"/>
+<text x="1170.0" y="92.8" font-size="8" text-anchor="middle" font-weight="normal" fill="#444" font-family="Helvetica,Arial">bedroom 2 wing 15'</text>
+<line x1="1260.0" y1="98.8" x2="1332.0" y2="98.8" stroke="#555" stroke-width="0.8"/>
+<line x1="1260.0" y1="95.2" x2="1260.0" y2="102.4" stroke="#555" stroke-width="0.8"/>
+<line x1="1332.0" y1="95.2" x2="1332.0" y2="102.4" stroke="#555" stroke-width="0.8"/>
+<text x="1296.0" y="92.8" font-size="8" text-anchor="middle" font-weight="normal" fill="#444" font-family="Helvetica,Arial">yard 6'</text>
+<line x1="60.0" y1="79.6" x2="1332.0" y2="79.6" stroke="#555" stroke-width="0.8"/>
+<line x1="60.0" y1="76.0" x2="60.0" y2="83.2" stroke="#555" stroke-width="0.8"/>
+<line x1="1332.0" y1="76.0" x2="1332.0" y2="83.2" stroke="#555" stroke-width="0.8"/>
+<text x="696.0" y="73.6" font-size="8" text-anchor="middle" font-weight="normal" fill="#444" font-family="Helvetica,Arial">106'</text>
+<line x1="40.8" y1="130.0" x2="40.8" y2="382.0" stroke="#555" stroke-width="0.8"/>
+<line x1="37.2" y1="130.0" x2="44.4" y2="130.0" stroke="#555" stroke-width="0.8"/>
+<line x1="37.2" y1="382.0" x2="44.4" y2="382.0" stroke="#555" stroke-width="0.8"/>
+<text x="36.0" y="256.0" font-size="8" text-anchor="middle" font-weight="normal" fill="#444" font-family="Helvetica,Arial" transform="rotate(-90 36.0 256.0)">21'</text>
+<line x1="1347.6" y1="130.0" x2="1347.6" y2="370.0" stroke="#555" stroke-width="0.8"/>
+<line x1="1344.0" y1="130.0" x2="1351.2" y2="130.0" stroke="#555" stroke-width="0.8"/>
+<line x1="1344.0" y1="370.0" x2="1351.2" y2="370.0" stroke="#555" stroke-width="0.8"/>
+<text x="1342.8" y="250.0" font-size="8" text-anchor="middle" font-weight="normal" fill="#444" font-family="Helvetica,Arial" transform="rotate(-90 1342.8 250.0)">20'</text>
+<line x1="348.0" y1="398.8" x2="936.0" y2="398.8" stroke="#555" stroke-width="0.8"/>
+<line x1="348.0" y1="395.2" x2="348.0" y2="402.4" stroke="#555" stroke-width="0.8"/>
+<line x1="936.0" y1="395.2" x2="936.0" y2="402.4" stroke="#555" stroke-width="0.8"/>
+<text x="642.0" y="410.8" font-size="8" text-anchor="middle" font-weight="normal" fill="#444" font-family="Helvetica,Arial">HALL ABOVE (phase 2): footprint 49' x 18'3"</text>
+<line x1="228.0" y1="398.8" x2="348.0" y2="398.8" stroke="#555" stroke-width="0.8"/>
+<line x1="228.0" y1="395.2" x2="228.0" y2="402.4" stroke="#555" stroke-width="0.8"/>
+<line x1="348.0" y1="395.2" x2="348.0" y2="402.4" stroke="#555" stroke-width="0.8"/>
+<text x="288.0" y="410.8" font-size="8" text-anchor="middle" font-weight="normal" fill="#444" font-family="Helvetica,Arial">lobby above</text>
+<line x1="1080.0" y1="398.8" x2="1260.0" y2="398.8" stroke="#555" stroke-width="0.8"/>
+<line x1="1080.0" y1="395.2" x2="1080.0" y2="402.4" stroke="#555" stroke-width="0.8"/>
+<line x1="1260.0" y1="395.2" x2="1260.0" y2="402.4" stroke="#555" stroke-width="0.8"/>
+<text x="1170.0" y="410.8" font-size="8" text-anchor="middle" font-weight="normal" fill="#444" font-family="Helvetica,Arial">BEDROOM 3 above (phase 1)</text>
+<line x1="339.6" y1="160.0" x2="339.6" y2="358.4" stroke="#555" stroke-width="0.8"/>
+<line x1="336.0" y1="160.0" x2="343.2" y2="160.0" stroke="#555" stroke-width="0.8"/>
+<line x1="336.0" y1="358.4" x2="343.2" y2="358.4" stroke="#555" stroke-width="0.8"/>
+<text x="334.8" y="259.2" font-size="8" text-anchor="middle" font-weight="normal" fill="#444" font-family="Helvetica,Arial" transform="rotate(-90 334.8 259.2)">16'9" inside</text>
+</svg>
