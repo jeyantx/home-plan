@@ -1,0 +1,10 @@
+# Exports the approved plan (model.py) as JSON for the 3D page. Units: feet.
+import json, model as M
+def walls(fl): return [dict(id=w[0],x1=w[1],x2=w[2],y1=w[3],y2=w[4],kind=w[5],h=w[6],desc=w[7]) for w in M.WALLS[fl]]
+def rooms(fl): return [dict(id=r[0],name=r[1],pts=r[2],kind=r[3]) for r in M.ROOMS[fl]]
+ops=[dict(id=o[0],fl=o[1],wall=o[2],a=o[3],b=o[4],type=o[5],hinge=o[6],swing=o[7],h=o[8],sill=o[9],note=o[10]) for o in M.OPENINGS]
+fu=[dict(id=f[0],fl=f[1],name=f[2],x1=f[3],x2=f[4],y1=f[5],y2=f[6],kind=f[7],side=f[8],note=f[9]) for f in getattr(M,'FURNITURE',[])]
+data=dict(walls=dict(G=walls('G'),F=walls('F')),rooms=dict(G=rooms('G'),F=rooms('F')),openings=ops,furniture=fu,
+          plot=M.PLOT,car=getattr(M,'CAR',None),spiral=dict(c=M.SPC,r=M.SPR),spec=getattr(M,'SPEC',{}))
+if __name__=='__main__':
+    print(json.dumps(data))
