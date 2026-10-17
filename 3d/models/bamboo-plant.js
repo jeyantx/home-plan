@@ -84,7 +84,7 @@ export function createBambooPlant(THREE, opts = {}) {
   // ------------------------------------------------------------------ stems + twigs (one merged geometry)
   const S = { pos: [], nor: [], uv: [], col: [], idx: [] };
   const UP = new THREE.Vector3(0, 1, 0);
-  const tmpA = new THREE.Vector3(), tmpB = new THREE.Vector3();
+  const tmpA = new THREE.Vector3();
 
   // tube along pts; per-point radius, v coordinate and colour
   function addTube(pts, rad, vs, cols, radial) {
@@ -121,32 +121,20 @@ export function createBambooPlant(THREE, opts = {}) {
 
   const leaves = []; // {p, d, len, wid, roll, tone}
 
-  // fan of leaves at point p, opening around direction dir
-  function leafFan(p, dir, count, heightT) {
-    const h = tmpB.set(dir.x, 0, dir.z);
-    if (h.lengthSq() < 1e-6) h.set(Math.cos(R(0, 6.28)), 0, Math.sin(R(0, 6.28)));
-    h.normalize();
-    const baseYaw = Math.atan2(h.z, h.x);
-    const spread = R(0.9, 1.6);
-    for (let k = 0; k < count; k++) {
-      const f = count === 1 ? 0 : k / (count - 1) - 0.5;
-      const yaw = baseYaw + f * 2 * spread + R(-0.18, 0.18);
-      // upper canopy leaves lift a little more, lower ones hang more
-      const pitch = R(-0.55, 0.25) + 0.25 * heightT + 0.25 * dir.y;
-      const d = new THREE.Vector3(Math.cos(yaw) * Math.cos(pitch), Math.sin(pitch), Math.sin(yaw) * Math.cos(pitch));
-      leaves.push({
-        p: p.clone().addScaledVector(d, 0.004),
-        d,
-        len: R(0.085, 0.14) * (1 - 0.15 * Math.abs(f)),
-        wid: R(0.85, 1.15),
-        roll: R(-0.45, 0.45),
-        heightT,
-      });
-    }
+  function pushLeaf(p, yaw, pitch, heightT, lenK) {
+    const d = new THREE.Vector3(Math.cos(yaw) * Math.cos(pitch), Math.sin(pitch), Math.sin(yaw) * Math.cos(pitch));
+    leaves.push({
+      p: p.clone().addScaledVector(d, 0.004),
+      d,
+      len: R(0.085, 0.14) * lenK,
+      wid: R(0.85, 1.15),
+      roll: R(-0.45, 0.45),
+      heightT,
+    });
   }
 
-  // twig with a leaf fan at its end; returns end point
-  function twig(p0, dir, len, r0, r1, droop, heightT, fanCount) {
+  // twig with leaves: alternating single leaves along its outer part plus a small tip cluster
+  function twig(p0, dir, len, r0, r1, droop, heightT, nLeaves) {
     const steps = 4, pts = [], rad = [], vs = [], cols = [];
     for (let i = 0; i <= steps; i++) {
       const u = i / steps;
@@ -156,9 +144,21 @@ export function createBambooPlant(THREE, opts = {}) {
       cols.push([0.86, 0.84, 0.62]);
     }
     addTube(pts, rad, vs, cols, 4);
-    const end = pts[steps];
-    const tan = new THREE.Vector3().subVectors(end, pts[steps - 1]).normalize();
-    leafFan(end, tan, fanCount, heightT);
+    const at = (u) => { const f = u * steps, i = Math.min(steps - 1, Math.floor(f)); return pts[i].clone().lerp(pts[i + 1], f - i); };
+    const tanYaw = Math.atan2(dir.z, dir.x);
+    const nTip = Math.min(nLeaves, 2 + Math.floor(rnd() * 2));
+    const nAlong = nLeaves - nTip;
+    let side = rnd() < 0.5 ? -1 : 1;
+    for (let k = 0; k < nAlong; k++) {
+      const u = 0.35 + 0.6 * (k + R(0.1, 0.9)) / Math.max(1, nAlong);
+      side = -side;
+      pushLeaf(at(u), tanYaw + side * R(0.55, 1.25), R(-0.85, 0.05) + 0.3 * heightT, heightT, 1);
+    }
+    const tipPitch = Math.asin(Math.max(-1, Math.min(1, dir.y))) * 0.5;
+    for (let k = 0; k < nTip; k++) {
+      const f = nTip === 1 ? 0 : k / (nTip - 1) - 0.5;
+      pushLeaf(at(1), tanYaw + f * R(0.6, 1.1) + R(-0.15, 0.15), tipPitch + R(-0.6, 0.15) + 0.2 * heightT, heightT, 1.05);
+    }
     return pts;
   }
 
@@ -208,8 +208,8 @@ export function createBambooPlant(THREE, opts = {}) {
       for (const nd of nodes) if (Math.abs(q - nd) < Math.abs(nearest)) nearest = q - nd;
       const ridge = Math.exp(-Math.pow(nearest / 0.0022, 2));
       const band = Math.exp(-Math.pow((nearest + 0.002) / 0.006, 2));
-      const r = cu.r0 * (1 - 0.18 * q / L) * (1 + 0.13 * ridge);
-      const k = cu.tone * (1 - 0.42 * band);
+      const r = cu.r0 * (1 - 0.18 * q / L) * (1 + 0.17 * ridge);
+      const k = cu.tone * (1 - 0.45 * band);
       const lowDark = q < 0.05 ? 0.75 + 5 * q : 1;
       pts.push(at(q)); rad.push(r); vs.push(cu.vOff + q / 0.35);
       cols.push([k * lowDark, k * 0.97 * lowDark, k * 0.9 * lowDark]);
@@ -236,9 +236,9 @@ export function createBambooPlant(THREE, opts = {}) {
         const el = R(0.45, 0.95) + 0.25 * ht;
         const dir = new THREE.Vector3(Math.cos(yaw) * Math.cos(el), Math.sin(el), Math.sin(yaw) * Math.cos(el));
         const shape = Math.sin(Math.PI * (0.18 + 0.72 * ht));     // ovoid canopy
-        const blen = (cu.thin ? 0.7 : 1) * (0.10 + 0.22 * shape) * R(0.75, 1.2);
+        const blen = (cu.thin ? 0.7 : 1) * (0.09 + 0.18 * shape) * R(0.75, 1.2);
         const start = p.clone().addScaledVector(dir, cu.r0 * 0.8);
-        const fan = 4 + Math.floor(rnd() * 4);
+        const fan = 5 + Math.floor(rnd() * 5);
         const bp = twig(start, dir, blen, 0.0019, 0.0011, R(0.15, 0.45), ht, fan);
         // side branchlets along the branch
         const nSub = blen > 0.14 ? 2 + (rnd() < 0.4 ? 1 : 0) : 1;
@@ -249,7 +249,7 @@ export function createBambooPlant(THREE, opts = {}) {
           const sy = yaw + (k % 2 ? 1 : -1) * R(0.5, 1.1);
           const se = el * R(0.3, 0.8);
           const sd = new THREE.Vector3(Math.cos(sy) * Math.cos(se), Math.sin(se), Math.sin(sy) * Math.cos(se));
-          twig(sp, sd, R(0.04, 0.10), 0.0011, 0.0008, R(0.1, 0.4), ht, 3 + Math.floor(rnd() * 4));
+          twig(sp, sd, R(0.05, 0.11), 0.0011, 0.0008, R(0.1, 0.4), ht, 4 + Math.floor(rnd() * 4));
         }
       }
     }
@@ -258,7 +258,7 @@ export function createBambooPlant(THREE, opts = {}) {
     for (let k = 0; k < nCrown; k++) {
       const yaw = R(0, Math.PI * 2), el = R(0.7, 1.25);
       const dir = new THREE.Vector3(Math.cos(yaw) * Math.cos(el), Math.sin(el), Math.sin(yaw) * Math.cos(el));
-      twig(at(L - R(0.0, 0.06)), dir, R(0.05, 0.12), 0.0014, 0.0009, R(0.1, 0.3), 1, 3 + Math.floor(rnd() * 3));
+      twig(at(L - R(0.0, 0.06)), dir, R(0.05, 0.12), 0.0014, 0.0009, R(0.1, 0.3), 1, 4 + Math.floor(rnd() * 3));
     }
   }
 
@@ -300,7 +300,7 @@ export function createBambooPlant(THREE, opts = {}) {
     g.setAttribute('color', new THREE.Float32BufferAttribute(S.col, 3));
     g.setIndex(S.idx);
     g.applyMatrix4(fit);
-    const stemMat = new THREE.MeshStandardMaterial({ map: barkTexture(THREE, rnd), vertexColors: true, roughness: 0.45, metalness: 0 });
+    const stemMat = new THREE.MeshStandardMaterial({ map: barkTexture(THREE, rnd), vertexColors: true, roughness: 0.55, metalness: 0 });
     const stems = tag(new THREE.Mesh(g, stemMat), 'BambooStems');
     stems.castShadow = true; stems.receiveShadow = true;
   }
@@ -309,9 +309,10 @@ export function createBambooPlant(THREE, opts = {}) {
   {
     const leafMat = new THREE.MeshStandardMaterial({
       map: leafTexture(THREE), roughness: 0.5, metalness: 0, side: THREE.DoubleSide,
+      emissive: 0x1e3a0e, emissiveIntensity: 0.35, // cheap stand-in for light passing through leaves
     });
     const im = new THREE.InstancedMesh(leafGeo, leafMat, mats.length);
-    const light = new THREE.Color('#a6cf4f'), mid = new THREE.Color('#5f9e34'), deep = new THREE.Color('#467f27');
+    const light = new THREE.Color('#b2d85a'), mid = new THREE.Color('#6eaf3c'), deep = new THREE.Color('#53922f');
     const c = new THREE.Color();
     for (let i = 0; i < mats.length; i++) {
       im.setMatrixAt(i, M.multiplyMatrices(fit, mats[i]));
@@ -349,7 +350,7 @@ function mulberry32(a) {
 // Lanceolate leaf, unit length along +X, normal ~+Y, width along Z.
 // Arched along its length and folded slightly along the midrib.
 function makeLeafGeometry(THREE) {
-  const N = 10, W = 0.068, FOLD = 0.35;
+  const N = 10, W = 0.068, FOLD = 0.2;
   const pos = [], uv = [], idx = [];
   for (let i = 0; i <= N; i++) {
     const t = i / N;
@@ -416,9 +417,9 @@ function leafTexture(THREE) {
 function barkTexture(THREE, rnd) {
   const W = 64, H = 256;
   const c = canvas(W, H), g = c.getContext('2d');
-  g.fillStyle = '#d6b273'; g.fillRect(0, 0, W, H);
+  g.fillStyle = '#e9c27a'; g.fillRect(0, 0, W, H);
   for (let i = 0; i < 70; i++) {
-    g.fillStyle = rnd() < 0.5 ? 'rgba(255,238,195,0.14)' : 'rgba(130,90,45,0.10)';
+    g.fillStyle = rnd() < 0.5 ? 'rgba(255,225,160,0.12)' : 'rgba(140,90,40,0.10)';
     g.fillRect(rnd() * W, 0, 0.6 + rnd() * 1.6, H);
   }
   const blot = (x, y, rx, ry, a, col) => {
@@ -431,11 +432,11 @@ function barkTexture(THREE, rnd) {
       g.fillStyle = gr; g.fillRect(-rx, -rx, rx * 2, rx * 2); g.restore();
     }
   };
-  for (let i = 0; i < 9; i++) {
+  for (let i = 0; i < 12; i++) {
     const x = rnd() * W, y = rnd() * H;
     const n = 2 + Math.floor(rnd() * 3);
     for (let k = 0; k < n; k++)
-      blot(x + (rnd() - 0.5) * 14, y + (rnd() - 0.5) * 40, 4 + rnd() * 10, 14 + rnd() * 40, 0.25 + rnd() * 0.35, '104,66,30');
+      blot(x + (rnd() - 0.5) * 14, y + (rnd() - 0.5) * 40, 4 + rnd() * 10, 14 + rnd() * 40, 0.22 + rnd() * 0.33, '118,72,30');
   }
   for (let i = 0; i < 25; i++) blot(rnd() * W, rnd() * H, 1 + rnd() * 3, 3 + rnd() * 10, 0.3 + rnd() * 0.3, '92,58,28');
   return finishTexture(THREE, c, true);
