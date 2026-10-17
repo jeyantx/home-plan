@@ -14,36 +14,36 @@ WALLS = {
   ('BW-01', 0,0.375, 0.75,89.375, 'comp', 6, 'East compound wall, front part (new)'),
   ('BW-02', 0,1.375, 89.0,89.375, 'comp', 6, 'East compound wall, 1\' step at the back'),
   ('BW-03', 1.0,1.375, 89.375,105.95, 'comp', 6, 'East compound wall, back part (new)'),
-  ('GW-01', 2.75,3.5, 40.5,75.75, 'outer', 10.5, 'East outer wall of foyer, living, kitchen, toilet 2'),
+  ('GW-01', 2.75,3.5, 40.5,73.75, 'outer', 10.5, 'East outer wall of foyer, living, kitchen, toilet 2'),
   ('GW-02', 2.75,8.5, 40.5,41.25, 'outer', 10.5, 'Main door wall, between porch and foyer'),
   ('GW-03', 8.5,9.25, 30.75,41.25, 'outer', 10.5, 'Porch-side wall of study and bedroom 1'),
   ('GW-04', 8.5,21.0, 30.75,31.5, 'outer', 10.5, 'Front wall of study and toilet 1, facing parking'),
-  ('GW-05', 20.25,21.0, 30.75,95.0, 'outer', 10.5, 'West outer wall, on the boundary (apartment side)'),
-  ('GW-06', 2.75,10.25, 75.0,75.75, 'outer', 10.5, 'Back wall of toilet 2, facing side garden'),
-  ('GW-07', 9.5,10.25, 75.0,95.0, 'outer', 10.5, 'East wall of stair hall and bedroom 2, facing side garden'),
-  ('GW-16', 9.875,10.25, 69.625,75.0, 'part', 10.5, 'Toilet 2 | stair hall (partition, inside the house)'),
-  ('GW-08', 9.5,21.0, 94.25,95.0, 'outer', 10.5, 'Back wall of bedroom 2, facing back garden'),
+  ('GW-05', 20.25,21.0, 30.75,95.125, 'outer', 10.5, 'West outer wall, on the boundary (apartment side)'),
+  ('GW-06', 2.75,10.25, 73.0,73.75, 'outer', 10.5, 'Back wall of toilet 2, facing side garden'),
+  ('GW-07', 9.5,10.25, 73.0,95.125, 'outer', 10.5, 'East wall of stair hall and bedroom 2, facing side garden'),
+  ('GW-16', 9.875,10.25, 67.625,73.0, 'part', 10.5, 'Toilet 2 | stair hall (partition, inside the house)'),
+  ('GW-08', 9.5,21.0, 94.375,95.125, 'outer', 10.5, 'Back wall of bedroom 2, facing back garden'),
   ('GW-09', 8.875,9.25, 41.25,46.375, 'part', 10.5, 'Foyer | bedroom 1'),
   ('GW-10', 13.75,14.125, 31.5,36.0, 'part', 10.5, 'Study | toilet 1'),
   ('GW-11', 13.75,20.25, 36.0,36.375, 'part', 10.5, 'Toilet 1 | bedroom 1'),
   ('GW-12', 8.875,20.25, 46.375,46.75, 'part', 10.5, 'Bedroom 1 | living room'),
-  ('GW-13', 3.5,20.25, 60.75,61.125, 'part', 10.5, 'Living room | kitchen and dining (arch O-01)'),
-  ('GW-14', 3.5,9.875, 69.625,70.0, 'part', 10.5, 'Kitchen | toilet 2'),
-  ('GW-15', 10.25,20.25, 80.125,80.5, 'part', 10.5, 'Stair hall | bedroom 2'),
+  ('GW-13', 3.5,20.25, 58.75,59.125, 'part', 10.5, 'Living room | kitchen and dining (arch O-01)'),
+  ('GW-14', 3.5,9.875, 67.625,68.0, 'part', 10.5, 'Kitchen | toilet 2'),
+  ('GW-15', 10.25,20.25, 80.25,80.625, 'part', 10.5, 'Stair hall | bedroom 2'),
  ],
  'F': [
-  ('FW-01', 9.5,10.25, 73.0,97.25, 'outer', 10.0, 'East wall of landing and bedroom 3'),
-  ('FW-02', 9.5,21.0, 73.0,73.75, 'outer', 10.0, 'Front wall of landing, facing terrace'),
-  ('FW-03', 20.25,21.0, 73.0,97.25, 'outer', 10.0, 'West wall, on the boundary'),
-  ('FW-04', 9.5,21.0, 96.5,97.25, 'outer', 10.0, 'Back wall of bedroom 3 (projects 2\'3" past bedroom 2 below)'),
-  ('FW-05', 10.25,20.25, 79.75,80.125, 'part', 10.0, 'Landing | bedroom 3 lobby and toilet 3'),
-  ('FW-06', 13.875,14.25, 80.125,84.75, 'part', 10.0, 'Bedroom 3 lobby | toilet 3'),
-  ('FW-07', 14.25,20.25, 84.375,84.75, 'part', 10.0, 'Toilet 3 | bedroom 3'),
+  ('FW-01', 9.5,10.25, 73.125,97.375, 'outer', 10.0, 'East wall of landing and bedroom 3'),
+  ('FW-02', 9.5,21.0, 73.125,73.875, 'outer', 10.0, 'Front wall of landing; 53\' from PW-03 (future hall back wall)'),
+  ('FW-03', 20.25,21.0, 73.125,97.375, 'outer', 10.0, 'West wall, on the boundary'),
+  ('FW-04', 9.5,21.0, 96.625,97.375, 'outer', 10.0, 'Back wall of bedroom 3 (projects 2\'3" past bedroom 2 below)'),
+  ('FW-05', 10.25,20.25, 79.875,80.25, 'part', 10.0, 'Landing | bedroom 3 lobby and toilet 3'),
+  ('FW-06', 13.875,14.25, 80.25,84.875, 'part', 10.0, 'Bedroom 3 lobby | toilet 3'),
+  ('FW-07', 14.25,20.25, 84.5,84.875, 'part', 10.0, 'Toilet 3 | bedroom 3'),
   ('PW-01', 2.75,11.667, 15.5,15.875, 'para', 3, 'Front parapet of balcony 2'),
-  ('PW-02', 2.75,3.125, 15.5,80.375, 'para', 3, 'East parapet of balcony, terrace and terrace corner'),
+  ('PW-02', 2.75,3.125, 15.5,77.875, 'para', 3, 'East parapet of balcony, terrace and terrace corner'),
   ('PW-03', 11.667,21.0, 19.75,20.125, 'para', 3, 'Front parapet of terrace, behind staircase 1'),
-  ('PW-04', 20.625,21.0, 20.125,73.0, 'para', 3, 'West parapet of terrace'),
-  ('PW-05', 3.125,9.5, 80.0,80.375, 'para', 3, 'Back parapet of terrace corner'),
+  ('PW-04', 20.625,21.0, 20.125,73.125, 'para', 3, 'West parapet of terrace'),
+  ('PW-05', 3.125,9.5, 77.5,77.875, 'para', 3, 'Back parapet of terrace corner'),
  ]}
 
 # ---------- rooms / areas: id, name, polygon or rect, kind ----------
@@ -54,27 +54,27 @@ ROOMS = {
   ('G-01','Parking',R(0.375,21.0,0.75,30.75),'out'),
   ('G-02','Porch',R(2.75,8.5,30.75,40.5),'porch'),
   ('G-03','Foyer',R(3.5,8.875,41.25,46.75),'in'),
-  ('G-04','Living room',R(3.5,20.25,46.75,60.75),'in'),
+  ('G-04','Living room',R(3.5,20.25,46.75,58.75),'in'),
   ('G-05','Bedroom 1',R(9.25,20.25,36.375,46.375),'bed'),
   ('G-06','Study',R(9.25,13.75,31.5,36.375),'bed'),
   ('G-07','Toilet 1',R(14.125,20.25,31.5,36.0),'wet'),
-  ('G-08','Kitchen',R(3.5,13.5,61.125,69.625),'kit'),
-  ('G-09','Dining',R(13.5,20.25,61.125,70.0),'in'),
-  ('G-10','Stair hall',R(10.25,20.25,70.0,80.125),'in'),
-  ('G-11','Toilet 2',R(3.5,9.875,70.0,75.0),'wet'),
-  ('G-12','Bedroom 2',R(10.25,20.25,80.5,94.25),'bed'),
-  ('G-13','Side passage',R(0.375,2.75,30.75,75.75),'out'),
-  ('G-14','Side garden',[(0.375,75.75),(9.5,75.75),(9.5,back_y(9.5)-0.375),(1.375,back_y(1.375)-0.375),(1.375,89.375),(0.375,89.375)],'garden'),
-  ('G-15','Back garden',[(9.5,95.0),(21.0,95.0),(21.0,back_y(21)-0.375),(9.5,back_y(9.5)-0.375)],'garden'),
+  ('G-08','Kitchen',R(3.5,13.5,59.125,67.625),'kit'),
+  ('G-09','Dining',R(13.5,20.25,59.125,68.0),'in'),
+  ('G-10','Stair hall',R(10.25,20.25,68.0,80.25),'in'),
+  ('G-11','Toilet 2',R(3.5,9.875,68.0,73.0),'wet'),
+  ('G-12','Bedroom 2',R(10.25,20.25,80.625,94.375),'bed'),
+  ('G-13','Side passage',R(0.375,2.75,30.75,73.75),'out'),
+  ('G-14','Side garden',[(0.375,73.75),(9.5,73.75),(9.5,back_y(9.5)-0.375),(1.375,back_y(1.375)-0.375),(1.375,89.375),(0.375,89.375)],'garden'),
+  ('G-15','Back garden',[(9.5,95.125),(21.0,95.125),(21.0,back_y(21)-0.375),(9.5,back_y(9.5)-0.375)],'garden'),
  ],
  'F': [
   ('F-01','Balcony 2',R(3.125,11.667,15.875,20.125),'terr'),
-  ('F-02','Open terrace',R(3.125,20.625,20.125,73.0),'terr'),
-  ('F-03','Terrace corner',R(3.125,9.5,73.0,80.0),'terr'),
-  ('F-04','Stair landing',R(10.25,20.25,73.75,79.75),'in'),
-  ('F-05','Bedroom 3',R(10.25,20.25,84.75,96.5),'bed'),
-  ('F-06','Bedroom 3 lobby',R(10.25,13.875,80.125,84.75),'bed'),
-  ('F-07','Toilet 3',R(14.25,20.25,80.125,84.375),'wet'),
+  ('F-02','Open terrace',R(3.125,20.625,20.125,73.125),'terr'),
+  ('F-03','Terrace corner',R(3.125,9.5,73.125,77.5),'terr'),
+  ('F-04','Stair landing',R(10.25,20.25,73.875,79.875),'in'),
+  ('F-05','Bedroom 3',R(10.25,20.25,84.875,96.625),'bed'),
+  ('F-06','Bedroom 3 lobby',R(10.25,13.875,80.25,84.875),'bed'),
+  ('F-07','Toilet 3',R(14.25,20.25,80.25,84.5),'wet'),
  ]}
 
 # ---------- openings: id, floor, wall, a, b (along wall), type, hinge('a'|'b'), swing(+/-), height, sill, note ----------
@@ -85,51 +85,59 @@ OPENINGS = [
  ('D-03','G','GW-11', 14.5,17.0,'door','a','-', 7.0,0,'Toilet 1 door, from bedroom 1'),
  ('O-01','G','GW-13', 13.75,18.75,'arch',None,None, 7.0,0,'Arch from living room to dining'),
  ('W-12','G','GW-13', 5.5,11.5,'fold',None,None, 4.0,3.0,'Folding glass window, kitchen to living. Opens left and right; curtain on the living side'),
- ('D-04','G','GW-16', 71.0,73.5,'door','a','-', 7.0,0,'Toilet 2 door, from stair hall, opens inward'),
- ('D-05','G','GW-07', 76.25,79.25,'door','b','-', 7.0,0,'Garden door, stair hall to side garden'),
+ ('D-04','G','GW-16', 69.0,71.5,'door','a','-', 7.0,0,'Toilet 2 door, from stair hall, opens inward'),
+ ('D-05','G','GW-07', 74.75,77.75,'door','b','-', 7.0,0,'Garden door, stair hall to side garden'),
  ('D-06','G','GW-15', 10.5,13.5,'door','a','+', 7.0,0,'Bedroom 2 door, from stair hall'),
  ('W-01','G','GW-04', 9.75,13.25,'window',None,None, 4.0,3.0,'Study window to parking'),
  ('V-01','G','GW-04', 16.25,18.25,'vent',None,None, 1.5,6.0,'Toilet 1 ventilator'),
  ('W-02','G','GW-03', 37.0,40.25,'window',None,None, 4.0,3.0,'Bedroom 1 window to porch'),
  ('W-03','G','GW-01', 42.5,45.5,'window',None,None, 4.0,3.0,'Foyer window to side passage'),
- ('W-04','G','GW-01', 48.25,52.25,'window',None,None, 4.0,3.0,'Living room window 1'),
- ('W-05','G','GW-01', 55.0,59.0,'window',None,None, 4.0,3.0,'Living room window 2'),
- ('W-06','G','GW-01', 63.0,67.0,'window',None,None, 3.5,3.5,'Kitchen window over counter'),
- ('V-02','G','GW-01', 71.5,73.5,'vent',None,None, 1.5,6.0,'Toilet 2 ventilator'),
- ('W-07','G','GW-07', 84.5,88.5,'window',None,None, 4.0,3.0,'Bedroom 2 side window to side garden'),
+ ('W-04','G','GW-01', 48.0,52.0,'window',None,None, 4.0,3.0,'Living room window 1'),
+ ('W-05','G','GW-01', 53.75,57.75,'window',None,None, 4.0,3.0,'Living room window 2'),
+ ('W-06','G','GW-01', 61.0,65.0,'window',None,None, 3.5,3.5,'Kitchen window over counter'),
+ ('V-02','G','GW-01', 69.5,71.5,'vent',None,None, 1.5,6.0,'Toilet 2 ventilator'),
+ ('W-07','G','GW-07', 85.0,89.0,'window',None,None, 4.0,3.0,'Bedroom 2 side window to side garden'),
  ('W-08','G','GW-08', 13.0,17.5,'window',None,None, 4.0,3.0,'Bedroom 2 back window to back garden'),
  ('GT-01','G','FRONT', 0.375,15.0,'gate',None,None, 6.0,0,'Main gate, 14\'7" (sliding)'),
  ('GT-02','G','FRONT', 15.75,20.25,'gate',None,None, 6.0,0,'Side gate, 4\'6", leads to staircase 1'),
  ('D-07','F','FW-05', 10.5,13.5,'door','a','+', 7.0,0,'Bedroom 3 door, from landing'),
- ('D-08','F','FW-06', 80.75,83.25,'door','a','+', 7.0,0,'Toilet 3 door, from bedroom 3 lobby'),
- ('D-09','F','FW-01', 74.5,77.5,'door','a','-', 7.0,0,'Landing door to terrace corner'),
+ ('D-08','F','FW-06', 81.0,83.5,'door','a','+', 7.0,0,'Toilet 3 door, from bedroom 3 lobby'),
+ ('D-09','F','FW-01', 74.25,77.25,'door','a','-', 7.0,0,'Landing door to terrace corner'),
  ('W-09','F','FW-02', 13.0,16.5,'window',None,None, 4.0,3.0,'Landing window to terrace'),
- ('W-10','F','FW-01', 88.0,92.0,'window',None,None, 4.0,3.0,'Bedroom 3 side window'),
+ ('W-10','F','FW-01', 88.5,92.5,'window',None,None, 4.0,3.0,'Bedroom 3 side window'),
  ('W-11','F','FW-04', 13.0,17.5,'window',None,None, 4.0,3.0,'Bedroom 3 back window'),
 ]
 
 # ---------- building outlines (outer wall faces) for built-up area ----------
-GF_OUTLINE=[(8.5,30.75),(21,30.75),(21,95.0),(9.5,95.0),(9.5,75.75),(2.75,75.75),(2.75,40.5),(8.5,40.5)]
-FF_OUTLINE=R(9.5,21.0,73.0,97.25)
-BRANCH_NOTES=''
+GF_OUTLINE=[(8.5,30.75),(21,30.75),(21,95.125),(9.5,95.125),(9.5,73.75),(2.75,73.75),(2.75,40.5),(8.5,40.5)]
+FF_OUTLINE=R(9.5,21.0,73.125,97.375)
+BRANCH_NOTES='''<section class="ask"><h2>Update 17 Oct: approved changes only</h2>
+<ol>
+<li><b>Living room</b> is 12' deep (was 14').</li>
+<li><b>GW-16</b>, the wall between toilet 2 and the stair hall, is a 4½" partition.</li>
+<li><b>53' rule:</b> PW-03 to FW-02 is exactly 53'. That fixes the spiral stair and bedroom 3 block in place, so the stair hall absorbs the 2' from the living room and is now 12'3" deep.</li>
+<li>Foyer, house position, bedroom 2 (13'9") and garden door D-05 are as before.</li>
+<li>The bikes are shown in the parking.</li>
+</ol></section>
+'''
 
 # ---------- existing features ----------
 BOREWELL=(6.0, back_y(6.0)-25.0)   # given: 25' from the back (south) boundary, 6' from the east boundary
 
 # ---------- drawing positions (layout specific) ----------
-LABELPOS={'G-01':(8.0,23.0),'G-02':(5.6,37.6),'G-03':(6.2,44.6),'G-04':(11.5,55.4),'G-05':(14.8,41.0),'G-06':(11.5,33.6),'G-07':(17.2,33.4),
-          'G-08':(8.0,66.6),'G-09':(16.9,66.0),'G-10':(12.8,71.4),'G-11':(6.0,73.0),'G-12':(15.25,88.2),'G-13':(1.55,36.0),'G-14':(5.0,96.0),'G-15':(15.2,100.6),
-          'F-01':(7.4,18.6),'F-02':(11.9,47.0),'F-03':(6.3,77.2),'F-04':(13.0,78.0),'F-05':(15.25,91.5),'F-06':(12.05,83.2),'F-07':(17.25,82.4)}
+LABELPOS={'G-01':(8.0,24.5),'G-02':(5.6,37.6),'G-03':(6.2,44.6),'G-04':(11.5,53.0),'G-05':(14.8,41.0),'G-06':(11.5,33.6),'G-07':(17.2,33.4),
+          'G-08':(8.0,63.4),'G-09':(16.9,63.4),'G-10':(15.0,71.0),'G-11':(6.0,70.6),'G-12':(15.25,88.0),'G-13':(1.55,36.0),'G-14':(5.0,94.0),'G-15':(15.2,100.2),
+          'F-01':(7.4,18.6),'F-02':(11.9,47.0),'F-03':(5.6,75.4),'F-04':(12.15,78.0),'F-05':(15.25,91.0),'F-06':(12.05,82.9),'F-07':(17.25,82.5)}
 LABELSIZE={'G-13':0.36,'G-06':0.4,'G-07':0.42,'G-11':0.42,'G-03':0.42,'G-02':0.42,'F-06':0.36,'F-07':0.42,'G-10':0.42,'F-04':0.45,'F-03':0.42,'F-01':0.45,'G-09':0.45,'G-01':0.6,'F-02':0.8}
-TAGPOS={'GW-01':(3.125,53.6),'GW-05':(20.625,51.0),'GW-07':(9.875,91.0),'GW-16':(10.06,74.2),'BW-01':(0.19,50.0),'GW-04':(19.0,31.125),'GW-13':(12.62,60.94),'GW-12':(17.6,46.56),
-        'GW-03':(8.875,33.6),'GW-02':(3.6,40.875),'GW-11':(19.0,36.19),'GW-08':(11.0,94.625),'GW-06':(8.2,75.375),'PW-02':(2.94,40.0),'PW-04':(20.81,40.0),
-        'FW-01':(9.875,94.0),'FW-03':(20.625,92.0),'FW-02':(18.4,73.375),'FW-04':(19.0,96.875),'FW-05':(18.0,79.94),'PW-03':(19.4,19.94),'PW-01':(5.0,15.69),'PW-05':(6.0,80.19),
-        'GW-15':(18.4,80.31),'GW-14':(5.0,69.81),'GW-10':(13.94,34.6),'GW-09':(9.06,43.0),'BW-03':(1.19,98.0),'BW-02':(0.6,89.19)}
+TAGPOS={'GW-01':(3.125,53.0),'GW-05':(20.625,51.0),'GW-07':(9.875,91.5),'BW-01':(0.19,50.0),'GW-04':(19.0,31.125),'GW-13':(12.62,58.94),'GW-12':(17.6,46.56),
+        'GW-03':(8.875,33.6),'GW-02':(3.6,40.875),'GW-11':(19.0,36.19),'GW-08':(11.0,94.75),'GW-06':(8.2,73.375),'GW-16':(10.06,72.2),'PW-02':(2.94,40.0),'PW-04':(20.81,40.0),
+        'FW-01':(9.875,94.0),'FW-03':(20.625,92.0),'FW-02':(18.4,73.5),'FW-04':(19.0,97.0),'FW-05':(18.0,80.06),'PW-03':(19.4,19.94),'PW-01':(5.0,15.69),'PW-05':(6.0,77.69),
+        'GW-15':(18.4,80.44),'GW-14':(5.0,67.81),'GW-10':(13.94,34.6),'GW-09':(9.06,43.0),'BW-03':(1.19,98.0),'BW-02':(0.6,89.19)}
 OPENTAGOFF={'W-01':-0.75,'V-01':-0.75,'W-02':0.9,'W-03':-1.0,'W-04':-1.0,'W-05':-1.0,'W-06':-1.0,'V-02':-1.0,'W-07':-1.0,'W-08':0.8,'D-01':-1.4,'D-02':-2.2,'D-03':-1.6,
             'O-01':-0.8,'D-04':-2.6,'D-05':-1.5,'D-06':1.7,'D-07':1.7,'D-08':1.6,'D-09':-1.6,'W-09':-0.8,'W-10':-1.0,'W-11':0.8,'W-12':-0.85}
-SPC=(17.0,76.75); SPR=3.0
-CH_G_E=[0,30.75,40.5,41.25,46.75,60.75,61.125,69.625,70.0,75.0,75.75,89.0,106.0]
-CH_G_W=[0,4.333,16.0,19.5,30.75,31.5,36.0,36.375,46.375,46.75,60.75,61.125,70.0,80.125,80.5,94.25,95.0,105.0]
+SPC=(17.0,76.875); SPR=3.0
+CH_G_E=[0,30.75,40.5,41.25,46.75,58.75,59.125,67.625,68.0,73.0,73.75,89.0,106.0]
+CH_G_W=[0,4.333,16.0,19.5,30.75,31.5,36.0,36.375,46.375,46.75,58.75,59.125,68.0,80.25,80.625,94.375,95.125,105.0]
 CH_G_BACK_Y=104.0
-CH_F_W=[15.5,20.125,73.0,73.75,79.75,80.125,84.375,84.75,96.5,97.25]
+CH_F_W=[15.5,20.125,73.125,73.875,79.875,80.25,84.5,84.875,96.625,97.375]
 CH_F_BACK_Y=98.6

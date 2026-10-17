@@ -155,12 +155,16 @@ def vehicles():
     cx1,cx2,cy1,cy2=getattr(_m,'CAR',(11.25,17.25,13.75,28.75))
     rect(cx1,cx2,cy1,cy2,'#fafafa','#555',0.06,extra='rx="1.0"'); rect(cx1+0.5,cx2-0.5,cy1+8.25,cy1+9.75,'#a9bccd','#555',0.03); rect(cx1+0.5,cx2-0.5,cy1+2.25,cy1+3.45,'#a9bccd','#555',0.03)
     text((cx1+cx2)/2,cy1+5.75,'CAR 6\' x 15\'',0.42,weight=600,fill='#666')
-    return
-    rect(11.25,17.25,13.75,28.75,'#fafafa','#555',0.06,extra='rx="1.0"'); rect(11.75,16.75,22.0,23.5,'#a9bccd','#555',0.03); rect(11.75,16.75,16.0,17.2,'#a9bccd','#555',0.03)
-    text(14.25,19.5,'CAR 6\' x 15\'',0.42,weight=600,fill='#666')
-    for yc in (8.0,14.5,21.0):
-        rect(1.6,2.6,yc-3,yc+3,'#7a7f88','#333',0.03,extra='rx="0.4"')
-    text(2.1,25.4,'3 bikes',0.36,fill='#555')
+    for yc in getattr(_m,'BIKES',(7.0,13.5,20.0)):
+        bike(2.0,yc)
+    text(2.0,getattr(_m,'BIKES',(7.0,13.5,20.0))[-1]+4.0,'3 two-wheelers',0.34,fill='#555')
+def bike(cx,cy):
+    # top view of a two-wheeler, 2'6" x 6', front toward the road
+    for wy in (cy-2.35,cy+2.35):
+        x,y=S(cx,wy); E(f'<ellipse cx="{x:.3f}" cy="{y:.3f}" rx="0.22" ry="0.75" fill="#2b2b2b"/>')
+    x1,y1=S(cx-0.42,cy+1.9); E(f'<rect x="{x1:.3f}" y="{y1:.3f}" width="0.84" height="3.8" rx="0.35" fill="#6d7480" stroke="#333" stroke-width="0.03"/>')
+    x2,y2=S(cx-0.3,cy+0.9); E(f'<rect x="{x2:.3f}" y="{y2:.3f}" width="0.6" height="1.6" rx="0.25" fill="#3c4048"/>')
+    a=S(cx-1.25,cy-1.75); b=S(cx+1.25,cy-1.75); E(f'<line x1="{a[0]:.3f}" y1="{a[1]:.3f}" x2="{b[0]:.3f}" y2="{b[1]:.3f}" stroke="#333" stroke-width="0.12" stroke-linecap="round"/>')
 def tree():
     x,y=S(12.75,4.25)
     E(f'<circle cx="{x}" cy="{y-2.5}" r="6" fill="#2f7d32" opacity="0.07" stroke="#2f7d32" stroke-width="0.05" stroke-dasharray="0.3 0.2"/>')
