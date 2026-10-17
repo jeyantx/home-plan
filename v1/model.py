@@ -83,7 +83,7 @@ OPENINGS = [
  ('D-01','G','GW-02', 4.25,8.25,'double',None,'+', 7.0,0,'Main door, double leaf, opens into foyer'),
  ('D-02','G','GW-12', 9.5,12.5,'door','a','-', 7.0,0,'Bedroom 1 door, from living room'),
  ('D-03','G','GW-11', 14.5,17.0,'door','a','-', 7.0,0,'Toilet 1 door, from bedroom 1'),
- ('O-01','G','GW-13', 13.75,18.75,'arch',None,None, 7.0,0,'Arch from living room to dining'),
+ ('O-01','G','GW-13', 13.75,17.75,'arch',None,None, 7.0,0,'Arch from living room to open area, 4\' wide; ends at the FU-25 cupboard face'),
  ('W-12','G','GW-13', 5.5,11.5,'fold',None,None, 4.0,3.0,'Folding glass window, kitchen to living. Opens left and right; curtain on the living side'),
  ('D-04','G','GW-16', 69.0,71.5,'door','a','-', 7.0,0,'Toilet 2 door, from stair hall, opens inward'),
  ('D-05','G','GW-07', 74.75,77.75,'door','b','-', 7.0,0,'Garden door, stair hall to side garden'),
@@ -95,12 +95,12 @@ OPENINGS = [
  ('W-04','G','GW-01', 48.0,52.0,'window',None,None, 4.0,3.0,'Living room window 1'),
  ('W-05','G','GW-01', 53.75,57.75,'window',None,None, 4.0,3.0,'Living room window 2'),
  ('W-06','G','GW-01', 61.0,65.0,'window',None,None, 3.5,3.5,'Kitchen window over counter'),
- ('V-02','G','GW-01', 69.5,71.5,'vent',None,None, 1.5,6.0,'Toilet 2 ventilator'),
+ ('V-02','G','GW-01', 68.25,70.25,'vent',None,None, 1.5,6.0,'Toilet 2 ventilator'),
  ('W-07','G','GW-07', 85.0,89.0,'window',None,None, 4.0,3.0,'Bedroom 2 side window to side garden'),
  ('W-08','G','GW-08', 14.75,19.25,'window',None,None, 4.0,3.0,'Bedroom 2 back window to back garden'),
  ('D-10','G','GW-08', 10.75,13.5,'door','a','-', 7.0,0,'Bedroom 2 back door to back garden'),
  ('GT-01','G','FRONT', 0.75,12.0,'gate',None,'+', 6.0,0,'Large gate, 11\'3", double leaf, east of the planter pillar'),
- ('GT-02','G','FRONT', 13.5,20.25,'gate',None,'-', 6.0,0,'Small gate, 6\'9", double leaf, opens out toward the road, west of the planter pillar'),
+ ('GT-02','G','FRONT', 13.5,20.25,'gate',None,'+', 6.0,0,'Small gate, 6\'9", double leaf, opens inward, west of the planter pillar'),
  ('D-07','F','FW-05', 10.5,13.5,'door','a','+', 7.0,0,'Bedroom 3 door, from landing'),
  ('D-08','F','FW-06', 81.0,83.5,'door','a','+', 7.0,0,'Toilet 3 door, from bedroom 3 lobby'),
  ('D-09','F','FW-01', 74.25,77.25,'door','a','-', 7.0,0,'Landing door to terrace corner'),
@@ -112,16 +112,15 @@ OPENINGS = [
 # ---------- building outlines (outer wall faces) for built-up area ----------
 GF_OUTLINE=[(8.5,30.75),(21,30.75),(21,95.125),(9.5,95.125),(9.5,73.75),(2.75,73.75),(2.75,40.5),(8.5,40.5)]
 FF_OUTLINE=R(9.5,21.0,73.125,97.375)
-BRANCH_NOTES='''<section class="ask"><h2>Proposal v3: furniture, fixtures, types</h2>
+BRANCH_NOTES='''<section class="ask"><h2>Proposal v4: for final review</h2>
 <ol>
 <li><b>Hover</b> over any item to see its name.</li>
-<li><b>Kitchen:</b> burner FU-52 at window W-06, with a slim chimney ducted out above the window. Sink FU-51 near the GW-14 corner. Fridge FU-18 against GW-13. The back counter FU-16 is now full length and modular. Overhead shelves above both counters: FU-19, FU-19.2, FU-19.3.</li>
-<li><b>Living:</b> FU-03.2 starts where FU-03.1 ends, so every seat is usable.</li>
-<li><b>Bedroom 1 AC outdoor FU-45</b> is on GW-04, above study window W-01.</li>
-<li><b>Side garden tap area FU-53</b> is in the corner of BW-02 and BW-03.</li>
-<li><b>Store FU-56</b> is only at the low end of staircase 1. The top part stays open, and the car is back in its earlier place.</li>
-<li><b>Small gate GT-02</b> is double leaf, 6'9", and opens out toward the road. There is no west wall, just a gate post BW-06 at the boundary.</li>
-<li><b>Toilet 2</b>, from online research of small Indian toilets: the Indian pan FU-26 is in the north-east corner under ventilator V-02, facing south, screened by the open door. Bucket and health faucet FU-57 are on the user's left. The shower FU-28 is in the far south-east corner with geyser FU-58. Basin FU-27 is in the dry corner by the door, with a curtain rod FU-59 between. Pipes run in the 9" outer walls only. Sources: studiomatrx.org layout guides, NBC 2016 minimum 2.8 m² for a combined bath and WC (this room is about 2.97 m²).</li>
+<li><b>Toilet 2:</b> Indian pan FU-26 against GW-01 (the V-02 wall) in the corner, user facing south. Ventilator V-02 is moved over it. Bucket and tap FU-57 are west of the pan, on the user's right hand. The shower FU-28 has its own 3'3" x 2'6" area along GW-06. Basin FU-27 is in the dry corner by the door.</li>
+<li><b>Wardrobes</b> FU-09.1, FU-09.2, FU-34 and FU-39 are 16" deep. The bedroom 1 L-wardrobe is now 6'5" long in total.</li>
+<li><b>FU-25 cupboard</b> is 10' x 2'6", full height. Arch O-01 now ends at the cupboard face, so the GW-13 stub by the west wall is exactly as deep as the cupboard.</li>
+<li><b>Small gate GT-02</b> opens inward. Its east leaf, fully open, just reaches the tree trunk, so limit it to about 80°.</li>
+<li><b>Kitchen:</b> burner at the window with a slim chimney, sink near the GW-14 corner, fridge on GW-13, modular back counter, overhead shelves on both counters.</li>
+<li>Also in this version: L-sofa, 11' TV and showcase wall unit, ACs in all 3 bedrooms, garden tap areas, small store under staircase 1, planter pillar between the gates.</li>
 </ol></section>
 <section class="ask"><h2>Layout (final): approved changes</h2>
 <ol>
@@ -139,9 +138,9 @@ BOREWELL=(6.0, back_y(6.0)-25.0)   # given: 25' from the back (south) boundary, 
 
 # ---------- drawing positions (layout specific) ----------
 LABELPOS={'G-01':(8.0,24.5),'G-02':(5.6,37.6),'G-03':(6.2,44.6),'G-04':(11.5,53.0),'G-05':(11.45,39.4),'G-06':(11.5,33.6),'G-07':(17.2,33.4),
-          'G-08':(8.0,63.4),'G-09':(16.3,66.7),'G-10':(15.0,71.0),'G-11':(7.25,68.75),'G-12':(16.2,92.8),'G-13':(1.55,36.0),'G-14':(5.0,94.0),'G-15':(15.2,100.2),
+          'G-08':(8.0,63.4),'G-09':(15.6,64.6),'G-10':(15.0,71.0),'G-11':(8.05,68.6),'G-12':(16.2,92.8),'G-13':(1.55,36.0),'G-14':(5.0,94.0),'G-15':(15.2,100.2),
           'F-01':(7.4,18.6),'F-02':(11.9,47.0),'F-03':(5.6,75.4),'F-04':(12.15,78.0),'F-05':(15.9,95.3),'F-06':(12.05,82.9),'F-07':(17.25,82.5)}
-LABELSIZE={'G-11':0.3,'G-05':0.42,'G-12':0.42,'F-05':0.42,'G-09':0.4,'G-13':0.36,'G-06':0.4,'G-07':0.42,'G-11':0.42,'G-03':0.42,'G-02':0.42,'F-06':0.36,'F-07':0.42,'G-10':0.42,'F-04':0.45,'F-03':0.42,'F-01':0.45,'G-09':0.45,'G-01':0.6,'F-02':0.8}
+LABELSIZE={'G-09':0.34,'G-11':0.3,'G-05':0.42,'G-12':0.42,'F-05':0.42,'G-09':0.4,'G-13':0.36,'G-06':0.4,'G-07':0.42,'G-11':0.42,'G-03':0.42,'G-02':0.42,'F-06':0.36,'F-07':0.42,'G-10':0.42,'F-04':0.45,'F-03':0.42,'F-01':0.45,'G-09':0.45,'G-01':0.6,'F-02':0.8}
 TAGPOS={'GW-01':(3.125,53.0),'GW-05':(20.625,51.0),'GW-07':(9.875,91.5),'BW-01':(0.19,50.0),'GW-04':(19.0,31.125),'GW-13':(12.62,58.94),'GW-12':(17.6,46.56),
         'GW-03':(8.875,33.6),'GW-02':(3.6,40.875),'GW-11':(19.0,36.19),'GW-08':(11.0,94.75),'GW-06':(8.2,73.375),'GW-16':(10.06,72.2),'PW-02':(2.94,40.0),'PW-04':(20.81,40.0),
         'FW-01':(9.875,94.0),'FW-03':(20.625,92.0),'FW-02':(18.4,73.5),'FW-04':(19.0,97.0),'FW-05':(18.0,80.06),'PW-03':(19.4,19.94),'PW-01':(5.0,15.69),'PW-05':(6.0,77.69),
@@ -166,8 +165,8 @@ FURNITURE = [
  ('FU-04','G','Coffee table',6.75,9.75,49.5,53.0,'table',None,'Living, 3\' x 3\'6"'),
  ('FU-05','G','TV, showcase and bookshelf wall unit',18.917,20.25,47.25,58.25,'tvwall',None,'Living, 11\' x 1\'4", full height on GW-05: TV in the middle, showcase and book shelves on both sides'),
  ('FU-06','G','Queen bed',13.75,20.25,41.25,46.25,'bed','x2','Bedroom 1, 6\'6" x 5\', head to GW-05 (east-west), side against GW-12'),
- ('FU-09.1','G','Wardrobe, part 1',17.25,20.25,36.375,38.375,'ward',None,'Bedroom 1, 3\' x 2\' on GW-11, with loft'),
- ('FU-09.2','G','Wardrobe, part 2',18.25,20.25,38.375,41.125,'ward',None,'Bedroom 1, 2\'9" x 2\' on GW-05; L-shape with part 1, total 5\'9"'),
+ ('FU-09.1','G','Wardrobe, part 1',17.25,20.25,36.375,37.7083,'ward',None,'Bedroom 1, 3\' x 1\'4" on GW-11, with loft'),
+ ('FU-09.2','G','Wardrobe, part 2',18.9167,20.25,37.7083,41.125,'ward',None,'Bedroom 1, 3\'5" x 1\'4" on GW-05; L-shape with part 1, total 6\'5"'),
  ('FU-10','G','Study desk',9.5,13.5,31.5,33.5,'desk',None,'Study, 4\' x 2\', under W-01'),
  ('FU-11','G','Bookshelf',12.5,13.75,33.75,36.25,'shelf',None,'Study, on GW-10'),
  ('FU-12','G','Western WC',18.0,20.25,33.9,35.4,'wc','x2','Toilet 1, wall-mounted cistern'),
@@ -180,24 +179,24 @@ FURNITURE = [
  ('FU-19','G','Overhead shelves, back',5.5,9.875,66.375,67.625,'over',None,'Kitchen, above the back counter (dashed)'),
  ('FU-19.2','G','Overhead shelves, east',3.5,4.75,65.0,67.625,'over',None,'Kitchen, above the east counter beside the window (dashed)'),
  ('FU-19.3','G','Overhead shelves, east',3.5,4.75,59.125,61.0,'over',None,'Kitchen, above the east counter beside the window (dashed)'),
- ('FU-25','G','Store cupboard, full height',17.75,20.25,59.5,67.5,'store2',None,'Open area, 8\' x 2\'6", floor to ceiling, on GW-05 (no separate store room)'),
- ('FU-26','G','Indian WC (Orissa pan)',4.5,6.0,69.0,70.92,'iwc',None,'Toilet 2, 1\'11" x 1\'5½" pan in the NE corner under ventilator V-02; user faces south; screened by the open door'),
- ('FU-57','G','Bucket, tap and health faucet',3.55,4.45,69.3,70.2,'bucket',None,'Toilet 2, on the user\'s left against GW-01; bib tap about 1\'9" high, health faucet about 10" high'),
+ ('FU-25','G','Store cupboard, full height',17.75,20.25,59.125,69.125,'store2',None,'Open area, 10\' x 2\'6", floor to ceiling on GW-05; its face lines up with the GW-13 end stub (seamless)'),
+ ('FU-26','G','Indian WC (Orissa pan)',3.6,5.06,68.15,70.07,'iwc',None,'Toilet 2, against GW-01 (V-02 wall) in the corner by GW-14; user faces south; clear of the shower'),
+ ('FU-57','G','Bucket, tap and health faucet',5.35,6.25,68.15,69.05,'bucket',None,'Toilet 2, west of the pan (user\'s right hand), bib tap on GW-14; health faucet on GW-01 beside the pan'),
  ('FU-27','G','Wash basin, wall-hung',7.9,9.4,71.85,73.0,'basin',None,'Toilet 2, 1\'6" x 1\'2" on GW-06 in the dry corner by the door; mirror above; rim 2\'8"'),
- ('FU-28','G','Shower area',3.5,6.5,70.75,73.0,'shower',None,'Toilet 2, 3\' x 2\'3" in the far SE corner; rose on GW-06 at 6\'9"; floor trap near the east wall; floor slopes 1:60'),
- ('FU-58','G','Geyser',5.5,6.9,72.55,73.0,'geyser',None,'Toilet 2, on GW-06 above the shower, bottom at about 6\'3"'),
- ('FU-59','G','Shower curtain rod',6.65,6.75,70.75,73.0,'curtain',None,'Toilet 2, keeps the basin side dry'),
+ ('FU-28','G','Shower area',3.5,6.75,70.5,73.0,'shower',None,'Toilet 2, 3\'3" x 2\'6" along GW-06; rose on GW-06 at 6\'9"; floor trap in the middle; floor slopes 1:60'),
+ ('FU-58','G','Geyser',4.4,5.8,72.55,73.0,'geyser',None,'Toilet 2, on GW-06 above the shower, bottom at about 6\'3"'),
+ ('FU-59','G','Shower curtain rod',6.75,6.85,70.5,73.0,'curtain',None,'Toilet 2, keeps the basin side dry'),
  ('FU-29','G','Washing machine',3.25,5.25,74.25,76.25,'wm',None,'Side garden utility, covered by the terrace corner'),
  ('FU-30','G','Wash basin with tap',5.5,7.0,74.25,75.5,'basin',None,'Side garden, next to garden door D-05'),
  ('FU-31','G','Queen bed',13.75,20.25,85.0,90.0,'bed','x2','Bedroom 2, head to GW-05'),
  ('FU-32','G','Side table',18.75,20.25,83.25,84.75,'cab',None,'Bedroom 2'),
  ('FU-33','G','Side table',18.75,20.25,90.25,91.75,'cab',None,'Bedroom 2'),
- ('FU-34','G','Wardrobe with loft',14.0,20.25,80.625,82.625,'ward',None,'Bedroom 2, 6\'3" x 2\', on GW-15'),
+ ('FU-34','G','Wardrobe with loft',14.0,20.25,80.625,81.9583,'ward',None,'Bedroom 2, 6\'3" x 1\'4", on GW-15'),
  ('FU-35','G','Dressing table',10.25,11.75,89.25,91.25,'desk',None,'Bedroom 2, on GW-07'),
  ('FU-36','F','Queen bed',13.75,20.25,89.0,94.0,'bed','x2','Bedroom 3, head to FW-03'),
  ('FU-37','F','Side table',18.75,20.25,87.25,88.75,'cab',None,'Bedroom 3'),
  ('FU-38','F','Side table',18.75,20.25,94.25,95.75,'cab',None,'Bedroom 3'),
- ('FU-39','F','Sliding wardrobe with loft',14.5,20.25,84.875,86.875,'ward',None,'Bedroom 3, 5\'9" x 2\', on FW-07'),
+ ('FU-39','F','Sliding wardrobe with loft',14.5,20.25,84.875,86.2083,'ward',None,'Bedroom 3, 5\'9" x 1\'4", on FW-07'),
  ('FU-40','F','Study desk',10.25,11.75,88.5,92.5,'desk',None,'Bedroom 3, under W-10'),
  ('FU-41','F','Western WC',18.0,20.25,80.5,82.0,'wc','x2','Toilet 3'),
  ('FU-42','F','Wash basin',17.0,18.4,83.1,84.5,'basin',None,'Toilet 3'),
@@ -225,7 +224,7 @@ SPEC = {
  'D-10':'Steel or UPVC door, glass upper half, plus MS grill shutter',
  'O-01':'Plastered arch opening, no shutter',
  'W-12':'Bi-fold glass window, aluminium or UPVC frame, curtain on the living side',
- 'GT-01':'MS swing gate, double leaf (no room on the wall for a sliding gate)', 'GT-02':'MS double-leaf hinged gate, opens outward',
+ 'GT-01':'MS swing gate, double leaf (no room on the wall for a sliding gate)', 'GT-02':'MS double-leaf hinged gate, opens inward',
 }
 for _o in OPENINGS:
     if _o[5]=='window' and _o[0] not in SPEC: SPEC[_o[0]]='UPVC 3-track sliding: 2 glass + 1 mosquito mesh, MS safety grill, 1\'6" sunshade outside'
