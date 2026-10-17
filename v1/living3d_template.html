@@ -344,7 +344,7 @@ let rugMesh,rugTex;
  const nm=T.jute.normalMap.clone();nm.repeat.set(m(W)/0.27,m(H)/0.27);nm.needsUpdate=true;
  rugMesh=box(rx1,rx2,ry1,ry2,0,0.03,std({map:rugTex,normalMap:nm,roughness:1}),{cast:false,tip:'Rug'});
  rugMesh.userData.keepUV=true;}
-function setRug(k){if(!RUG[k])k='sofa';const c=rugTex.image,g=c.getContext('2d'),w=c.width,h=c.height,r=rng(77),b=Math.round(w*0.11);
+function setRug(k){if(!RUG[k])k='sofa';const c=rugTex.image,g=c.getContext('2d'),w=c.width,h=c.height,r=rng(77),b=Math.round(w*0.077);
   g.fillStyle='#6e4a32';g.fillRect(0,0,w,h);                                   // border: dark brown
   g.fillStyle=RUG[k][0];g.fillRect(b,b,w-2*b,h-2*b);                           // centre: chosen colour
   for(let i=0;i<14000;i++){const v=(r()-.5)*0.08;g.fillStyle=v>0?`rgba(255,255,255,${v})`:`rgba(0,0,0,${-v})`;g.fillRect(r()*w,r()*h,2,2)}   // woven speckle
