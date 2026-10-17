@@ -338,11 +338,11 @@ box(s2.x2-1.3,s2.x2-0.35,s2.y2-1.35,s2.y2-0.85,1.42,2.3,cushMat('#efe6d6'),{roun
  const rx1=6.0,rx2=11.6,ry1=49.5,ry2=56.1, W=rx2-rx1, H=ry2-ry1;
  const t=canvasTex(1024,Math.round(1024*H/W),(g,w,h)=>{const r=rng(77),b=Math.round(w*0.11),l=Math.round(w*0.018);
    g.fillStyle='#6e4a32';g.fillRect(0,0,w,h);                                   // border: dark brown
-   g.fillStyle='#e8cbb2';g.fillRect(b,b,w-2*b,h-2*b);                           // centre: peach
+   g.fillStyle='#ad8b66';g.fillRect(b,b,w-2*b,h-2*b);                           // centre: floor oak, a touch lighter
    for(let i=0;i<14000;i++){const v=(r()-.5)*0.08;g.fillStyle=v>0?`rgba(255,255,255,${v})`:`rgba(0,0,0,${-v})`;g.fillRect(r()*w,r()*h,2,2)}   // woven speckle
  },1);t.repeat.set(1,1);
  const nm=T.jute.normalMap.clone();nm.repeat.set(m(W)/0.27,m(H)/0.27);nm.needsUpdate=true;
- const rug=box(rx1,rx2,ry1,ry2,0,0.03,std({map:t,normalMap:nm,roughness:1}),{cast:false,tip:'Rug, two-tone: peach centre, dark-brown border · 5\'7" x 6\'7"'});
+ const rug=box(rx1,rx2,ry1,ry2,0,0.03,std({map:t,normalMap:nm,roughness:1}),{cast:false,tip:'Rug, two-tone: oak-tone centre (a touch lighter than the floor), dark-brown border · 5\'7" x 6\'7"'});
  rug.userData.keepUV=true;}
 const lampX=4.8,lampY=48.9;cyl(lampX,lampY,0,0.05,0.42,MAT.blackMetal,{tip:'Paper floor lamp'});cyl(lampX,lampY,0.05,4.4,0.025,MAT.blackMetal,{tip:'Paper floor lamp'});
 const shadeMesh=new THREE.Mesh(new THREE.SphereGeometry(m(0.72),32,24),MAT.paper);shadeMesh.position.set(mx(lampX),m(5.0),m(lampY));scene.add(shadeMesh);named(shadeMesh,'Paper floor lamp');
@@ -415,7 +415,7 @@ const gtao=new GTAOPass(scene,camera,1,1);gtao.output=GTAOPass.OUTPUT.Default;gt
 // ---------------- options, light, views, lens ----------------
 const OPTIONS=[
  {name:'Warm oak',floor:'oak',wall:'#f6e1d1',accent:'#e9cfbd',accentWall:'niche',sofa:'#b49a80',rug:'#d8c7a6',curtain:'#b9987a',
-  notes:['Floor: light-oak wood-look porcelain planks, 8" x 48" (shown with a real oak-floor scan)','Walls: light peach emulsion (all interior walls); TV niches a shade deeper; ceiling and band in white','TV wall: civil-work niches, oak-veneer centre wall and console (mid-range)','Sofa: wooden frame in walnut-tone stain with mild-brown cushions; terracotta and cream throw cushions','Rug: two-tone, peach centre with a dark-brown border','Curtains: light-brown sheer (latte); dark brown would make this low-daylight room gloomy','Art: two framed textured canvases on GW-12'],sw:['#cfae86','#f2ede4','#d9cfc0','#c49a6c']},
+  notes:['Floor: light-oak wood-look porcelain planks, 8" x 48" (shown with a real oak-floor scan)','Walls: light peach emulsion (all interior walls); TV niches a shade deeper; ceiling and band in white','TV wall: civil-work niches, oak-veneer centre wall and console (mid-range)','Sofa: wooden frame in walnut-tone stain with mild-brown cushions; terracotta and cream throw cushions','Rug: two-tone, oak-tone centre a touch lighter than the floor, dark-brown border','Curtains: light-brown sheer (latte); dark brown would make this low-daylight room gloomy','Art: two framed textured canvases on GW-12'],sw:['#cfae86','#f2ede4','#d9cfc0','#c49a6c']},
 ];
 const panel=document.getElementById('panel');let curOpt=0,curLight='day';
 function applyOption(i){const o=OPTIONS[i];curOpt=i;
