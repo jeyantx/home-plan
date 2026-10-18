@@ -270,7 +270,7 @@ function buildOpening(o,w,horiz,s0,out=0){
     const vo=T-0.04;
     grillMesh(o,w,horiz,u1,u2,z1,z2,vo-0.08);
     boxAlong(horiz,w,u1-0.12,u2+0.12,-0.1,T*0.35-0.012,z1-0.06,z1+0.012,MAT.granite,{tip:'Granite window sill'});
-    if(out&&o.id!=='W-01'){   // outside box frame WF-1: wood-look brown cladding (same as the balcony louvers and the gate slats) round the window, deeper hood on top as the sunshade
+    if(out&&!['W-01','V-01'].includes(o.id)){   // outside box frame WF-1 (none on V-01; W-01 has its own gable frame): wood-look brown cladding (same as the balcony louvers and the gate slats) round the window, deeper hood on top as the sunshade
       const vr=(a,b)=>out<0?[-b,-a]:[T+a,T+b],big=o.type==='window',fw2=big?0.5:0.33,d=big?0.33:0.25,hood=big&&w.id!=='GW-03'?1.25:d,ft=`${o.id} · window box frame WF-1 · RCC fins and sunshade clad in wood-look brown (HPL or aluminium), ${big?'6" frame, 1\'3" hood':'4" frame'}`;
       const S1=vr(0.012,d),SH=vr(0.012,hood);
       boxAlong(horiz,w,u1-fw2,u2+fw2,SH[0],SH[1],z2+0.012,z2+fw2,MAT.extWood,{tip:ft});                                  // top hood
