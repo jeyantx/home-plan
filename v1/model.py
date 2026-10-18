@@ -191,6 +191,7 @@ FURNITURE = [
  ('FU-28','G','Shower area',3.5,6.75,70.5,73.0,'shower',None,'Toilet 2, 3\'3" x 2\'6" along GW-06; rose on GW-06 at 6\'9"; floor trap in the middle; floor slopes 1:60'),
  ('FU-58','G','Geyser',4.4,5.8,72.55,73.0,'geyser',None,'Toilet 2, on GW-06 above the shower, bottom at about 6\'3"'),
  ('FU-59','G','Shower curtain rod',6.75,6.85,70.5,73.0,'curtain',None,'Toilet 2, keeps the basin side dry'),
+ ('FU-70','G','Bath rack, 2 shelves',6.95,7.8,72.55,73.0,'over',None,'Toilet 2, wall-mounted on GW-06 between the shower curtain and the basin, for soap and shampoo'),
  ('FU-29','G','Washing machine',3.25,5.25,74.25,76.25,'wm',None,'Side garden utility, covered by the terrace corner'),
  ('FU-30','G','Wash basin with tap',5.5,7.0,74.25,75.5,'basin',None,'Side garden, next to garden door D-05'),
  ('FU-31','G','Queen bed',13.75,20.25,85.0,90.0,'bed','x2','Bedroom 2, head to GW-05'),

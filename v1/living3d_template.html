@@ -41,11 +41,12 @@ canvas{display:block;width:100%;height:100%}
 </head><body>
 <div id="app">
 <header>
- <div><h1>Japandi 3D · Living, Bedroom 1, Kitchen</h1><div class="sub">↑↓ walk · ←→ turn · A/D slide · W/S tilt · Q/E lower/raise · Shift faster · Drag to look around · Scroll to walk · Right-drag to slide · Hover for names</div></div>
+ <div><h1>Japandi 3D · Living, Kitchen, Bedrooms 1 and 2</h1><div class="sub">↑↓ walk · ←→ turn · A/D slide · W/S tilt · Q/E lower/raise · Shift faster · Drag to look around · Scroll to walk · Right-drag to slide · Hover for names</div></div>
  <span class="lbl">Light</span><div class="seg" id="lightSeg"><button data-l="day">Day</button><button data-l="eve">Evening</button></div>
  <span class="lbl">Living</span><div class="seg cams"><button data-c="0">Entry</button><button data-c="1">Corner</button><button data-c="2">From sofa</button><button data-c="3">From TV</button><button data-c="4">From kitchen</button><button data-c="5">Top</button></div>
  <span class="lbl">Bedroom 1</span><div class="seg cams"><button data-c="6">Door</button><button data-c="7">Window</button><button data-c="8">Study</button><button data-c="9">Toilet</button><button data-c="10">Top</button></div>
  <span class="lbl">Kitchen</span><div class="seg cams"><button data-c="11">Kitchen</button><button data-c="12">Sink</button><button data-c="13">Hob</button><button data-c="14">Fridge</button><button data-c="15">Top</button></div>
+ <span class="lbl">Bedroom 2</span><div class="seg cams"><button data-c="16">Door</button><button data-c="17">Bed</button><button data-c="18">Window</button><button data-c="19">Toilet 2</button><button data-c="20">Top</button></div>
  <span class="lbl">Finish</span><div class="seg" id="finishSeg"><button data-k="KT-1"><i style="background:#c9a77c"></i><i style="background:#efe9df"></i>KT-1</button><button data-k="KT-2"><i style="background:#efe9df"></i><i style="background:#c9a77c"></i>KT-2</button><button data-k="KT-3"><i style="background:#7d5a3e"></i><i style="background:#efe9df"></i>KT-3</button></div>
  <span class="lbl">Lens</span><div class="seg" id="lensSeg"><button data-f="60">Eye 60°</button><button data-f="75">Wide 75°</button></div>
  <button class="btn" id="photoBtn" aria-pressed="false" title="Ray-traced photo of the current view. Uses the graphics card heavily for about a minute, then stops by itself.">Photo</button>
@@ -165,7 +166,7 @@ function metreUV(geo){const p=geo.attributes.position,n=geo.attributes.normal;if
   geo.setAttribute('uv',new THREE.BufferAttribute(uv,2))}
 const roomsG=Object.fromEntries(P.rooms.G.map(r=>[r.id,r]));
 const fuG=Object.fromEntries(P.furniture.filter(f=>f.fl==='G').map(f=>[f.id,f]));
-const COMMON=new Set(['G-03','G-04','G-09','G-10','G-05','G-06','G-08']);   // oak-look floor; toilet 1 has its own tiles
+const COMMON=new Set(['G-03','G-04','G-09','G-10','G-05','G-06','G-08','G-12']);   // oak-look floor; toilet 1 has its own tiles
 const LX1=3.5,LX2=20.25,LY1=46.75,LY2=58.75;
 
 // ---------------- walls with openings ----------------
@@ -234,9 +235,10 @@ function buildOpening(o,w,horiz,s0){
     boxAlong(horiz,w,u1+0.012,u1+0.1,-0.04,T+0.04,0,o.h-0.012,MAT.oak,{tip:o.id+' frame'});boxAlong(horiz,w,u2-0.1,u2-0.012,-0.04,T+0.04,0,o.h-0.012,MAT.oak,{tip:o.id+' frame'});
     boxAlong(horiz,w,u1+0.012,u2-0.012,-0.04,T+0.04,o.h-0.1,o.h-0.012,MAT.oak,{tip:o.id+' frame'});
     for(const vv of [[-0.07,-0.04],[T+0.04,T+0.07]]){boxAlong(horiz,w,u1-0.15,u1+0.1,vv[0],vv[1],0,o.h+0.1,MAT.oak,{tip:o.id+' architrave'});boxAlong(horiz,w,u2-0.1,u2+0.15,vv[0],vv[1],0,o.h+0.1,MAT.oak,{tip:o.id+' architrave'});boxAlong(horiz,w,u1-0.15,u2+0.15,vv[0],vv[1],o.h-0.1,o.h+0.12,MAT.oak,{tip:o.id+' architrave'})}
-    const mat=o.id==='D-01'?MAT.teak:(['D-03','D-04','D-08'].includes(o.id)?MAT.white:MAT.oak);
+    const glassTop=/glass upper half/.test(P.spec[o.id]||'');
+    const mat=o.id==='D-01'?MAT.teak:(['D-03','D-04','D-08'].includes(o.id)||glassTop?MAT.white:MAT.oak);
     const leaves=o.type==='double'?[[u1,(u1+u2)/2,'a'],[(u1+u2)/2,u2,'b']]:[[u1,u2,o.hinge||'a']];
-    const open={'D-01':1.15,'D-02':1.2,'D-03':1.2,'D-06':0.4}[o.id]||0;   // main door, bedroom 1 and toilet 1 doors shown open
+    const open={'D-01':1.15,'D-02':1.2,'D-03':1.2,'D-04':1.2,'D-06':1.5}[o.id]||0;   // main door, bedroom 1 and toilet 1 doors shown open
     for(const [a,b,h] of leaves){const len=b-a, hingeU=h==='a'?a:b;
       const leaf=new THREE.Mesh(new THREE.BoxGeometry(m(len-0.24),m(o.h-0.14),m(th)),mat);leaf.castShadow=true;leaf.receiveShadow=true;
       const piv=new THREE.Group();const p=along(horiz,w,hingeU,T/2);piv.position.set(mx(p[0]),0,m(p[1]));
@@ -244,6 +246,12 @@ function buildOpening(o,w,horiz,s0){
       piv.rotation.y=horiz?Math.PI:-Math.PI/2;
       const sgn=-(o.swing==='+'?1:-1)*(h==='a'?-1:1);piv.rotation.y+=sgn*open;
       scene.add(piv);named(leaf,tip);
+      if(glassTop){   // cut the upper half out of the leaf: solid lower half, rails and stiles round a glass pane
+        const L=len-0.24,H=o.h-0.14,sg=h==='a'?1:-1,zc=m(0.02),st=0.3,gz1=H*0.5,gz2=H-0.3;
+        leaf.geometry.dispose();leaf.geometry=new THREE.BoxGeometry(m(L),m(gz1),m(th));leaf.position.set(m(sg*len/2),zc+m(gz1/2),0);
+        const part=(w,hh,x,z,mt)=>{const q=new THREE.Mesh(new THREE.BoxGeometry(m(w),m(hh),m(mt===MAT.glass?0.03:th)),mt);q.position.set(m(sg*len/2+x),zc+m(z),0);q.castShadow=mt!==MAT.glass;piv.add(q);named(q,tip+(mt===MAT.glass?' · glass upper half':''));return q};
+        part(L,H-gz2,0,(gz2+H)/2,mat);part(st,gz2-gz1,-L/2+st/2,(gz1+gz2)/2,mat);part(st,gz2-gz1,L/2-st/2,(gz1+gz2)/2,mat);
+        glassMeshes.push(part(L-2*st,gz2-gz1,0,(gz1+gz2)/2,MAT.glass));}
       if(o.id==='D-01'){for(const zz of [2.2,4.6]) {const pan=new THREE.Mesh(new THREE.BoxGeometry(m(len*0.6),m(1.8),m(0.03)),MAT.oakDark);pan.position.set(m((h==='a'?1:-1)*len/2),m(zz),m(th/2+0.015));piv.add(pan)}}
       const hd=new THREE.Mesh(new THREE.BoxGeometry(m(0.06),m(0.55),m(0.08)),MAT.blackMetal);hd.position.set(m((h==='a'?1:-1)*(len-0.3)),m(3.3),m(th/2+0.05));hd.castShadow=true;piv.add(hd);
     }
@@ -257,7 +265,7 @@ function slab(pts,mat,z,tip,down=false){
   const me=new THREE.Mesh(g,mat);me.position.y=m(z);me.receiveShadow=true;scene.add(me);if(tip)named(me,tip);return me}
 for(const r of P.rooms.G){
   if(['out','garden','covered'].includes(r.kind)) continue;
-  if(r.id!=='G-07') slab(r.pts,COMMON.has(r.id)?MAT.floor:MAT.otherFloor,0,`${r.id} · ${r.name}`);
+  if(r.id!=='G-07'&&r.id!=='G-11') slab(r.pts,COMMON.has(r.id)?MAT.floor:MAT.otherFloor,0,`${r.id} · ${r.name}`);
   ceilingMeshes.push(slab(r.pts,MAT.ceiling,CEIL-0.001,null,true));
 }
 ceilingMeshes.push(box(2.75,21,30.75,95.125,CEIL,CEIL+0.45,MAT.white));
@@ -386,15 +394,17 @@ function addPlant(px,py,hM,seed,tip){
  scene.add(plant);plant.traverse(o=>{if(o.isMesh){o.userData.keepUV=true;named(o,tip)}})}
 addPlant(11.3,57.45,1.5,1,'Bamboo plant in black pot · 5 ft');
 // sheer curtains: ripple-fold pleats on a ceiling track hung from the band
-function curtain(y1,y2,xp=LX1+0.42,top=BZ,trackTip='Curtain track'){const w=y2-y1,h=top-0.12,segW=Math.round(w*14),segH=24;
+function curtain(y1,y2,xp=LX1+0.42,top=BZ,trackTip='Curtain track',axis='y',mat=null,ctip=null){   // axis 'y': wall along plan y at x=xp; 'x': wall along plan x at y=xp
+  const w=y2-y1,h=top-0.12,segW=Math.round(w*14),segH=24;
   const g=new THREE.PlaneGeometry(m(w),m(h),segW,segH);const p=g.attributes.position;
   for(let i=0;i<p.count;i++){const u=p.getX(i)/m(w)+0.5,v=p.getY(i)/m(h)+0.5;
     const amp=m(0.11)*(1+0.25*(1-v));p.setZ(i,Math.sin(u*w/0.36*Math.PI*2)*amp+Math.sin(u*31+v*3)*m(0.01))}
   g.computeVertexNormals();
   const uv=g.attributes.uv;for(let i=0;i<uv.count;i++)uv.setXY(i,uv.getX(i)*m(w),uv.getY(i)*m(h));
-  const me=new THREE.Mesh(g,MAT.curtain);me.rotation.y=Math.PI/2;me.position.set(mx(xp),m(h/2+0.04),m((y1+y2)/2));me.castShadow=true;me.receiveShadow=true;scene.add(me);
-  named(me,'Sheer curtain · crepe georgette, ripple-fold on a ceiling track');me.userData.curtain=true;
-  box(xp-0.06,xp+0.06,y1,y2,top-0.08,top-0.012,MAT.blackMetal,{tip:trackTip})}
+  const me=new THREE.Mesh(g,mat||MAT.curtain);if(axis==='y'){me.rotation.y=Math.PI/2;me.position.set(mx(xp),m(h/2+0.04),m((y1+y2)/2))}else me.position.set(mx((y1+y2)/2),m(h/2+0.04),m(xp));
+  me.castShadow=true;me.receiveShadow=true;scene.add(me);
+  if(mat){named(me,ctip||'Curtain');me.userData.keepUV=true}else{named(me,'Sheer curtain · crepe georgette, ripple-fold on a ceiling track');me.userData.curtain=true}
+  if(axis==='y')box(xp-0.06,xp+0.06,y1,y2,top-0.08,top-0.012,MAT.blackMetal,{tip:trackTip});else box(y1,y2,xp-0.06,xp+0.06,top-0.08,top-0.012,MAT.blackMetal,{tip:trackTip})}
 for(const o of P.openings.filter(o=>o.wall==='GW-01'&&o.type==='window'&&o.b<LY2&&o.a>LY1)){curtain(o.a-1.3,o.a+0.25);curtain(o.b-0.25,o.b+1.3)}
 function ceilingFan(cx,cy,rot){const hub=8.6;cyl(cx,cy,hub+0.3,CEIL,0.045,MAT.blackMetal,{tip:'Ceiling fan, 48", wood-finish blades'});cyl(cx,cy,hub,hub+0.35,0.3,MAT.blackMetal,{tip:'Ceiling fan'});
   const fan=new THREE.Group();fan.position.set(mx(cx),m(hub+0.1),m(cy));scene.add(fan);
@@ -515,7 +525,7 @@ Object.assign(MAT,{
   tWall:std({map:tileTex('#e3dace','#cbc1b3',2,1,32),roughness:0.5}),
   tWood:std({map:T.oak.map,normalMap:T.oak.normalMap,normalScale:new THREE.Vector2(0.3,0.3),color:'#efe3d2',roughness:0.5}),   // light wood-look, same oak family as the furniture
   ceramic:std({color:'#f7f6f3',roughness:0.15}),
-  mirror:std({color:'#d7dadc',roughness:0.03,metalness:1}),
+  mirror:std({color:'#dfe5e8',roughness:0.06,metalness:0.9,envMapIntensity:3.0}),   // brighter reflection so it reads as a mirror, not a black panel
 });
 // tiles as thin cladding: UVs in world feet-to-metres so the grout lines run level from the floor
 function tile(x1,x2,y1,y2,z1,z2,mat,tip){const me=box(x1,x2,y1,y2,z1,z2,mat,{cast:false,tip});metreUV(me.geometry);
@@ -676,17 +686,115 @@ function setFinish(k){if(!KT[k])k='KT-1';const o=KT[k];finishMat(MAT.kLow,o.low)
   document.querySelectorAll('#finishSeg button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.k===k));
   try{localStorage.setItem('lr3d-finish',k)}catch(e){};if(photo&&pt)pt.updateMaterials();invalidate()}
 
+
+// ================= TOILET 2 (G-11): Indian pan, bucket and tap, open shower with a fabric curtain, wall-hung basin =================
+{const X1=3.5,X2=9.875,Y1=68.0,Y2=73.0,c=0.04,e=0.012,TZ=7.0,tw='Wall tile · greige matte porcelain, 2\' x 1\', to 7\'',tsw='Shower wall tile · wood-look porcelain, to 7\'';
+ // tiles: GW-14 (north), GW-06 (south, shower part wood-look), GW-01 (east, V-02 at y 68.25-70.25 from 6'), GW-16 (west, door D-04 at y 69-71.5)
+ tile(X1,X2,Y1,Y1+c,0,TZ,MAT.tWall,tw);
+ tile(X1,6.75,Y2-c,Y2,0,TZ,MAT.tWood,tsw);tile(6.75,X2,Y2-c,Y2,0,TZ,MAT.tWall,tw);
+ tile(X1,X1+c,Y1+c+e,70.5,0,6.0,MAT.tWall,tw);tile(X1,X1+c,70.25,70.5,6.0,TZ,MAT.tWall,tw);tile(X1,X1+c,70.5,Y2-c-e,0,TZ,MAT.tWood,tsw);
+ tile(X2-c,X2,Y1+c+e,69.0,0,TZ,MAT.tWall,tw);tile(X2-c,X2,71.5,Y2-c-e,0,TZ,MAT.tWall,tw);
+ slab([[X1,Y1],[X2,Y1],[X2,Y2],[X1,Y2]],MAT.tFloor,0,'G-11 · Toilet 2 floor · matte anti-skid porcelain, 1\' x 1\', greige');
+ // Indian WC FU-26 (Orissa pan, set into the floor), bucket and tap FU-57, health faucet
+ const pn=fuG['FU-26'],px=(pn.x1+pn.x2)/2,pt0=`FU-26 · Indian WC, Orissa pan, white · ${pn.note}`;
+ box(pn.x1+0.05,pn.x2-0.05,pn.y1+0.05,pn.y2-0.05,0.006,0.07,MAT.ceramic,{round:0.03,cast:false,tip:pt0});
+ const hole=new THREE.Mesh(new THREE.CylinderGeometry(m(0.3),m(0.3),m(0.01),28),std({color:'#9aa0a3',roughness:0.2,metalness:0.1}));hole.scale.set(1,1,1.6);hole.position.set(mx(px),m(0.072),m(pn.y2-0.6));scene.add(hole);named(hole,pt0);
+ for(const fx of [px-0.42,px+0.42]) box(fx-0.17,fx+0.17,pn.y1+0.35,pn.y1+0.95,0.07,0.1,MAT.ceramic,{round:0.02,cast:false,tip:'Foot rest, ribbed'});
+ const bk=fuG['FU-57'],bx=(bk.x1+bk.x2)/2,by=(bk.y1+bk.y2)/2;
+ cyl(bx,by,0,1.05,0.4,std({color:'#8f969a',roughness:0.5}),{tip:`FU-57 · Bucket, grey · ${bk.note}`,rTop:0.45,seg:28});cyl(bx+0.25,by+0.3,1.05,1.35,0.12,std({color:'#cfd4d6',roughness:0.4}),{tip:'Mug'});
+ box(bx-0.03,bx+0.03,Y1+c,Y1+c+0.35,1.55,1.62,MAT.blackMetal,{tip:'Bib tap, matte black, on GW-14'});
+ box(X1+c,X1+c+0.12,69.05,69.25,1.4,1.75,MAT.blackMetal,{tip:'Health faucet, matte black'});
+ // shower FU-28: rose on GW-06 at 6'9" clear of the geyser, mixer, floor trap; geyser FU-58; fabric curtain on rod FU-59
+ box(6.0-0.03,6.0+0.03,Y2-c-0.9,Y2-c,6.95,7.0,MAT.blackMetal,{tip:'Shower arm, matte black'});cyl(6.0,Y2-c-0.9,6.75,6.8,0.3,MAT.blackMetal,{tip:'Shower rose, 8", matte black'});
+ cyl(6.0,Y2-c-0.02,3.5,3.75,0.16,MAT.blackMetal,{tip:'Shower mixer, matte black',seg:24}).rotation.x=Math.PI/2;
+ box(4.9,5.32,71.55,71.97,0.006,0.016,std({color:'#9a9893',roughness:0.4,metalness:0.6}),{cast:false,tip:'Floor trap, 5" square steel grating'});
+ const gy=fuG['FU-58'];box(gy.x1,gy.x2,gy.y1,Y2-c-e,6.25,7.4,MAT.appWhite,{round:0.12,tip:`FU-58 · Geyser, 15 L · ${gy.note}`});
+ curtain(70.55,72.95,6.8,7.15,'FU-59 · Shower curtain rod, matte black','y',std({color:'#e6ddcf',roughness:1,side:THREE.DoubleSide,normalMap:T.linen.normalMap}),'Shower curtain, oatmeal waffle cotton');
+ // wall-hung basin FU-27 with mirror, bath rack FU-70 between the shower and the basin, towel rail on GW-14, light
+ const b=fuG['FU-27'];box(b.x1+0.05,b.x2-0.05,b.y1+0.1,Y2-c-e,2.3,2.68,MAT.ceramic,{round:0.1,tip:`FU-27 · Wash basin, wall-hung · ${b.note}`});
+ cyl((b.x1+b.x2)/2,(b.y1+Y2)/2,2.6,2.685,0.42,std({color:'#e4e6e7',roughness:0.15}),{tip:'Basin bowl'});
+ box((b.x1+b.x2)/2-0.04,(b.x1+b.x2)/2+0.04,Y2-c-0.45,Y2-c,3.0,3.07,MAT.blackMetal,{tip:'Basin tap, wall-mounted, matte black'});
+ box(b.x1+0.1,b.x2-0.1,Y2-c-0.04,Y2-c-e,3.5,5.7,MAT.mirror,{cast:false,tip:'Mirror with warm LED backlight'});ledStrips.push(box(b.x1+0.05,b.x2-0.05,Y2-c-0.03,Y2-c-e,3.45,3.5,MAT.led,{cast:false,tip:'Mirror backlight'}));
+ const ml=new THREE.PointLight('#ffd7a3',0,m(6),2);ml.position.set(mx((b.x1+b.x2)/2),m(4.8),m(Y2-1.0));scene.add(ml);towerLights.push(ml);
+ {const r=fuG['FU-70'],ry=Y2-c-e,dp=0.42,tr=`FU-70 · Bath rack, 2 shelves, matte black · ${r.note}`;
+  for(const z of [3.7,4.75]){box(r.x1,r.x2,ry-dp,ry,z,z+0.04,MAT.blackMetal,{tip:tr});box(r.x1,r.x2,ry-dp,ry-dp+0.03,z+0.04,z+0.2,MAT.blackMetal,{cast:false,tip:tr})}
+  for(const x of [r.x1,r.x2-0.03]) box(x,x+0.03,ry-dp,ry,3.7,4.95,MAT.blackMetal,{tip:tr});
+  cyl(r.x1+0.2,ry-0.2,4.79,5.35,0.1,std({color:'#efe7da',roughness:0.35}),{tip:'Shampoo',rTop:0.08});cyl(r.x2-0.22,ry-0.2,4.79,5.25,0.1,std({color:'#6f5a46',roughness:0.35}),{tip:'Body wash',rTop:0.08});
+  box(r.x1+0.12,r.x1+0.5,ry-0.32,ry-0.08,3.74,3.79,MAT.oak,{tip:'Soap dish, wood'});cyl(r.x2-0.22,ry-0.2,3.74,4.1,0.11,std({color:'#e9e4da',roughness:0.4}),{tip:'Toothbrush cup',rTop:0.12});}
+ box(7.2,8.6,Y1+c+0.12,Y1+c+0.15,5.2,5.24,MAT.blackMetal,{tip:'Towel rail, matte black'});box(7.3,8.5,Y1+c+0.08,Y1+c+0.2,3.9,5.25,std({color:'#e9e1d3',roughness:1,normalMap:T.linen.normalMap}),{round:0.05,tip:'Towel, oatmeal'});
+ downlight(6.7,70.5,CEIL,'LED ceiling light, toilet (warm white)');}
+
+// ================= BEDROOM 2 (G-12): same Japandi warm-oak design as bedroom 1 =================
+{const X1=10.25,X2=20.25,Y1=80.625,Y2=94.375;
+ bandSide(X1,X2,Y1,Y1+BW,'y+');bandSide(X1,X2,Y2-BW,Y2,'y-');bandSide(X1,X1+BW,Y1+BW,Y2-BW,'x+');bandSide(X2-BW,X2,Y1+BW,Y2-BW,'x-');
+ for(const [x,y] of [[X1+0.5,86.6],[X1+0.5,91.8],[16.6,Y2-0.45],[12.4,Y1+0.45]]) downlight(x,y,BZ);
+ ceilingFan(15.6,87.5,0.7);
+ {const hS=0.33,d=0.04,t='Tile skirting, 4"';
+  box(X1,X1+d,Y1,Y2,0,hS,MAT.skirt,{tip:t});box(X1+d,10.5,Y1,Y1+d,0,hS,MAT.skirt,{tip:t});box(13.5,14.0,Y1,Y1+d,0,hS,MAT.skirt,{tip:t});
+  box(X1+d,10.75,Y2-d,Y2,0,hS,MAT.skirt,{tip:t});box(13.5,X2,Y2-d,Y2,0,hS,MAT.skirt,{tip:t});box(X2-d,X2,81.96,83.0,0,hS,MAT.skirt,{tip:t});box(X2-d,X2,92.0,Y2-d,0,hS,MAT.skirt,{tip:t});}
+ // AC FU-46 on GW-07; W-07 curtains on a wall track below it; W-08 curtains from the band
+ box(10.262,10.92,81.75,84.75,7.55,8.5,std({color:'#f4f4f2',roughness:0.35}),{round:0.08,tip:'FU-46 · AC indoor unit, 1.5 ton split · on GW-07 facing the bed'});
+ box(10.92,10.94,81.9,84.6,7.62,7.7,MAT.blackMetal,{cast:false,tip:'FU-46 · AC air outlet'});
+ for(const [a,b] of [[83.85,85.2],[88.75,89.2]]) curtain(a,b,10.6,7.4,'Curtain track, wall-mounted at 7\'4" below the AC');
+ for(const [a,b] of [[14.0,15.1],[18.9,20.15]]) curtain(a,b,Y2-0.42,BZ,'Curtain track','x');
+ // queen bed FU-31, headboard wall panel across both side tables, linen pad, ledge over the bed, art above
+ const f=fuG['FU-31'],tip=`FU-31 · Queen bed · oak platform, 6'6" x 5' · ${f.note}`;
+ box(f.x1+0.35,f.x2-0.2,f.y1+0.3,f.y2-0.3,0,0.32,MAT.plinth,{tip});
+ box(f.x1,f.x2-0.15,f.y1,f.y2,0.32,1.02,MAT.oak,{round:0.04,tip});
+ box(f.x1+0.12,f.x2-0.2,f.y1+0.1,f.y2-0.1,1.02,1.72,std({color:'#f3efe8',roughness:0.95,normalMap:T.linen.normalMap}),{round:0.12,tip:'Mattress, 6\'3" x 5\', 8"'});
+ box(f.x1+0.05,f.x2-1.55,f.y1+0.03,f.y2-0.03,1.45,1.8,std({color:'#e6ddcf',roughness:1,normalMap:T.linen.normalMap,normalScale:new THREE.Vector2(0.9,0.9)}),{round:0.1,tip:'Duvet, oatmeal linen'});
+ box(f.x1+0.3,f.x1+1.6,f.y1,f.y2,1.79,1.88,std({color:'#6e4a32',roughness:1,normalMap:T.linen.normalMap}),{round:0.04,tip:'Throw, dark brown (same as the rug border)'});
+ for(const [a,b] of [[f.y1+0.35,f.y1+2.35],[f.y2-2.35,f.y2-0.35]]) box(f.x2-1.45,f.x2-0.45,a,b,1.72,2.2,std({color:'#f6f3ee',roughness:1,normalMap:T.linen.normalMap}),{round:0.2,tip:'Pillow, white cotton'});
+ box(f.x2-1.85,f.x2-1.35,f.y1+1.9,f.y1+3.1,1.75,2.5,cushMat('#b49a80'),{round:0.16,tip:'Cushion, mild brown linen'});
+ const hy1=83.0,hy2=92.0,ht=0.12,lz=3.35;
+ box(X2-ht,X2,hy1,hy2,0,lz,MAT.tvPanel,{tip:'Headboard wall panel · oak veneer with 3 mm grooves, across both side tables'});
+ for(let y=hy1+0.5;y<hy2-0.1;y+=0.5) box(X2-ht-0.005,X2-ht,y-0.008,y+0.008,0.05,lz-0.05,MAT.oakDark,{cast:false,tip:'Groove in the oak panel'});
+ box(X2-0.42,X2-ht,hy1,hy2,lz,lz+0.1,MAT.oak,{tip:'Headboard ledge, oak, 4" deep'});
+ ledStrips.push(box(X2-0.4,X2-0.34,hy1+0.15,hy2-0.15,lz-0.03,lz,MAT.led,{cast:false,tip:'LED strip under the ledge'}));
+ box(X2-0.3,X2-ht,f.y1+0.25,f.y2-0.25,1.7,3.15,MAT.sofa,{round:0.08,tip:'Upholstered headboard pad, mild-brown linen'});
+ // floating side tables FU-32 and FU-33 with table lamps
+ for(const id of ['FU-32','FU-33']){const s=fuG[id],ts=`${id} · Side table, floating oak, one drawer · ${s.note}`;
+  box(s.x1+0.1,X2-ht,s.y1+0.05,s.y2-0.05,1.3,2.05,MAT.oak,{tip:ts});box(s.x1+0.098,s.x1+0.1,s.y1+0.1,s.y2-0.1,1.66,1.68,MAT.oakDark,{cast:false,tip:'Drawer line'});
+  box(s.x1+0.06,s.x1+0.1,(s.y1+s.y2)/2-0.25,(s.y1+s.y2)/2+0.25,1.86,1.9,MAT.blackMetal,{cast:false,tip:'Drawer pull'});
+  const lx=s.x1+0.75,ly=(s.y1+s.y2)/2;cyl(lx,ly,2.05,2.7,0.16,std({color:'#cdbfa8',roughness:0.5}),{tip:'Table lamp, ceramic base',rTop:0.12});
+  cyl(lx,ly,2.7,3.28,0.42,MAT.paper,{tip:'Table lamp, linen shade',rTop:0.33}).castShadow=false;
+  const ll=new THREE.PointLight('#ffc98a',0,m(8),2);ll.position.set(mx(lx),m(3.05),m(ly));scene.add(ll);towerLights.push(ll);}
+ // art above the ledge
+ const ay1=86.0,ay2=89.0,az1=4.7,az2=6.7;
+ box(X2-0.11,X2-0.012,ay1,ay2,az1,az2,MAT.oakDark,{tip:'Photo frame, oak, 1" profile'});
+ const t=canvasTex(768,Math.round(768*(az2-az1)/(ay2-ay1)),(g,w,h)=>{const r=rng(93);g.fillStyle='#e9dfcf';g.fillRect(0,0,w,h);
+   g.fillStyle='#8a6a4f';for(let i=0;i<3;i++){g.beginPath();g.moveTo(0,h*(0.55+i*0.12));g.bezierCurveTo(w*0.3,h*(0.45+i*0.12),w*0.6,h*(0.68+i*0.1),w,h*(0.5+i*0.12));g.lineTo(w,h);g.lineTo(0,h);g.globalAlpha=0.35+i*0.2;g.fill()}
+   g.globalAlpha=1;g.fillStyle='#b5683f';g.beginPath();g.arc(w*0.3,h*0.32,h*0.12,0,7);g.fill();
+   for(let i=0;i<9000;i++){const v=(r()-.5)*0.06;g.fillStyle=v>0?`rgba(255,255,255,${v})`:`rgba(0,0,0,${-v})`;g.fillRect(r()*w,r()*h,2,2)}},1);t.repeat.set(1,1);
+ const pl=new THREE.Mesh(new THREE.PlaneGeometry(m(ay2-ay1-0.2),m(az2-az1-0.2)),std({map:t,roughness:0.9}));pl.rotation.y=Math.PI/2;pl.position.set(mx(X2-0.115),m((az1+az2)/2),m((ay1+ay2)/2));scene.add(pl);named(pl,'Framed art · earthy hills and sun, textured canvas');pl.userData.keepUV=true;
+ // wardrobe FU-34 with loft on GW-15 (front faces +y)
+ const wd=fuG['FU-34'],wy2=wd.y2,wl=7.55;
+ cabRun('FU-34','Wardrobe with loft, oak veneer',wd.x1,X2-0.012,Y1+0.012,wy2,0,wl,'y+',[[14.0,16.08,'door'],[16.08,18.16,'door'],[18.16,20.238,'door']],MAT.oak,true);
+ cabRun('FU-34','Wardrobe loft, oak veneer',wd.x1,X2-0.012,Y1+0.012,wy2,wl+0.012,BZ-0.005,'y+',[[14.0,16.08,'door'],[16.08,18.16,'door'],[18.16,20.238,'door']],MAT.oak,false);
+ // dressing table FU-35 on GW-07: floating oak console with 2 drawers, framed mirror, linen stool
+ const dt=fuG['FU-35'],tdt=`FU-35 · Dressing table, floating oak, 2 drawers · ${dt.note}`;
+ box(X1+0.012,dt.x2-0.1,dt.y1,dt.y2,2.25,2.6,MAT.oak,{tip:tdt});
+ for(const [a,b] of [[dt.y1+0.05,(dt.y1+dt.y2)/2-0.02],[(dt.y1+dt.y2)/2+0.02,dt.y2-0.05]]){box(dt.x2-0.1,dt.x2-0.08,a,b,2.28,2.57,MAT.oak,{tip:tdt});box(dt.x2-0.08,dt.x2-0.04,(a+b)/2-0.2,(a+b)/2+0.2,2.5,2.54,MAT.blackMetal,{cast:false,tip:'Drawer pull'})}
+ box(X1+0.012,X1+0.1,dt.y1+0.15,dt.y2-0.15,3.2,6.2,MAT.oakDark,{tip:'Mirror frame, oak'});box(X1+0.1,X1+0.11,dt.y1+0.25,dt.y2-0.25,3.3,6.1,MAT.mirror,{cast:false,tip:'Dressing mirror'});
+ cyl(dt.x2+0.55,(dt.y1+dt.y2)/2,0,1.45,0.5,MAT.sofa,{tip:'Stool, mild-brown linen',rTop:0.5});
+ // rug under the lower part of the bed, same two-tone
+ {const rx1=12.3,rx2=17.2,ry1=83.7,ry2=91.3,W=rx2-rx1,H=ry2-ry1;
+  const tx=canvasTex(1024,Math.round(1024*H/W),(g,w,h)=>{const r=rng(79),bb=Math.round(w*0.077);g.fillStyle='#6e4a32';g.fillRect(0,0,w,h);g.fillStyle='#b49a80';g.fillRect(bb,bb,w-2*bb,h-2*bb);
+    for(let i=0;i<14000;i++){const v=(r()-.5)*0.08;g.fillStyle=v>0?`rgba(255,255,255,${v})`:`rgba(0,0,0,${-v})`;g.fillRect(r()*w,r()*h,2,2)}},1);tx.repeat.set(1,1);
+  const nm=T.jute.normalMap.clone();nm.repeat.set(m(W)/0.27,m(H)/0.27);nm.needsUpdate=true;
+  box(rx1,rx2,ry1,ry2,0,0.03,std({map:tx,normalMap:nm,roughness:1}),{cast:false,tip:'Rug, two-tone: sofa-seat brown centre, dark-brown border · 4\'11" x 7\'7"'}).userData.keepUV=true;}}
+
 // ---------------- other rooms: simple blocks so the views through openings look right ----------------
 const simpleH={bed:1.8,cab:2.3,desk:2.5,ward:7.5,store2:9.4,shelf:6,counter:2.8,counter2:3.0,fridge:5.6,wc:1.3,basin:2.7,wm:2.8,store:3.5,table:2.4,chair:1.5};
 const kmat={counter:MAT.granite,counter2:MAT.granite,fridge:std({color:'#d9dcdf',roughness:0.3,metalness:0.5}),ward:MAT.oak,store2:std({color:'#ebe5da',roughness:0.55}),bed:std({color:'#e9e4da',roughness:0.9}),cab:MAT.oak,desk:MAT.oak,shelf:MAT.oak};
-for(const f of P.furniture){ if(f.fl!=='G'||['FU-03.1','FU-03.2','FU-04','FU-05','FU-06','FU-09.1','FU-09.2','FU-10','FU-11','FU-12','FU-13','FU-14','FU-15','FU-16','FU-16.2','FU-17','FU-18','FU-25'].includes(f.id)) continue;
+for(const f of P.furniture){ if(f.fl!=='G'||['FU-03.1','FU-03.2','FU-04','FU-05','FU-06','FU-09.1','FU-09.2','FU-10','FU-11','FU-12','FU-13','FU-14','FU-15','FU-16','FU-16.2','FU-17','FU-18','FU-25','FU-27','FU-31','FU-32','FU-33','FU-34','FU-35'].includes(f.id)) continue;
   const h=simpleH[f.kind]; if(!h) continue;
   if(f.kind==='counter'||f.kind==='counter2'){box(f.x1,f.x2,f.y1,f.y2,0.3,h-0.12,MAT.cabinet,{tip:`${f.id} · ${f.name}`});box(f.x1,f.x2,f.y1,f.y2,h-0.12,h,MAT.granite,{tip:`${f.id} · ${f.name} · granite top`});continue}
   box(f.x1,f.x2,f.y1,f.y2,0,h,kmat[f.kind]||std({color:'#e6e2da',roughness:0.8}),{tip:`${f.id} · ${f.name}`});
 }
 scene.traverse(n=>{if(n.isMesh&&!n.userData.curtain&&!n.userData.keepUV) metreUV(n.geometry)});
 scene.updateMatrixWorld(true);   // wall positions ready for collision before the first frame
-const SOLID=['FU-05','FU-06','FU-09','FU-11','FU-12','FU-13','FU-14','FU-15','FU-16','FU-17','FU-18','FU-25'];   // FU-16 also covers FU-16.2
+const SOLID=['FU-05','FU-06','FU-09','FU-11','FU-12','FU-13','FU-14','FU-15','FU-16','FU-17','FU-18','FU-25','FU-31','FU-34','FU-35'];   // FU-16 also covers FU-16.2
 scene.traverse(n=>{if(n.isMesh&&typeof n.userData.tip==='string'&&SOLID.some(k=>n.userData.tip.startsWith(k)))wallMeshes.push(n)});   // TV unit, bed, wardrobe, shelf, WC, vanity, shower glass are solid too
 
 // ---------------- light ----------------
@@ -735,6 +843,14 @@ function applyOption(i){const o=OPTIONS[i];curOpt=i;
   <li><b>Cabinet finish:</b> pick with the Finish buttons. KT-1 oak base and cream wall cabinets, black granite top. KT-2 cream base and oak wall cabinets, white quartz top. KT-3 walnut base and cream wall cabinets, white quartz top. All with slim black handles and a dark shadow-gap plinth.</li>
   <li><b>Layout:</b> hob FU-52 under W-06 (window lowered to 4' x 2', head at 5'3") with the chimney hood at the standard 2'6" above the counter; sink FU-51 on the back counter against GW-14; wall cabinets on GW-14 and GW-01 (glass doors on the unit above the sink and the one left of the window), plus a top row FU-68 and FU-69 up to the ceiling; cream 3" x 12" backsplash tiles; LED strips under the wall cabinets.</li>
   <li><b>Appliances:</b> mixer grinder FU-64 in the GW-13 corner, wet grinder FU-65 on its own 2' low counter FU-16.2 beside the sink, RO purifier FU-66 on GW-14 left of the sink, microwave FU-67 on the breakfast counter FU-17 (now 8' long, joined to the east counter). Fridge FU-18 on GW-05 at the north end of the store cupboard FU-25, with a loft above.</li>
+  </ul><h2>Bedroom 2 (G-12)</h2><ul>
+  <li>Same design as bedroom 1: oak-look floor, peach walls, ceiling band with LED cove, 4 downlights, ceiling fan.</li>
+  <li><b>Bed FU-31:</b> oak platform; headboard wall panel in grooved oak veneer runs across both floating side tables FU-32 and FU-33 (each with a drawer and a linen-shade lamp); linen pad, LED ledge, framed canvas; two-tone rug under the bed.</li>
+  <li><b>Wardrobe FU-34</b> on GW-15 with loft, oak veneer, black handles. <b>Dressing table FU-35:</b> floating oak console with 2 drawers, framed mirror and a linen stool.</li>
+  <li><b>Windows:</b> W-07 curtains on a wall track below the AC FU-46; W-08 curtains from the band. Back door D-10: white UPVC with a glass upper half.</li>
+  </ul><h2>Toilet 2 (G-11)</h2><ul>
+  <li>Same tiles as toilet 1: greige walls to 7', wood-look in the shower, anti-skid floor.</li>
+  <li><b>Fittings:</b> Indian WC FU-26 (Orissa pan) with bucket, bib tap and health faucet FU-57; shower FU-28 with rose clear of the geyser FU-58 and an oatmeal fabric curtain on rod FU-59; wall-hung basin FU-27 with backlit mirror; black two-shelf bath rack FU-70 between shower and basin; towel rail on GW-14.</li>
   </ul><h2>Toilet 1 (G-07)</h2><ul>
   <li><b>Tiles:</b> greige matte porcelain 2' x 1' to 7' high; wood-look porcelain on the shower walls; matte anti-skid 1' x 1' floor. Paint above 7'.</li>
   <li><b>Fittings:</b> wall-hung WC FU-12 on a tiled concealed-cistern ledge, floating oak-look vanity FU-13 with a vessel basin and backlit mirror, open shower FU-14 (no screen) with a rain shower and a small square floor trap, black two-shelf bath rack FU-63 beside the basin, 15 L geyser above. All fittings matte black. WPC door D-03.</li>
@@ -772,6 +888,11 @@ const VIEWS=[
  {p:[9.6,EYE,63.2],t:[3.5,3.6,62.6]},     // hob, window, chimney, wet grinder
  {p:[13.0,EYE,70.6],t:[19.0,4.0,61.0]},  // fridge and store cupboard, from the stair hall
  {p:[11.6,32,65.0],t:[11.6,0,65.01],top:true},   // top of kitchen and open area
+ {p:[12.6,EYE,81.5],t:[20.0,3.4,88.5]},   // bedroom 2 from the door: bed, headboard, side tables
+ {p:[11.2,EYE,93.4],t:[20.25,3.6,85.5]},  // bedroom 2 from the back door: bed and wardrobe
+ {p:[17.6,EYE,84.4],t:[10.25,4.6,89.0]},  // bedroom 2 window W-07, dressing table, AC
+ {p:[10.9,5.6,71.0],t:[4.2,2.0,70.4]},    // toilet 2 from the stair hall, through D-04
+ {p:[15.2,34,87.5],t:[15.2,0,87.51],top:true},   // top of bedroom 2
 ];
 let hfov=75;
 function applyFov(){const a=camera.aspect||1;camera.fov=THREE.MathUtils.radToDeg(2*Math.atan(Math.tan(THREE.MathUtils.degToRad(hfov)/2)/a));camera.updateProjectionMatrix()}
