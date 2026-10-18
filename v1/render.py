@@ -184,6 +184,14 @@ def spiral(top=False):
         pts=arc(s0+8,s0+300,1.9,40); pline(pts,'#fff',0.08,'marker-end="url(#arrW)"')
     E(f'<circle cx="{S(cx,cy)[0]}" cy="{S(cx,cy)[1]}" r="{st["col"]+0.03:.3f}" fill="#222"/>')
     E('</g>')
+def plants():
+    import model as _m
+    E('<g class="L-furn">')
+    for c,t,x,y in getattr(_m,'PLANTS',[]):
+        a=S(x,y); col=_m.PLANT_COL.get(t,'#3f6a32')
+        E(f'<g class="fu" data-tip="{tip(c+" · "+_m.PLANT_NAMES.get(t,t))}"><circle cx="{a[0]:.3f}" cy="{a[1]:.3f}" r="0.55" fill="#4f7d3a" stroke="#2c4a20" stroke-width="0.04"/>'
+          f'<circle cx="{a[0]:.3f}" cy="{a[1]:.3f}" r="0.25" fill="{col}" stroke="#555" stroke-width="0.02"/></g>')
+    E('</g>')
 def vehicles():
     import model as _m
     cx1,cx2,cy1,cy2=getattr(_m,'CAR',(11.25,17.25,13.75,28.75))
@@ -344,6 +352,15 @@ def draw_furniture(fl,_late=False):
         elif k=='curtain':
             if w>d: line(x1,(y1+y2)/2,x2,(y1+y2)/2,'#b05a8a',0.05,extra='stroke-dasharray="0.15 0.08"')
             else: line((x1+x2)/2,y1,(x1+x2)/2,y2,'#b05a8a',0.05,extra='stroke-dasharray="0.15 0.08"')
+        elif k=='fbed':
+            import model as _mm
+            q=[(x1,_mm.back_y(x1)-0.375),(x2,_mm.back_y(x2)-0.375),(x2,_mm.back_y(x2)-1.875),(x1,_mm.back_y(x1)-1.875)]
+            E(f'<polygon points="{pts(q)}" fill="#b98a62" stroke="#6b4a2a" stroke-width="0.05"/>')
+        elif k=='tulsi':
+            R_(x1,x2,y1,y2,'#efe6d2','#8a6a3a',0.05); a=S((x1+x2)/2,(y1+y2)/2); E(f'<circle cx="{a[0]:.3f}" cy="{a[1]:.3f}" r="0.45" fill="#3f6a32"/>')
+        elif k=='cline':
+            for xx in (x1,x2): a=S(xx,(y1+y2)/2); E(f'<rect x="{a[0]-0.12:.3f}" y="{a[1]-0.3:.3f}" width="0.24" height="0.6" fill="#222"/>')
+            for dy in (-0.2,0,0.2): line(x1,(y1+y2)/2+dy,x2,(y1+y2)/2+dy,'#555',0.025)
         elif k=='washpad':
             R_(x1,x2,y1,y2,'#d7dde2','#6c7a86',0.04); a=S((x1+x2)/2,(y1+y2)/2)
             E(f'<rect x="{a[0]-0.2:.3f}" y="{a[1]-0.2:.3f}" width="0.4" height="0.4" fill="#6c7a86"/>')
@@ -389,7 +406,7 @@ def draw_struct(fl):
 def ground():
     W=walls_of('G')
     draw_plot('G'); draw_rooms('G'); porch_steps(); tree(); vehicles()
-    draw_furniture('G')
+    draw_furniture('G'); plants(); text(11.0,106.7,'BW-09 back wall (existing, houses behind)',0.3,fill='#666')
     stair_A(); stair_L(); stair_B(op=0.45,dash='stroke-dasharray="0.2 0.12"')
     E('<g opacity="0.72">'); draw_furniture('G',_late=True); E('</g>')
     text(14.6,20.6,'flight 1B overhead (+7\'6" to +11\'6")',0.3,fill='#6b3a1c')

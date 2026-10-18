@@ -122,7 +122,13 @@ OPENINGS = [
 # ---------- building outlines (outer wall faces) for built-up area ----------
 GF_OUTLINE=[(8.5,30.75),(21,30.75),(21,95.125),(9.5,95.125),(9.5,73.875),(6.0,73.875),(6.0,67.125),(2.75,67.125),(2.75,40.5),(8.5,40.5)]
 FF_OUTLINE=R(9.5,21.0,73.125,97.375)
-BRANCH_NOTES='''<section class="ask"><h2>Toilet 2 re-planned (branch spiral-v1, for review)</h2>
+BRANCH_NOTES='''<section class="ask"><h2>Back garden (branch spiral-v1, for review)</h2>
+<ol>
+<li><b>BW-09 back wall</b> (existing, of the houses behind) now shown in 3D, with the houses behind it.</li>
+<li><b>Flower bed FU-73</b>, 1'6" deep, all along the back wall, 9" brick kerb. A row of 12 plants common in Tamil Nadu homes, east to west: Sembaruthi (red hibiscus), Malli (jasmine), Kanakambaram (orange crossandra), Nandiyavattai (white crape jasmine), Nithya kalyani (pink periwinkle), Karuveppilai (curry leaf), Malli, Vetchi / Idly poo (red ixora), Rose, Kanakambaram, Nithya kalyani, Sembaruthi. Tall ones at the ends, low ones in between.</li>
+<li><b>Tulsi maadam FU-74</b> in the side garden with Tulsi PL-13; <b>clothes line FU-75</b> in the back garden.</li>
+</ol></section>
+<section class="ask"><h2>Toilet 2 re-planned (branch spiral-v1, for review)</h2>
 <ol>
 <li><b>Door D-04</b> now opens inward, hinged at its north end; the leaf folds back over the shower area.</li>
 <li><b>Shower FU-28</b> moves to the north end (5' x 2'10½"), rose and geyser FU-58 on GW-14, bath rack FU-70 on GW-16 north of the door.</li>
@@ -179,6 +185,16 @@ BRANCH_NOTES='''<section class="ask"><h2>Toilet 2 re-planned (branch spiral-v1, 
 
 # ---------- existing features ----------
 # two existing bores (site survey 2026-10-18): distances from the west boundary (X 21) and the south (back) boundary
+# existing back boundary wall of the houses behind (slanted with the back line), 4½" inside our line, 6' high
+BACK_WALL=dict(id='BW-09',h=6.0,t=0.375,pts=[(1.0,back_y(1.0)),(21.0,back_y(21.0))],note='Back compound wall (existing, of the houses behind), 4½", about 6\' high')
+# plants in the back flower bed FU-73 (east to west) and the Tulsi maadam
+_bed=lambda x:back_y(x)-0.375-0.75
+PLANTS=[('PL-01','sembaruthi',2.2),('PL-02','malli',3.8),('PL-03','kanakambaram',5.4),('PL-04','nandiyavattai',7.0),('PL-05','nithyakalyani',8.6),('PL-06','karuveppilai',10.2),
+        ('PL-07','malli',11.8),('PL-08','vetchi',13.4),('PL-09','rose',15.0),('PL-10','kanakambaram',16.6),('PL-11','nithyakalyani',18.2),('PL-12','sembaruthi',19.8)]
+PLANTS=[(c,t,x,_bed(x)) for c,t,x in PLANTS]+[('PL-13','tulsi',5.25,97.5)]
+PLANT_NAMES={'malli':'Malli (Jasmine)','sembaruthi':'Sembaruthi (Hibiscus, red)','nandiyavattai':'Nandiyavattai (Crape jasmine)','vetchi':'Vetchi / Idly poo (Ixora, red)',
+ 'kanakambaram':'Kanakambaram (Crossandra, orange)','nithyakalyani':'Nithya kalyani (Periwinkle, pink)','rose':'Rose (pink)','karuveppilai':'Karuveppilai (Curry leaf)','tulsi':'Tulsi (Holy basil)'}
+PLANT_COL={'malli':'#ffffff','sembaruthi':'#c8102e','nandiyavattai':'#ffffff','vetchi':'#e03a24','kanakambaram':'#ff7a1f','nithyakalyani':'#e2558c','rose':'#c2185b','karuveppilai':'#3d6b2b','tulsi':'#7a4a7e'}
 BORES=[('BR-01',21.0-13.25, back_y(21.0-13.25)-27.0,"13'3\" from west, 27' from south"),('BR-02',21.0-17.0, back_y(21.0-17.0)-34.0,"17' from west, 34' from south")]
 BOREWELL=BORES[0][1:3]
 
@@ -275,6 +291,9 @@ FURNITURE = [
  ('FU-53','G','Tap and wash platform',1.375,4.875,89.375,91.875,'washpad',None,'Side garden, paved with drain, in the corner of BW-02 and BW-03'),
  ('FU-54','G','Wash basin with tap',19.125,20.625,95.25,96.5,'basin',None,'Back garden, against GW-08 beside window W-08'),
  ('FU-55','G','Tap and wash platform',17.625,20.625,96.75,99.25,'washpad',None,'Back garden, paved, with floor drain'),
+ ('FU-73','G','Flower bed along the back wall',1.375,20.625,103.14,105.6,'fbed',None,'Back and side garden, 1\'6" deep all along the back wall BW-09, 9" brick kerb, red soil; a row of Tamil Nadu flowering plants PL-01 to PL-12'),
+ ('FU-74','G','Tulsi maadam',4.5,6.0,96.75,98.25,'tulsi',None,'Side garden, 1\'6" square, 3\' high plastered pedestal with a lamp niche facing east, Tulsi PL-13 on top'),
+ ('FU-75','G','Clothes drying line',10.25,17.25,101.0,101.5,'cline',None,'Back garden, two black MS posts 6\' high with T-arms, 3 steel wires, 7\' long; clear of the back door D-10 and the wash platform'),
  ('FU-56','G','Store under staircase 1',17.125,20.625,10.997,16.0,'store',None,'Parking, 3\'6" x 5\', under the high end of ST-1A (about 4\' high at the front, 6\' at the back); door 2\'6" x 3\'10" facing east; the low end of the stair is solid'),
 ]
 # door and window types (proposal)

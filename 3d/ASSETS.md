@@ -29,6 +29,7 @@ All CC0 (public domain) from Poly Haven, https://polyhaven.com
 
 ## Models made in code (no downloads)
 - `models/bamboo-plant.js`: bamboo plant in a black pot, procedural, canvas textures.
+- `models/tn-plants.js`: Tamil Nadu garden plants (malli, sembaruthi, nandiyavattai, vetchi, kanakambaram, nithya kalyani, rose, karuveppilai, tulsi), procedural.
 - `models/neem-tree.js`: the existing neem tree at the gate, rebuilt from the site photos (south lean, fork at about 3 m, south limb cut to a stub). Procedural, canvas textures.
 
 ## Site photos (owner's, for reference only)

@@ -52,7 +52,7 @@ canvas{display:block;width:100%;height:100%}
   <div class="seg" id="floorSeg" title="Go to a floor at eye level"><button data-fl="G">Ground</button><button data-fl="F">First</button></div>
   <select id="areaSel" title="Choose an area, then a view"><option value="0">Living</option><option value="1">Bedroom 1</option><option value="2">Kitchen</option><option value="3">Bedroom 2</option><option value="4">Outside</option><option value="5">Stairs</option><option value="6">First floor</option></select>
   
-<div class="seg cams" data-area="0"><button data-c="0">Entry</button><button data-c="1">Corner</button><button data-c="2">From sofa</button><button data-c="3">From TV</button><button data-c="4">From kitchen</button><button data-c="5">Top</button></div>  <div class="seg cams" data-area="1"><button data-c="6">Door</button><button data-c="7">Window</button><button data-c="8">Study</button><button data-c="9">Toilet</button><button data-c="10">Top</button></div>  <div class="seg cams" data-area="2"><button data-c="11">Kitchen</button><button data-c="12">Sink</button><button data-c="13">Hob</button><button data-c="14">Fridge</button><button data-c="15">Top</button></div>  <div class="seg cams" data-area="3"><button data-c="16">Door</button><button data-c="17">Bed</button><button data-c="18">Window</button><button data-c="19">Toilet 2</button><button data-c="20">Top</button></div>  <div class="seg cams" data-area="4"><button data-c="21">Gate</button><button data-c="22">Parking</button><button data-c="23">Terrace</button><button data-c="24">Aerial</button><button data-c="25">Side</button><button data-c="26">Stair</button></div>
+<div class="seg cams" data-area="0"><button data-c="0">Entry</button><button data-c="1">Corner</button><button data-c="2">From sofa</button><button data-c="3">From TV</button><button data-c="4">From kitchen</button><button data-c="5">Top</button></div>  <div class="seg cams" data-area="1"><button data-c="6">Door</button><button data-c="7">Window</button><button data-c="8">Study</button><button data-c="9">Toilet</button><button data-c="10">Top</button></div>  <div class="seg cams" data-area="2"><button data-c="11">Kitchen</button><button data-c="12">Sink</button><button data-c="13">Hob</button><button data-c="14">Fridge</button><button data-c="15">Top</button></div>  <div class="seg cams" data-area="3"><button data-c="16">Door</button><button data-c="17">Bed</button><button data-c="18">Window</button><button data-c="19">Toilet 2</button><button data-c="20">Top</button></div>  <div class="seg cams" data-area="4"><button data-c="21">Gate</button><button data-c="22">Parking</button><button data-c="23">Terrace</button><button data-c="24">Aerial</button><button data-c="25">Side</button><button data-c="26">Stair</button><button data-c="32">Back garden</button></div>
   <div class="seg cams" data-area="5"><button data-c="27">Spiral</button><button data-c="28">Landing</button><button data-c="29">Well</button><button data-c="26">ST-1</button></div>
   <div class="seg cams" data-area="6"><button data-c="28">Landing</button><button data-c="30">Bedroom 3</button><button data-c="23">Terrace</button><button data-c="31">Top</button></div>
   <span class="spacer"></span>
@@ -85,6 +85,7 @@ import {GTAOPass} from 'three/addons/postprocessing/GTAOPass.js';
 import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';
 import {createBambooPlant} from './models/bamboo-plant.js';
 import {createNeemTree} from './models/neem-tree.js';
+import {createTNPlant,TN_PLANTS} from './models/tn-plants.js';
 import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
 
 const P=window.PLAN, F=0.3048, CEIL=10.0, EYE=5.25;
@@ -1001,6 +1002,40 @@ function setExt(k){if(!EXT[k])k='EX-1';const o=EXT[k];MAT.ext.color.set(o.wall);
  for(const [arr,mt,t] of [[oak,st2oak,'ST-2 spiral stair · oak tread 1¼" on a black steel pan, 30°, 7⅔" rise'],[blk,MAT.blackMetal,'ST-2 · black MS frame, hub sleeves and balusters, gaps under 4"'],[rail,st2oak,'ST-2 · oak handrail, 3\' high']]){
    const g=mergeGeometries(arr.map(g=>g.index?g.toNonIndexed():g));metreUV(g);const me=new THREE.Mesh(g,mt);me.castShadow=true;me.receiveShadow=true;me.userData.keepUV=true;scene.add(me);named(me,t)}
 }
+// back boundary: existing wall BW-09 of the houses behind (slanted with the back line), the houses behind it
+function prism(pts,z1,z2,mat,tip){const sh=new THREE.Shape(pts.map(p=>new THREE.Vector2(mx(p[0]),-m(p[1]))));
+  const g=new THREE.ExtrudeGeometry(sh,{depth:m(z2-z1),bevelEnabled:false});g.rotateX(-Math.PI/2);const me=new THREE.Mesh(g,mat);me.position.y=m(z1);me.castShadow=true;me.receiveShadow=true;scene.add(me);if(tip)named(me,tip);return me}
+const backY=x=>106.0-(x-1)/20.0;
+if(P.backwall){const bw=P.backwall,[a,b]=bw.pts,t=bw.t,old=std({color:'#cdc4b3',roughness:0.95});
+  wallMeshes.push(prism([[a[0],a[1]],[b[0],b[1]],[b[0],b[1]-t],[a[0]+t,a[1]-t]],GRD,GRD+bw.h,old,`${bw.id} · ${bw.note}`));
+  prism([[a[0]-0.05,a[1]+0.05],[b[0]+0.05,b[1]+0.05],[b[0]+0.05,b[1]-t-0.05],[a[0]+t-0.05,a[1]-t-0.05]],GRD+bw.h,GRD+bw.h+0.12,std({color:'#b9b0a0',roughness:0.95}),`${bw.id} · coping`);
+  // the houses behind: a 2-storey house and a single-storey house with a black tank, set back 3' from the wall
+  const nb=c=>std({color:c,roughness:0.95}),win=std({color:'#2b2e31',roughness:0.4});
+  for(const [x1,x2,y1,y2,fl,c,tip] of [[-12,10.5,109,134,2,'#efe3c9','House behind (south) · 2 storeys'],[11.5,34,108.5,130,1,'#cfd8dc','House behind (south-west) · 1 storey']]){
+    box(x1,x2,y1,y2,GRD,GRD+10.5*fl+3,nb(c),{tip});for(let k=1;k<=fl;k++)box(x1-0.15,x2+0.15,y1-0.15,y2+0.15,GRD+10.5*k-0.5,GRD+10.5*k,nb('#e8e4dc'),{cast:false,tip});
+    for(let k=0;k<fl;k++)for(let x=x1+2;x<x2-4;x+=8)box(x,x+3.5,y1-0.06,y1,GRD+10.5*k+3.5,GRD+10.5*k+7,win,{cast:false,tip:'Window'});
+    if(fl===1)cyl((x1+x2)/2,y1+6,GRD+13.5,GRD+18,2.3,std({color:'#1f2124',roughness:0.6}),{tip:'Black water tank (house behind)'})}
+  // their compound walls along the side boundaries behind ours
+  for(const x of [1.0,21.0]) box(x-0.19,x+0.19,backY(x)+0.05,backY(x)+3.0,GRD,GRD+6,old,{tip:'Compound wall of the houses behind (existing)'});}
+// back flower bed FU-73: 1'6" deep along BW-09, 9" brick kerb, red soil; a row of Tamil Nadu flowering plants; Tulsi maadam FU-74; clothes line FU-75
+{const fb=fuG['FU-73'],x1=fb.x1,x2=fb.x2,iy=x=>backY(x)-0.375,KZ=GRD+0.75;
+ const kerb=std({color:'#a8553a',roughness:0.9}),soil=std({color:'#7a3f26',roughness:1});
+ prism([[x1,iy(x1)],[x2,iy(x2)],[x2,iy(x2)-1.5],[x1,iy(x1)-1.5]],GRD,KZ-0.12,soil,`FU-73 · ${fb.name} · red soil · ${fb.note}`);
+ prism([[x1,iy(x1)-1.37],[x2,iy(x2)-1.37],[x2,iy(x2)-1.5],[x1,iy(x1)-1.5]],GRD,KZ,kerb,'FU-73 · brick kerb, 9" high, terracotta red');
+ box(x1,x1+0.13,iy(x1)-1.5,iy(x1),GRD,KZ,kerb,{tip:'FU-73 · brick kerb'});box(x2-0.13,x2,iy(x2)-1.5,iy(x2),GRD,KZ,kerb,{tip:'FU-73 · brick kerb'});
+ for(const pl of (P.plants||[])){const sp=TN_PLANTS[pl.type];if(!sp)continue;const g=createTNPlant(THREE,mergeGeometries,{type:pl.type,seed:+pl.id.slice(3)});
+   const onBed=pl.id!=='PL-13';g.position.set(mx(pl.x),m(onBed?KZ-0.12:GRD+3.2),m(pl.y));g.rotation.y=+pl.id.slice(3)*1.7;scene.add(g);
+   g.traverse(o=>{if(o.isMesh){o.userData.keepUV=true;named(o,`${pl.id} · ${sp.name} · ${sp.note}`)}})}
+ // Tulsi maadam: plastered pedestal with a lamp niche facing east and a planter on top
+ const tm=fuG['FU-74'],cx=(tm.x1+tm.x2)/2,cy=(tm.y1+tm.y2)/2,wm=std({color:'#f1e9d8',roughness:0.9}),tt=`FU-74 · Tulsi maadam · ${tm.note}`;
+ box(tm.x1-0.15,tm.x2+0.15,tm.y1-0.15,tm.y2+0.15,GRD,GRD+0.35,wm,{tip:tt});box(tm.x1,tm.x2,tm.y1,tm.y2,GRD+0.35,GRD+2.6,wm,{tip:tt});
+ box(tm.x1-0.1,tm.x2+0.1,tm.y1-0.1,tm.y2+0.1,GRD+2.6,GRD+3.2,wm,{tip:tt});box(tm.x1-0.006,tm.x1+0.25,cy-0.3,cy+0.3,GRD+1.0,GRD+1.7,std({color:'#6b3a1c',roughness:0.9}),{tip:'Lamp niche (vilakku maadam), facing east'});
+ for(const [dx,dy] of [[-1,-1],[1,-1],[1,1],[-1,1]]) box(cx+dx*0.75-0.06,cx+dx*0.75+0.06,cy+dy*0.75-0.06,cy+dy*0.75+0.06,GRD+3.2,GRD+3.4,std({color:'#c9a96b',roughness:0.7}),{tip:'Tulsi maadam corner'});
+ box(tm.x1+0.12,tm.x2-0.12,tm.y1+0.12,tm.y2-0.12,GRD+3.15,GRD+3.21,soil,{tip:'Soil'});
+ // clothes line: two black MS posts with T-arms and three wires
+ const cl=fuG['FU-75'],cyy=(cl.y1+cl.y2)/2,tc=`FU-75 · Clothes drying line · ${cl.note}`;
+ for(const x of [cl.x1,cl.x2]){box(x-0.06,x+0.06,cyy-0.06,cyy+0.06,GRD,GRD+6,MAT.blackMetal,{tip:tc});box(x-0.04,x+0.04,cyy-0.6,cyy+0.6,GRD+5.9,GRD+6.0,MAT.blackMetal,{tip:tc})}
+ for(const dy of [-0.5,0,0.5]) box(cl.x1,cl.x2,cyy+dy-0.012,cyy+dy+0.012,GRD+5.95,GRD+5.975,MAT.steel,{cast:false,tip:tc});}
 // the two existing bores (BR-01, BR-02): 2' concrete chamber with a steel cap
 for(const [x,y,id] of [[7.75,78.66,'BR-01'],[4.0,71.85,'BR-02']]){box(x-1,x+1,y-1,y+1,GRD,GRD+0.5,MAT.white,{tip:`${id} · Borewell (existing) · concrete chamber`});cyl(x,y,GRD+0.5,GRD+0.7,0.45,MAT.steel,{tip:`${id} · borewell cap`})}
 // outside lights: porch and parking downlights
@@ -1126,6 +1161,7 @@ const VIEWS=[
  {p:[14.6,FFZ+5.6,77.4],t:[17.4,1.0,76.6],fl:'F'},       // looking down the ST-2 well
  {p:[11.4,FFZ+EYE,85.6],t:[19.5,FFZ+3.6,95.0],fl:'F'},   // bedroom 3 from its lobby
  {p:[15.2,FFZ+30,85.0],t:[15.2,FFZ,85.01],top:true,fl:'F'},   // top of the first floor (its roof and ceilings hidden)
+ {p:[19.6,4.4,96.0],t:[6.0,0.6,104.3]},   // back garden: flower bed along BW-09, clothes line, Tulsi maadam beyond
 ];
 let hfov=75;
 function applyFov(){const a=camera.aspect||1;camera.fov=THREE.MathUtils.radToDeg(2*Math.atan(Math.tan(THREE.MathUtils.degToRad(hfov)/2)/a));camera.updateProjectionMatrix()}
