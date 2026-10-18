@@ -244,3 +244,59 @@ SPEC['V-03']='Louvred glass ventilator with exhaust fan opening'
 CAR=(11.25,17.25,13.75,28.75)
 BIKES=(10.0,16.5,23.0)
 CH_G_FRONT=[0,0.75,12.0,13.5,20.25,21.0]
+
+# ---------- structure (proposal): RCC frame with side pillars only, no pillar inside any room ----------
+# Columns 1' x 9" (engineer's size), the 1' along the wall, so each column hides inside a 9" outer wall.
+# id, floors, x1, x2, y1, y2, note.  floors: 'G' = ground floor, continues up later for the future hall; 'G+F' = up to the first-floor roof
+COL_SIZE="1' x 9\""
+COLUMNS = [
+ ('C-01','G', 2.75,3.5, 19.75,20.75,'East, front edge of the terrace slab, in the parking'),
+ ('C-02','G', 20.25,21.0, 19.75,20.75,'West, front edge of the terrace slab, just behind the ST-1 landing'),
+ ('C-03','G', 2.75,3.5, 30.75,31.75,'East, porch front corner'),
+ ('C-04','G', 20.25,21.0, 30.75,31.75,'West, corner of GW-04 and GW-05'),
+ ('C-05','G', 2.75,3.5, 35.7,36.7,'East, porch side, in line with GW-11'),
+ ('C-06','G', 20.25,21.0, 35.7,36.7,'West, in GW-05 where GW-11 meets it'),
+ ('C-07','G', 2.75,3.5, 46.0,47.0,'East, in GW-01 at the foyer | living line'),
+ ('C-08','G', 20.25,21.0, 46.0,47.0,'West, in GW-05 where GW-12 meets it'),
+ ('C-09','G', 2.75,3.5, 58.44,59.44,'East, in GW-01 where GW-13 meets it'),
+ ('C-10','G', 20.25,21.0, 58.44,59.44,'West, in GW-05 where GW-13 meets it'),
+ ('C-11','G', 2.75,3.5, 67.0,68.0,'East, in GW-01 where GW-14 meets it (clear of V-02)'),
+ ('C-12','G', 20.25,21.0, 67.0,68.0,'West, in GW-05 behind the FU-25 store cupboard'),
+ ('C-13','G', 2.75,3.5, 72.75,73.75,'East, back corner of GW-01 and GW-06'),
+ ('C-14','G+F', 9.5,10.25, 73.0,74.0,'Corner of GW-06 and GW-07; runs up in FW-01'),
+ ('C-15','G+F', 20.25,21.0, 73.0,74.0,'West, in GW-05 under FW-02; runs up in FW-03'),
+ ('C-16','G+F', 9.5,10.25, 79.94,80.94,'In GW-07 where GW-15 meets it; runs up in FW-01'),
+ ('C-17','G+F', 20.25,21.0, 79.94,80.94,'West, in GW-05 where GW-15 meets it; runs up in FW-03'),
+ ('C-18','G+F', 9.5,10.25, 94.125,95.125,'Back corner of GW-07 and GW-08; runs up in FW-01'),
+ ('C-19','G+F', 20.25,21.0, 94.125,95.125,'Back corner of GW-05 and GW-08; runs up in FW-03'),
+]
+# Beams 9" wide. id, level ('G' = ground-floor roof, 'F' = first-floor roof), x1, x2, y1, y2, depth, note
+BEAMS = [
+ ('B-01','G', 2.75,21.0, 19.75,20.5, "1'6\"",'Front beam over the parking, C-01 to C-02; balcony 2 cantilevers 4\'3" in front of it'),
+ ('B-02','G', 2.75,21.0, 30.75,31.5, "1'6\"",'Over GW-04 and the porch front, C-03 to C-04'),
+ ('B-03','G', 2.75,21.0, 35.825,36.575, "1'6\"",'Over GW-11, across the porch and the study corner opening, C-05 to C-06'),
+ ('B-04','G', 2.75,21.0, 46.125,46.875, "1'6\"",'Over GW-12 (bedroom 1 | living), C-07 to C-08'),
+ ('B-05','G', 2.75,21.0, 58.565,59.315, "1'6\"",'Over GW-13 (living | kitchen), C-09 to C-10'),
+ ('B-06','G', 2.75,21.0, 67.25,68.0, "1'6\"",'Over GW-14 and across the open area, C-11 to C-12'),
+ ('B-07','G', 2.75,21.0, 73.0,73.75, "1'6\"",'Over GW-06 and under FW-02, C-13 to C-14 to C-15; the terrace corner cantilevers 4\'1" behind it'),
+ ('B-08','G', 9.5,21.0, 80.065,80.815, "1'3\"",'Over GW-15, C-16 to C-17'),
+ ('B-09','G', 9.5,21.0, 94.375,95.125, "1'3\"",'Over GW-08, C-18 to C-19'),
+ ('B-10','G', 2.75,3.5, 19.75,73.75, "1'3\"",'East edge beam over GW-01 and the porch side, C-01 to C-13'),
+ ('B-11','G', 9.5,10.25, 73.0,95.125, "1'3\"",'East edge beam over GW-07, C-14 to C-18'),
+ ('B-12','G', 20.25,21.0, 19.75,95.125, "1'3\"",'West edge beam over GW-05, C-02 to C-19'),
+ ('B-13','F', 9.5,21.0, 73.125,73.875, "1'3\"",'Over FW-02, C-14 to C-15'),
+ ('B-14','F', 9.5,21.0, 79.875,80.625, "1'3\"",'Over FW-05, C-16 to C-17'),
+ ('B-15','F', 9.5,21.0, 96.625,97.375, "1'3\"",'Over FW-04, carried by the B-16 and B-17 cantilevers'),
+ ('B-16','F', 9.5,10.25, 73.125,97.375, "1'3\"",'Over FW-01, C-14 to C-18, then cantilevers 2\'3" to carry FW-04'),
+ ('B-17','F', 20.25,21.0, 73.125,97.375, "1'3\"",'Over FW-03, C-15 to C-19, then cantilevers 2\'3" to carry FW-04'),
+]
+STRUCT_NOTES=[
+ 'Pillars only in the outer walls (east and west sides). No pillar stands inside any room, and the future first-floor hall stays pillar-free.',
+ 'Pillars C-01 to C-19 are 1\' x 9" (engineer\'s size), set with the 1\' along the wall so they hide inside the 9" walls.',
+ 'Cross beams B-01 to B-07 span the full width, about 17\'6" clear, and sit over the cross walls where there is one. Edge beams run along both side walls.',
+ 'Beam depths shown are first estimates for the engineer: 1\'6" for the 17\'6" cross spans, 1\'3" for the rest. Roof slab 5".',
+ 'C-01 to C-13 stop at the terrace for now; leave their bars sticking up for the future hall. C-14 to C-19 go up to the first-floor roof.',
+ 'Cantilevers: balcony 2 (4\'3" in front of B-01), the terrace corner (4\'1" behind B-07) and the bedroom 3 back wall FW-04 (2\'3" past C-18 and C-19).',
+ 'Also needed: plinth beams under all walls and a footing under each pillar. The engineer sizes these, and checks pillar sizes for the future floor.',
+]
+PORCH_STEPS_X=(3.5,8.25)

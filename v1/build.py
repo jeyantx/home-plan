@@ -33,6 +33,8 @@ for oid,f,wid,a,b,typ,hinge,swing,h,sill,note in OPENINGS:
     op_rows+=f'<tr><td class="c">{oid}</td><td>{TN[typ]}</td><td>{"front line" if wid=="FRONT" else wid}</td><td>{fmt(b-a)} x {fmt(h)}</td><td>{fmt(sill) if sill else "–"}</td><td>{esc(note)}<br><span class="lbl">{esc(getattr(_mm,"SPEC",{}).get(oid,""))}</span></td></tr>'
 import model as _m
 BN=getattr(_m,'BRANCH_NOTES','')
+struct_cols=''.join(f'<tr><td class="c">{c[0]}</td><td>{esc(_mm.COL_SIZE)}</td><td>{"Ground, bars left for the future hall" if c[1]=="G" else "Ground and first"}</td><td>{esc(c[6])}</td></tr>' for c in _mm.COLUMNS)
+struct_beams=''.join(f'<tr><td class="c">{b[0]}</td><td>{"Ground-floor roof" if b[1]=="G" else "First-floor roof"}</td><td>9" x {esc(b[6])}</td><td>{fmt(max(b[3]-b[2],b[5]-b[4]))}</td><td>{esc(b[7])}</td></tr>' for b in _mm.BEAMS)
 panel=BN+f'''
 <section><h2>How to read this plan</h2>
 <ul>
@@ -91,6 +93,10 @@ panel=BN+f'''
 <section><h2>Existing on site</h2><ul><li><b>Borewell</b> at X 6', Y {BOREWELL[1]:.1f}', which is 6' from the east boundary and 25' from the back wall, in the side garden G-14.</li></ul></section>
 <section><h2>Still open</h2>
 <ul><li><b>Neem tree.</b> At the position you gave, the trunk is 4' from staircase 1 and directly in front of the car's spot. Please confirm or correct it.</li></ul></section>
+<section class="ask"><h2>Structure: pillars and beams (proposal)</h2><ol>{''.join(f'<li>{esc(n)}</li>' for n in _mm.STRUCT_NOTES)}</ol>
+<div class="note">Pillars are solid black, beams are dashed red. Untick <b>Pillars and beams</b> above the plan to hide them.</div></section>
+<section><h2>Pillars</h2><table class="t"><tr><th>Code</th><th>Size</th><th>Floors</th><th>Where</th></tr>{struct_cols}</table></section>
+<section><h2>Beams</h2><table class="t"><tr><th>Code</th><th>Level</th><th>Size</th><th>Length</th><th>Where</th></tr>{struct_beams}</table></section>
 <section><h2>Rooms and areas</h2><table class="t"><tr><th>Code</th><th>Name</th><th>Floor</th><th>Inside size</th><th class="n">sq ft</th></tr>{room_rows}</table></section>
 <section><h2>Walls</h2><table class="t"><tr><th>Code</th><th>Where</th><th>Type</th><th>Length</th><th>Height</th></tr>{wall_rows}</table></section>
 <section><h2>Furniture and fixtures (proposal)</h2><table class="t"><tr><th>Code</th><th>Item</th><th>Floor</th><th>Size</th><th>Where</th></tr>{furn_rows}</table></section>
@@ -107,7 +113,7 @@ td.c{font-weight:700;white-space:nowrap;color:var(--accent)}
 #tip{position:fixed;z-index:50;pointer-events:none;max-width:320px;background:#1f2328;color:#fff;font-size:12.5px;line-height:1.35;padding:6px 9px;border-radius:7px;box-shadow:0 4px 14px rgba(0,0,0,.25);display:none}
 #tip b{color:#9fe0bf}
 .fu:hover>*{filter:brightness(1.08)}
-.hide-L-furn .L-furn,.hide-L-rooms .L-rooms,.hide-L-walls .L-walls,.hide-L-open .L-open,.hide-L-dims .L-dims{display:none}
+.hide-L-struct .L-struct,.hide-L-furn .L-furn,.hide-L-rooms .L-rooms,.hide-L-walls .L-walls,.hide-L-open .L-open,.hide-L-dims .L-dims{display:none}
 #measure[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:600}
 .mread{font-variant-numeric:tabular-nums;font-size:13px;color:var(--ink);background:var(--chip);border:1px solid var(--line);border-radius:8px;padding:5px 10px;min-height:30px;display:none;align-items:center}
 .mread.on{display:inline-flex}
@@ -145,6 +151,7 @@ out=f'''<!doctype html>
   <label><input type="checkbox" data-layer="L-open" checked>Door and window codes</label>
   <label><input type="checkbox" data-layer="L-dims" checked>Dimensions</label>
   <label><input type="checkbox" data-layer="L-furn" checked>Furniture</label>
+  <label><input type="checkbox" data-layer="L-struct" checked>Pillars and beams</label>
  </div>
  <div id="mread" class="mread" aria-live="polite"></div>
  <div class="tools" role="group" aria-label="Zoom">
