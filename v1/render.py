@@ -142,10 +142,10 @@ def opening_tags(fl,W):
         tag(X,Y,oid,'win' if typ in('window','vent') else 'door',tipText=tt)
 
 # stairs
-A0,A1=4.333,16.0; AX1,AX2=17.125,20.625; LY1,LY2=16.0,19.5; BX1,BX2=9.625,17.125   # ST-1: 15 + 10 risers of 6", 10" treads, 3'6" wide, inside BW-07
+A0,A1=2.667,16.0; AX1,AX2=17.125,20.625; LY1,LY2=16.0,19.5; BX1,BX2=9.625,17.125   # ST-1: 15 + 10 risers of 6", 10" treads, 3'6" wide, inside BW-07
 def stair_A(op=1,dash=''):
     E(f'<g opacity="{op}">'); rect(AX1,AX2,A0,A1,'#c98b5e','#6b3a1c',0.05,extra=dash)
-    n=14
+    n=16
     for i in range(1,n): y=A0+i*(A1-A0)/n; line(AX1,y,AX2,y,'#6b3a1c',0.03)
     a=S((AX1+AX2)/2,A0+0.4); b=S((AX1+AX2)/2,A1-0.4)
     E(f'<line x1="{a[0]:.3f}" y1="{a[1]:.3f}" x2="{b[0]:.3f}" y2="{b[1]:.3f}" stroke="#fff" stroke-width="0.08" marker-end="url(#arrW)"/></g>')
@@ -191,6 +191,28 @@ def plants():
         a=S(x,y); col=_m.PLANT_COL.get(t,'#3f6a32')
         E(f'<g class="fu" data-tip="{tip(c+" · "+_m.PLANT_NAMES.get(t,t))}"><circle cx="{a[0]:.3f}" cy="{a[1]:.3f}" r="0.55" fill="#4f7d3a" stroke="#2c4a20" stroke-width="0.04"/>'
           f'<circle cx="{a[0]:.3f}" cy="{a[1]:.3f}" r="0.25" fill="{col}" stroke="#555" stroke-width="0.02"/></g>')
+    E('</g>')
+def _trunk():
+    x,y=S(12.75,4.25); E(f'<circle cx="{x}" cy="{y}" r="0.75" fill="#6b4423" stroke="#3b2412" stroke-width="0.05"/>')
+def levels():
+    # site levels above the road crown: gate crest, drain, ramp, parking, gardens, floor
+    import model as _m
+    L=getattr(_m,'LEVELS',None); R=getattr(_m,'RAMP',None)
+    if not L: return
+    ft=lambda v:("+" if v>0 else "")+fmt(v) if v else "0"
+    E('<g class="L-dims">')
+    line(0.375,R['y_hump'],21,R['y_hump'],'#1f6f8b',0.04,extra='stroke-dasharray="0.25 0.15"')
+    for a,b in ((0.375,10.0),(15.5,17.1)): rect(a,b,R['drain'][0],R['drain'][1],'#4a4f55','#222',0.02)
+    line(0.375,R['y_top'],17.1,R['y_top'],'#1f6f8b',0.04,extra='stroke-dasharray="0.25 0.15"')
+    a=S(7.0,R['y_crest']+0.4); b=S(7.0,R['y_top']-0.4)
+    E(f'<line x1="{a[0]:.3f}" y1="{a[1]:.3f}" x2="{b[0]:.3f}" y2="{b[1]:.3f}" stroke="#1f6f8b" stroke-width="0.09" marker-end="url(#arrT)"/>')
+    text(4.4,-0.45,'ROAD '+ft(L['road']),0.3,weight=700,fill='#1f6f8b')
+    text(5.4,1.95,'gate crest '+ft(L['hump']-L['road'])+', drain',0.42,weight=600,fill='#1f6f8b')
+    text(4.6,9.0,'RAMP up\n1 in 7.5',0.48,weight=700,fill='#1f6f8b')
+    text(5.6,15.3,'parking '+ft(L['parking']-L['road']),0.3,weight=700,fill='#1f6f8b')
+    text(1.55,52.0,'garden\n'+ft(L['garden']-L['road']),0.39,weight=700,fill='#1f6f8b')
+    text(15.2,98.4,'back garden '+ft(L['garden']-L['road']),0.42,weight=700,fill='#1f6f8b')
+    text(6.0,42.3,'floor '+ft(L['floor']-L['road']),0.42,weight=700,fill='#1f6f8b')
     E('</g>')
 def vehicles():
     import model as _m
@@ -410,8 +432,8 @@ def draw_struct(fl):
 
 def ground():
     W=walls_of('G')
-    draw_plot('G'); draw_rooms('G'); porch_steps(); tree(); vehicles()
-    draw_furniture('G'); plants(); text(11.0,106.7,'BW-09 back wall (existing, houses behind)',0.3,fill='#666')
+    draw_plot('G'); draw_rooms('G'); porch_steps(); tree(); vehicles(); levels()
+    draw_furniture('G'); plants(); _trunk(); text(11.0,106.7,'BW-09 back wall (existing, houses behind)',0.3,fill='#666')
     stair_A(); stair_L(); stair_B(op=0.45,dash='stroke-dasharray="0.2 0.12"')
     E('<g opacity="0.72">'); draw_furniture('G',_late=True); E('</g>')
     text(14.6,20.6,'flight 1B overhead (+7\'6" to +11\'6")',0.3,fill='#6b3a1c')

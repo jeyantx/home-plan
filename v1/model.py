@@ -118,7 +118,21 @@ OPENINGS = [
 # ---------- building outlines (outer wall faces) for built-up area ----------
 GF_OUTLINE=[(8.5,30.75),(21,30.75),(21,95.125),(9.5,95.125),(9.5,73.875),(6.0,73.875),(6.0,67.125),(2.75,67.125),(2.75,40.5),(8.5,40.5)]
 FF_OUTLINE=R(9.5,21.0,73.125,97.375)
-BRANCH_NOTES='''<section class="ask"><h2>Tree pit and terrace door (branch spiral-v1, for review)</h2>
+# site levels, in feet above the road crown in front of the gate (house floor = +3.5)
+LEVELS=dict(road=0.0,hump=0.5,parking=2.0,garden=2.5,floor=3.5)
+RAMP=dict(y_hump=1.0,y_crest=3.25,y_top=14.5,drain=(2.5,3.25))   # gate bevel to Y 1', crest to 3'3" (drain at its inner edge), ramp 1 in 7.5 to Y 14'6"
+BRANCH_NOTES='''<section class="ask"><h2>Raised site levels (branch levels-v1, sample for review)</h2>
+<ol>
+<li><b>Levels above the road:</b> gate hump +6", parking +2'0", gardens, side passage and back yard +2'6", house floor +3'6" (1' plinth above the gardens).</li>
+<li><b>Gate:</b> a 1' bevel from the road to a 6" crest, a 2'3" level strip at the crest, then a covered drain across the drive (to the rainwater pit and the road drain).</li>
+<li><b>Drive ramp:</b> 1 in 7.5, from Y 3'3" to 14'6", rising 1'6" to the parking. The car parks on the level part (Y 15'3" to 30'3").</li>
+<li><b>Gates GT-01 and GT-02</b> become inward folding (bi-fold) gates, so their leaves stay over the level crest and never hit the ramp. Shown closed in 3D.</li>
+<li><b>Outside stair ST-1</b> now starts at the crest by the small gate: 27 risers of about 6½" (17 in ST-1A from Y 2'8", landing, 10 in ST-1B); balcony 2 unchanged.</li>
+<li><b>Neem tree:</b> trunk kept at today's ground in a 5'6" tree well FU-76 with a low retaining ring; no fill against the trunk.</li>
+<li><b>Porch:</b> 3 steps of 6" from the parking. Side passage starts 6" above the parking.</li>
+<li><b>Compound walls</b> step down along the ramp and hold back the fill at the bottom (thicker base, weep holes): engineer to detail. About 2' of earth filling over the plot.</li>
+</ol></section>
+<section class="ask"><h2>Tree pit and terrace door (branch spiral-v1, for review)</h2>
 <ol>
 <li><b>Tree pit FU-76:</b> a 5' round bed of open soil round the neem trunk, with a 4" granite kerb ring 1" above the pavers. Pavers stop at the kerb, so growing roots cannot lift them; water poured here stays at the roots.</li>
 <li><b>Door D-09</b> (landing to terrace corner) now opens inward, hinged at its north end, folding back against FW-02; a 1" raised sill outside keeps rain out.</li>
@@ -299,7 +313,7 @@ FURNITURE = [
  ('FU-53','G','Tap and wash platform',1.375,4.875,89.375,91.875,'washpad',None,'Side garden, paved with drain, in the corner of BW-02 and BW-03'),
  ('FU-54','G','Wash basin with tap',19.125,20.625,95.25,96.5,'basin',None,'Back garden, against GW-08 beside window W-08'),
  ('FU-55','G','Tap and wash platform',17.625,20.625,96.75,99.25,'washpad',None,'Back garden, paved, with floor drain'),
- ('FU-76','G','Tree pit round the neem',10.25,15.25,1.75,6.75,'treepit',None,'Parking, 5\' across, open soil with leaf mulch round the trunk; 4" granite kerb ring 1" above the pavers keeps the water in; no pavers inside, so the roots never lift them; water the tree here'),
+ ('FU-76','G','Tree well round the neem',10.0,15.5,1.5,7.0,'treepit',None,'Parking, 5\'6" across: the trunk stays at today\'s ground (road level); a low retaining ring, 4½" brick in granite coping, holds back the raised drive (about 6" here); open soil with leaf mulch inside, so water reaches the roots and no fill touches the trunk'),
  ('FU-73','G','Flower bed along the back wall',1.375,20.625,103.14,105.6,'fbed',None,'Back and side garden, 1\'6" deep all along the back wall BW-09, 9" brick kerb, red soil; a row of Tamil Nadu flowering plants PL-01 to PL-12'),
  ('FU-74','G','Tulsi maadam',4.5,6.0,96.75,98.25,'tulsi',None,'Side garden, 1\'6" square, 3\' high plastered pedestal with a lamp niche facing east, Tulsi PL-13 on top'),
  ('FU-75','G','Clothes drying line',10.25,17.25,101.0,101.5,'cline',None,'Back garden, two black MS posts 6\' high with T-arms, 3 steel wires, 7\' long; clear of the back door D-10 and the wash platform'),
@@ -321,8 +335,8 @@ for _o in OPENINGS:
     if _o[5]=='window' and _o[0] not in SPEC: SPEC[_o[0]]='UPVC 3-track sliding: 2 glass + 1 mosquito mesh, MS safety grill, 1\'6" sunshade outside'
     if _o[5]=='vent' and _o[0] not in SPEC: SPEC[_o[0]]='Louvred glass ventilator with exhaust fan opening'
 SPEC['V-03']='Louvred glass ventilator with exhaust fan opening'
-CAR=(11.25,17.25,13.75,28.75)
-BIKES=(10.0,16.5,23.0)
+CAR=(11.25,17.0,15.25,30.25)
+BIKES=(11.0,17.5,24.0)
 CH_G_FRONT=[0,0.75,12.0,13.5,20.25,21.0]
 
 # ---------- structure (proposal): RCC frame with side pillars only, no pillar inside any room ----------
