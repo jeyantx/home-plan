@@ -90,7 +90,7 @@ panel=BN+f'''
 <li><b>Dining G-09:</b> 4-seat table and a crockery shelf on GW-05.</li>
 <li><b>Toilets:</b> WC, wash basin, shower area and geyser in each.</li>
 </ul></section>
-<section><h2>Existing on site</h2><ul><li><b>Borewell</b> at X 6', Y {BOREWELL[1]:.1f}', which is 6' from the east boundary and 25' from the back wall, in the side garden G-14.</li></ul></section>
+<section><h2>Existing on site</h2><ul>{''.join(f'<li><b>{b[0]} bore</b> at X {b[1]:.2f}, Y {b[2]:.2f} ({esc(b[3])}).</li>' for b in _mm.BORES)}</ul></section>
 <section><h2>Still open</h2>
 <ul><li><b>Neem tree.</b> At the position you gave, the trunk is 4' from staircase 1 and directly in front of the car's spot. Please confirm or correct it.</li></ul></section>
 <section class="ask"><h2>Structure: pillars and beams (proposal)</h2><ol>{''.join(f'<li>{esc(n)}</li>' for n in _mm.STRUCT_NOTES)}</ol>

@@ -217,10 +217,12 @@ def sides():
     E(f'<g transform="translate({x},{y})"><circle r="1.1" fill="#fff" stroke="#2f6f4f" stroke-width="0.06"/><polygon points="0,1.0 -0.38,-0.55 0,-0.22 0.38,-0.55" fill="#2f6f4f"/><text y="-1.35" font-size="0.5" font-weight="700" text-anchor="middle" fill="#2f6f4f">N ↓</text></g>')
 
 def borewell():
-    x,y=S(*BOREWELL)
-    E(f'<g class="bore"><circle cx="{x:.3f}" cy="{y:.3f}" r="0.55" fill="#dff1ff" stroke="#1a6ea0" stroke-width="0.08"/><circle cx="{x:.3f}" cy="{y:.3f}" r="0.18" fill="#1a6ea0"/></g>')
-    E(f'<g class="L-rooms"><text x="{x:.3f}" y="{y+1.05:.3f}" font-size="0.36" font-weight="700" fill="#1a6ea0" text-anchor="middle">BOREWELL (existing)</text>'
-      f'<text x="{x:.3f}" y="{y+1.5:.3f}" font-size="0.3" fill="#1a6ea0" text-anchor="middle">6\' from east · 25\' from back</text></g>')
+    import model as _m
+    for bid,bx,by,desc in getattr(_m,'BORES',[('BR-01',*BOREWELL,'existing')]):
+        x,y=S(bx,by)
+        E(f'<g class="bore" data-tip="{tip(bid+" · Borewell (existing) · "+desc)}"><circle cx="{x:.3f}" cy="{y:.3f}" r="0.55" fill="#dff1ff" stroke="#1a6ea0" stroke-width="0.08"/><circle cx="{x:.3f}" cy="{y:.3f}" r="0.18" fill="#1a6ea0"/></g>')
+        E(f'<g class="L-rooms"><text x="{x:.3f}" y="{y+1.05:.3f}" font-size="0.34" font-weight="700" fill="#1a6ea0" text-anchor="middle">{bid} BORE</text>'
+          f'<text x="{x:.3f}" y="{y+1.45:.3f}" font-size="0.26" fill="#1a6ea0" text-anchor="middle">{desc}</text></g>')
 
 def draw_furniture(fl,_late=False):
     import model as _m
@@ -339,7 +341,7 @@ def draw_furniture(fl,_late=False):
 # structure: pillars (solid) and the beams above them (dashed red), in the L-struct layer
 BEAMTAG={'B-01':(7.0,20.125),'B-02':(6.0,30.0),'B-03':(6.0,36.2),'B-04':(6.0,46.5),'B-05':(14.6,58.94),'B-06':(12.0,67.625),'B-07':(6.8,73.375),'B-08':(15.6,80.44),
          'B-09':(14.6,94.75),'B-10':(3.125,25.5),'B-11':(9.875,79.0),'B-12':(20.625,25.5),'B-13':(14.0,73.5),'B-14':(16.0,80.25),'B-15':(14.0,97.0),'B-16':(9.875,86.5),'B-17':(20.625,86.5)}
-COLTAG={'C-14':(10.8,73.5),'C-18':(8.95,92.6)}
+COLTAG={'C-14':(10.8,76.0),'C-18':(8.95,92.6),'C-20':(5.45,69.7),'C-21':(5.45,73.9)}
 def draw_struct(fl):
     import model as _m
     E('<g class="L-struct">')
