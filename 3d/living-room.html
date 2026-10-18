@@ -63,7 +63,7 @@ canvas{display:block;width:100%;height:100%}
  </div>
  <div class="row hidden" id="optRow">
   <span class="lbl">Gate</span><div class="seg" id="gateSeg"><button data-g="GD-1">GD-1 Slats</button><button data-g="GD-2">GD-2 Bars</button><button data-g="GD-3">GD-3 Panels</button></div>
-  <span class="lbl">Colour</span><div class="seg" id="extSeg"><button data-e="EX-4" title="Warm white walls, light sand first-floor block, wood-brown frames, charcoal plinth"><i style="background:#f1ece3"></i><i style="background:#d3c2a8"></i><i style="background:#8a5a3a"></i><i style="background:#4f4a45"></i>EX-4</button><button data-e="EX-5" title="Beige walls, white first-floor block, wood-brown frames, dark brown plinth"><i style="background:#d8c5a6"></i><i style="background:#f3efe7"></i><i style="background:#8a5a3a"></i><i style="background:#5a4234"></i>EX-5</button><button data-e="EX-6" title="Light grey walls, dark grey first-floor block, wood-brown frames, charcoal plinth"><i style="background:#c6c3bd"></i><i style="background:#6b6966"></i><i style="background:#8a5a3a"></i><i style="background:#3f4043"></i>EX-6</button></div>
+  <span class="lbl">Colour</span><div class="seg" id="extSeg"><button data-e="EX-4" title="Warm white walls, light sand first-floor block, wood-brown frames, charcoal plinth"><i style="background:#f1ece3"></i><i style="background:#d3c2a8"></i><i style="background:#8a5a3a"></i><i style="background:#4f4a45"></i>EX-4</button><button data-e="EX-5" title="Beige walls, white first-floor block, wood-brown frames, dark brown plinth"><i style="background:#d8c5a6"></i><i style="background:#f3efe7"></i><i style="background:#8a5a3a"></i><i style="background:#5a4234"></i>EX-5</button><button data-e="EX-6" title="Light grey walls, dark grey first-floor block, wood-brown frames, charcoal plinth"><i style="background:#c6c3bd"></i><i style="background:#6b6966"></i><i style="background:#8a5a3a"></i><i style="background:#3f4043"></i>EX-6</button><button data-e="EX-7" title="Light beige walls (lighter EX-5), white first-floor block, wood-brown frames, brown plinth"><i style="background:#e6d8c0"></i><i style="background:#f6f3ec"></i><i style="background:#8a5a3a"></i><i style="background:#6a5140"></i>EX-7</button></div>
   <span class="lbl">Finish</span><div class="seg" id="finishSeg"><button data-k="KT-1"><i style="background:#c9a77c"></i><i style="background:#efe9df"></i>KT-1</button><button data-k="KT-2"><i style="background:#efe9df"></i><i style="background:#c9a77c"></i>KT-2</button><button data-k="KT-3"><i style="background:#7d5a3e"></i><i style="background:#efe9df"></i>KT-3</button></div>
   <span class="lbl">Lens</span><div class="seg" id="lensSeg"><button data-f="60" title="Eye-like lens">60°</button><button data-f="75" title="Wide lens">75°</button></div>
   <span class="sub">↑↓ walk · ←→ turn · A/D slide · W/S tilt · Q/E lower/raise · Shift faster · Drag to look around · Scroll to walk · Right-drag to slide · Hover for names</span>
@@ -856,7 +856,8 @@ const FFZ=P.ff, SLB=CEIL+0.02;   // first-floor level 11'6"; slab soffit just ab
 const EXT={   // wood-look brown window frames, balcony louvers and gate slats in every scheme
  'EX-4':{name:'White house, light sand upper block, wood brown, charcoal base',wall:'#f1ece3',up:'#d3c2a8',trim:'#e4ddd1',base:'#4f4a45',louver:'wood'},
  'EX-5':{name:'Beige house, white upper block, wood brown, dark brown base',wall:'#d8c5a6',up:'#f3efe7',trim:'#f6f2ea',base:'#4e3a2c',louver:'wood'},
- 'EX-6':{name:'Light grey house, dark grey upper block, wood brown, charcoal base',wall:'#c6c3bd',up:'#6b6966',trim:'#f4f2ee',base:'#3a3b3e',louver:'wood'}};
+ 'EX-6':{name:'Light grey house, dark grey upper block, wood brown, charcoal base',wall:'#c6c3bd',up:'#6b6966',trim:'#f4f2ee',base:'#3a3b3e',louver:'wood'},
+ 'EX-7':{name:'Light beige house (lighter EX-5), white upper block, wood brown, brown base',wall:'#e6d8c0',up:'#f6f3ec',trim:'#f8f5ef',base:'#6a5140',louver:'wood'}};
 const extMeshes=[];   // top views hide these too
 const X_=fn=>{const n0=scene.children.length;fn();for(const o of scene.children.slice(n0)){ceilingMeshes.push(o);extMeshes.push(o)}};   // mark what a block adds as 'roof level'
 // first floor: walls, openings, floors
@@ -984,26 +985,22 @@ X_(()=>{for(const [a,b,c,d] of slabParts) box(a,b,c,d,SLB,FFZ-0.05,MAT.white,{ti
  // column stubs left on the terrace for the future hall (C-01..C-13)
  for(const c of P.columns.filter(c=>c.floors==='G')) box(c.x1+0.012,c.x2-0.012,c.y1+0.012,c.y2-0.012,FFZ-0.05,FFZ+1.25,MAT.white,{tip:`${c.id} · pillar stub, 1'3" high, bars inside for the future hall`});
 });
-// W-01 (study, front wall GW-04): gable window canopy WF-2, after the owner's photo: sill shelf, two slim posts, a small gable with an arched trim, red clay-tile roof, scroll ornaments in the grill
-{const o=P.openings.find(o=>o.id==='W-01'),xa=o.a,xb=o.b,xc=(xa+xb)/2,z1=o.sill,z2=o.sill+o.h,Yf=30.75-0.035,tan=MAT.extWood,tt='W-01 · gable window canopy WF-2 · wood-look brown frame (aluminium or HPL), red clay-tile roof';
- const prismXZ=(pts,y1,y2,mat,tip,holes=[])=>{const sh=new THREE.Shape(pts.map(([x,z])=>new THREE.Vector2(mx(x),m(z))));for(const h of holes)sh.holes.push(new THREE.Path(h.map(([x,z])=>new THREE.Vector2(mx(x),m(z)))));
+// W-01 (study, front wall GW-04): small gable window frame WF-2: a frame that hugs the window, a sill ledge, and a little tiled gable on top
+{const o=P.openings.find(o=>o.id==='W-01'),xa=o.a,xb=o.b,xc=(xa+xb)/2,z1=o.sill,z2=o.sill+o.h,Yf=30.75-0.035,tan=MAT.extWood,tt='W-01 · gable window frame WF-2 · wood-look brown frame (aluminium or HPL), red clay-tile roof';
+ const prismXZ=(pts,y1,y2,mat,tip)=>{const sh=new THREE.Shape(pts.map(([x,z])=>new THREE.Vector2(mx(x),m(z))));
    const g=new THREE.ExtrudeGeometry(sh,{depth:m(y2-y1),bevelEnabled:false});const me=new THREE.Mesh(g,mat);me.position.z=m(y1);me.castShadow=true;me.receiveShadow=true;scene.add(me);named(me,tip);return me};
- // sill shelf with a moulding under it
- box(xa-0.75,xb+0.75,Yf-1.1,Yf,z1-0.35,z1-0.05,tan,{tip:tt+' · sill shelf'});box(xa-0.65,xb+0.65,Yf-0.95,Yf,z1-0.5,z1-0.35,tan,{tip:tt+' · sill moulding'});
- // two slim posts and the beam they carry
- const ZB=z2+0.2;for(const x of [xa-0.55,xb+0.25]) box(x,x+0.3,Yf-1.0,Yf-0.7,z1-0.05,ZB,tan,{tip:tt+' · post'});
- box(xa-0.8,xb+0.8,Yf-1.15,Yf-0.6,ZB,ZB+0.2,tan,{tip:tt+' · beam'});
- // gable: light pediment with an arched opening, brown bargeboards and arch band
- const Z0=ZB+0.2,H=2.4,ea=xa-0.9,eb=xb+0.9,ax=xc,az=Z0+H;
- const CR=0.8,R=((xc-xa)**2+CR*CR)/(2*CR),cz=Z0+CR-R,arc=(r,n=24)=>{const s0=Math.asin(Math.min(1,(Z0-cz)/r)),out=[];for(let i=0;i<=n;i++){const t=s0+(Math.PI-2*s0)*i/n;out.push([xc+r*Math.cos(t),cz+r*Math.sin(t)])}return out};
- const inner=arc(R);prismXZ([[ea+0.3,Z0],[ax,az-0.25],[eb-0.3,Z0],...inner],Yf-1.15,Yf-1.05,MAT.ext,tt+' · gable panel');
- const outerA=arc(R+0.22),band=[...outerA,...inner.slice().reverse()];prismXZ(band,Yf-1.2,Yf-1.03,tan,tt+' · arch trim');
+ const fw=0.33,fd=0.33;   // 4" frame, 4" out from the wall
+ box(xa-fw,xa-0.012,Yf-fd,Yf,z1-0.2,z2+fw,tan,{tip:tt+' · side frame'});box(xb+0.012,xb+fw,Yf-fd,Yf,z1-0.2,z2+fw,tan,{tip:tt+' · side frame'});
+ box(xa-0.012,xb+0.012,Yf-fd,Yf,z2+0.012,z2+fw,tan,{tip:tt+' · top frame'});
+ box(xa-fw-0.12,xb+fw+0.12,Yf-0.5,Yf,z1-0.32,z1-0.06,tan,{tip:tt+' · sill ledge'});
+ // little gable: eaves 6" past the frame, 1' high, 10" out from the wall
+ const Z0=z2+fw,ea=xa-fw-0.45,eb=xb+fw+0.45,H=1.0,az=Z0+H,PD=0.85;
+ prismXZ([[xa-fw,Z0],[xc,az-0.12],[xb+fw,Z0]],Yf-PD+0.1,Yf-PD+0.18,MAT.ext,tt+' · gable panel');
  const edge=(p,q,w)=>{const dx=q[0]-p[0],dz=q[1]-p[1],L=Math.hypot(dx,dz),nx=-dz/L*w,nz=dx/L*w;return [p,q,[q[0]+nx,q[1]+nz],[p[0]+nx,p[1]+nz]]};
- prismXZ(edge([ea+0.15,Z0],[ax,az-0.05],-0.28),Yf-1.22,Yf-1.02,tan,tt+' · bargeboard');prismXZ(edge([ax,az-0.05],[eb-0.15,Z0],-0.28),Yf-1.22,Yf-1.02,tan,tt+' · bargeboard');
- // roof: two tiled slopes from the ridge to the eaves, out past the gable
- const tile=std({map:canvasTex(512,512,(g,w,h)=>{g.fillStyle='#9c3b24';g.fillRect(0,0,w,h);const r=rng(9);for(let row=0;row<8;row++){const y=row*h/8;for(let i=0;i<6;i++){const x=(i+(row%2)*0.5)*w/6;g.fillStyle=['#b4482b','#a8412a','#8f3520','#bd5232'][Math.floor(r()*4)];g.beginPath();g.ellipse(x+w/12,y+h/16,w/13,h/15,0,0,Math.PI);g.fill()}g.fillStyle='rgba(0,0,0,0.35)';g.fillRect(0,y+h/8-3,w,3)}},0.6),roughness:0.75});
- prismXZ([[ea-0.15,Z0-0.12],[ax,az+0.12],[eb+0.15,Z0-0.12],[eb+0.15,Z0-0.24],[ax,az],[ea-0.15,Z0-0.24]],Yf-1.45,Yf,tile,tt+' · roof, red clay tiles (Mangalore style)');
- box(ax-0.08,ax+0.08,Yf-1.45,Yf,az+0.08,az+0.2,std({color:'#8a3420',roughness:0.7}),{tip:tt+' · ridge tile'});
+ prismXZ(edge([ea+0.2,Z0+0.03],[xc,az-0.03],-0.2),Yf-PD,Yf-PD+0.12,tan,tt+' · bargeboard');prismXZ(edge([xc,az-0.03],[eb-0.2,Z0+0.03],-0.2),Yf-PD,Yf-PD+0.12,tan,tt+' · bargeboard');
+ const tile=std({map:canvasTex(512,512,(g,w,h)=>{g.fillStyle='#9c3b24';g.fillRect(0,0,w,h);const r=rng(9);for(let row=0;row<8;row++){const y=row*h/8;for(let i=0;i<6;i++){const x=(i+(row%2)*0.5)*w/6;g.fillStyle=['#b4482b','#a8412a','#8f3520','#bd5232'][Math.floor(r()*4)];g.beginPath();g.ellipse(x+w/12,y+h/16,w/13,h/15,0,0,Math.PI);g.fill()}g.fillStyle='rgba(0,0,0,0.35)';g.fillRect(0,y+h/8-3,w,3)}},0.4),roughness:0.75});
+ prismXZ([[ea,Z0-0.05],[xc,az+0.08],[eb,Z0-0.05],[eb,Z0-0.15],[xc,az-0.02],[ea,Z0-0.15]],Yf-PD-0.08,Yf,tile,tt+' · roof, red clay tiles (Mangalore style)');
+ box(xc-0.06,xc+0.06,Yf-PD-0.08,Yf,az+0.05,az+0.14,std({color:'#8a3420',roughness:0.7}),{tip:tt+' · ridge tile'});
  // scroll ornaments across the middle of the grill, in the frame brown
  const orn=std({color:'#c49a6c',roughness:0.5,metalness:0.3}),gy=31.5-0.12;
  for(const cx of [xc-0.95,xc,xc+0.95]){const cz2=z1+1.7;

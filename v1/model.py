@@ -124,9 +124,9 @@ RAMP=dict(y_hump=1.0,y_crest=3.25,y_top=14.5,drain=(2.5,3.25))   # gate bevel to
 BRANCH_NOTES='''<section class="ask"><h2>Outside windows and colours (branch exterior-v2, for review)</h2>
 <ol>
 <li><b>Window frame WF-1</b> on every outside window: a box frame round the window, 6" wide and 4" out from the wall, with a deeper 1'3" hood on top that works as the sunshade, and a thin black drip edge. Ventilators get a slimmer 4" frame. RCC fins and hood, clad in the same wood-look brown as the balcony louvers and the gate slats (HPL or aluminium wood finish).</li>
-<li><b>W-01 (study, facing the parking): gable canopy WF-2</b>, after your photo: a sill shelf 1'1" deep, two slim 4" posts, a small gable with an arched trim and a light panel, a red clay-tile roof (Mangalore style), and brown scroll ornaments across the middle of the grill. Frame in the same wood-look brown. Top stays under the slab of the covered parking.</li>
+<li><b>W-01 (study, facing the parking): small gable frame WF-2</b>: a 4" brown frame that hugs the window, a sill ledge, and a little red clay-tile gable on top (1' high, 6" eaves past the frame, 10" out from the wall), with a light gable panel. Brown scroll ornaments across the middle of the grill.</li>
 <li><b>Plinth band:</b> the plinth below the floor is in a dark base colour (textured paint, or stone cladding).</li>
-<li><b>Colour schemes</b> (Options → Colour): <b>EX-4</b> white house, light sand first-floor block, charcoal plinth (recommended); <b>EX-5</b> beige house, white first-floor block, dark brown plinth; <b>EX-6</b> light grey house, dark grey first-floor block, charcoal plinth. All three keep the wood-brown frames, louvers and gates.</li>
+<li><b>Colour schemes</b> (Options → Colour): <b>EX-4</b> white house, light sand first-floor block, charcoal plinth (recommended); <b>EX-5</b> beige house, white first-floor block, dark brown plinth; <b>EX-6</b> light grey house, dark grey first-floor block, charcoal plinth; <b>EX-7</b> light beige house (a lighter EX-5), white first-floor block, brown plinth. All three keep the wood-brown frames, louvers and gates.</li>
 </ol></section>
 <section class="ask"><h2>Raised site levels (branch levels-v1, sample for review)</h2>
 <ol>
@@ -333,7 +333,7 @@ SPEC = {
  'D-02':'Flush door, hardwood frame', 'D-06':'Flush door, hardwood frame', 'D-07':'Flush door, hardwood frame',
  'D-03':'WPC waterproof door', 'D-04':'WPC waterproof door', 'D-08':'WPC waterproof door',
  'D-05':'Steel or UPVC door, glass upper half, plus MS grill shutter',
- 'W-01':'UPVC sliding window; grill with brown scroll ornaments; outside gable canopy WF-2 (wood-look brown posts and gable, red clay-tile roof)',
+ 'W-01':'UPVC sliding window; grill with brown scroll ornaments; outside small gable frame WF-2 (wood-look brown frame and gable, red clay-tile roof)',
  'D-09':'Steel or UPVC door, glass upper half, plus MS grill shutter',
  'D-10':'Steel or UPVC door, glass upper half, plus MS grill shutter',
  'O-01':'Plastered arch opening, no shutter',
