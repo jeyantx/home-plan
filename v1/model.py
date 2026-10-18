@@ -44,13 +44,13 @@ WALLS = {
   ('FW-05', 10.25,20.25, 79.875,80.25, 'part', 10.0, 'Landing | bedroom 3 lobby and toilet 3'),
   ('FW-06', 13.875,14.25, 80.25,84.875, 'part', 10.0, 'Bedroom 3 lobby | toilet 3'),
   ('FW-07', 14.25,20.25, 84.5,84.875, 'part', 10.0, 'Toilet 3 | bedroom 3'),
-  ('PW-01', 2.75,11.667, 15.5,15.875, 'para', 3, 'Front parapet of balcony 2'),
+  ('PW-01', 2.75,9.625, 15.5,15.875, 'para', 3, 'Front parapet of balcony 2'),
   ('PW-02', 2.75,3.125, 15.5,67.125, 'para', 3, 'East parapet of balcony and terrace'),
   ('PW-06', 2.75,6.375, 67.125,67.5, 'para', 3, 'Parapet on the north edge of the bore court opening'),
   ('PW-07', 6.0,6.375, 67.5,73.875, 'para', 3, 'Parapet on the west edge of the bore court opening'),
   ('PW-08', 2.75,6.375, 73.875,74.25, 'para', 3, 'Parapet on the south edge of the bore court opening'),
   ('PW-09', 2.75,3.125, 74.25,77.875, 'para', 3, 'East parapet of the terrace corner'),
-  ('PW-03', 11.667,21.0, 19.75,20.125, 'para', 3, 'Front parapet of terrace, behind staircase 1'),
+  ('PW-03', 9.625,21.0, 19.75,20.125, 'para', 3, 'Front parapet of terrace, behind staircase 1 (now from the top of ST-1B)'),
   ('PW-04', 20.625,21.0, 20.125,73.125, 'para', 3, 'West parapet of terrace'),
   ('PW-05', 3.125,9.5, 77.5,77.875, 'para', 3, 'Back parapet of terrace corner'),
  ]}
@@ -78,7 +78,7 @@ ROOMS = {
   ('G-15','Back garden',[(9.5,95.125),(21.0,95.125),(21.0,back_y(21)-0.375),(9.5,back_y(9.5)-0.375)],'garden'),
  ],
  'F': [
-  ('F-01','Balcony 2',R(3.125,11.667,15.875,20.125),'terr'),
+  ('F-01','Balcony 2',R(3.125,9.625,15.875,20.125),'terr'),
   ('F-02','Open terrace',[(3.125,20.125),(20.625,20.125),(20.625,73.125),(6.375,73.125),(6.375,67.5),(3.125,67.5)],'terr'),
   ('F-03','Terrace corner',[(6.375,73.125),(9.5,73.125),(9.5,77.5),(3.125,77.5),(3.125,74.25),(6.375,74.25)],'terr'),
   ('F-04','Stair landing',R(10.25,20.25,73.875,79.875),'in'),
@@ -122,7 +122,14 @@ OPENINGS = [
 # ---------- building outlines (outer wall faces) for built-up area ----------
 GF_OUTLINE=[(8.5,30.75),(21,30.75),(21,95.125),(9.5,95.125),(9.5,73.875),(6.0,73.875),(6.0,67.125),(2.75,67.125),(2.75,40.5),(8.5,40.5)]
 FF_OUTLINE=R(9.5,21.0,73.125,97.375)
-BRANCH_NOTES='''<section class="ask"><h2>Bore change (branch bore-v1, for review)</h2>
+BRANCH_NOTES='''<section class="ask"><h2>Staircase ST-1 (branch stair-v1, for review)</h2>
+<ol>
+<li><b>25 risers of 6"</b> from the parking floor (1' below the house floor, to be confirmed) to the balcony at the first-floor level: 15 in ST-1A, 10 in ST-1B. Treads 10", width 3'6".</li>
+<li><b>ST-1A</b> runs along the new west compound wall BW-07 (moved 4½" east of the boundary), from Y 4'4" to 16'; <b>landing ST-1L</b> 3'6" x 3'6" at +7'6" above the parking; <b>ST-1B</b> turns east over the car, 7'6" long, arriving on balcony 2.</li>
+<li><b>Balcony 2</b> is 2' shorter (6'6" x 4'3"); PW-01 shortened and PW-03 extended to meet the top of ST-1B.</li>
+<li><b>Finish:</b> grey flamed granite treads and risers, plastered sides in the outside colour, black MS railing with 4" gaps and a wood-look handrail at 3'. Low store FU-56 under the foot of ST-1A, opening to the east.</li>
+</ol></section>
+<section class="ask"><h2>Bore change (branch bore-v1, for review)</h2>
 <ol>
 <li><b>Two existing bores:</b> BR-01 at 13'3" from west and 27' from south (side garden), BR-02 at 17' from west and 34' from south. BR-02 was inside toilet 2.</li>
 <li><b>Kitchen</b> is 7'3" deep (was 8'6"), so toilet 2 moves 1'3" north and the stair hall gets more room beside the spiral stair.</li>
@@ -161,7 +168,7 @@ BOREWELL=BORES[0][1:3]
 # ---------- drawing positions (layout specific) ----------
 LABELPOS={'G-01':(8.0,24.5),'G-02':(5.6,37.6),'G-03':(6.2,44.6),'G-04':(11.5,53.0),'G-05':(11.45,39.4),'G-06':(11.5,33.6),'G-07':(17.2,33.4),
           'G-08':(8.0,63.4),'G-09':(15.6,64.6),'G-10':(16.0,70.6),'G-11':(9.25,69.6),'G-16':(3.9,70.1),'G-12':(16.2,92.8),'G-13':(1.55,36.0),'G-14':(5.0,94.0),'G-15':(15.2,100.2),
-          'F-01':(7.4,18.6),'F-02':(11.9,47.0),'F-03':(7.9,75.6),'F-04':(12.15,78.0),'F-05':(15.9,95.3),'F-06':(12.05,82.9),'F-07':(16.4,83.75)}
+          'F-01':(6.4,18.0),'F-02':(11.9,47.0),'F-03':(7.9,75.6),'F-04':(12.15,78.0),'F-05':(15.9,95.3),'F-06':(12.05,82.9),'F-07':(16.4,83.75)}
 LABELSIZE={'G-16':0.24,'F-07':0.3,'G-09':0.34,'G-11':0.3,'G-05':0.42,'G-12':0.42,'F-05':0.42,'G-09':0.4,'G-13':0.36,'G-06':0.4,'G-07':0.42,'G-11':0.42,'G-03':0.42,'G-02':0.42,'F-06':0.36,'F-07':0.42,'G-10':0.42,'F-04':0.45,'F-03':0.42,'F-01':0.45,'G-09':0.45,'G-01':0.6,'F-02':0.8}
 TAGPOS={'GW-01':(3.125,53.0),'GW-05':(20.625,51.0),'GW-07':(9.875,91.5),'BW-01':(0.19,50.0),'GW-04':(19.0,31.125),'GW-13':(12.62,58.94),'GW-12':(17.6,46.56),
         'GW-03':(8.875,33.6),'GW-02':(3.6,40.875),'GW-11':(19.0,36.19),'GW-08':(11.0,94.75),'GW-06':(8.0,73.5),'GW-16':(11.94,71.6),'GW-17':(4.4,66.75),'GW-18':(6.375,72.3),'PW-02':(2.94,40.0),'PW-04':(20.81,40.0),
@@ -246,7 +253,7 @@ FURNITURE = [
  ('FU-53','G','Tap and wash platform',1.375,4.875,89.375,91.875,'washpad',None,'Side garden, paved with drain, in the corner of BW-02 and BW-03'),
  ('FU-54','G','Wash basin with tap',19.125,20.625,95.25,96.5,'basin',None,'Back garden, against GW-08 beside window W-08'),
  ('FU-55','G','Tap and wash platform',17.625,20.625,96.75,99.25,'washpad',None,'Back garden, paved, with floor drain'),
- ('FU-56','G','Low store under staircase 1',17.5,21.0,4.75,10.75,'store',None,'Parking, 3\'6" x 6\', under the low end of the flight (up to about 3\'8" high); top part left open so the car door can open'),
+ ('FU-56','G','Low store under staircase 1',17.125,20.625,4.75,10.75,'store',None,'Parking, 3\'6" x 6\', under the low end of ST-1A (up to about 3\'8" high), door facing east'),
 ]
 # door and window types (proposal)
 SPEC = {
@@ -318,6 +325,7 @@ BEAMS = [
  ('B-17','F', 20.25,21.0, 73.125,97.375, "1'3\"",'Over FW-03, C-15 to C-19, then cantilevers 2\'3" to carry FW-04'),
 ]
 STRUCT_NOTES=[
+ 'Staircase ST-1: RCC waist-slab stair. ST-1A rests on the ground at its foot and on the landing; the landing ST-1L is carried by a short cantilever beam from pillar C-02; ST-1B spans from the landing to the balcony slab edge at X 9\'7½". No new pillar in the parking.',
  'Bore court: bore BR-02 sits in an open-to-sky court (no slab above) so a rig can lift its pipes. C-13 is removed; C-20 and C-21 need eccentric footings that stay clear of the bore. Bore BR-01 is about 1\'9" from the GW-07 face, so that footing needs checking too.',
  'Pillars only in the outer walls (east and west sides). No pillar stands inside any room, and the future first-floor hall stays pillar-free.',
  'Pillars C-01 to C-19 are 1\' x 9" (engineer\'s size), set with the 1\' along the wall so they hide inside the 9" walls.',

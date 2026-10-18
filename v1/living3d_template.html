@@ -47,7 +47,7 @@ canvas{display:block;width:100%;height:100%}
  <span class="lbl">Bedroom 1</span><div class="seg cams"><button data-c="6">Door</button><button data-c="7">Window</button><button data-c="8">Study</button><button data-c="9">Toilet</button><button data-c="10">Top</button></div>
  <span class="lbl">Kitchen</span><div class="seg cams"><button data-c="11">Kitchen</button><button data-c="12">Sink</button><button data-c="13">Hob</button><button data-c="14">Fridge</button><button data-c="15">Top</button></div>
  <span class="lbl">Bedroom 2</span><div class="seg cams"><button data-c="16">Door</button><button data-c="17">Bed</button><button data-c="18">Window</button><button data-c="19">Toilet 2</button><button data-c="20">Top</button></div>
- <span class="lbl">Outside</span><div class="seg cams"><button data-c="21">Gate</button><button data-c="22">Parking</button><button data-c="23">Terrace</button><button data-c="24">Aerial</button><button data-c="25">Side</button></div>
+ <span class="lbl">Outside</span><div class="seg cams"><button data-c="21">Gate</button><button data-c="22">Parking</button><button data-c="23">Terrace</button><button data-c="24">Aerial</button><button data-c="25">Side</button><button data-c="26">Stair</button></div>
  <span class="lbl">Gate</span><div class="seg" id="gateSeg"><button data-g="GD-1">GD-1 Slats</button><button data-g="GD-2">GD-2 Bars</button><button data-g="GD-3">GD-3 Panels</button></div>
  <span class="lbl">Colour</span><div class="seg" id="extSeg"><button data-e="EX-1"><i style="background:#eeeae2"></i><i style="background:#c99a6a"></i>EX-1</button><button data-e="EX-2"><i style="background:#cbc2b4"></i><i style="background:#f1eee8"></i>EX-2</button><button data-e="EX-3"><i style="background:#dccaae"></i><i style="background:#4a4a48"></i>EX-3</button></div>
  <span class="lbl">Finish</span><div class="seg" id="finishSeg"><button data-k="KT-1"><i style="background:#c9a77c"></i><i style="background:#efe9df"></i>KT-1</button><button data-k="KT-2"><i style="background:#efe9df"></i><i style="background:#c9a77c"></i>KT-2</button><button data-k="KT-3"><i style="background:#7d5a3e"></i><i style="background:#efe9df"></i>KT-3</button></div>
@@ -830,15 +830,15 @@ X_(()=>{CURFL='F';ZOFF=FFZ;P.walls.F.forEach(buildWall);
    else{slab(r.pts,r.kind==='wet'?MAT.tFloor:MAT.floor,0,t);slab(r.pts,MAT.ceiling,CEIL-0.001,null,true)}}
  ZOFF=0;CURFL='G';});
 // roof slab of the ground floor (also the terrace floor) and its edge fascia
-const slabParts=[[2.75,11.667,15.5,19.75],[2.75,21,19.75,67.125],[6.0,21,67.125,73.75],[9.5,21,73.75,95.125],[6.0,9.5,73.75,73.875],[2.75,9.5,73.875,77.875]];   // open over the bore court X 2.75-6, Y 67.125-73.875
+const slabParts=[[2.75,9.625,15.5,19.75],[2.75,21,19.75,67.125],[6.0,21,67.125,73.75],[9.5,21,73.75,95.125],[6.0,9.5,73.75,73.875],[2.75,9.5,73.875,77.875]];   // open over the bore court X 2.75-6, Y 67.125-73.875
 X_(()=>{for(const [a,b,c,d] of slabParts) box(a,b,c,d,SLB,FFZ-0.05,MAT.white,{tip:'RCC roof slab and beams, ground floor (terrace floor above)'});
  const fz1=SLB-0.012,fz2=FFZ,ft='Slab edge fascia';
- for(const [a,b,c,d] of [[2.75,11.667,15.5-0.03,15.5-0.012],[2.75,6.0,67.125+0.012,67.125+0.03],[2.75,6.0,73.875-0.03,73.875-0.012],[11.667,21,19.75-0.03,19.75-0.012],[2.75,9.5,77.875+0.012,77.875+0.03],[9.5,21,95.125+0.012,95.125+0.03]]) box(a,b,c,d,fz1,fz2,MAT.extTrim,{tip:ft});
- for(const [a,b,c,d] of [[2.75-0.03,2.75-0.012,15.5,67.125],[2.75-0.03,2.75-0.012,73.875,77.875],[6.0-0.03,6.0-0.012,67.125,73.875],[11.667+0.012,11.667+0.03,15.5,19.75],[21+0.012,21+0.03,19.75,95.125],[9.5-0.03,9.5-0.012,77.875,95.125]]) box(a,b,c,d,fz1,fz2,MAT.extTrim,{tip:ft});
+ for(const [a,b,c,d] of [[2.75,9.625,15.5-0.03,15.5-0.012],[2.75,6.0,67.125+0.012,67.125+0.03],[2.75,6.0,73.875-0.03,73.875-0.012],[9.625,21,19.75-0.03,19.75-0.012],[2.75,9.5,77.875+0.012,77.875+0.03],[9.5,21,95.125+0.012,95.125+0.03]]) box(a,b,c,d,fz1,fz2,MAT.extTrim,{tip:ft});
+ for(const [a,b,c,d] of [[2.75-0.03,2.75-0.012,15.5,67.125],[2.75-0.03,2.75-0.012,73.875,77.875],[6.0-0.03,6.0-0.012,67.125,73.875],[9.625+0.012,9.625+0.03,15.5,19.75],[21+0.012,21+0.03,19.75,95.125],[9.5-0.03,9.5-0.012,77.875,95.125]]) box(a,b,c,d,fz1,fz2,MAT.extTrim,{tip:ft});
  // parapets PW-01..05, 3' high, 4½", with a coping; vertical louvers on the balcony front PW-01
  for(const w of P.walls.F.filter(w=>w.kind==='para')){box(w.x1,w.x2,w.y1,w.y2,FFZ-0.05,FFZ+w.h,MAT.ext,{tip:`${w.id} · ${w.desc} · 3' parapet`});
    box(w.x1-0.06,w.x2+0.06,w.y1-0.06,w.y2+0.06,FFZ+w.h,FFZ+w.h+0.15,MAT.extTrim,{tip:`${w.id} · parapet coping`});wallMeshes.push(scene.children[scene.children.length-2])}
- for(let x=2.95;x<11.6;x+=0.33) box(x,x+0.12,15.5-0.15,15.5-0.035,FFZ-0.4,FFZ+3.0,MAT.extWood,{tip:'Balcony front louvers, wood-look aluminium'});
+ for(let x=2.95;x<9.55;x+=0.33) box(x,x+0.12,15.5-0.15,15.5-0.035,FFZ-0.4,FFZ+3.0,MAT.extWood,{tip:'Balcony front louvers, wood-look aluminium'});
  // roof of the first floor (bedroom 3 block), low parapet, overhead tank FU-71 on a stand, cat ladder FU-72
  const RZ=FFZ+SLB,RT=RZ+1.0;box(9.5,21,73.125,97.375,RZ,RT,MAT.white,{tip:'RCC roof slab, first floor'});
  for(const [a,b,c,d] of [[9.5,21,73.125,73.5],[9.5,21,97.0,97.375],[9.5,9.875,73.5,97.0],[20.625,21,73.5,97.0]]){box(a,b,c,d,RT,RT+1.5,MAT.ext,{tip:'Roof parapet, 1\'6"'});box(a-0.04,b+0.04,c-0.04,d+0.04,RT+1.5,RT+1.62,MAT.extTrim,{tip:'Roof parapet coping'})}
@@ -907,11 +907,32 @@ function setExt(k){if(!EXT[k])k='EX-1';const o=EXT[k];MAT.ext.color.set(o.wall);
 // neem tree (existing, rebuilt from the site photos; 3d/models/neem-tree.js): trunk 3'6" from the road, leaning south, south limb cut to a stub
 {const tree=createNeemTree(THREE,{seed:1,cut:true});tree.position.set(mx(12.75),m(GRD),m(4.25));scene.add(tree);
  tree.traverse(o=>{if(o.isMesh){o.userData.keepUV=true;named(o,o.userData.tip||'Neem tree (existing)');if(o.name==='NeemTrunk'||o.name==='NeemStub')wallMeshes.push(o)}});}
-// staircase ST-1: simple stand-in until the staircase is designed
-{const st='ST-1 outside stair (stand-in: next to be designed)';
- for(let i=0;i<15;i++) box(17.5,20.625,4.333+i*(11.667/15),4.333+(i+1)*(11.667/15),GRD,GRD+(i+1)*(7.5/15),MAT.white,{tip:st});
- box(17.5,20.625,16.0,19.5,GRD+7.5-0.5,GRD+7.5,MAT.white,{tip:st+' · landing ST-1L'});
- for(let i=0;i<8;i++){const xa=17.5-(i+1)*(5.833/8);box(xa,17.5-i*(5.833/8),16.0,19.5,GRD+7.5+i*(5.0/8),GRD+7.5+(i+1)*(5.0/8),MAT.white,{tip:st})}}
+// staircase ST-1: 25 risers of 6", 10" treads, 3'6" wide; ST-1A south along BW-07, landing ST-1L, ST-1B east over the car to balcony 2
+{const AX1=17.125,AX2=20.625,A0=4.333,R=0.5,TD=10/12,LY1=16.0,LY2=19.5,BX2=17.125,NA=15,NB=10,LZ=GRD+NA*R;
+ const gr='Granite tread and riser, grey flamed (anti-skid)',st='ST-1 outside stair · RCC waist slab, 6" risers, 10" treads';
+ // ST-1A: tread i covers y A0+i*TD .. +TD, top at GRD+(i+1)*R; each block is one riser plus a 6" waist below it
+ for(let i=0;i<NA-1;i++){const y1=A0+i*TD,top=GRD+(i+1)*R;box(AX1,AX2,y1,y1+TD,Math.max(GRD,top-1.0),top-0.04,MAT.ext,{tip:st+' · ST-1A'});box(AX1-0.03,AX2,y1-0.03,y1+TD,top-0.04,top,MAT.stepStone,{tip:gr})}
+ box(AX1,AX2,A0+(NA-1)*TD,LY2,LZ-1.0,LZ-0.04,MAT.ext,{tip:st+' · landing ST-1L, carried by a cantilever beam from C-02'});box(AX1-0.03,AX2,A0+(NA-1)*TD-0.03,LY2+0.03,LZ-0.04,LZ,MAT.stepStone,{tip:'Landing ST-1L, grey flamed granite'});
+ // ST-1B: tread j covers x BX2-(j+1)*TD .. BX2-j*TD, top at LZ+(j+1)*R; the 10th riser lands on balcony 2
+ for(let j=0;j<NB-1;j++){const x2=BX2-j*TD,top=LZ+(j+1)*R;box(x2-TD,x2,LY1,LY2,top-1.0,top-0.04,MAT.ext,{tip:st+' · ST-1B'});box(x2-TD,x2+0.03,LY1-0.03,LY2+0.03,top-0.04,top,MAT.stepStone,{tip:gr})}
+ // store FU-56 under the foot of ST-1A, with a door to the east
+ const sf=fuG['FU-56'];box(sf.x1,sf.x2,sf.y1,sf.y2,GRD,GRD+3.6,MAT.ext,{tip:`FU-56 · Low store under ST-1A · ${sf.note}`});box(sf.x1-0.04,sf.x1,sf.y1+1.5,sf.y1+4.0,GRD+0.2,GRD+3.3,MAT.extWood,{tip:'Store door, wood-look'});
+ // railing: black MS posts and 4"-gap balusters, wood-look handrail 3' above the nosing line; merged into two meshes
+ const blk=[],wd=[],H=3.0,P3=(x,y,z)=>new THREE.Vector3(mx(x),m(z),m(y));
+ const rod=(a,b,w,arr)=>{const d=new THREE.Vector3().subVectors(b,a),L=d.length(),g=new THREE.BoxGeometry(m(w),L,m(w));g.translate(0,L/2,0);
+   const q=new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0,1,0),d.clone().normalize());g.applyQuaternion(q);g.translate(a.x,a.y,a.z);arr.push(g)};
+ const run=(p1,p2,z1,z2)=>{// straight run from plan point p1 (floor z1) to p2 (floor z2), floor rising linearly
+   const n=Math.max(2,Math.ceil(Math.hypot(p2[0]-p1[0],p2[1]-p1[1])/0.36));
+   for(let k=0;k<=n;k++){const t=k/n,x=p1[0]+(p2[0]-p1[0])*t,y=p1[1]+(p2[1]-p1[1])*t,z=z1+(z2-z1)*t;rod(P3(x,y,z),P3(x,y,z+H-0.1),k%8===0?0.12:0.05,blk)}
+   rod(P3(p1[0],p1[1],z1+H-0.1),P3(p2[0],p2[1],z2+H-0.1),0.1,blk);rod(P3(p1[0],p1[1],z1+H),P3(p2[0],p2[1],z2+H),0.2,wd)};
+ const e=0.1;
+ run([AX1+e,A0],[AX1+e,LY1],GRD+R,LZ);                       // ST-1A, open east side
+ run([AX2-e,A0+6*TD],[AX2-e,LY1],GRD+7*R,LZ);                // ST-1A, west side above the compound wall
+ run([AX2-e,LY1],[AX2-e,LY2-e],LZ,LZ);run([AX2-e,LY2-e],[AX1,LY2-e],LZ,LZ);   // landing, west and south sides
+ run([BX2,LY2-e],[BX2-NB*TD+TD,LY2-e],LZ+R,FFZ);run([BX2,LY1+e],[BX2-NB*TD+TD,LY1+e],LZ+R,FFZ);   // ST-1B, both sides
+ for(const [arr,mt,t] of [[blk,MAT.blackMetal,'ST-1 railing · black MS, 4" gaps'],[wd,MAT.extWood,'ST-1 handrail · wood-look, 3\' high']]){const g=mergeGeometries(arr);metreUV(g);const me=new THREE.Mesh(g,mt);me.castShadow=true;me.receiveShadow=true;me.userData.keepUV=true;scene.add(me);named(me,t)}
+ const L=new THREE.PointLight('#ffc98a',0,m(12),2);L.position.set(mx(20.5),m(LZ+6),m(17.75));scene.add(L);towerLights.push(L);
+ box(20.6,20.625,17.4,18.1,LZ+5.6,LZ+6.3,MAT.paper,{cast:false,tip:'Wall light at the landing'});}
 // the two existing bores (BR-01, BR-02): 2' concrete chamber with a steel cap
 for(const [x,y,id] of [[7.75,78.66,'BR-01'],[4.0,71.85,'BR-02']]){box(x-1,x+1,y-1,y+1,GRD,GRD+0.5,MAT.white,{tip:`${id} · Borewell (existing) · concrete chamber`});cyl(x,y,GRD+0.5,GRD+0.7,0.45,MAT.steel,{tip:`${id} · borewell cap`})}
 // outside lights: porch and parking downlights
@@ -1031,6 +1052,7 @@ const VIEWS=[
  {p:[5.2,FFZ+5.25,22.6],t:[15.5,FFZ+3.5,72.0]},   // terrace, looking at the bedroom 3 block
  {p:[-26.0,52.0,-22.0],t:[11.0,6.0,46.0]},       // aerial from the north-east
  {p:[1.55,4.2,29.0],t:[1.55,4.3,72.0]},   // side passage
+ {p:[7.0,5.5,27.0],t:[18.5,5.5,10.0]},    // staircase ST-1 from the parking
 ];
 let hfov=75;
 function applyFov(){const a=camera.aspect||1;camera.fov=THREE.MathUtils.radToDeg(2*Math.atan(Math.tan(THREE.MathUtils.degToRad(hfov)/2)/a));camera.updateProjectionMatrix()}

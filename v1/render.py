@@ -142,7 +142,7 @@ def opening_tags(fl,W):
         tag(X,Y,oid,'win' if typ in('window','vent') else 'door',tipText=tt)
 
 # stairs
-A0,A1=4.333,16.0; AX1,AX2=17.5,21.0; LY1,LY2=16.0,19.5; BX1,BX2=11.667,17.5
+A0,A1=4.333,16.0; AX1,AX2=17.125,20.625; LY1,LY2=16.0,19.5; BX1,BX2=9.625,17.125   # ST-1: 15 + 10 risers of 6", 10" treads, 3'6" wide, inside BW-07
 def stair_A(op=1,dash=''):
     E(f'<g opacity="{op}">'); rect(AX1,AX2,A0,A1,'#c98b5e','#6b3a1c',0.05,extra=dash)
     n=14
@@ -152,7 +152,7 @@ def stair_A(op=1,dash=''):
 def stair_L(op=1,dash=''): rect(AX1,AX2,LY1,LY2,'#d9a37a','#6b3a1c',0.05,extra=f'opacity="{op}" '+dash)
 def stair_B(op=1,dash=''):
     E(f'<g opacity="{op}">'); rect(BX1,BX2,LY1,LY2,'#c98b5e','#6b3a1c',0.05,extra=dash)
-    n=7
+    n=9
     for i in range(1,n): x=BX2-i*(BX2-BX1)/n; line(x,LY1,x,LY2,'#6b3a1c',0.03)
     a=S(BX2-0.4,(LY1+LY2)/2); b=S(BX1+0.4,(LY1+LY2)/2)
     E(f'<line x1="{a[0]:.3f}" y1="{a[1]:.3f}" x2="{b[0]:.3f}" y2="{b[1]:.3f}" stroke="#fff" stroke-width="0.08" marker-end="url(#arrW)"/></g>')
@@ -387,7 +387,7 @@ def ground():
     import model as _m
     for X,Y,t,sz in getattr(_m,'EXTRA_TEXT',[]): text(X,Y,t,sz,weight=600,fill='#555')
     text(SPC[0]-2.75,SPC[1]-3.95,'ST-2 spiral stair',0.34,weight=600,fill='#3a1f0c')
-    text(19.25,10.2,'ST-1A',0.36,weight=700,fill='#fff'); text(19.25,17.75,'ST-1L',0.32,weight=700,fill='#3a1f0c')
+    text(18.875,10.2,'ST-1A',0.36,weight=700,fill='#fff'); text(18.875,17.75,'ST-1L',0.32,weight=700,fill='#3a1f0c')
     E('</g>')
     borewell()
     draw_struct('G')
@@ -406,11 +406,11 @@ def first():
         if o[1]=='F': opening(o,W)
     E('<g class="L-dims">')
     chain('F',22.6,CH_F_W)
-    hchain(14.3,[2.75,3.125,11.667,17.5,21.0])
+    hchain(14.3,[2.75,3.125,9.625,17.125,20.625,21.0])
     hchain(CH_F_BACK_Y,[9.5,10.25,13.875,14.25,20.25,21.0])
     E('</g>')
     E('<g class="L-rooms">'); room_labels('F')
-    text(14.6,17.75,'ST-1B',0.36,weight=700,fill='#fff'); text(19.25,17.75,'ST-1L',0.32,weight=700,fill='#3a1f0c')
+    text(13.4,17.75,'ST-1B',0.36,weight=700,fill='#fff'); text(18.875,17.75,'ST-1L',0.32,weight=700,fill='#3a1f0c')
     text(SPC[0]-3.0,SPC[1]-4.55,'ST-2 arrives',0.32,weight=600,fill='#3a1f0c')
     text(10.5,8.0,'below: parking, gates, neem tree',0.45,fill='#888')
     E('</g>')
