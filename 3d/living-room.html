@@ -508,7 +508,7 @@ addPlant(10.05,42.3,1.2,3,'Bamboo plant in black pot · 4 ft');
  box(9.65,13.35,31.5+0.012,31.6,6.1,7.25,std({color:'#cdb69a',roughness:1,normalMap:T.linen.normalMap}),{tip:'Roman blind · light-brown linen, half lowered'});
  for(const z of [6.3,6.7]) box(9.65,13.35,31.6,31.66,z,z+0.12,std({color:'#c2a98c',roughness:1,normalMap:T.linen.normalMap}),{cast:false,tip:'Roman blind fold'});}
 
-// ---------------- TOILET 1 (G-07): greige matte tiles to 7', wood-look tiles in the shower, wall-hung WC, floating vanity ----------------
+// ---------------- TOILET 1 (G-07): greige matte tiles to 7' (shower walls too), wall-hung WC, floating vanity ----------------
 function tileTex(base,grout,tw,th,seed){const t=canvasTex(1024,Math.round(1024*th/tw),(g,w,h)=>{const r=rng(seed);g.fillStyle=base;g.fillRect(0,0,w,h);
   for(let i=0;i<9000;i++){const v=(r()-.5)*0.045;g.fillStyle=v>0?`rgba(255,255,255,${v})`:`rgba(0,0,0,${-v})`;g.fillRect(r()*w,r()*h,3,3)}
   for(let i=0;i<120;i++){g.fillStyle=`rgba(${r()<.5?'255,255,255':'120,110,95'},0.04)`;g.beginPath();g.ellipse(r()*w,r()*h,8+r()*40,4+r()*20,r()*3,0,7);g.fill()}
@@ -529,13 +529,13 @@ function tile(x1,x2,y1,y2,z1,z2,mat,tip){const me=box(x1,x2,y1,y2,z1,z2,mat,{cas
   me.userData.keepUV=true;return me}
 {const X1=14.125,X2=20.25,Y1=31.5,Y2=36.0,c=0.04,e=0.012,TZ=7.0,tw='Wall tile · greige matte porcelain, 2\' x 1\', to 7\'',tsw='Shower wall tile · wood-look porcelain, to 7\'';
  // front wall GW-04 (V-01 at x 16.25-18.25, sill 6')
- tile(X1,17.25,Y1,Y1+c,0,6.0,MAT.tWall,tw);tile(17.25,X2,Y1,Y1+c,0,6.0,MAT.tWood,tsw);
- tile(X1,16.25,Y1,Y1+c,6.0,TZ,MAT.tWall,tw);tile(18.25,X2,Y1,Y1+c,6.0,TZ,MAT.tWood,tsw);
+ tile(X1,17.25,Y1,Y1+c,0,6.0,MAT.tWall,tw);tile(17.25,X2,Y1,Y1+c,0,6.0,MAT.tWall,tw);
+ tile(X1,16.25,Y1,Y1+c,6.0,TZ,MAT.tWall,tw);tile(18.25,X2,Y1,Y1+c,6.0,TZ,MAT.tWall,tw);
  // back wall GW-11 (door D-03 at x 14.5-17.0)
  tile(X1,14.5,Y2-c,Y2,0,TZ,MAT.tWall,tw);tile(17.0,X2,Y2-c,Y2,0,TZ,MAT.tWall,tw);
  // side walls, kept inside the front and back tiles so no faces overlap
  tile(X1,X1+c,Y1+c+e,Y2-c-e,0,TZ,MAT.tWall,tw);
- tile(X2-c,X2,Y1+c+e,33.6,0,TZ,MAT.tWood,tsw);tile(X2-c,X2,33.6,Y2-c-e,0,TZ,MAT.tWall,tw);
+ tile(X2-c,X2,Y1+c+e,33.6,0,TZ,MAT.tWall,tw);tile(X2-c,X2,33.6,Y2-c-e,0,TZ,MAT.tWall,tw);
  slab([[X1,Y1],[X2,Y1],[X2,Y2],[X1,Y2]],MAT.tFloor,0.006,'G-07 · Toilet 1 floor · matte anti-skid porcelain, 1\' x 1\', greige');
  // shower FU-14: open, no screen; rain shower, mixer, linear drain, geyser above
  // bath rack FU-63 on GW-04 between the basin and the shower: two matte-black shelves with a front rail
@@ -685,8 +685,8 @@ function setFinish(k){if(!KT[k])k='KT-1';const o=KT[k];finishMat(MAT.kLow,o.low)
 {const X1=3.5,X2=9.875,Y1=68.0,Y2=73.0,c=0.04,e=0.012,TZ=7.0,SX2=7.5,SY1=70.5,tw='Wall tile · greige matte porcelain, 2\' x 1\', to 7\'',tsw='Shower wall tile · wood-look porcelain, to 7\'';
  // tiles: GW-14 (north), GW-06 (south: shower part wood-look), GW-01 (east: V-02 at y 68.25-70.25 from 6'), GW-16 (west: door D-04 at y 69-71.5)
  tile(X1,X2,Y1,Y1+c,0,TZ,MAT.tWall,tw);
- tile(X1,SX2,Y2-c,Y2,0,TZ,MAT.tWood,tsw);tile(SX2,X2,Y2-c,Y2,0,TZ,MAT.tWall,tw);
- tile(X1,X1+c,Y1+c+e,SY1,0,6.0,MAT.tWall,tw);tile(X1,X1+c,70.25,SY1,6.0,TZ,MAT.tWall,tw);tile(X1,X1+c,SY1,Y2-c-e,0,TZ,MAT.tWood,tsw);
+ tile(X1,SX2,Y2-c,Y2,0,TZ,MAT.tWall,tw);tile(SX2,X2,Y2-c,Y2,0,TZ,MAT.tWall,tw);
+ tile(X1,X1+c,Y1+c+e,SY1,0,6.0,MAT.tWall,tw);tile(X1,X1+c,70.25,SY1,6.0,TZ,MAT.tWall,tw);tile(X1,X1+c,SY1,Y2-c-e,0,TZ,MAT.tWall,tw);
  tile(X2-c,X2,Y1+c+e,69.0,0,TZ,MAT.tWall,tw);tile(X2-c,X2,71.5,Y2-c-e,0,TZ,MAT.tWall,tw);
  slab([[X1,Y1],[X2,Y1],[X2,Y2],[X1,Y2]],MAT.tFloor,0,'G-11 · Toilet 2 floor · matte anti-skid porcelain, 1\' x 1\', greige');
  // Indian WC FU-26 (Orissa pan set into the floor), long side along x, user faces west: foot rests at the east end, bowl to the west
@@ -839,10 +839,10 @@ function applyOption(i){const o=OPTIONS[i];curOpt=i;
   <li><b>Wardrobe FU-34</b> on GW-15 with loft, oak veneer, black handles. <b>FU-33</b> is one long floating oak shelf: side table with a lamp at the bed end, dressing table with a framed mirror and a linen stool at the other end (FU-35 merged into it).</li>
   <li><b>Windows:</b> AC FU-46 centred above W-07, blowing across the bed; W-07 curtains on a wall track below it; W-08 curtains from the band. Back door D-10: white UPVC with a glass upper half.</li>
   </ul><h2>Toilet 2 (G-11)</h2><ul>
-  <li>Same tiles as toilet 1: greige walls to 7', wood-look in the shower, anti-skid floor.</li>
+  <li>Same tiles as toilet 1: greige walls to 7' (shower walls too), anti-skid floor.</li>
   <li><b>Layout:</b> Indian WC FU-26 (Orissa pan) against GW-01, user faces west, with bucket, bib tap and health faucet FU-57 in front; wall-hung basin FU-27 with backlit mirror on the north wall GW-14 beside the door, black two-shelf bath rack FU-70 next to it; shower FU-28 takes the whole south end (4' x 2'6") open, no screen, geyser FU-58 on GW-01; the WC sits on a 4" tiled platform; towel rail on GW-16.</li>
   </ul><h2>Toilet 1 (G-07)</h2><ul>
-  <li><b>Tiles:</b> greige matte porcelain 2' x 1' to 7' high; wood-look porcelain on the shower walls; matte anti-skid 1' x 1' floor. Paint above 7'.</li>
+  <li><b>Tiles:</b> greige matte porcelain 2' x 1' to 7' high, shower walls included; matte anti-skid 1' x 1' floor. Paint above 7'.</li>
   <li><b>Fittings:</b> wall-hung WC FU-12 on a tiled concealed-cistern ledge, floating oak-look vanity FU-13 with a vessel basin and backlit mirror, open shower FU-14 (no screen) with a rain shower and a small square floor trap, black two-shelf bath rack FU-63 beside the basin, 15 L geyser above. All fittings matte black. WPC door D-03.</li>
   </ul><h2>Textures</h2><div>Real CC0 scans from Poly Haven, stored locally in <code>3d/assets</code>. Use <b>Photo</b> for a ray-traced, near-photographic still.</div>`;
   try{localStorage.setItem('lr3d-opt',i)}catch(e){}
