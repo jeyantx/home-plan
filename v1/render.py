@@ -209,7 +209,7 @@ def hchain(Y,xs,cls='dim'):
         if x2-x1>=1.6: text((x1+x2)/2,Y+0.35,fmt(x2-x1),0.4,fill='#333')
     E('</g>')
 def sides():
-    text(10.5,-2.1,'NORTH  ·  ROAD AND GATES',0.7,weight=700,fill='#2f6f4f')
+    text(10.5,-2.1,'NORTH  ·  ROAD (17\' wide) AND GATES',0.7,weight=700,fill='#2f6f4f')
     text(11,107.9,'SOUTH  ·  BACK (existing wall)',0.6,weight=700,fill='#2f6f4f')
     text(-3.6,53,'EAST  ·  neighbour house',0.6,weight=700,fill='#2f6f4f',rot=-90)
     text(23.0,53,'WEST  ·  apartment (existing wall)',0.6,weight=700,fill='#2f6f4f',rot=90)
