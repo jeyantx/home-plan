@@ -285,7 +285,7 @@ function buildOpening(o,w,horiz,s0,out=0){
       const piv=new THREE.Group();const p=along(horiz,w,hingeU,T/2);piv.position.set(mx(p[0]),m(ZOFF),m(p[1]));
       leaf.position.set(m((h==='a'?1:-1)*(len/2)),m((o.h-0.14)/2+0.02),0);piv.add(leaf);
       piv.rotation.y=horiz?Math.PI:-Math.PI/2;
-      const sgn=-(o.swing==='+'?1:-1)*(h==='a'?-1:1);piv.rotation.y+=sgn*open;
+      const sgn=-(o.swing==='+'?1:-1)*(h==='a'?-1:1)*(horiz?1:-1);piv.rotation.y+=sgn*open;   // side walls (along Y) turn the other way round
       scene.add(piv);named(leaf,tip);
       if(glassTop){   // cut the upper half out of the leaf: solid lower half, rails and stiles round a glass pane
         const L=len-0.24,H=o.h-0.14,sg=h==='a'?1:-1,zc=m(0.02),st=0.3,gz1=H*0.5,gz2=H-0.3;
@@ -742,42 +742,42 @@ function setFinish(k){if(!KT[k])k='KT-1';const o=KT[k];finishMat(MAT.kLow,o.low)
   try{localStorage.setItem('lr3d-finish',k)}catch(e){};if(photo&&pt)pt.updateMaterials();invalidate()}
 
 
-// ================= TOILET 2 (G-11), 5' x 6'4½": Indian pan on the bore-court wall GW-18 facing west, bucket and basin on GW-14, shower across the south end =================
+// ================= TOILET 2 (G-11), 5' x 6'4½": shower across the north end, Indian WC on a 3'6" x 2'6" platform in the south-east corner, basin by the door =================
 {const X1=6.75,X2=11.75,Y1=66.75,Y2=73.125,c=0.04,e=0.012,TZ=7.0,tw='Wall tile · greige matte porcelain, 2\' x 1\', to 7\'',v2=P.openings.find(o=>o.id==='V-02'),dr=P.openings.find(o=>o.id==='D-04');
  tile(X1,X2,Y1,Y1+c,0,TZ,MAT.tWall,tw);tile(X1,X2,Y2-c,Y2,0,TZ,MAT.tWall,tw);
- tile(X1,X1+c,Y1+c+e,v2.b,0,v2.sill,MAT.tWall,tw);tile(X1,X1+c,v2.b,Y2-c-e,0,TZ,MAT.tWall,tw);
+ tile(X1,X1+c,Y1+c+e,v2.a,0,TZ,MAT.tWall,tw);tile(X1,X1+c,v2.a,v2.b,0,v2.sill,MAT.tWall,tw);tile(X1,X1+c,v2.b,Y2-c-e,0,TZ,MAT.tWall,tw);
  tile(X2-c,X2,Y1+c+e,dr.a,0,TZ,MAT.tWall,tw);tile(X2-c,X2,dr.b,Y2-c-e,0,TZ,MAT.tWall,tw);
  slab([[X1,Y1],[X2,Y1],[X2,Y2],[X1,Y2]],MAT.tFloor,0,'G-11 · Toilet 2 floor · matte anti-skid porcelain, 1\' x 1\', greige');
- // Indian WC FU-26 on a 4" tiled platform, long side along x, user faces west: foot rests at the east end, bowl to the west
- const pn=fuG['FU-26'],py=(pn.y1+pn.y2)/2,pt0=`FU-26 · Indian WC, Orissa pan, white · ${pn.note}`,PZ=0.333;
- tile(X1+c+e,pn.x2+0.25,Y1+c+e,pn.y2+0.3,0,PZ,MAT.tFloor,'WC platform, 4" high, floor tiles');
+ // Indian WC FU-26 on the 4" tiled platform FU-26.1 (3'6" x 2'6"), user faces west: foot rests at the east end, bowl to the west
+ const pl=fuG['FU-26.1'],pn=fuG['FU-26'],py=(pn.y1+pn.y2)/2,pt0=`FU-26 · Indian WC, Orissa pan, white · ${pn.note}`,PZ=0.333;
+ tile(X1+c+e,pl.x2,pl.y1,Y2-c-e,0,PZ,MAT.tFloor,`FU-26.1 · WC platform, 4" high, 3'6" x 2'6", floor tiles · ${pl.note}`);
  box(pn.x1+0.05,pn.x2-0.05,pn.y1+0.05,pn.y2-0.05,PZ+0.006,PZ+0.07,MAT.ceramic,{round:0.03,cast:false,tip:pt0});
  const hole=new THREE.Mesh(new THREE.CylinderGeometry(m(0.3),m(0.3),m(0.01),28),std({color:'#9aa0a3',roughness:0.2,metalness:0.1}));hole.scale.set(1.6,1,1);hole.position.set(mx(pn.x2-0.6),m(PZ+0.072),m(py));scene.add(hole);named(hole,pt0);
  for(const fy of [py-0.42,py+0.42]) box(pn.x1+0.35,pn.x1+0.95,fy-0.17,fy+0.17,PZ+0.07,PZ+0.1,MAT.ceramic,{round:0.02,cast:false,tip:'Foot rest, ribbed'});
- box(X1+c,X1+c+0.12,68.75,68.95,1.4,1.75,MAT.blackMetal,{tip:'Health faucet, matte black, on GW-18 beside the pan'});
- // bucket and bib tap FU-57 in front of the user
+ box(8.55,8.75,Y2-c-0.12,Y2-c,1.4,1.75,MAT.blackMetal,{tip:'Health faucet, matte black, on GW-06 on the left hand'});
+ // bucket and bib tap FU-57 in front of the platform, on GW-06
  const bk=fuG['FU-57'],bx=(bk.x1+bk.x2)/2,by=(bk.y1+bk.y2)/2;
- cyl(bx,by,0,1.05,0.4,std({color:'#8f969a',roughness:0.5}),{tip:`FU-57 · Bucket, grey · ${bk.note}`,rTop:0.45,seg:28});cyl(bx+0.25,by+0.3,1.05,1.35,0.12,std({color:'#cfd4d6',roughness:0.4}),{tip:'Mug'});
- box(bx-0.03,bx+0.03,Y1+c,Y1+c+0.35,1.55,1.62,MAT.blackMetal,{tip:'Bib tap, matte black, on GW-14'});
- // shower FU-28 across the south end: rose and mixer on GW-06, geyser FU-58 beside the rose, floor trap; rack FU-70 on GW-16
- const sh=fuG['FU-28'],rx=(X1+X2)/2+0.4;
- box(rx-0.03,rx+0.03,Y2-c-0.9,Y2-c,6.95,7.0,MAT.blackMetal,{tip:'Shower arm, matte black'});cyl(rx,Y2-c-0.9,6.75,6.8,0.3,MAT.blackMetal,{tip:'Shower rose, 8", matte black'});
- cyl(rx,Y2-c-0.02,3.5,3.75,0.16,MAT.blackMetal,{tip:'Shower mixer, matte black',seg:24}).rotation.x=Math.PI/2;
- box(rx-0.21,rx+0.21,(sh.y1+sh.y2)/2-0.21,(sh.y1+sh.y2)/2+0.21,0.006,0.016,std({color:'#9a9893',roughness:0.4,metalness:0.6}),{cast:false,tip:'Floor trap, 5" square steel grating'});
- const gy=fuG['FU-58'];box(gy.x1,gy.x2,gy.y1,Y2-c-e,6.25,7.4,MAT.appWhite,{round:0.12,tip:`FU-58 · Geyser, 15 L · ${gy.note}`});
+ cyl(bx,by,0,1.05,0.4,std({color:'#8f969a',roughness:0.5}),{tip:`FU-57 · Bucket, grey · ${bk.note}`,rTop:0.45,seg:28});cyl(bx+0.25,by-0.3,1.05,1.35,0.12,std({color:'#cfd4d6',roughness:0.4}),{tip:'Mug'});
+ box(bx-0.03,bx+0.03,Y2-c-0.35,Y2-c,1.55,1.62,MAT.blackMetal,{tip:'Bib tap, matte black, on GW-06'});
+ // shower FU-28 across the north end: rose and mixer on GW-14, geyser FU-58 beside the rose, floor trap; rack FU-70 on GW-16 north of the door
+ const sh=fuG['FU-28'],rx=9.6;
+ box(rx-0.03,rx+0.03,Y1+c,Y1+c+0.9,6.95,7.0,MAT.blackMetal,{tip:'Shower arm, matte black'});cyl(rx,Y1+c+0.9,6.75,6.8,0.3,MAT.blackMetal,{tip:'Shower rose, 8", matte black'});
+ cyl(rx,Y1+c+0.02,3.5,3.75,0.16,MAT.blackMetal,{tip:'Shower mixer, matte black',seg:24}).rotation.x=Math.PI/2;
+ box(8.75-0.21,8.75+0.21,(sh.y1+sh.y2)/2-0.21,(sh.y1+sh.y2)/2+0.21,0.006,0.016,std({color:'#9a9893',roughness:0.4,metalness:0.6}),{cast:false,tip:'Floor trap, 5" square steel grating'});
+ const gy=fuG['FU-58'];box(gy.x1,gy.x2,Y1+c+e,gy.y2,6.25,7.4,MAT.appWhite,{round:0.12,tip:`FU-58 · Geyser, 15 L · ${gy.note}`});
  {const r=fuG['FU-70'],rx2=X2-c-e,dp=0.42,tr=`FU-70 · Bath rack, 2 shelves, matte black · ${r.note}`;
   for(const z of [3.7,4.75]){box(rx2-dp,rx2,r.y1,r.y2,z,z+0.04,MAT.blackMetal,{tip:tr});box(rx2-dp,rx2-dp+0.03,r.y1,r.y2,z+0.04,z+0.2,MAT.blackMetal,{cast:false,tip:tr})}
   for(const y of [r.y1,r.y2-0.03]) box(rx2-dp,rx2,y,y+0.03,3.7,4.95,MAT.blackMetal,{tip:tr});
   cyl(rx2-0.2,r.y1+0.2,4.79,5.35,0.1,std({color:'#efe7da',roughness:0.35}),{tip:'Shampoo',rTop:0.08});cyl(rx2-0.2,r.y2-0.22,4.79,5.25,0.1,std({color:'#6f5a46',roughness:0.35}),{tip:'Body wash',rTop:0.08});
   box(rx2-0.32,rx2-0.08,r.y1+0.12,r.y1+0.5,3.74,3.79,MAT.oak,{tip:'Soap dish, wood'});}
- // wall-hung basin FU-27 on GW-14 in the corner by the door, mirror above
- const b=fuG['FU-27'],bxc=(b.x1+b.x2)/2;box(b.x1+0.05,b.x2-0.05,Y1+c+e,b.y2-0.05,2.3,2.68,MAT.ceramic,{round:0.1,tip:`FU-27 · Wash basin, wall-hung · ${b.note}`});
- cyl(bxc,(Y1+b.y2)/2+0.05,2.6,2.685,0.42,std({color:'#e4e6e7',roughness:0.15}),{tip:'Basin bowl'});
- box(bxc-0.04,bxc+0.04,Y1+c,Y1+c+0.45,3.0,3.07,MAT.blackMetal,{tip:'Basin tap, wall-mounted, matte black'});
- box(b.x1+0.1,b.x2-0.1,Y1+c+e,Y1+c+0.04,3.5,5.7,MAT.mirror,{cast:false,tip:'Mirror with warm LED backlight'});ledStrips.push(box(b.x1+0.05,b.x2-0.05,Y1+c+e,Y1+c+0.03,3.45,3.5,MAT.led,{cast:false,tip:'Mirror backlight'}));
- const ml=new THREE.PointLight('#ffd7a3',0,m(6),2);ml.position.set(mx(bxc),m(4.8),m(Y1+1.0));scene.add(ml);towerLights.push(ml);
- box(X1+c+0.08,X1+c+0.11,69.35,70.35,5.2,5.24,MAT.blackMetal,{tip:'Towel rail, matte black, on GW-18'});box(X1+c+0.04,X1+c+0.16,69.45,70.25,3.9,5.25,std({color:'#e9e1d3',roughness:1,normalMap:T.linen.normalMap}),{round:0.05,tip:'Towel, oatmeal'});
- downlight(9.25,69.4,CEIL,'LED ceiling light, toilet (warm white)');}
+ // wall-hung basin FU-27 on GW-16 just south of the door, mirror above
+ const b=fuG['FU-27'],byc=(b.y1+b.y2)/2,W=X2-c-e;box(b.x1+0.05,W,b.y1+0.05,b.y2-0.05,2.3,2.68,MAT.ceramic,{round:0.1,tip:`FU-27 · Wash basin, wall-hung · ${b.note}`});
+ cyl((b.x1+W)/2-0.05,byc,2.6,2.685,0.42,std({color:'#e4e6e7',roughness:0.15}),{tip:'Basin bowl'});
+ box(W-0.45,W,byc-0.04,byc+0.04,3.0,3.07,MAT.blackMetal,{tip:'Basin tap, wall-mounted, matte black'});
+ box(W-0.04,W,b.y1+0.1,b.y2-0.1,3.5,5.7,MAT.mirror,{cast:false,tip:'Mirror with warm LED backlight'});ledStrips.push(box(W-0.03,W,b.y1+0.05,b.y2-0.05,3.45,3.5,MAT.led,{cast:false,tip:'Mirror backlight'}));
+ const ml=new THREE.PointLight('#ffd7a3',0,m(6),2);ml.position.set(mx(X2-1.0),m(4.8),m(byc));scene.add(ml);towerLights.push(ml);
+ box(X1+c+0.08,X1+c+0.11,68.4,69.4,5.2,5.24,MAT.blackMetal,{tip:'Towel rail, matte black, on GW-18'});box(X1+c+0.04,X1+c+0.16,68.5,69.3,3.9,5.25,std({color:'#e9e1d3',roughness:1,normalMap:T.linen.normalMap}),{round:0.05,tip:'Towel, oatmeal'});
+ downlight(9.25,69.9,CEIL,'LED ceiling light, toilet (warm white)');}
 
 // ================= BEDROOM 2 (G-12): same Japandi warm-oak design as bedroom 1 =================
 {const X1=10.25,X2=20.25,Y1=80.625,Y2=94.375;
@@ -1071,7 +1071,7 @@ function applyOption(i){const o=OPTIONS[i];curOpt=i;
   <li><b>Windows:</b> AC FU-46 centred above W-07, blowing across the bed; W-07 curtains on a wall track below it; W-08 curtains from the band. Back door D-10: white UPVC with a glass upper half.</li>
   </ul><h2>Toilet 2 (G-11)</h2><ul>
   <li>Same tiles as toilet 1: greige walls to 7' (shower walls too), anti-skid floor.</li>
-  <li><b>Layout (bore-v1):</b> 5' x 6'4½", 1'3" further north since the kitchen is now 7'3" deep. Indian WC FU-26 on a 4" tiled platform against the bore-court wall GW-18 with V-02 above, user faces west; bucket, bib tap and health faucet FU-57 in front; wall-hung basin FU-27 with backlit mirror on GW-14 by the door; open shower FU-28 across the south end (5' x 2'6") with geyser FU-58 and the bath rack FU-70 on GW-16.</li>
+  <li><b>Layout:</b> 5' x 6'4½". Door D-04 opens inward, hinged at its north end. Open shower FU-28 across the north end (5' x 2'10½") with rose, geyser FU-58 on GW-14 and bath rack FU-70 on GW-16. Indian WC FU-26 on a 3'6" x 2'6" tiled platform FU-26.1 (4" high) in the south-east corner, user faces west, V-02 above; bucket, bib tap and health faucet FU-57 on GW-06. Wall-hung basin FU-27 with backlit mirror on GW-16 just south of the door.</li>
   </ul><h2>Toilet 1 (G-07)</h2><ul>
   <li><b>Tiles:</b> greige matte porcelain 2' x 1' to 7' high, shower walls included; matte anti-skid 1' x 1' floor. Paint above 7'.</li>
   <li><b>Fittings:</b> wall-hung WC FU-12 on a tiled concealed-cistern ledge, floating oak-look vanity FU-13 with a vessel basin and backlit mirror, open shower FU-14 (no screen) with a rain shower and a small square floor trap, black two-shelf bath rack FU-63 beside the basin, 15 L geyser above. All fittings matte black. WPC door D-03.</li>
@@ -1112,7 +1112,7 @@ const VIEWS=[
  {p:[12.6,EYE,81.5],t:[20.0,3.4,88.5]},   // bedroom 2 from the door: bed, headboard, side tables
  {p:[11.2,EYE,93.4],t:[20.25,3.6,85.5]},  // bedroom 2 from the back door: bed and wardrobe
  {p:[17.6,EYE,86.6],t:[10.25,5.6,87.0]},  // bedroom 2 window W-07 with the AC above it
- {p:[13.0,5.6,69.0],t:[6.9,2.2,69.3]},    // toilet 2 from the stair hall, through D-04
+ {p:[12.2,5.5,68.3],t:[7.2,1.2,72.0]},    // toilet 2 from the stair hall, through D-04: WC platform, basin, bucket
  {p:[15.2,34,87.5],t:[15.2,0,87.51],top:true},   // top of bedroom 2
  {p:[10.5,4.4,-18.0],t:[11.5,11.0,20.0]},  // from the road: gates, pillars, planter, front of the house
  {p:[4.6,4.2,2.6],t:[14.0,5.0,30.75]},    // inside the gate: parking, pillars, porch steps, front wall

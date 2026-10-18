@@ -95,7 +95,7 @@ OPENINGS = [
  ('D-03','G','GW-11', 14.5,17.0,'door','a','-', 7.0,0,'Toilet 1 door, from bedroom 1'),
  ('O-01','G','GW-13', 13.75,17.75,'arch',None,None, 7.0,0,'Arch from living room to open area, 4\' wide; ends at the FU-25 cupboard face'),
  ('W-12','G','GW-13', 5.5,11.5,'fold',None,None, 4.0,3.0,'Folding glass window, kitchen to living. Opens left and right; curtain on the living side'),
- ('D-04','G','GW-16', 67.75,70.25,'door','b','-', 7.0,0,'Toilet 2 door, from stair hall, opens inward toward the shower side'),
+ ('D-04','G','GW-16', 67.75,70.25,'door','a','-', 7.0,0,'Toilet 2 door, from stair hall, opens inward; hinged at its north end, so the leaf folds back over the shower area, clear of the basin'),
  ('D-05','G','GW-07', 74.25,77.25,'door','b','-', 7.0,0,'Garden door, stair hall to side garden; opens out, hinged at its south end, 1\'5" north of bore BR-01'),
  ('D-06','G','GW-15', 10.5,13.5,'door','a','+', 7.0,0,'Bedroom 2 door, from stair hall'),
  ('W-01','G','GW-04', 9.75,13.25,'window',None,None, 4.0,3.0,'Study window to parking'),
@@ -105,7 +105,7 @@ OPENINGS = [
  ('W-04','G','GW-01', 48.0,52.0,'window',None,None, 4.0,3.0,'Living room window 1'),
  ('W-05','G','GW-01', 53.75,57.75,'window',None,None, 4.0,3.0,'Living room window 2'),
  ('W-06','G','GW-01', 61.0,65.0,'window',None,None, 2.0,3.25,'Kitchen window over the hob, 4\' x 2\', sill 3\'3", head 5\'3", so the chimney hood sits at the standard 2\'6" above the counter'),
- ('V-02','G','GW-18', 66.9,68.9,'vent',None,None, 1.5,6.0,'Toilet 2 ventilator over the pan, opens onto the bore court'),
+ ('V-02','G','GW-18', 70.375,72.375,'vent',None,None, 1.5,6.0,'Toilet 2 ventilator over the WC platform, opens onto the bore court'),
  ('W-07','G','GW-07', 85.0,89.0,'window',None,None, 4.0,3.0,'Bedroom 2 side window to side garden'),
  ('W-08','G','GW-08', 14.75,19.25,'window',None,None, 4.0,3.0,'Bedroom 2 back window to back garden'),
  ('D-10','G','GW-08', 10.75,13.5,'door','a','-', 7.0,0,'Bedroom 2 back door to back garden'),
@@ -122,7 +122,14 @@ OPENINGS = [
 # ---------- building outlines (outer wall faces) for built-up area ----------
 GF_OUTLINE=[(8.5,30.75),(21,30.75),(21,95.125),(9.5,95.125),(9.5,73.875),(6.0,73.875),(6.0,67.125),(2.75,67.125),(2.75,40.5),(8.5,40.5)]
 FF_OUTLINE=R(9.5,21.0,73.125,97.375)
-BRANCH_NOTES='''<section class="ask"><h2>Spiral stair ST-2 (branch spiral-v1, for review)</h2>
+BRANCH_NOTES='''<section class="ask"><h2>Toilet 2 re-planned (branch spiral-v1, for review)</h2>
+<ol>
+<li><b>Door D-04</b> now opens inward, hinged at its north end; the leaf folds back over the shower area.</li>
+<li><b>Shower FU-28</b> moves to the north end (5' x 2'10½"), rose and geyser FU-58 on GW-14, bath rack FU-70 on GW-16 north of the door.</li>
+<li><b>Indian WC FU-26</b> sits on a bigger 4" platform FU-26.1, 3'6" x 2'6", in the south-east corner; user faces west; V-02 moved over it; bucket and bib tap FU-57 on GW-06 on the left hand.</li>
+<li><b>Basin FU-27</b> on GW-16 just south of the door, clear of the swing, mirror above.</li>
+</ol></section>
+<section class="ask"><h2>Spiral stair ST-2 (branch spiral-v1, for review)</h2>
 <ol>
 <li><b>Size:</b> 5'10" across, in the stair hall against GW-05, centre 17' from east and 76'10½" from the road. Clear walking width about 2'7" (31"), 4½" steel centre pole.</li>
 <li><b>Steps:</b> 18 risers of 7⅔" (195 mm) for the 11'6" floor height, 17 oak treads of 30° (12 per full turn) plus a 60° landing. Tread depth is 7½" at the inner walk line and 12" where you normally walk; outer edge 18".</li>
@@ -227,12 +234,13 @@ FURNITURE = [
  ('FU-19.2','G','Overhead shelves, east',3.5,4.75,65.0,66.375,'over',None,'Kitchen, corner unit above the east counter beside the window (dashed)'),
  ('FU-19.3','G','Overhead shelves, east',3.5,4.75,59.125,61.0,'over',None,'Kitchen, above the east counter beside the window, glass door (dashed)'),
  ('FU-25','G','Store cupboard, full height',17.75,20.25,61.375,71.375,'store2',None,'Open area and stair hall, 10\' x 2\'6", floor to ceiling on GW-05, south of the fridge; its face lines up with the fridge and the GW-13 end stub'),
- ('FU-26','G','Indian WC (Orissa pan)',6.85,8.77,67.1,68.56,'iwc',None,'Toilet 2, against the east wall GW-18 in the north part, user faces west, on a 4" tiled platform, V-02 above'),
- ('FU-57','G','Bucket, tap and health faucet',9.1,10.0,66.9,67.8,'bucket',None,'Toilet 2, west of the pan (in front of the user), bib tap on GW-14; health faucet on GW-18 beside the pan'),
- ('FU-27','G','Wash basin, wall-hung',10.2,11.6,66.75,67.9,'basin',None,'Toilet 2, 1\'5" x 1\'2" on GW-14 in the corner by the door; mirror above; rim 2\'8"'),
- ('FU-28','G','Shower area',6.75,11.75,70.625,73.125,'shower',None,'Toilet 2, 5\' x 2\'6" across the whole south end, open (no screen); rose on GW-06 at 6\'9"; floor trap in the middle; floor slopes 1:60'),
- ('FU-58','G','Geyser',7.0,8.4,72.65,73.125,'geyser',None,'Toilet 2, on GW-06 above the shower, clear of the rose, bottom at about 6\'3"'),
- ('FU-70','G','Bath rack, 2 shelves',11.3,11.75,70.65,71.5,'over',None,'Toilet 2, wall-mounted on GW-16 in the shower, south of the door, for soap and shampoo'),
+ ('FU-26.1','G','WC platform, 4" high',6.75,9.25,69.625,73.125,'plat',None,'Toilet 2, 3\'6" x 2\'6" tiled platform in the south-east corner (GW-18 and GW-06), room to squat comfortably'),
+ ('FU-26','G','Indian WC (Orissa pan)',6.95,8.87,70.645,72.105,'iwc',None,'Toilet 2, centred on the 4" platform FU-26.1 against the east wall GW-18, user faces west, V-02 above; health faucet on GW-06 on the left hand'),
+ ('FU-57','G','Bucket, tap and health faucet',9.4,10.3,72.15,73.05,'bucket',None,'Toilet 2, in front of the platform on the user\'s left, bib tap on GW-06; health faucet on GW-06 beside the pan'),
+ ('FU-27','G','Wash basin, wall-hung',10.6,11.75,70.75,72.15,'basin',None,'Toilet 2, 1\'5" x 1\'2" on GW-16 just south of the door (clear of its swing); mirror above; rim 2\'8"'),
+ ('FU-28','G','Shower area',6.75,11.75,66.75,69.625,'shower',None,'Toilet 2, 5\' x 2\'10½" across the whole north end, open (no screen); rose on GW-14 at 6\'9"; floor trap in the middle; floor slopes 1:60; the door folds back over it'),
+ ('FU-58','G','Geyser',7.0,8.4,66.75,67.225,'geyser',None,'Toilet 2, on GW-14 above the shower, clear of the rose, bottom at about 6\'3"'),
+ ('FU-70','G','Bath rack, 2 shelves',11.33,11.75,66.85,67.7,'over',None,'Toilet 2, wall-mounted on GW-16 in the shower, north of the door, for soap and shampoo'),
  ('FU-29','G','Washing machine',3.25,5.25,74.25,76.25,'wm',None,'Side garden utility, covered by the terrace corner, south of the bore court'),
  ('FU-30','G','Wash basin with tap',5.5,7.0,74.25,75.5,'basin',None,'Side garden, under the terrace corner, near garden door D-05'),
  ('FU-31','G','Queen bed',13.75,20.25,85.0,90.0,'bed','x2','Bedroom 2, head to GW-05'),
