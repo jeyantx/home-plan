@@ -49,11 +49,12 @@ canvas{display:block;width:100%;height:100%}
  <div class="row">
   <h1 title="↑↓ walk · ←→ turn · A/D slide · W/S tilt · Q/E lower/raise · Shift faster · Drag to look around · Scroll to walk · Right-drag to slide · Hover for names">Home 3D</h1>
   <div class="seg" id="lightSeg"><button data-l="day">Day</button><button data-l="eve">Evening</button></div>
-  <div class="seg" id="floorSeg" title="Show one floor from above"><button data-fl="all">All</button><button data-fl="G">Ground</button><button data-fl="F">First</button></div>
-  <select id="areaSel" title="Choose an area, then a view"><option value="0">Living</option><option value="1">Bedroom 1</option><option value="2">Kitchen</option><option value="3">Bedroom 2</option><option value="4">Outside</option><option value="5">Stairs</option></select>
+  <div class="seg" id="floorSeg" title="Go to a floor at eye level"><button data-fl="G">Ground</button><button data-fl="F">First</button></div>
+  <select id="areaSel" title="Choose an area, then a view"><option value="0">Living</option><option value="1">Bedroom 1</option><option value="2">Kitchen</option><option value="3">Bedroom 2</option><option value="4">Outside</option><option value="5">Stairs</option><option value="6">First floor</option></select>
   
 <div class="seg cams" data-area="0"><button data-c="0">Entry</button><button data-c="1">Corner</button><button data-c="2">From sofa</button><button data-c="3">From TV</button><button data-c="4">From kitchen</button><button data-c="5">Top</button></div>  <div class="seg cams" data-area="1"><button data-c="6">Door</button><button data-c="7">Window</button><button data-c="8">Study</button><button data-c="9">Toilet</button><button data-c="10">Top</button></div>  <div class="seg cams" data-area="2"><button data-c="11">Kitchen</button><button data-c="12">Sink</button><button data-c="13">Hob</button><button data-c="14">Fridge</button><button data-c="15">Top</button></div>  <div class="seg cams" data-area="3"><button data-c="16">Door</button><button data-c="17">Bed</button><button data-c="18">Window</button><button data-c="19">Toilet 2</button><button data-c="20">Top</button></div>  <div class="seg cams" data-area="4"><button data-c="21">Gate</button><button data-c="22">Parking</button><button data-c="23">Terrace</button><button data-c="24">Aerial</button><button data-c="25">Side</button><button data-c="26">Stair</button></div>
   <div class="seg cams" data-area="5"><button data-c="27">Spiral</button><button data-c="28">Landing</button><button data-c="29">Well</button><button data-c="26">ST-1</button></div>
+  <div class="seg cams" data-area="6"><button data-c="28">Landing</button><button data-c="30">Bedroom 3</button><button data-c="23">Terrace</button><button data-c="31">Top</button></div>
   <span class="spacer"></span>
   <button class="btn" id="photoBtn" aria-pressed="false" title="Ray-traced photo of the current view. Uses the graphics card heavily for about a minute, then stops by itself.">Photo</button>
   <button class="btn" id="saveBtn" title="Save the current image as PNG">Save</button>
@@ -1116,29 +1117,29 @@ const VIEWS=[
  {p:[15.2,34,87.5],t:[15.2,0,87.51],top:true},   // top of bedroom 2
  {p:[10.5,4.4,-18.0],t:[11.5,11.0,20.0]},  // from the road: gates, pillars, planter, front of the house
  {p:[4.6,4.2,2.6],t:[14.0,5.0,30.75]},    // inside the gate: parking, pillars, porch steps, front wall
- {p:[5.2,FFZ+5.25,22.6],t:[15.5,FFZ+3.5,72.0]},   // terrace, looking at the bedroom 3 block
+ {p:[5.2,FFZ+5.25,22.6],t:[15.5,FFZ+3.5,72.0],fl:'F'},   // terrace, looking at the bedroom 3 block
  {p:[-26.0,52.0,-22.0],t:[11.0,6.0,46.0]},       // aerial from the north-east
  {p:[1.55,4.2,29.0],t:[1.55,4.3,72.0]},   // side passage
  {p:[7.0,5.5,27.0],t:[18.5,5.5,10.0]},    // staircase ST-1 from the parking
  {p:[16.2,EYE,68.6],t:[17.6,4.6,77.0]},   // ST-2 from the open area: the first tread faces you
- {p:[11.0,FFZ+EYE,79.3],t:[17.5,FFZ+2.6,76.2]},   // first-floor landing F-04, arriving off ST-2
- {p:[14.6,FFZ+5.6,77.4],t:[17.4,1.0,76.6]},       // looking down the ST-2 well
+ {p:[11.0,FFZ+EYE,79.3],t:[17.5,FFZ+2.6,76.2],fl:'F'},   // first-floor landing F-04, arriving off ST-2
+ {p:[14.6,FFZ+5.6,77.4],t:[17.4,1.0,76.6],fl:'F'},       // looking down the ST-2 well
+ {p:[11.4,FFZ+EYE,85.6],t:[19.5,FFZ+3.6,95.0],fl:'F'},   // bedroom 3 from its lobby
+ {p:[15.2,FFZ+30,85.0],t:[15.2,FFZ,85.01],top:true,fl:'F'},   // top of the first floor (its roof and ceilings hidden)
 ];
-const FLOORVIEW={G:{p:[11,80,34],t:[11,0,64]},F:{p:[12,FFZ+58,52],t:[13,FFZ,78]},all:{p:[-26.0,52.0,-22.0],t:[11.0,6.0,46.0]}};
 let hfov=75;
 function applyFov(){const a=camera.aspect||1;camera.fov=THREE.MathUtils.radToDeg(2*Math.atan(Math.tan(THREE.MathUtils.degToRad(hfov)/2)/a));camera.updateProjectionMatrix()}
-let floorMode='all',viewTop=false;
-function applyVis(){const hideUp=floorMode==='G'||viewTop;   // ground: drop the ground-floor ceilings and everything above; first: drop its ceilings and roof
-  ceilingMeshes.forEach(c=>c.visible=!hideUp);ROOF_F.forEach(c=>c.visible=!(hideUp||floorMode==='F'));
-  document.querySelectorAll('#floorSeg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.fl===floorMode));
+// top views cut the house open: a ground-floor top hides everything above the ground-floor ceiling, a first-floor top hides only its own ceilings and roof
+function applyVis(v){const cutG=v.top&&v.fl!=='F',cutF=v.top&&v.fl==='F';
+  ceilingMeshes.forEach(c=>c.visible=!cutG);ROOF_F.forEach(c=>c.visible=!(cutG||cutF));
+  document.querySelectorAll('#floorSeg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.fl===(v.fl||'G')));
   renderer.shadowMap.needsUpdate=true;if(photo&&pt)pt.setScene(scene,camera);invalidate()}
-function setFloor(f){floorMode=f;viewTop=false;applyVis();aimAt(FLOORVIEW[f]);document.querySelectorAll('.cams button').forEach(b=>b.setAttribute('aria-pressed',false))}
-function aimAt(v){camera.position.set(mx(v.p[0]),m(v.p[1]),m(v.p[2]));
-  const d=new THREE.Vector3(mx(v.t[0]),m(v.t[1]),m(v.t[2])).sub(camera.position);yaw=Math.atan2(-d.x,-d.z);pitch=Math.atan2(d.y,Math.hypot(d.x,d.z));applyLook();invalidate()}
-function setView(i){const v=VIEWS[i];floorMode='all';viewTop=!!v.top;applyVis();camera.position.set(mx(v.p[0]),m(v.p[1]),m(v.p[2]));
+function setFloor(f){areaSel.value=f==='F'?'6':'0';setView(f==='F'?28:0)}   // go to that floor at eye level: the entry, or the first-floor landing
+function setView(i){const v=VIEWS[i];applyVis(v);camera.position.set(mx(v.p[0]),m(v.p[1]),m(v.p[2]));
   const d=new THREE.Vector3(mx(v.t[0]),m(v.t[1]),m(v.t[2])).sub(camera.position);yaw=Math.atan2(-d.x,-d.z);pitch=Math.atan2(d.y,Math.hypot(d.x,d.z));applyLook();
   document.querySelectorAll('.cams button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.c===i));
-  const ar=document.querySelector(`.cams button[data-c="${i}"]`)?.parentElement.dataset.area;if(ar!=null)showArea(ar);invalidate()}
+  const cur=document.querySelector(`.cams[data-area="${areaSel.value}"] button[data-c="${i}"]`);   // stay in the chosen area if it has this view
+  const ar=(cur||document.querySelector(`.cams button[data-c="${i}"]`))?.parentElement.dataset.area;if(ar!=null)showArea(ar);invalidate()}
 function showArea(a){areaSel.value=a;document.querySelectorAll('.cams').forEach(g=>g.classList.toggle('off',g.dataset.area!==String(a)))}
 function applyLook(){pitch=Math.max(-1.55,Math.min(1.55,pitch));camera.rotation.set(pitch,yaw,0)}
 function setLens(f){hfov=f;applyFov();document.querySelectorAll('#lensSeg button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.f===f));try{localStorage.setItem('lr3d-lens',f)}catch(e){};invalidate()}
