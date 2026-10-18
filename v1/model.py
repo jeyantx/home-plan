@@ -207,6 +207,8 @@ FURNITURE = [
  ('FU-43','F','Shower area',18.0,20.25,80.25,84.5,'shower',None,'Toilet 3, 2\'3" x 4\'3" across the west end (was 1\'9" x 2\'3"); floor trap in the middle'),
  ('FU-60','F','Geyser',19.8,20.25,81.5,82.9,'geyser',None,'Toilet 3, on FW-03 above the shower, bottom at about 6\'3"'),
  ('FU-61','F','Shower curtain rod',17.95,18.05,80.25,84.5,'curtain',None,'Toilet 3, keeps the WC side dry'),
+ ('FU-71','F','Overhead water tank, 2000 L',15.2,20.2,91.4,96.4,'over',None,'On the bedroom 3 roof (above F-05), 5\' across x 5\' high on a 1\' RCC stand near FW-03; highest point for good pressure, clear of the future hall'),
+ ('FU-72','F','Cat ladder to the bedroom 3 roof',18.0,19.5,72.6,73.125,'over',None,'MS ladder on the terrace face of FW-02, for reaching the water tank'),
  ('FU-62','F','Exhaust fan, ducted to roof',18.6,19.6,82.9,83.9,'fan',None,'Toilet 3 has no outside wall: ceiling exhaust fan with a duct up through the roof slab'),
  ('FU-44','G','AC indoor unit',9.25,9.92,37.25,40.25,'acin',None,'Bedroom 1, on GW-03 above window W-02, about 7\'6" high'),
  ('FU-45','G','AC outdoor unit',9.0,11.67,29.58,30.75,'acout',None,'Bedroom 1, on GW-04 parking face, bracket above window W-01 (about 7\'6"); pipe runs inside the study corner'),
