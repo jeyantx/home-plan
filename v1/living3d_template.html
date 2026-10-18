@@ -327,7 +327,7 @@ for(const [q,t] of floorPatches) slab(q,MAT.floor,0,t);
  for(const [a,b] of [[LX1+d,13.75],[17.75,18.9]]) box(a,b,LY2-d,LY2,0,hS,MAT.skirt,{tip:'Tile skirting, 4"'});}
 for(const [a,b,c,d,z] of [[-30,0,0,130,NBZ],[21,60,0,130,NBZ],[0,21,106,130,NBZ],[-30,60,-80,-22,RDZ+0.4]]) box(a,b,c,d,z-0.05,z,MAT.grass,{cast:false});   // neighbours' ground (assumed 1' above the road), and beyond the road
 // our plot, filled up: gardens, side passage and back yard at GRD (2'6" above the road); the drive in front is built further down
-prism([[0.375,30.75],[20.625,30.75],[20.625,104.65],[1.375,105.6],[1.375,89.375],[0.375,89.375]],NBZ-0.05,GRD,MAT.grass,null);
+prism([[0.375,30.8],[2.75,30.8],[2.75,33.3],[20.625,33.3],[20.625,104.65],[1.375,105.6],[1.375,89.375],[0.375,89.375]],NBZ-0.05,GRD-0.004,MAT.grass,null);   // starts behind the porch steps, the plinth and the side-passage step, so no faces overlap
 box(0.375,2.75,30.75,75.125,-1.0,-0.97,MAT.paving,{cast:false,tip:'G-13 Side passage'});
 box(2.75,6.0,67.125,73.875,-1.0,-0.97,MAT.paving,{cast:false,tip:'G-16 Bore court · covered by the terrace slab, open to the side passage'});
 // neighbours, from the site photos: east = 2-storey house (pale green ground floor, lavender upper floor); west = blue apartment with a peach ground floor;
