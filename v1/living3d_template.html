@@ -879,20 +879,26 @@ const GD={'GD-1':'horizontal wood-look slats with 1" gaps','GD-2':'black vertica
 const gateMeshes=[];
 {const gy1=0.3,gy2=0.45,z1=GRD+0.15,z2=GRD+6.0,fr=0.17;
  const gb=(x1,x2,y1,y2,za,zb)=>new THREE.BoxGeometry(m(x2-x1),m(zb-za),m(y2-y1)).translate(mx((x1+x2)/2),m((za+zb)/2),m((y1+y2)/2));
- const leaves=[];for(const o of P.openings.filter(o=>o.type==='gate')){const mid=(o.a+o.b)/2;leaves.push([o.a+0.05,mid-0.03,o.id],[mid+0.03,o.b-0.05,o.id])}
- const designs={};
- for(const k in GD){const blk=[],wd=[];
-  for(const [a,b] of leaves){blk.push(gb(a,b,gy1,gy2,z1,z1+fr),gb(a,b,gy1,gy2,z2-fr,z2),gb(a,a+fr,gy1,gy2,z1+fr,z2-fr),gb(b-fr,b,gy1,gy2,z1+fr,z2-fr));
+ // four leaves; one leaf of each gate shown open inward: GT-01 east leaf (hinge on the east pillar), GT-02 west leaf (hinge on the west pillar, clear of the tree)
+ const leaves=[];for(const o of P.openings.filter(o=>o.type==='gate')){const mid=(o.a+o.b)/2,big=o.id==='GT-01';
+   leaves.push({a:o.a+0.05,b:mid-0.03,id:o.id,hinge:'a',open:big?1.45:0},{a:mid+0.03,b:o.b-0.05,id:o.id,hinge:'b',open:big?0:1.45})}
+ const gyc=(gy1+gy2)/2;
+ for(const L of leaves){const {a,b}=L,designs={};
+  for(const k in GD){const blk=[],wd=[];
+   blk.push(gb(a,b,gy1,gy2,z1,z1+fr),gb(a,b,gy1,gy2,z2-fr,z2),gb(a,a+fr,gy1,gy2,z1+fr,z2-fr),gb(b-fr,b,gy1,gy2,z1+fr,z2-fr));
    const ia=a+fr,ib=b-fr,iz1=z1+fr,iz2=z2-fr,yc1=gy1+0.04,yc2=gy2-0.04;
    if(k==='GD-1'){for(let z=iz1+0.02;z<iz2-0.1;z+=0.42) wd.push(gb(ia,ib,yc1,yc2,z,Math.min(z+0.34,iz2)))}
    if(k==='GD-2'){for(let x=ia+0.12;x<ib-0.05;x+=0.36) blk.push(gb(x,x+0.08,yc1,yc2,iz1,iz2));wd.push(gb(ia,ib,yc1-0.01,yc2+0.01,iz2-1.6,iz2-0.6));blk.push(gb(ia,ib,yc1,yc2,iz1,iz1+0.9))}
-   if(k==='GD-3'){const w=ib-ia,s=[0.25,0.5,0.75].map(f=>ia+w*f);let x=ia;for(const sx of s){wd.push(gb(x,sx-0.04,yc1,yc2,iz1,iz2));x=sx+0.04}wd.push(gb(x,ib,yc1,yc2,iz1,iz2));
-     for(const sx of s){wd.push(gb(sx-0.04,sx+0.04,yc1,yc2,iz1,iz1+0.5));wd.push(gb(sx-0.04,sx+0.04,yc1,yc2,iz2-0.5,iz2))}}}
-  designs[k]=[mergeGeometries(blk),mergeGeometries(wd)]}
- for(const [i,mt] of [[0,MAT.blackMetal],[1,MAT.extWood]]){const me=new THREE.Mesh(designs['GD-1'][i],mt);me.castShadow=true;me.receiveShadow=true;me.userData.keepUV=false;me.userData.designs=Object.fromEntries(Object.keys(GD).map(k=>[k,designs[k][i]]));
-   scene.add(me);named(me,'');gateMeshes.push(me);wallMeshes.push(me)}
- for(const k in designs) for(const g of designs[k]) metreUV(g);}
-function setGate(k){if(!GD[k])k='GD-1';for(const me of gateMeshes){me.geometry=me.userData.designs[k];me.userData.tip=`Gates GT-01 and GT-02 · ${k} · MS frame, black powder-coat · ${GD[k]}`}
+   if(k==='GD-3'){const w=ib-ia,sl=[0.25,0.5,0.75].map(f=>ia+w*f);let x=ia;for(const sx of sl){wd.push(gb(x,sx-0.04,yc1,yc2,iz1,iz2));x=sx+0.04}wd.push(gb(x,ib,yc1,yc2,iz1,iz2));
+     for(const sx of sl){wd.push(gb(sx-0.04,sx+0.04,yc1,yc2,iz1,iz1+0.5));wd.push(gb(sx-0.04,sx+0.04,yc1,yc2,iz2-0.5,iz2))}}
+   designs[k]=[mergeGeometries(blk),mergeGeometries(wd)]}
+  // texture in world feet, then move the geometry so the hinge is the origin, and hang it on a pivot
+  const hx=L.hinge==='a'?a:b;
+  for(const k in designs) for(const g of designs[k]){metreUV(g);g.translate(-mx(hx),0,-m(gyc))}
+  const piv=new THREE.Group();piv.position.set(mx(hx),0,m(gyc));piv.rotation.y=(L.hinge==='a'?1:-1)*L.open;scene.add(piv);
+  for(const [i,mt] of [[0,MAT.blackMetal],[1,MAT.extWood]]){const me=new THREE.Mesh(designs['GD-1'][i],mt);me.castShadow=true;me.receiveShadow=true;me.userData.keepUV=true;
+    me.userData.designs=Object.fromEntries(Object.keys(GD).map(k=>[k,designs[k][i]]));me.userData.gate=L.id+(L.open?' (open)':'');piv.add(me);named(me,'');gateMeshes.push(me);wallMeshes.push(me)}}}
+function setGate(k){if(!GD[k])k='GD-1';for(const me of gateMeshes){me.geometry=me.userData.designs[k];me.userData.tip=`Gate ${me.userData.gate} · ${k} · MS frame, black powder-coat · ${GD[k]}`}
   document.querySelectorAll('#gateSeg button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.g===k));try{localStorage.setItem('lr3d-gate',k)}catch(e){};renderer.shadowMap.needsUpdate=true;if(photo&&pt)pt.setScene(scene,camera);invalidate()}
 function setExt(k){if(!EXT[k])k='EX-1';const o=EXT[k];MAT.ext.color.set(o.wall);MAT.extTrim.color.set(o.trim);
   if(o.louver==='wood'){MAT.extWood.map=T.oakPanel.map;MAT.extWood.color.set('#c99a6a')}else{MAT.extWood.map=null;MAT.extWood.color.set('#3c3d3e')}MAT.extWood.needsUpdate=true;
