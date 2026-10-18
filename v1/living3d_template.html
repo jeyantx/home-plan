@@ -1206,7 +1206,9 @@ function rightVec(){return new THREE.Vector3(Math.cos(yaw),0,-Math.sin(yaw))}
 function tryMove(step){const len=step.length();if(!len)return;const dir=step.clone().normalize();
   for(const h of [0.35,camera.position.y]){colRay.set(new THREE.Vector3(camera.position.x,h,camera.position.z),dir);colRay.far=len+0.3;if(colRay.intersectObjects(wallMeshes,false).length)return}
   camera.position.add(step)}
-function moveVertical(dz){camera.position.y=Math.max(0.4,Math.min(m(CEIL)-0.15,camera.position.y+dz))}
+function moveVertical(dz){const y=camera.position.y;   // stay within the floor you are on: ground floor, first floor, or free above the house
+  const [lo,hi]=y<=m(CEIL+0.5)?[0.4,m(CEIL)-0.15]:y<=m(FFZ+CEIL)?[m(FFZ)+0.4,m(FFZ+CEIL)-0.15]:[0.4,m(200)];
+  camera.position.y=Math.max(lo,Math.min(hi,y+dz))}
 let lastT=performance.now();
 function walk(){const now=performance.now(),dt=Math.min(0.05,(now-lastT)/1000);lastT=now;
   if(![...keys].some(k=>!k.startsWith('Shift')))return;
