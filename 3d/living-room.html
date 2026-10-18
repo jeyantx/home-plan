@@ -310,13 +310,13 @@ box(2.75,6.0,67.125,73.875,-1.0,-0.97,MAT.paving,{cast:false,tip:'G-16 Bore cour
    box(x1,x2,y1,y2,z,z+3,nb(floors[floors.length-1][1]),{tip});return z};
  // windows on the face that looks at our plot (east house: its west face; apartment: its east face) and on the road faces
  const winsX=(x,dir,y1,y2,zs)=>{for(const z of zs)for(let y=y1;y<y2-3;y+=9) box(dir>0?x:x-0.06,dir>0?x+0.06:x,y,y+3,z,z+3.5,win,{cast:false,tip:'Window'})};
- const winsY=(y,x1,x2,zs)=>{for(const z of zs)for(let x=x1+2;x<x2-4;x+=8) box(x,x+3.5,y-0.06,y,z,z+3.5,win,{cast:false,tip:'Window'})};
+ const winsY=(y,x1,x2,zs,dir=-1)=>{for(const z of zs)for(let x=x1+2;x<x2-4;x+=8) box(x,x+3.5,dir<0?y-0.06:y,dir<0?y:y+0.06,z,z+3.5,win,{cast:false,tip:'Window'})};   // dir: which side of the face is outside
  house(-24,-1.2,7,56,[[10.5,'#c7cfba'],[10,'#a597d4']],'Neighbour house (east) · 2 storeys');winsX(-1.2,1,10,54,[2.5,13]);winsY(7,-24,-1.2,[2.5,13]);
  house(-24,-1.2,58,92,[[10.5,'#d9d2c2']],'Neighbour house (east), back part');
  house(21.4,42,5,84,[[10.5,'#e7b08c'],[10,'#2f6fc4'],[10,'#2f6fc4']],'Apartment (west) · blue, peach ground floor');winsX(21.4,-1,8,82,[2.5,13,23]);winsY(5,21.4,42,[2.5,13,23]);
  house(21.4,42,86,108,[[10.5,'#e7b08c'],[10,'#2f6fc4']],'Apartment (west), back block');
  const across=[[-34,-14,'#d9a3a3'],[-13,3,'#efebe3'],[4,22,'#f3e6cf'],[23,40,'#efebe3'],[41,58,'#cfe0d3']];
- for(const [x1,x2,c] of across){const zt=house(x1,x2,-60,-22,[[10.5,c],[10,c]],'House across the road');winsY(-22,x1,x2,[2.5,13]);
+ for(const [x1,x2,c] of across){const zt=house(x1,x2,-60,-22,[[10.5,c],[10,c]],'House across the road');winsY(-22,x1,x2,[2.5,13],1);
    cyl((x1+x2)/2+3,-50,zt+3,zt+8,2.3,std({color:'#1f2124',roughness:0.6}),{tip:'Black water tank (across the road)'})}
  box(-40,70,-22,-17,G,G+0.4,MAT.paver,{cast:false,tip:'Footpath, across the road'});}
 
