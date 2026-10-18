@@ -121,6 +121,14 @@ def opening(o,W):
         for v in (v1,v2): p,q=P(a,v),P(b,v); line(p[0],p[1],q[0],q[1],'#777',0.03,extra='stroke-dasharray="0.2 0.12"')
     else:
         face=v2 if swing=='+' else v1; sg=1 if swing=='+' else -1
+        if typ=='double' and 'bi-fold' in note:   # folding gate: each leaf folds in two, sweeping only half a leaf
+            for hu,L,dirn in [(a,(b-a)/2,1),(b,(b-a)/2,-1)]:
+                p0,p1,p2=P(hu,face),P(hu+dirn*L/4,face+sg*L*0.48),P(hu+dirn*L/2,face)
+                E(f'<polyline points="{pts([p0,p1,p2])}" fill="none" stroke="#8a4b12" stroke-width="0.06"/>')
+                e=P(hu,face+sg*L/2); o2=P(hu+dirn*L/2,face); se,so,sh=S(*e),S(*o2),S(*p0)
+                cross=(se[0]-sh[0])*(so[1]-sh[1])-(se[1]-sh[1])*(so[0]-sh[0])
+                E(f'<path d="M{se[0]:.3f},{se[1]:.3f} A{L/2:.3f},{L/2:.3f} 0 0 {1 if cross>0 else 0} {so[0]:.3f},{so[1]:.3f}" fill="none" stroke="#8a4b12" stroke-width="0.035" stroke-dasharray="0.15 0.1"/>')
+            return
         leaves=[(a,b-a,1),(b,b-a,-1)] if typ=='door' else [(a,(b-a)/2,1),(b,(b-a)/2,-1)]
         if typ=='door': leaves=[leaves[0]] if hinge=='a' else [leaves[1]]
         for hu,L,dirn in leaves:

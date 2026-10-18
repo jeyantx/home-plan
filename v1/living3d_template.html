@@ -1003,8 +1003,12 @@ box(0.375,2.75,30.75,30.79,PKZ,GRD,MAT.extTrim,{tip:'Step up from the parking to
  // tree well: low retaining ring, brick with a granite coping; soil and leaf mulch at today's ground
  const ringTop=Math.max(zF(tp.y1),zF(tp.y2))+0.12,sh=new THREE.Shape();sh.absarc(mx(tx),-m(ty),m(tr),0,Math.PI*2,false);const hl=new THREE.Path();hl.absarc(mx(tx),-m(ty),m(tr-0.375),0,Math.PI*2,true);sh.holes.push(hl);
  const kg=new THREE.ExtrudeGeometry(sh,{depth:m(ringTop-RDZ),bevelEnabled:false,curveSegments:48});kg.rotateX(-Math.PI/2);
+ const ringZ=y=>Math.max(HUZ+0.04,zF(y)+0.1)-(RDZ-0.02);   // ring top 1" over the drive beside it (low by the gate, higher where the ramp rises)
+ {const pa=kg.attributes.position;for(let i=0;i<pa.count;i++)if(pa.getY(i)>m(0.2))pa.setY(i,m(ringZ(pa.getZ(i)/F)));pa.needsUpdate=true;kg.computeVertexNormals()}
  const kb=new THREE.Mesh(kg,MAT.extTrim);kb.position.y=m(RDZ-0.02);kb.castShadow=true;kb.receiveShadow=true;scene.add(kb);named(kb,`FU-76 · Tree well ring, 4½" brick, granite coping · holds back the raised drive · ${tp.note}`);wallMeshes.push(kb);
- const cg=new THREE.ExtrudeGeometry(sh,{depth:m(0.06),bevelEnabled:false,curveSegments:48});cg.rotateX(-Math.PI/2);const cp=new THREE.Mesh(cg,MAT.stepStone);cp.position.y=m(ringTop-0.02);scene.add(cp);named(cp,'FU-76 · Tree well coping, grey granite');
+ const cg=new THREE.ExtrudeGeometry(sh,{depth:m(0.06),bevelEnabled:false,curveSegments:48});cg.rotateX(-Math.PI/2);
+ {const pa=cg.attributes.position;for(let i=0;i<pa.count;i++){const top=pa.getY(i)>m(0.03);pa.setY(i,m(ringZ(pa.getZ(i)/F)+(RDZ-0.02)+(top?0.04:-0.02)))}pa.needsUpdate=true;cg.computeVertexNormals()}
+ const cp=new THREE.Mesh(cg,MAT.stepStone);scene.add(cp);named(cp,'FU-76 · Tree well coping, grey granite');
  const mulch=std({map:canvasTex(512,512,(g,w,h)=>{const r=rng(61);g.fillStyle='#5b3b25';g.fillRect(0,0,w,h);for(let i=0;i<5000;i++){const c=['#3f2818','#6e4a2e','#7d6a3e','#4a5a2a','#8a6a48'][Math.floor(r()*5)];g.fillStyle=c;g.globalAlpha=0.6;g.save();g.translate(r()*w,r()*h);g.rotate(r()*7);g.fillRect(-4,-1.5,8+r()*8,3);g.restore()}g.globalAlpha=1},0.6),roughness:1});
  cyl(tx,ty,RDZ-0.05,RDZ+0.04,tr-0.375,mulch,{tip:`FU-76 · Tree well · open soil with leaf mulch at today's ground · ${tp.note}`,seg:48}).castShadow=false;}
 box(-40,70,-17,-0.02,RDZ-0.02,RDZ+0.02,MAT.paver,{cast:false,tip:'Road (north), 17\' wide · grey interlocking pavers · our gate crest is 6" above it, the parking 2\'0", the gardens 2\'6"'});
@@ -1026,27 +1030,29 @@ for(const w of P.walls.G.filter(w=>w.kind==='pillar')){const PT=HUZ+w.h;const me
 // gates GT-01 and GT-02: black MS frame; three infill designs swap in place (geometry swap, so hover and walking stay right)
 const GD={'GD-1':'horizontal wood-look slats with 1" gaps','GD-2':'black vertical flat bars with a wood-look band near the top','GD-3':'solid wood-look panels with three thin vertical slots'};
 const gateMeshes=[];
-{const gy1=0.3,gy2=0.45,z1=zF(0.45)+0.15,z2=z1+5.85,fr=0.17;   // bottom 2" over the gate-line ground
+{const gy1=0.3,gy2=0.45,z1=HUZ+0.12,z2=z1+5.85,fr=0.15;   // bottom 1½" over the crest, so the folding leaves clear the drive
  const gb=(x1,x2,y1,y2,za,zb)=>new THREE.BoxGeometry(m(x2-x1),m(zb-za),m(y2-y1)).translate(mx((x1+x2)/2),m((za+zb)/2),m((y1+y2)/2));
- // four leaves; one leaf of each gate shown open inward: GT-01 east leaf (hinge on the east pillar), GT-02 west leaf (hinge on the west pillar, clear of the tree)
- const leaves=[];for(const o of P.openings.filter(o=>o.type==='gate')){const mid=(o.a+o.b)/2,big=o.id==='GT-01';
-   leaves.push({a:o.a+0.05,b:mid-0.03,id:o.id,hinge:'a',open:0},{a:mid+0.03,b:o.b-0.05,id:o.id,hinge:'b',open:0})}   // shown closed: on the raised drive both gates become inward bi-fold gates
- const gyc=(gy1+gy2)/2;
- for(const L of leaves){const {a,b}=L,designs={};
+ // GT-01 and GT-02 are inward bi-fold gates: each leaf is two panels that fold back on themselves, so they sweep only half a leaf over the level crest
+ const gyc=(gy1+gy2)/2,FOLD=1.45;
+ const build=(a,b)=>{const designs={};
   for(const k in GD){const blk=[],wd=[];
    blk.push(gb(a,b,gy1,gy2,z1,z1+fr),gb(a,b,gy1,gy2,z2-fr,z2),gb(a,a+fr,gy1,gy2,z1+fr,z2-fr),gb(b-fr,b,gy1,gy2,z1+fr,z2-fr));
    const ia=a+fr,ib=b-fr,iz1=z1+fr,iz2=z2-fr,yc1=gy1+0.04,yc2=gy2-0.04;
    if(k==='GD-1'){for(let z=iz1+0.02;z<iz2-0.1;z+=0.42) wd.push(gb(ia,ib,yc1,yc2,z,Math.min(z+0.34,iz2)))}
    if(k==='GD-2'){for(let x=ia+0.12;x<ib-0.05;x+=0.36) blk.push(gb(x,x+0.08,yc1,yc2,iz1,iz2));wd.push(gb(ia,ib,yc1-0.01,yc2+0.01,iz2-1.6,iz2-0.6));blk.push(gb(ia,ib,yc1,yc2,iz1,iz1+0.9))}
-   if(k==='GD-3'){const w=ib-ia,sl=[0.25,0.5,0.75].map(f=>ia+w*f);let x=ia;for(const sx of sl){wd.push(gb(x,sx-0.04,yc1,yc2,iz1,iz2));x=sx+0.04}wd.push(gb(x,ib,yc1,yc2,iz1,iz2));
+   if(k==='GD-3'){const w=ib-ia,sl=[0.33,0.67].map(f=>ia+w*f);let x=ia;for(const sx of sl){wd.push(gb(x,sx-0.04,yc1,yc2,iz1,iz2));x=sx+0.04}wd.push(gb(x,ib,yc1,yc2,iz1,iz2));
      for(const sx of sl){wd.push(gb(sx-0.04,sx+0.04,yc1,yc2,iz1,iz1+0.5));wd.push(gb(sx-0.04,sx+0.04,yc1,yc2,iz2-0.5,iz2))}}
    designs[k]=[mergeGeometries(blk),mergeGeometries(wd)]}
-  // texture in world feet, then move the geometry so the hinge is the origin, and hang it on a pivot
-  const hx=L.hinge==='a'?a:b;
-  for(const k in designs) for(const g of designs[k]){metreUV(g);g.translate(-mx(hx),0,-m(gyc))}
-  const piv=new THREE.Group();piv.position.set(mx(hx),0,m(gyc));piv.rotation.y=(L.hinge==='a'?1:-1)*L.open;scene.add(piv);
+  return designs};
+ const hang=(designs,ox,parent,label)=>{for(const k in designs) for(const g of designs[k]){metreUV(g);g.translate(-mx(ox),0,-m(gyc))}
   for(const [i,mt] of [[0,MAT.blackMetal],[1,MAT.extWood]]){const me=new THREE.Mesh(designs['GD-1'][i],mt);me.castShadow=true;me.receiveShadow=true;me.userData.keepUV=true;
-    me.userData.designs=Object.fromEntries(Object.keys(GD).map(k=>[k,designs[k][i]]));me.userData.gate=L.id+(L.open?' (open)':'');piv.add(me);named(me,'');gateMeshes.push(me);wallMeshes.push(me)}}}
+    me.userData.designs=Object.fromEntries(Object.keys(GD).map(k=>[k,designs[k][i]]));me.userData.gate=label;parent.add(me);named(me,'');gateMeshes.push(me);wallMeshes.push(me)}};
+ for(const o of P.openings.filter(o=>o.type==='gate')){const mid=(o.a+o.b)/2;
+  for(const [a,b,h] of [[o.a+0.05,mid-0.03,'a'],[mid+0.03,o.b-0.05,'b']]){const sg=h==='a'?1:-1,hx=h==='a'?a:b,jx=(a+b)/2,far=h==='a'?[jx+0.01,b]:[a,jx-0.01],near=h==='a'?[a,jx-0.01]:[jx+0.01,b];
+   const p1=new THREE.Group();p1.position.set(mx(hx),0,m(gyc));p1.rotation.y=sg*FOLD;scene.add(p1);
+   hang(build(...near),hx,p1,`${o.id} (bi-fold, open)`);
+   const p2=new THREE.Group();p2.position.set(mx(jx)-mx(hx),0,0);p2.rotation.y=-sg*2*FOLD;p1.add(p2);
+   hang(build(...far),jx,p2,`${o.id} (bi-fold, open)`);}}}
 function setGate(k){if(!GD[k])k='GD-1';for(const me of gateMeshes){me.geometry=me.userData.designs[k];me.userData.tip=`Gate ${me.userData.gate} · ${k} · MS frame, black powder-coat · ${GD[k]}`}
   document.querySelectorAll('#gateSeg button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.g===k));try{localStorage.setItem('lr3d-gate',k)}catch(e){};renderer.shadowMap.needsUpdate=true;if(photo&&pt)pt.setScene(scene,camera);invalidate()}
 function setExt(k){if(!EXT[k])k='EX-1';const o=EXT[k];MAT.ext.color.set(o.wall);MAT.extTrim.color.set(o.trim);
@@ -1362,7 +1368,9 @@ function rightVec(){return new THREE.Vector3(Math.cos(yaw),0,-Math.sin(yaw))}
 function tryMove(step){const len=step.length();if(!len)return;const dir=step.clone().normalize();
   const y=camera.position.y,knee=y<=m(CEIL+0.5)?0.35:y<=m(FFZ+CEIL)?m(FFZ)+0.35:y;   // knee-height check on the floor you are on, not the ground floor below
   for(const h of [knee,y]){colRay.set(new THREE.Vector3(camera.position.x,h,camera.position.z),dir);colRay.far=len+0.3;if(colRay.intersectObjects(wallMeshes,false).length)return}
-  camera.position.add(step)}
+  camera.position.add(step);
+  {const py=camera.position.z/F,px=-camera.position.x/F;   // in front of the house the ground slopes: keep the eye 5'3" above the drive or the road
+   if(py<30.75&&px>-40&&px<60){const g=py<0?RDZ:zF(py),t=m(g+EYE);if(Math.abs(camera.position.y-t)<m(3.0))camera.position.y=t}}}
 function moveVertical(dz){const y=camera.position.y;   // stay within the floor you are on: ground floor, first floor, or free above the house
   const [lo,hi]=y<=m(CEIL+0.5)?[0.4,m(CEIL)-0.15]:y<=m(FFZ+CEIL)?[m(FFZ)+0.4,m(FFZ+CEIL)-0.15]:[0.4,m(200)];
   camera.position.y=Math.max(lo,Math.min(hi,y+dz))}
