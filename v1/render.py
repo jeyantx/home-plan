@@ -290,9 +290,14 @@ def draw_furniture(fl,_late=False):
             line(x1,y1,x2,y2,'#5a4128',0.025); line(x1,y2,x2,y1,'#5a4128',0.025)
         elif k=='iwc':
             R_(x1,x2,y1,y2,'#f4f6f8','#777',0.04,extra='rx="0.2"')
-            a=S((x1+x2)/2,(y1+y2)/2+0.2); E(f'<ellipse cx="{a[0]:.3f}" cy="{a[1]:.3f}" rx="0.45" ry="0.7" fill="#dceaf3" stroke="#777" stroke-width="0.04"/>')
-            for dx in (-0.6,0.6):
-                b=S((x1+x2)/2+dx,y1+0.45); E(f'<rect x="{b[0]-0.22:.3f}" y="{b[1]-0.3:.3f}" width="0.44" height="0.6" rx="0.1" fill="#bfc8cf"/>')
+            if w>d:   # long along x: user faces west (+x), foot rests at the east end
+                a=S((x1+x2)/2+0.2,(y1+y2)/2); E(f'<ellipse cx="{a[0]:.3f}" cy="{a[1]:.3f}" rx="0.7" ry="0.45" fill="#dceaf3" stroke="#777" stroke-width="0.04"/>')
+                for dy in (-0.6,0.6):
+                    b=S(x1+0.45,(y1+y2)/2+dy); E(f'<rect x="{b[0]-0.3:.3f}" y="{b[1]-0.22:.3f}" width="0.6" height="0.44" rx="0.1" fill="#bfc8cf"/>')
+            else:
+                a=S((x1+x2)/2,(y1+y2)/2+0.2); E(f'<ellipse cx="{a[0]:.3f}" cy="{a[1]:.3f}" rx="0.45" ry="0.7" fill="#dceaf3" stroke="#777" stroke-width="0.04"/>')
+                for dx in (-0.6,0.6):
+                    b=S((x1+x2)/2+dx,y1+0.45); E(f'<rect x="{b[0]-0.22:.3f}" y="{b[1]-0.3:.3f}" width="0.44" height="0.6" rx="0.1" fill="#bfc8cf"/>')
         elif k=='acin':
             R_(x1,x2,y1,y2,'#ffffff','#2f6fb0',0.05,extra='rx="0.1"'); line(x1+0.15,y1+0.2,x1+0.15,y2-0.2,'#2f6fb0',0.03)
         elif k=='acout':
@@ -313,7 +318,8 @@ def draw_furniture(fl,_late=False):
             a=S((x1+x2)/2,(y1+y2)/2); E(f'<circle cx="{a[0]:.3f}" cy="{a[1]:.3f}" r="0.45" fill="#fff" stroke="#555" stroke-width="0.04"/>')
             line(x1+0.2,y1+0.2,x2-0.2,y2-0.2,'#555',0.04); line(x1+0.2,y2-0.2,x2-0.2,y1+0.2,'#555',0.04)
         elif k=='curtain':
-            line((x1+x2)/2,y1,(x1+x2)/2,y2,'#b05a8a',0.05,extra='stroke-dasharray="0.15 0.08"')
+            if w>d: line(x1,(y1+y2)/2,x2,(y1+y2)/2,'#b05a8a',0.05,extra='stroke-dasharray="0.15 0.08"')
+            else: line((x1+x2)/2,y1,(x1+x2)/2,y2,'#b05a8a',0.05,extra='stroke-dasharray="0.15 0.08"')
         elif k=='washpad':
             R_(x1,x2,y1,y2,'#d7dde2','#6c7a86',0.04); a=S((x1+x2)/2,(y1+y2)/2)
             E(f'<rect x="{a[0]-0.2:.3f}" y="{a[1]-0.2:.3f}" width="0.4" height="0.4" fill="#6c7a86"/>')
