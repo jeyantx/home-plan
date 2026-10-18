@@ -737,10 +737,10 @@ function setFinish(k){if(!KT[k])k='KT-1';const o=KT[k];finishMat(MAT.kLow,o.low)
   box(X1,X1+d,Y1,Y2,0,hS,MAT.skirt,{tip:t});box(X1+d,10.5,Y1,Y1+d,0,hS,MAT.skirt,{tip:t});box(13.5,14.0,Y1,Y1+d,0,hS,MAT.skirt,{tip:t});
   box(X1+d,10.75,Y2-d,Y2,0,hS,MAT.skirt,{tip:t});box(13.5,X2,Y2-d,Y2,0,hS,MAT.skirt,{tip:t});box(X2-d,X2,81.96,83.0,0,hS,MAT.skirt,{tip:t});box(X2-d,X2,92.0,Y2-d,0,hS,MAT.skirt,{tip:t});}
  // AC FU-46 on GW-07; W-07 curtains on a wall track below it; W-08 curtains from the band
- box(10.262,10.92,81.75,84.75,7.55,8.5,std({color:'#f4f4f2',roughness:0.35}),{round:0.08,tip:'FU-46 · AC indoor unit, 1.5 ton split · on GW-07 facing the bed'});
- box(10.92,10.94,81.9,84.6,7.62,7.7,MAT.blackMetal,{cast:false,tip:'FU-46 · AC air outlet'});
- for(const [a,b] of [[83.85,85.2],[88.75,89.2]]) curtain(a,b,10.6,7.4,'Curtain track, wall-mounted at 7\'4" below the AC');
- for(const [a,b] of [[14.0,15.1],[18.9,20.15]]) curtain(a,b,Y2-0.42,BZ,'Curtain track','x');
+ {const ac=fuG['FU-46'];box(10.262,ac.x2,ac.y1,ac.y2,7.55,8.5,std({color:'#f4f4f2',roughness:0.35}),{round:0.08,tip:`FU-46 · AC indoor unit, 1.5 ton split · ${ac.note}`});
+  box(ac.x2,ac.x2+0.02,ac.y1+0.15,ac.y2-0.15,7.62,7.7,MAT.blackMetal,{cast:false,tip:'FU-46 · AC air outlet'});}
+ for(const [a,b] of [[83.8,85.2],[88.8,90.2]]) curtain(a,b,10.6,7.4,'Curtain track, wall-mounted at 7\'4" below the AC');
+ for(const [a,b] of [[14.0,15.1],[18.9,19.45]]) curtain(a,b,Y2-0.42,BZ,'Curtain track','x');   // west stack kept short, clear of the dressing table
  // queen bed FU-31, headboard wall panel across both side tables, linen pad, ledge over the bed, art above
  const f=fuG['FU-31'],tip=`FU-31 · Queen bed · oak platform, 6'6" x 5' · ${f.note}`;
  box(f.x1+0.35,f.x2-0.2,f.y1+0.3,f.y2-0.3,0,0.32,MAT.plinth,{tip});
@@ -775,12 +775,12 @@ function setFinish(k){if(!KT[k])k='KT-1';const o=KT[k];finishMat(MAT.kLow,o.low)
  const wd=fuG['FU-34'],wy2=wd.y2,wl=7.55;
  cabRun('FU-34','Wardrobe with loft, oak veneer',wd.x1,X2-0.012,Y1+0.012,wy2,0,wl,'y+',[[14.0,16.08,'door'],[16.08,18.16,'door'],[18.16,20.238,'door']],MAT.oak,true);
  cabRun('FU-34','Wardrobe loft, oak veneer',wd.x1,X2-0.012,Y1+0.012,wy2,wl+0.012,BZ-0.005,'y+',[[14.0,16.08,'door'],[16.08,18.16,'door'],[18.16,20.238,'door']],MAT.oak,false);
- // dressing table FU-35 on GW-07: floating oak console with 2 drawers, framed mirror, linen stool
+ // dressing table FU-35 on GW-05 next to FU-33: floating oak console with 2 drawers, framed mirror above, linen stool
  const dt=fuG['FU-35'],tdt=`FU-35 · Dressing table, floating oak, 2 drawers · ${dt.note}`;
- box(X1+0.012,dt.x2-0.1,dt.y1,dt.y2,2.25,2.6,MAT.oak,{tip:tdt});
- for(const [a,b] of [[dt.y1+0.05,(dt.y1+dt.y2)/2-0.02],[(dt.y1+dt.y2)/2+0.02,dt.y2-0.05]]){box(dt.x2-0.1,dt.x2-0.08,a,b,2.28,2.57,MAT.oak,{tip:tdt});box(dt.x2-0.08,dt.x2-0.04,(a+b)/2-0.2,(a+b)/2+0.2,2.5,2.54,MAT.blackMetal,{cast:false,tip:'Drawer pull'})}
- box(X1+0.012,X1+0.1,dt.y1+0.15,dt.y2-0.15,3.2,6.2,MAT.oakDark,{tip:'Mirror frame, oak'});box(X1+0.1,X1+0.11,dt.y1+0.25,dt.y2-0.25,3.3,6.1,MAT.mirror,{cast:false,tip:'Dressing mirror'});
- cyl(dt.x2+0.55,(dt.y1+dt.y2)/2,0,1.45,0.5,MAT.sofa,{tip:'Stool, mild-brown linen',rTop:0.5});
+ box(dt.x1,X2-0.012,dt.y1,dt.y2,2.25,2.6,MAT.oak,{tip:tdt});
+ for(const [a,b] of [[dt.y1+0.05,(dt.y1+dt.y2)/2-0.02],[(dt.y1+dt.y2)/2+0.02,dt.y2-0.05]]){box(dt.x1-0.02,dt.x1,a,b,2.28,2.57,MAT.oak,{tip:tdt});box(dt.x1-0.06,dt.x1-0.02,(a+b)/2-0.15,(a+b)/2+0.15,2.5,2.54,MAT.blackMetal,{cast:false,tip:'Drawer pull'})}
+ box(X2-0.1,X2-0.012,dt.y1+0.08,dt.y2-0.08,3.2,6.2,MAT.oakDark,{tip:'Mirror frame, oak'});box(X2-0.11,X2-0.1,dt.y1+0.18,dt.y2-0.18,3.3,6.1,MAT.mirror,{cast:false,tip:'Dressing mirror'});
+ cyl(dt.x1-0.7,(dt.y1+dt.y2)/2,0,1.45,0.45,MAT.sofa,{tip:'Stool, mild-brown linen',rTop:0.45});
  // rug under the lower part of the bed, same two-tone
  {const rx1=12.3,rx2=17.2,ry1=83.7,ry2=91.3,W=rx2-rx1,H=ry2-ry1;
   const tx=canvasTex(1024,Math.round(1024*H/W),(g,w,h)=>{const r=rng(79),bb=Math.round(w*0.077);g.fillStyle='#6e4a32';g.fillRect(0,0,w,h);g.fillStyle='#b49a80';g.fillRect(bb,bb,w-2*bb,h-2*bb);
@@ -850,8 +850,8 @@ function applyOption(i){const o=OPTIONS[i];curOpt=i;
   </ul><h2>Bedroom 2 (G-12)</h2><ul>
   <li>Same design as bedroom 1: oak-look floor, peach walls, ceiling band with LED cove, 4 downlights, ceiling fan.</li>
   <li><b>Bed FU-31:</b> oak platform; headboard wall panel in grooved oak veneer runs across both floating side tables FU-32 and FU-33 (each with a drawer and a linen-shade lamp); linen pad, LED ledge, framed canvas; two-tone rug under the bed.</li>
-  <li><b>Wardrobe FU-34</b> on GW-15 with loft, oak veneer, black handles. <b>Dressing table FU-35:</b> floating oak console with 2 drawers, framed mirror and a linen stool.</li>
-  <li><b>Windows:</b> W-07 curtains on a wall track below the AC FU-46; W-08 curtains from the band. Back door D-10: white UPVC with a glass upper half.</li>
+  <li><b>Wardrobe FU-34</b> on GW-15 with loft, oak veneer, black handles. <b>Dressing table FU-35:</b> on GW-05 next to side table FU-33, floating oak console with 2 drawers, framed mirror and a linen stool.</li>
+  <li><b>Windows:</b> AC FU-46 centred above W-07, blowing across the bed; W-07 curtains on a wall track below it; W-08 curtains from the band. Back door D-10: white UPVC with a glass upper half.</li>
   </ul><h2>Toilet 2 (G-11)</h2><ul>
   <li>Same tiles as toilet 1: greige walls to 7', wood-look in the shower, anti-skid floor.</li>
   <li><b>Layout:</b> Indian WC FU-26 (Orissa pan) against GW-01, user faces west, with bucket, bib tap and health faucet FU-57 in front; wall-hung basin FU-27 with backlit mirror on the north wall GW-14 beside the door, black two-shelf bath rack FU-70 next to it; shower FU-28 takes the whole south end (4' x 2'6") with an L-shaped fabric curtain FU-59, geyser FU-58 on GW-01; towel rail on GW-16.</li>
@@ -894,7 +894,7 @@ const VIEWS=[
  {p:[11.6,32,65.0],t:[11.6,0,65.01],top:true},   // top of kitchen and open area
  {p:[12.6,EYE,81.5],t:[20.0,3.4,88.5]},   // bedroom 2 from the door: bed, headboard, side tables
  {p:[11.2,EYE,93.4],t:[20.25,3.6,85.5]},  // bedroom 2 from the back door: bed and wardrobe
- {p:[17.6,EYE,84.4],t:[10.25,4.6,89.0]},  // bedroom 2 window W-07, dressing table, AC
+ {p:[17.6,EYE,86.6],t:[10.25,5.6,87.0]},  // bedroom 2 window W-07 with the AC above it
  {p:[10.9,5.6,71.0],t:[4.2,2.0,70.4]},    // toilet 2 from the stair hall, through D-04
  {p:[15.2,34,87.5],t:[15.2,0,87.51],top:true},   // top of bedroom 2
 ];
