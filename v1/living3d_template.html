@@ -323,7 +323,7 @@ for(const [q,t] of floorPatches) slab(q,MAT.floor,0,t);
  for(const [a,b] of [[LX1+d,13.75],[17.75,18.9]]) box(a,b,LY2-d,LY2,0,hS,MAT.skirt,{tip:'Tile skirting, 4"'});}
 box(-30,60,-20,130,-1.05,-1.0,MAT.grass,{cast:false});
 box(0.375,2.75,30.75,75.125,-1.0,-0.97,MAT.paving,{cast:false,tip:'G-13 Side passage'});
-box(2.75,6.0,67.125,73.875,-1.0,-0.97,MAT.paving,{cast:false,tip:'G-16 Bore court · open to the sky'});
+box(2.75,6.0,67.125,73.875,-1.0,-0.97,MAT.paving,{cast:false,tip:'G-16 Bore court · covered by the terrace slab, open to the side passage'});
 // neighbours, from the site photos: east = 2-storey house (pale green ground floor, lavender upper floor); west = blue apartment with a peach ground floor;
 // across the 17' road = a row of 2-storey houses with black water tanks on the roofs
 {const nb=(c)=>std({color:c,roughness:0.95}),win=std({color:'#2b2e31',roughness:0.4}),G=-1;
@@ -851,7 +851,7 @@ X_(()=>{CURFL='F';ZOFF=FFZ;P.walls.F.forEach(buildWall);
    else{slab(r.pts,r.kind==='wet'?MAT.tFloor:MAT.floor,0,t,false,r.id==='F-04'?[{...WELL,r:WELL.r-0.01}]:[]);ROOF_F.push(slab(r.pts,MAT.ceiling,CEIL-0.001,null,true))}}
  ZOFF=0;CURFL='G';});
 // roof slab of the ground floor (also the terrace floor) and its edge fascia
-const slabParts=[[2.75,9.625,15.5,19.75],[2.75,21,19.75,67.125],[6.0,21,67.125,73.75],[6.0,9.5,73.75,73.875],[2.75,9.5,73.875,77.875]];
+const slabParts=[[2.75,9.625,15.5,19.75],[2.75,21,19.75,67.125],[6.0,21,67.125,73.75],[6.0,9.5,73.75,73.875],[2.75,9.5,73.875,77.875],[2.75,6.0,67.125,73.875]];   // full slab, also over the bore court
 function holeSlab(x1,x2,y1,y2,z1,z2,h,mat,tip){   // thick slab with a round hole (extruded upward from z1)
   const sh=new THREE.Shape([[x1,y1],[x2,y1],[x2,y2],[x1,y2]].map(p=>new THREE.Vector2(mx(p[0]),-m(p[1]))));
   const q=new THREE.Path();q.absarc(mx(h.x),-m(h.y),m(h.r),0,Math.PI*2,false);sh.holes.push(q);
@@ -860,8 +860,8 @@ function holeSlab(x1,x2,y1,y2,z1,z2,h,mat,tip){   // thick slab with a round hol
 X_(()=>{for(const [a,b,c,d] of slabParts) box(a,b,c,d,SLB,FFZ-0.05,MAT.white,{tip:'RCC roof slab and beams, ground floor (terrace floor above)'});
  holeSlab(9.5,21,73.75,95.125,SLB,FFZ-0.05,WELL,MAT.white,'RCC slab over the stair hall and bedroom 2 · 6\' round hole for ST-2, edge beams round it');
  const fz1=SLB-0.012,fz2=FFZ,ft='Slab edge fascia';
- for(const [a,b,c,d] of [[2.75,9.625,15.5-0.03,15.5-0.012],[2.75,6.0,67.125+0.012,67.125+0.03],[2.75,6.0,73.875-0.03,73.875-0.012],[9.625,21,19.75-0.03,19.75-0.012],[2.75,9.5,77.875+0.012,77.875+0.03],[9.5,21,95.125+0.012,95.125+0.03]]) box(a,b,c,d,fz1,fz2,MAT.extTrim,{tip:ft});
- for(const [a,b,c,d] of [[2.75-0.03,2.75-0.012,15.5,67.125],[2.75-0.03,2.75-0.012,73.875,77.875],[6.0-0.03,6.0-0.012,67.125,73.875],[9.625+0.012,9.625+0.03,15.5,19.75],[21+0.012,21+0.03,19.75,95.125],[9.5-0.03,9.5-0.012,77.875,95.125]]) box(a,b,c,d,fz1,fz2,MAT.extTrim,{tip:ft});
+ for(const [a,b,c,d] of [[2.75,9.625,15.5-0.03,15.5-0.012],[9.625,21,19.75-0.03,19.75-0.012],[2.75,9.5,77.875+0.012,77.875+0.03],[9.5,21,95.125+0.012,95.125+0.03]]) box(a,b,c,d,fz1,fz2,MAT.extTrim,{tip:ft});
+ for(const [a,b,c,d] of [[2.75-0.03,2.75-0.012,15.5,77.875],[9.625+0.012,9.625+0.03,15.5,19.75],[21+0.012,21+0.03,19.75,95.125],[9.5-0.03,9.5-0.012,77.875,95.125]]) box(a,b,c,d,fz1,fz2,MAT.extTrim,{tip:ft});
  // parapets PW-01..05, 3' high, 4½", with a coping; vertical louvers on the balcony front PW-01
  for(const w of P.walls.F.filter(w=>w.kind==='para')){box(w.x1,w.x2,w.y1,w.y2,FFZ-0.05,FFZ+w.h,MAT.ext,{tip:`${w.id} · ${w.desc} · 3' parapet`});
    box(w.x1-0.06,w.x2+0.06,w.y1-0.06,w.y2+0.06,FFZ+w.h,FFZ+w.h+0.15,MAT.extTrim,{tip:`${w.id} · parapet coping`});wallMeshes.push(scene.children[scene.children.length-2])}
@@ -1240,7 +1240,8 @@ function fwdVec(){return new THREE.Vector3(-Math.sin(yaw),0,-Math.cos(yaw))}
 function rightVec(){return new THREE.Vector3(Math.cos(yaw),0,-Math.sin(yaw))}
 // move by a horizontal step unless a wall is within 0.3 m; rays at knee and eye height, so windows block too
 function tryMove(step){const len=step.length();if(!len)return;const dir=step.clone().normalize();
-  for(const h of [0.35,camera.position.y]){colRay.set(new THREE.Vector3(camera.position.x,h,camera.position.z),dir);colRay.far=len+0.3;if(colRay.intersectObjects(wallMeshes,false).length)return}
+  const y=camera.position.y,knee=y<=m(CEIL+0.5)?0.35:y<=m(FFZ+CEIL)?m(FFZ)+0.35:y;   // knee-height check on the floor you are on, not the ground floor below
+  for(const h of [knee,y]){colRay.set(new THREE.Vector3(camera.position.x,h,camera.position.z),dir);colRay.far=len+0.3;if(colRay.intersectObjects(wallMeshes,false).length)return}
   camera.position.add(step)}
 function moveVertical(dz){const y=camera.position.y;   // stay within the floor you are on: ground floor, first floor, or free above the house
   const [lo,hi]=y<=m(CEIL+0.5)?[0.4,m(CEIL)-0.15]:y<=m(FFZ+CEIL)?[m(FFZ)+0.4,m(FFZ+CEIL)-0.15]:[0.4,m(200)];

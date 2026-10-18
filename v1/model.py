@@ -45,11 +45,7 @@ WALLS = {
   ('FW-06', 13.875,14.25, 80.25,84.875, 'part', 10.0, 'Bedroom 3 lobby | toilet 3'),
   ('FW-07', 14.25,20.25, 84.5,84.875, 'part', 10.0, 'Toilet 3 | bedroom 3'),
   ('PW-01', 2.75,9.625, 15.5,15.875, 'para', 3, 'Front parapet of balcony 2'),
-  ('PW-02', 2.75,3.125, 15.5,67.125, 'para', 3, 'East parapet of balcony and terrace'),
-  ('PW-06', 2.75,6.375, 67.125,67.5, 'para', 3, 'Parapet on the north edge of the bore court opening'),
-  ('PW-07', 6.0,6.375, 67.5,73.875, 'para', 3, 'Parapet on the west edge of the bore court opening'),
-  ('PW-08', 2.75,6.375, 73.875,74.25, 'para', 3, 'Parapet on the south edge of the bore court opening'),
-  ('PW-09', 2.75,3.125, 74.25,77.875, 'para', 3, 'East parapet of the terrace corner'),
+  ('PW-02', 2.75,3.125, 15.5,77.875, 'para', 3, 'East parapet of balcony, terrace and terrace corner (terrace now covers the bore court too)'),
   ('PW-03', 9.625,21.0, 19.75,20.125, 'para', 3, 'Front parapet of terrace, behind staircase 1 (now from the top of ST-1B)'),
   ('PW-04', 20.625,21.0, 20.125,73.125, 'para', 3, 'West parapet of terrace'),
   ('PW-05', 3.125,9.5, 77.5,77.875, 'para', 3, 'Back parapet of terrace corner'),
@@ -79,8 +75,8 @@ ROOMS = {
  ],
  'F': [
   ('F-01','Balcony 2',R(3.125,9.625,15.875,20.125),'terr'),
-  ('F-02','Open terrace',[(3.125,20.125),(20.625,20.125),(20.625,73.125),(6.375,73.125),(6.375,67.5),(3.125,67.5)],'terr'),
-  ('F-03','Terrace corner',[(6.375,73.125),(9.5,73.125),(9.5,77.5),(3.125,77.5),(3.125,74.25),(6.375,74.25)],'terr'),
+  ('F-02','Open terrace',[(3.125,20.125),(20.625,20.125),(20.625,73.125),(3.125,73.125)],'terr'),
+  ('F-03','Terrace corner',R(3.125,9.5,73.125,77.5),'terr'),
   ('F-04','Stair landing',R(10.25,20.25,73.875,79.875),'in'),
   ('F-05','Bedroom 3',R(10.25,20.25,84.875,96.625),'bed'),
   ('F-06','Bedroom 3 lobby',R(10.25,13.875,80.25,84.875),'bed'),
@@ -122,7 +118,12 @@ OPENINGS = [
 # ---------- building outlines (outer wall faces) for built-up area ----------
 GF_OUTLINE=[(8.5,30.75),(21,30.75),(21,95.125),(9.5,95.125),(9.5,73.875),(6.0,73.875),(6.0,67.125),(2.75,67.125),(2.75,40.5),(8.5,40.5)]
 FF_OUTLINE=R(9.5,21.0,73.125,97.375)
-BRANCH_NOTES='''<section class="ask"><h2>Back garden (branch spiral-v1, for review)</h2>
+BRANCH_NOTES='''<section class="ask"><h2>Terrace over the bore court (branch spiral-v1, for review)</h2>
+<ol>
+<li><b>Terrace slab is full</b> over the bore court G-16 now; the cut and parapets PW-06 to PW-09 are removed, PW-02 runs straight to the back parapet PW-05. F-02 and F-03 are plain rectangles.</li>
+<li><b>Bore court</b> stays open at the ground floor (to the side passage) for the borewell; only its top is closed.</li>
+</ol></section>
+<section class="ask"><h2>Back garden (branch spiral-v1, for review)</h2>
 <ol>
 <li><b>BW-09 back wall</b> (existing, of the houses behind) now shown in 3D, with the houses behind it.</li>
 <li><b>Flower bed FU-73</b>, 1'6" deep, all along the back wall, 9" brick kerb. A row of 12 plants common in Tamil Nadu homes, east to west: Sembaruthi (red hibiscus), Malli (jasmine), Kanakambaram (orange crossandra), Nandiyavattai (white crape jasmine), Nithya kalyani (pink periwinkle), Karuveppilai (curry leaf), Malli, Vetchi / Idly poo (red ixora), Rose, Kanakambaram, Nithya kalyani, Sembaruthi. Tall ones at the ends, low ones in between.</li>
@@ -355,8 +356,8 @@ BEAMS = [
  ('B-09','G', 9.5,21.0, 94.375,95.125, "1'3\"",'Over GW-08, C-18 to C-19'),
   ('B-10','G', 2.75,3.5, 19.75,67.125, "1'3\"",'East edge beam over GW-01 and the porch side, C-01 to C-11'),
   ('B-11','G', 9.5,10.25, 73.125,95.125, "1'3\"",'East edge beam over GW-07, C-14 to C-18'),
-  ('B-18','G', 6.0,6.75, 66.375,73.875, "1'3\"",'West edge of the bore court opening, over GW-18, C-20 to C-21'),
-  ('B-19','G', 2.75,6.75, 66.375,67.125, "1'3\"",'North edge of the bore court opening, over GW-17, C-11 to C-20'),
+  ('B-18','G', 6.0,6.75, 66.375,73.875, "1'3\"",'Over GW-18 (bore court | toilet 2), C-20 to C-21'),
+  ('B-19','G', 2.75,6.75, 66.375,67.125, "1'3\"",'Over GW-17 (kitchen | bore court), C-11 to C-20'),
   ('B-20','G', 2.75,10.25, 73.125,73.875, "1'3\"",'Over GW-06, C-21 to C-14; cantilevers 3\'3" east, and the terrace corner cantilevers 4\' south of it'),
  ('B-12','G', 20.25,21.0, 19.75,95.125, "1'3\"",'West edge beam over GW-05, C-02 to C-19'),
  ('B-13','F', 9.5,21.0, 73.125,73.875, "1'3\"",'Over FW-02, C-14 to C-15'),
@@ -367,7 +368,7 @@ BEAMS = [
 ]
 STRUCT_NOTES=[
  'Staircase ST-1: RCC waist-slab stair. ST-1A rests on the ground at its foot and on the landing; the landing ST-1L is carried by a short cantilever beam from pillar C-02; ST-1B spans from the landing to the balcony slab edge at X 9\'7½". No new pillar in the parking.',
- 'Bore court: bore BR-02 sits in an open-to-sky court (no slab above) so a rig can lift its pipes. C-13 is removed; C-20 and C-21 need eccentric footings that stay clear of the bore. Bore BR-01 is about 1\'9" from the GW-07 face, so that footing needs checking too.',
+ 'Bore court: bore BR-02 sits in a court covered by the terrace slab and open to the side passage; the pump is pulled out sideways through the passage, or through a removable cover in the slab if a rig needs a straight lift (engineer to advise). C-13 is removed; C-20 and C-21 need eccentric footings that stay clear of the bore. Bore BR-01 is about 1\'9" from the GW-07 face, so that footing needs checking too.',
  'Pillars only in the outer walls (east and west sides). No pillar stands inside any room, and the future first-floor hall stays pillar-free.',
  'Pillars C-01 to C-19 are 1\' x 9" (engineer\'s size), set with the 1\' along the wall so they hide inside the 9" walls.',
  'Cross beams B-01 to B-07 span the full width, about 17\'6" clear, and sit over the cross walls where there is one. Edge beams run along both side walls.',
