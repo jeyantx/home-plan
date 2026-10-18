@@ -249,7 +249,7 @@ def porch_steps():
     sx1,sx2=getattr(_m,'PORCH_STEPS_X',(3.0,8.25))
     rect(sx1,sx2,y0,y0+2.5,'#d8cdbb','#7a6a55',0.04)
     for k in (1,2): y=y0+k*2.5/3; line(sx1,y,sx2,y,'#7a6a55',0.03)
-    text((sx1+sx2)/2,y0+1.25,'3 steps up',0.32,fill='#5a4a35')
+    text((sx1+sx2)/2,y0+1.25,'3 steps up (6")',0.32,fill='#5a4a35')
 def chain(fl,X,ys,labels=True,cls='dim'):
     E(f'<g class="{cls}">')
     line(X,ys[0],X,ys[-1],'#555',0.03)
@@ -444,7 +444,7 @@ def ground():
     draw_furniture('G'); plants(); _trunk(); text(11.0,106.7,'BW-09 back wall (existing, houses behind)',0.3,fill='#666')
     stair_A(); stair_L(); stair_B(op=0.45,dash='stroke-dasharray="0.2 0.12"')
     E('<g opacity="0.72">'); draw_furniture('G',_late=True); E('</g>')
-    text(14.6,20.6,'flight 1B overhead (+7\'6" to +11\'6")',0.3,fill='#6b3a1c')
+    text(14.6,20.6,'flight 1B overhead (7\'7" to 13\' above the parking)',0.3,fill='#6b3a1c')
     spiral()
     draw_walls('G')
     for o in OPENINGS:

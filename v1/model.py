@@ -130,6 +130,7 @@ BRANCH_NOTES='''<section class="ask"><h2>Raised site levels (branch levels-v1, s
 <li><b>Outside stair ST-1</b> now starts at the crest by the small gate: 27 risers of about 6½" (17 in ST-1A from Y 2'8", landing, 10 in ST-1B); balcony 2 unchanged.</li>
 <li><b>Neem tree:</b> trunk kept at today's ground in a 5'6" tree well FU-76 with a low retaining ring; no fill against the trunk.</li>
 <li><b>Porch:</b> 3 steps of 6" from the parking. Side passage starts 6" above the parking.</li>
+<li><b>Headroom over the parking:</b> about 7'2" under ST-1B at the car's west edge and about 7'1" under the landing ST-1L (with a 6" landing slab); more toward the east.</li>
 <li><b>Compound walls</b> step down along the ramp and hold back the fill at the bottom (thicker base, weep holes): engineer to detail. About 2' of earth filling over the plot.</li>
 </ol></section>
 <section class="ask"><h2>Tree pit and terrace door (branch spiral-v1, for review)</h2>
@@ -317,7 +318,7 @@ FURNITURE = [
  ('FU-73','G','Flower bed along the back wall',1.375,20.625,103.14,105.6,'fbed',None,'Back and side garden, 1\'6" deep all along the back wall BW-09, 9" brick kerb, red soil; a row of Tamil Nadu flowering plants PL-01 to PL-12'),
  ('FU-74','G','Tulsi maadam',4.5,6.0,96.75,98.25,'tulsi',None,'Side garden, 1\'6" square, 3\' high plastered pedestal with a lamp niche facing east, Tulsi PL-13 on top'),
  ('FU-75','G','Clothes drying line',10.25,17.25,101.0,101.5,'cline',None,'Back garden, two black MS posts 6\' high with T-arms, 3 steel wires, 7\' long; clear of the back door D-10 and the wash platform'),
- ('FU-56','G','Store under staircase 1',17.125,20.625,10.997,16.0,'store',None,'Parking, 3\'6" x 5\', under the high end of ST-1A (about 4\' high at the front, 6\' at the back); door 2\'6" x 3\'10" facing east; the low end of the stair is solid'),
+ ('FU-56','G','Store under staircase 1',17.125,20.625,10.997,16.0,'store',None,'Parking, 3\'6" x 5\', under the high end of ST-1A (about 4\'6" high at the front, 7\' at the back); floor at the parking level; door 2\'6" x 3\'10" facing east; the low end of the stair is solid'),
 ]
 # door and window types (proposal)
 SPEC = {
