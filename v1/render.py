@@ -388,11 +388,13 @@ def draw_struct(fl):
         span=max(x2-x1,y2-y1)
         rect(x1,x2,y1,y2,'rgba(192,57,43,0.10)','#c0392b',0.05,extra=f'stroke-dasharray="0.3 0.18" data-tip="{tip(bid+" · Beam 9 in wide x "+d+" deep · "+fmt(span)+" long · "+note)}"')
     for cid,fls,x1,x2,y1,y2,note in getattr(_m,'COLUMNS',[]):
+        if fl=='F' and fls=='G0': continue   # ground-floor-only pillar: nothing on the terrace
         up=fl=='G' or fls=='G+F'
         t=cid+' · Pillar '+_m.COL_SIZE+' · '+note+('' if up else ' · future hall pillar: bars left sticking up at the terrace')
         if up: rect(x1,x2,y1,y2,'#1f2328','#000',0.03,extra=f'data-tip="{tip(t)}"')
         else: rect(x1,x2,y1,y2,'none','#1f2328',0.05,extra=f'stroke-dasharray="0.15 0.1" data-tip="{tip(t)}"')
     for cid,fls,x1,x2,y1,y2,note in getattr(_m,'COLUMNS',[]):
+        if fl=='F' and fls=='G0': continue
         cx,cy=(x1+x2)/2,(y1+y2)/2
         X=x1-0.55 if x1<5 or abs(x1-9.5)<0.01 else x2+0.55
         X,cy=COLTAG.get(cid,(X,cy))

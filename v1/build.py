@@ -33,7 +33,7 @@ for oid,f,wid,a,b,typ,hinge,swing,h,sill,note in OPENINGS:
     op_rows+=f'<tr><td class="c">{oid}</td><td>{TN[typ]}</td><td>{"front line" if wid=="FRONT" else wid}</td><td>{fmt(b-a)} x {fmt(h)}</td><td>{fmt(sill) if sill else "–"}</td><td>{esc(note)}<br><span class="lbl">{esc(getattr(_mm,"SPEC",{}).get(oid,""))}</span></td></tr>'
 import model as _m
 BN=getattr(_m,'BRANCH_NOTES','')
-struct_cols=''.join(f'<tr><td class="c">{c[0]}</td><td>{esc(_mm.COL_SIZE)}</td><td>{"Ground, bars left for the future hall" if c[1]=="G" else "Ground and first"}</td><td>{esc(c[6])}</td></tr>' for c in _mm.COLUMNS)
+struct_cols=''.join(f'<tr><td class="c">{c[0]}</td><td>{esc(_mm.COL_SIZE)}</td><td>{"Ground, bars left for the future hall" if c[1]=="G" else ("Ground only, stops at the roof slab" if c[1]=="G0" else "Ground and first")}</td><td>{esc(c[6])}</td></tr>' for c in _mm.COLUMNS)
 struct_beams=''.join(f'<tr><td class="c">{b[0]}</td><td>{"Ground-floor roof" if b[1]=="G" else "First-floor roof"}</td><td>9" x {esc(b[6])}</td><td>{fmt(max(b[3]-b[2],b[5]-b[4]))}</td><td>{esc(b[7])}</td></tr>' for b in _mm.BEAMS)
 panel=BN+f'''
 <section><h2>How to read this plan</h2>

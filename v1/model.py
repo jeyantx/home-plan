@@ -122,6 +122,8 @@ BRANCH_NOTES='''<section class="ask"><h2>Terrace over the bore court (branch spi
 <ol>
 <li><b>Terrace slab is full</b> over the bore court G-16 now; the cut and parapets PW-06 to PW-09 are removed, PW-02 runs straight to the back parapet PW-05. F-02 and F-03 are plain rectangles.</li>
 <li><b>Bore court</b> stays open at the ground floor (to the side passage) for the borewell; only its top is closed.</li>
+<li><b>C-20 and C-21</b> (the two inner pillars at the bore court) now stop at the ground-floor roof: no stubs on the terrace, so the future hall stays clear in the middle; it will stand on the side pillars only (C-01 to C-12 on the east and west lines).</li>
+<li><b>Bedroom 3</b> finished in 3D in the same design as bedrooms 1 and 2; toilet 3 fitted out; all first-floor doors shown open.</li>
 </ol></section>
 <section class="ask"><h2>Back garden (branch spiral-v1, for review)</h2>
 <ol>
@@ -334,8 +336,8 @@ COLUMNS = [
  ('C-10','G', 20.25,21.0, 58.44,59.44,'West, in GW-05 where GW-13 meets it'),
   ('C-11','G', 2.75,3.5, 66.125,67.125,'East, end of GW-01 at the bore court corner'),
   ('C-12','G', 20.25,21.0, 66.125,67.125,'West, in GW-05 behind the FU-25 store cupboard, in line with GW-14'),
-  ('C-20','G', 6.0,6.75, 66.375,67.375,'Bore court corner: GW-17, GW-18 and GW-14; footing kept away from bore BR-02'),
-  ('C-21','G', 6.0,6.75, 72.875,73.875,'Bore court corner: GW-18 and GW-06; eccentric footing needed, it is close to bore BR-02'),
+  ('C-20','G0', 6.0,6.75, 66.375,67.375,'Bore court corner: GW-17, GW-18 and GW-14; footing kept away from bore BR-02. Ground floor only: stops at the roof slab, no stub on the terrace, so the future hall has no pillar in the middle'),
+  ('C-21','G0', 6.0,6.75, 72.875,73.875,'Bore court corner: GW-18 and GW-06; eccentric footing needed, it is close to bore BR-02. Ground floor only: stops at the roof slab, no stub on the terrace'),
   ('C-14','G+F', 9.5,10.25, 73.125,74.125,'Corner of GW-06 and GW-07; runs up in FW-01'),
  ('C-15','G+F', 20.25,21.0, 73.0,74.0,'West, in GW-05 under FW-02; runs up in FW-03'),
  ('C-16','G+F', 9.5,10.25, 79.94,80.94,'In GW-07 where GW-15 meets it; runs up in FW-01'),
