@@ -527,9 +527,16 @@ function tile(x1,x2,y1,y2,z1,z2,mat,tip){const me=box(x1,x2,y1,y2,z1,z2,mat,{cas
  tile(X1,X1+c,Y1+c+e,Y2-c-e,0,TZ,MAT.tWall,tw);
  tile(X2-c,X2,Y1+c+e,33.6,0,TZ,MAT.tWood,tsw);tile(X2-c,X2,33.6,Y2-c-e,0,TZ,MAT.tWall,tw);
  slab([[X1,Y1],[X2,Y1],[X2,Y2],[X1,Y2]],MAT.tFloor,0.006,'G-07 · Toilet 1 floor · matte anti-skid porcelain, 1\' x 1\', greige');
- // shower FU-14: clear glass screen on a black profile, rain shower, mixer, linear drain, geyser above
- const gs=box(18.0,X2-c-e,33.58,33.62,0.06,6.6,MAT.glass,{cast:false,tip:'FU-14 · Shower glass screen, 8 mm clear, black profile'});glassMeshes.push(gs);
- box(18.0,X2-c-e,33.565,33.635,0.0,0.06,MAT.blackMetal,{tip:'Glass screen floor profile'});box(17.96,18.0,33.56,33.64,0,6.6,MAT.blackMetal,{tip:'Glass screen edge profile'});
+ // shower FU-14: open, no screen; rain shower, mixer, linear drain, geyser above
+ // bath rack FU-63 on GW-04 between the basin and the shower: two matte-black shelves with a front rail
+ {const r=fuG['FU-63'],rx1=r.x1,rx2=r.x2,ry=Y1+c+e,dp=0.42,tr=`FU-63 · Bath rack, 2 shelves, matte black · ${r.note}`;
+  for(const z of [3.7,4.75]){box(rx1,rx2,ry,ry+dp,z,z+0.04,MAT.blackMetal,{tip:tr});box(rx1,rx2,ry+dp-0.03,ry+dp,z+0.04,z+0.2,MAT.blackMetal,{cast:false,tip:tr})}
+  for(const x of [rx1,rx2-0.03]) box(x,x+0.03,ry,ry+dp,3.7,4.95,MAT.blackMetal,{tip:tr});
+  const bottle=(x,z,h,r0,col,t)=>cyl(x,ry+0.2,z,z+h,r0,std({color:col,roughness:0.35}),{tip:t,rTop:r0*0.8});
+  bottle(rx1+0.25,4.79,0.62,0.11,'#efe7da','Shampoo, cream bottle');bottle(rx1+0.55,4.79,0.5,0.1,'#6f5a46','Conditioner, brown bottle');bottle(rx2-0.3,4.79,0.42,0.1,'#d9d3c8','Body wash');
+  box(rx1+0.15,rx1+0.6,ry+0.08,ry+0.32,3.74,3.79,MAT.oak,{tip:'Soap dish, wood'});box(rx1+0.22,rx1+0.52,ry+0.12,ry+0.28,3.79,3.87,std({color:'#f3ead8',roughness:0.6}),{round:0.03,tip:'Soap'});
+  cyl(rx2-0.35,ry+0.2,3.74,4.12,0.12,std({color:'#e9e4da',roughness:0.4}),{tip:'Toothbrush cup, ceramic',rTop:0.13});
+  for(const dx of [-0.04,0.05]) cyl(rx2-0.35+dx,ry+0.2,3.95,4.45,0.015,std({color:dx<0?'#6f8f7a':'#c9a27c',roughness:0.5}),{tip:'Toothbrush'});}
  box(X2-c-0.9,X2-c,32.53,32.57,7.02,7.07,MAT.blackMetal,{tip:'Rain shower arm, matte black'});cyl(X2-c-0.9,32.55,6.95,7.0,0.33,MAT.blackMetal,{tip:'Rain shower head, 8", matte black'});
  cyl(X2-c-0.02,32.55,3.5,3.75,0.16,MAT.blackMetal,{tip:'Shower mixer, matte black',seg:24}).rotation.z=Math.PI/2;
  box(17.5,X2-c-e,32.9,33.05,0.006,0.02,MAT.blackMetal,{cast:false,tip:'Linear floor drain'});
@@ -614,7 +621,7 @@ function applyOption(i){const o=OPTIONS[i];curOpt=i;
   <li><b>Study:</b> floating oak desk FU-10 on black steel legs, walnut-tone chair with a linen seat, open oak bookshelf FU-11, linen roman blind on W-01.</li>
   </ul><h2>Toilet 1 (G-07)</h2><ul>
   <li><b>Tiles:</b> greige matte porcelain 2' x 1' to 7' high; wood-look porcelain on the shower walls; matte anti-skid 1' x 1' floor. Paint above 7'.</li>
-  <li><b>Fittings:</b> wall-hung WC FU-12 on a tiled concealed-cistern ledge, floating oak-look vanity FU-13 with a vessel basin and backlit mirror, clear glass shower screen FU-14 with a rain shower, 15 L geyser above. All fittings matte black. WPC door D-03.</li>
+  <li><b>Fittings:</b> wall-hung WC FU-12 on a tiled concealed-cistern ledge, floating oak-look vanity FU-13 with a vessel basin and backlit mirror, open shower FU-14 (no screen) with a rain shower and linear drain, black two-shelf bath rack FU-63 beside the basin, 15 L geyser above. All fittings matte black. WPC door D-03.</li>
   </ul><h2>Textures</h2><div>Real CC0 scans from Poly Haven, stored locally in <code>3d/assets</code>. Use <b>Photo</b> for a ray-traced, near-photographic still.</div>`;
   try{localStorage.setItem('lr3d-opt',i)}catch(e){}
   renderer.shadowMap.needsUpdate=true;rebuildPhoto();invalidate();
