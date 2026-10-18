@@ -26,7 +26,7 @@ def text(X,Y,s,size=0.5,weight=400,fill='#222',anchor='middle',rot=0,cls=''):
 def tip(s): return _H.escape(s,quote=True)
 def tag(X,Y,s,kind='wall',rot=0,tipText=None):
     x,y=S(X,Y); w=len(s)*0.25+0.3; h=0.5
-    col={'wall':('#ffffff','#5b5b5b','#333'),'door':('#fff4e8','#a35a1b','#7a3e0c'),'win':('#e8f2ff','#2f6fb0','#1f4f86'),'room':('#2f6f4f','#2f6f4f','#fff')}[kind]
+    col={'col':('#1f2328','#1f2328','#ffffff'),'beam':('#fff1ee','#c0392b','#a12a1d'),'wall':('#ffffff','#5b5b5b','#333'),'door':('#fff4e8','#a35a1b','#7a3e0c'),'win':('#e8f2ff','#2f6fb0','#1f4f86'),'room':('#2f6f4f','#2f6f4f','#fff')}[kind]
     tr=f' transform="rotate({rot} {x:.3f} {y:.3f})"' if rot else ''
     dt=f' data-tip="{tip(tipText)}"' if tipText else ''
     E(f'<g class="tag-{kind}"{tr}{dt}><rect x="{x-w/2:.3f}" y="{y-h/2:.3f}" width="{w:.3f}" height="{h:.3f}" rx="0.12" fill="{col[0]}" stroke="{col[1]}" stroke-width="0.03"/>'
@@ -189,9 +189,10 @@ def tree():
 def porch_steps():
     import model as _m
     y0=getattr(_m,'PORCH_STEPS_Y',30.75)
-    rect(3.0,8.25,y0,y0+2.5,'#d8cdbb','#7a6a55',0.04)
-    for k in (1,2): y=y0+k*2.5/3; line(3.0,y,8.25,y,'#7a6a55',0.03)
-    text(5.6,y0+1.25,'3 steps up',0.32,fill='#5a4a35')
+    sx1,sx2=getattr(_m,'PORCH_STEPS_X',(3.0,8.25))
+    rect(sx1,sx2,y0,y0+2.5,'#d8cdbb','#7a6a55',0.04)
+    for k in (1,2): y=y0+k*2.5/3; line(sx1,y,sx2,y,'#7a6a55',0.03)
+    text((sx1+sx2)/2,y0+1.25,'3 steps up',0.32,fill='#5a4a35')
 def chain(fl,X,ys,labels=True,cls='dim'):
     E(f'<g class="{cls}">')
     line(X,ys[0],X,ys[-1],'#555',0.03)
@@ -328,6 +329,33 @@ def draw_furniture(fl,_late=False):
         E('</g>')
     E('</g>')
 
+# structure: pillars (solid) and the beams above them (dashed red), in the L-struct layer
+BEAMTAG={'B-01':(7.0,20.125),'B-02':(6.0,30.0),'B-03':(6.0,36.2),'B-04':(6.0,46.5),'B-05':(14.6,58.94),'B-06':(12.0,67.625),'B-07':(6.8,73.375),'B-08':(15.6,80.44),
+         'B-09':(14.6,94.75),'B-10':(3.125,25.5),'B-11':(9.875,79.0),'B-12':(20.625,25.5),'B-13':(14.0,73.5),'B-14':(16.0,80.25),'B-15':(14.0,97.0),'B-16':(9.875,86.5),'B-17':(20.625,86.5)}
+COLTAG={'C-14':(10.8,73.5),'C-18':(8.95,92.6)}
+def draw_struct(fl):
+    import model as _m
+    E('<g class="L-struct">')
+    for bid,lv,x1,x2,y1,y2,d,note in getattr(_m,'BEAMS',[]):
+        if lv!=fl: continue
+        span=max(x2-x1,y2-y1)
+        rect(x1,x2,y1,y2,'rgba(192,57,43,0.10)','#c0392b',0.05,extra=f'stroke-dasharray="0.3 0.18" data-tip="{tip(bid+" · Beam 9 in wide x "+d+" deep · "+fmt(span)+" long · "+note)}"')
+    for cid,fls,x1,x2,y1,y2,note in getattr(_m,'COLUMNS',[]):
+        up=fl=='G' or fls=='G+F'
+        t=cid+' · Pillar '+_m.COL_SIZE+' · '+note+('' if up else ' · future hall pillar: bars left sticking up at the terrace')
+        if up: rect(x1,x2,y1,y2,'#1f2328','#000',0.03,extra=f'data-tip="{tip(t)}"')
+        else: rect(x1,x2,y1,y2,'none','#1f2328',0.05,extra=f'stroke-dasharray="0.15 0.1" data-tip="{tip(t)}"')
+    for cid,fls,x1,x2,y1,y2,note in getattr(_m,'COLUMNS',[]):
+        cx,cy=(x1+x2)/2,(y1+y2)/2
+        X=x1-0.55 if x1<5 or abs(x1-9.5)<0.01 else x2+0.55
+        X,cy=COLTAG.get(cid,(X,cy))
+        tag(X,cy,cid,'col',-90,tipText=cid+' · Pillar '+_m.COL_SIZE+' · '+note)
+    for bid,lv,x1,x2,y1,y2,d,note in getattr(_m,'BEAMS',[]):
+        if lv!=fl: continue
+        X,Y=BEAMTAG.get(bid,((x1+x2)/2,(y1+y2)/2))
+        tag(X,Y,bid,'beam',0 if (x2-x1)>(y2-y1) else -90,tipText=bid+' · Beam 9" x '+d+' · '+note)
+    E('</g>')
+
 def ground():
     W=walls_of('G')
     draw_plot('G'); draw_rooms('G'); porch_steps(); tree(); vehicles()
@@ -353,6 +381,7 @@ def ground():
     text(19.25,10.2,'ST-1A',0.36,weight=700,fill='#fff'); text(19.25,17.75,'ST-1L',0.32,weight=700,fill='#3a1f0c')
     E('</g>')
     borewell()
+    draw_struct('G')
     E('<g class="L-walls">'); wall_tags('G'); E('</g>')
     E('<g class="L-open">'); opening_tags('G',W); E('</g>')
     sides()
@@ -376,6 +405,7 @@ def first():
     text(SPC[0]-3.0,SPC[1]-4.55,'ST-2 arrives',0.32,weight=600,fill='#3a1f0c')
     text(10.5,8.0,'below: parking, gates, neem tree',0.45,fill='#888')
     E('</g>')
+    draw_struct('F')
     E('<g class="L-walls">'); wall_tags('F'); E('</g>')
     E('<g class="L-open">'); opening_tags('F',W); E('</g>')
     sides()
