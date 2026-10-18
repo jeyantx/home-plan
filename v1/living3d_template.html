@@ -621,9 +621,11 @@ function cabRun(id,what,x1,x2,y1,y2,z1,z2,face,segs,mat,plinth){
     else{panel(a+g,b-g,fz1,fz2);handle(a,b,hz)}}}
 {const X1=3.5,ky2=67.625,bY=65.625,W06=P.openings.find(o=>o.id==='W-06');
  // base cabinets: east run FU-15 on GW-01 (front faces +x), back run FU-16 on GW-14 (front faces -y); the corner is a blind corner with a carousel
- cabRun('FU-15','Base cabinets, east',X1,5.5,59.125,ky2,0,KCH-KTOP,'x+',[[59.125,60.6,'door'],[60.6,62.0,'door'],[62.0,64.0,'drawers'],[64.0,bY,'door']],MAT.kLow,true);
- cabRun('FU-16','Base cabinets, back',5.5,9.875,bY,ky2,0,KCH-KTOP,'y-',[[5.5,6.6,'drawers'],[6.6,8.9,'door2'],[8.9,9.875,'door']],MAT.kLow,true);
- box(X1,5.56,59.125,ky2,KCH-KTOP,KCH,MAT.kTop,{tip:'Counter top, 40 mm, east run'});box(5.56,9.9,bY-0.06,ky2,KCH-KTOP,KCH,MAT.kTop,{tip:'Counter top, 40 mm, back run'});
+ cabRun('FU-15','Base cabinets, east',X1,5.5,59.125,ky2,0,KCH-KTOP,'x+',[[60.375,62.0,'door'],[62.0,64.0,'drawers'],[64.0,bY,'door']],MAT.kLow,true);
+ cabRun('FU-16','Base cabinets, back',5.5,8.6,bY,ky2,0,KCH-KTOP,'y-',[[5.5,6.45,'drawers'],[6.45,8.6,'door2']],MAT.kLow,true);
+ const LOW=2.0;cabRun('FU-16.2','Low counter for the wet grinder',8.6,9.875,bY,ky2,0,LOW-KTOP,'y-',[[8.6,9.875,'door']],MAT.kLow,true);
+ box(8.6,9.9,bY-0.06,ky2,LOW-KTOP,LOW,MAT.kTop,{tip:'FU-16.2 · Low counter top, 2\' from the floor'});
+ box(X1,5.56,59.125,ky2,KCH-KTOP,KCH,MAT.kTop,{tip:'Counter top, 40 mm, east run'});box(5.56,8.6,bY-0.06,ky2,KCH-KTOP,KCH,MAT.kTop,{tip:'Counter top, 40 mm, back run'});
  // wall cabinets FU-19 (GW-14), FU-19.2 and FU-19.3 (GW-01, either side of W-06)
  cabRun('FU-19','Wall cabinets, back',4.69,9.875,66.375,ky2-0.012,UPZ1,UPZ2,'y-',[[4.75,6.5,'door'],[6.5,8.25,'glass'],[8.25,9.875,'door']],MAT.kUp,false);
  cabRun('FU-19.2','Wall cabinets, east',X1+0.012,4.75,65.0,ky2-0.012,UPZ1,UPZ2,'x+',[[65.0,66.375,'door']],MAT.kUp,false);
@@ -638,7 +640,7 @@ function cabRun(id,what,x1,x2,y1,y2,z1,z2,face,segs,mat,plinth){
  // backsplash: cream 3" x 12" ceramic tiles between counter and wall cabinets; below the W-06 sill
  const st='Backsplash · cream 3" x 12" glazed tiles';
  tile(X1,X1+0.03,59.137,61.0,KCH,UPZ1,MAT.kSplash,st);tile(X1,X1+0.03,61.0,65.0,KCH,W06.sill,MAT.kSplash,st);tile(X1,X1+0.03,61.0,65.0,W06.sill+W06.h,UPZ2,MAT.kSplash,st);tile(X1,X1+0.03,65.0,ky2-0.042,KCH,UPZ1,MAT.kSplash,st);
- tile(X1+0.042,9.875,ky2-0.03,ky2,KCH,UPZ1,MAT.kSplash,st);
+ tile(X1+0.042,8.6,ky2-0.03,ky2,KCH,UPZ1,MAT.kSplash,st);tile(8.6,9.875,ky2-0.03,ky2,LOW,UPZ1,MAT.kSplash,st);
  // hob FU-52 under W-06; chimney hood at the standard 2'6" above the counter, just above the lowered window head, ducted straight out through GW-01
  const h=fuG['FU-52'];box(h.x1+0.1,h.x2-0.1,h.y1+0.1,h.y2-0.1,KCH,KCH+0.03,MAT.blackGlass,{tip:`FU-52 · Hob, 3 burner, black glass · ${h.note}`});
  for(const [bx,by,r] of [[4.15,62.55,0.27],[4.15,63.45,0.22],[4.95,63.0,0.3]]) cyl(bx,by,KCH+0.03,KCH+0.09,r,std({color:'#3a3b3d',roughness:0.4,metalness:0.6}),{tip:'Burner',rTop:r*0.85});
@@ -653,11 +655,11 @@ function cabRun(id,what,x1,x2,y1,y2,z1,z2,face,segs,mat,plinth){
  cyl((mg.x1+mg.x2)/2,(mg.y1+mg.y2)/2,KCH+0.42,KCH+1.15,0.22,std({color:'#d8dde0',roughness:0.15,metalness:0.4}),{tip:'Mixer jar',rTop:0.26});
  const ro=fuG['FU-66'];box(ro.x1,ro.x2,ro.y1,ro.y2-0.012,3.4,4.75,MAT.appWhite,{round:0.06,tip:`FU-66 · RO water purifier · ${ro.note}`});box(ro.x1+0.1,ro.x2-0.1,ro.y1-0.01,ro.y1,4.15,4.45,MAT.blackGlass,{cast:false,tip:'RO purifier display'});
  cyl((ro.x1+ro.x2)/2,ro.y1+0.05,3.2,3.4,0.03,MAT.blackMetal,{tip:'RO tap'});
- // wet grinder FU-65 in the GW-13 corner of the east counter
- const wg=fuG['FU-65'],wx=(wg.x1+wg.x2)/2,wy=(wg.y1+wg.y2)/2;cyl(wx,wy,KCH,KCH+0.38,0.6,MAT.appWhite,{tip:`FU-65 · Wet grinder, table-top · ${wg.note}`,rTop:0.55});
- cyl(wx,wy,KCH+0.38,KCH+1.0,0.44,MAT.steel,{tip:'Wet grinder drum, steel'});cyl(wx,wy,KCH+1.0,KCH+1.08,0.46,std({color:'#d8dde0',roughness:0.2}),{tip:'Wet grinder lid'});
+ // wet grinder FU-65 on the 2' low counter FU-16.2
+ const wg=fuG['FU-65'],wx=(wg.x1+wg.x2)/2,wy=(wg.y1+wg.y2)/2,WZ=LOW;cyl(wx,wy,WZ,WZ+0.38,0.6,MAT.appWhite,{tip:`FU-65 · Wet grinder, table-top · ${wg.note}`,rTop:0.55});
+ cyl(wx,wy,WZ+0.38,WZ+1.0,0.44,MAT.steel,{tip:'Wet grinder drum, steel'});cyl(wx,wy,WZ+1.0,WZ+1.08,0.46,std({color:'#d8dde0',roughness:0.2}),{tip:'Wet grinder lid'});
  // breakfast counter FU-17 on GW-13 under W-12 (front faces +y), microwave FU-67 on its west end
- const b=fuG['FU-17'];cabRun('FU-17','Breakfast counter',b.x1,b.x2,b.y1+0.012,b.y2,0,2.87,'y+',[[6.0,7.5,'door'],[7.5,9.0,'door'],[9.0,10.5,'door'],[10.5,12.0,'door'],[12.0,13.5,'door']],MAT.kLow,true);
+ const b=fuG['FU-17'];cabRun('FU-17','Breakfast counter',b.x1,b.x2,b.y1+0.012,b.y2,0,2.87,'y+',[[5.5,7.1,'door'],[7.1,8.7,'door'],[8.7,10.3,'door'],[10.3,11.9,'door'],[11.9,13.5,'door']],MAT.kLow,true);
  box(b.x1,b.x2,b.y1+0.012,b.y2+0.06,2.87,2.99,MAT.kTop,{tip:'Breakfast counter top, 40 mm'});
  const mw=fuG['FU-67'];box(mw.x1,mw.x2,mw.y1+0.05,mw.y2-0.05,2.99,3.95,std({color:'#3a3c3f',roughness:0.4,metalness:0.4}),{round:0.04,tip:`FU-67 · Microwave oven · ${mw.note}`});
  box(mw.x1+0.08,mw.x2-0.45,mw.y2-0.05,mw.y2-0.03,3.1,3.85,MAT.blackGlass,{cast:false,tip:'Microwave door, black glass'});
@@ -732,7 +734,7 @@ function applyOption(i){const o=OPTIONS[i];curOpt=i;
   </ul><h2>Kitchen (G-08) and open area (G-09)</h2><ul>
   <li><b>Cabinet finish:</b> pick with the Finish buttons. KT-1 oak base and cream wall cabinets, black granite top. KT-2 cream base and oak wall cabinets, white quartz top. KT-3 walnut base and cream wall cabinets, white quartz top. All with slim black handles and a dark shadow-gap plinth.</li>
   <li><b>Layout:</b> hob FU-52 under W-06 (window lowered to 4' x 2', head at 5'3") with the chimney hood at the standard 2'6" above the counter; sink FU-51 on the back counter against GW-14; wall cabinets on GW-14 and GW-01 (glass doors on the unit above the sink and the one left of the window), plus a top row FU-68 and FU-69 up to the ceiling; cream 3" x 12" backsplash tiles; LED strips under the wall cabinets.</li>
-  <li><b>Appliances:</b> mixer grinder FU-64 beside the sink, wet grinder FU-65 in the GW-13 corner, RO purifier FU-66 on GW-14, microwave FU-67 on the breakfast counter FU-17 (now 7'6" long). Fridge FU-18 on GW-05 at the north end of the store cupboard FU-25, with a loft above.</li>
+  <li><b>Appliances:</b> mixer grinder FU-64 in the GW-13 corner, wet grinder FU-65 on its own 2' low counter FU-16.2 beside the sink, RO purifier FU-66 on GW-14 left of the sink, microwave FU-67 on the breakfast counter FU-17 (now 8' long, joined to the east counter). Fridge FU-18 on GW-05 at the north end of the store cupboard FU-25, with a loft above.</li>
   </ul><h2>Toilet 1 (G-07)</h2><ul>
   <li><b>Tiles:</b> greige matte porcelain 2' x 1' to 7' high; wood-look porcelain on the shower walls; matte anti-skid 1' x 1' floor. Paint above 7'.</li>
   <li><b>Fittings:</b> wall-hung WC FU-12 on a tiled concealed-cistern ledge, floating oak-look vanity FU-13 with a vessel basin and backlit mirror, open shower FU-14 (no screen) with a rain shower and a small square floor trap, black two-shelf bath rack FU-63 beside the basin, 15 L geyser above. All fittings matte black. WPC door D-03.</li>
