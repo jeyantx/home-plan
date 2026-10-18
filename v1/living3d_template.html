@@ -911,12 +911,14 @@ function setExt(k){if(!EXT[k])k='EX-1';const o=EXT[k];MAT.ext.color.set(o.wall);
 {const AX1=17.125,AX2=20.625,A0=4.333,R=0.5,TD=10/12,LY1=16.0,LY2=19.5,BX2=17.125,NA=15,NB=10,LZ=GRD+NA*R;
  const gr='Granite tread and riser, grey flamed (anti-skid)',st='ST-1 outside stair · RCC waist slab, 6" risers, 10" treads';
  // ST-1A: tread i covers y A0+i*TD .. +TD, top at GRD+(i+1)*R; each block is one riser plus a 6" waist below it
- for(let i=0;i<NA-1;i++){const y1=A0+i*TD,top=GRD+(i+1)*R;box(AX1,AX2,y1,y1+TD,Math.max(GRD,top-1.0),top-0.04,MAT.ext,{tip:st+' · ST-1A'});box(AX1-0.03,AX2,y1-0.03,y1+TD,top-0.04,top,MAT.stepStone,{tip:gr})}
+ for(let i=0;i<NA-1;i++){const y1=A0+i*TD,top=GRD+(i+1)*R;box(AX1,AX2,y1,y1+TD,y1<10.7?GRD:top-1.0,top-0.04,MAT.ext,{tip:st+' · ST-1A'});box(AX1-0.03,AX2,y1-0.03,y1+TD,top-0.04,top,MAT.stepStone,{tip:gr})}
  box(AX1,AX2,A0+(NA-1)*TD,LY2,LZ-1.0,LZ-0.04,MAT.ext,{tip:st+' · landing ST-1L, carried by a cantilever beam from C-02'});box(AX1-0.03,AX2,A0+(NA-1)*TD-0.03,LY2+0.03,LZ-0.04,LZ,MAT.stepStone,{tip:'Landing ST-1L, grey flamed granite'});
  // ST-1B: tread j covers x BX2-(j+1)*TD .. BX2-j*TD, top at LZ+(j+1)*R; the 10th riser lands on balcony 2
  for(let j=0;j<NB-1;j++){const x2=BX2-j*TD,top=LZ+(j+1)*R;box(x2-TD,x2,LY1,LY2,top-1.0,top-0.04,MAT.ext,{tip:st+' · ST-1B'});box(x2-TD,x2+0.03,LY1-0.03,LY2+0.03,top-0.04,top,MAT.stepStone,{tip:gr})}
  // store FU-56 under the foot of ST-1A, with a door to the east
- const sf=fuG['FU-56'];box(sf.x1,sf.x2,sf.y1,sf.y2,GRD,GRD+3.6,MAT.ext,{tip:`FU-56 · Low store under ST-1A · ${sf.note}`});box(sf.x1-0.04,sf.x1,sf.y1+1.5,sf.y1+4.0,GRD+0.2,GRD+3.3,MAT.extWood,{tip:'Store door, wood-look'});
+ // store FU-56 fills the space under the high end of ST-1A: one slice per tread, each just under the stair, so its top follows the slope
+ const sf=fuG['FU-56'];for(let i=0;i<NA-1;i++){const y1=A0+i*TD,y2=y1+TD,top=GRD+(i+1)*R;if(y1<sf.y1-0.01||y2>sf.y2+0.01)continue;box(sf.x1+0.012,sf.x2-0.012,y1,y2,GRD,top-1.0,MAT.ext,{tip:`FU-56 · Store under ST-1A · ${sf.note}`})}
+ box(sf.x1-0.04,sf.x1+0.012,sf.y1+0.6,sf.y1+3.1,GRD+0.2,GRD+3.4,MAT.extWood,{tip:'Store door, wood-look, 2\'6" x 3\'10"'});
  // railing: black MS posts and 4"-gap balusters, wood-look handrail 3' above the nosing line; merged into two meshes
  const blk=[],wd=[],H=3.0,P3=(x,y,z)=>new THREE.Vector3(mx(x),m(z),m(y));
  const rod=(a,b,w,arr)=>{const d=new THREE.Vector3().subVectors(b,a),L=d.length(),g=new THREE.BoxGeometry(m(w),L,m(w));g.translate(0,L/2,0);

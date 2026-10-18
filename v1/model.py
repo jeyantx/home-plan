@@ -127,7 +127,7 @@ BRANCH_NOTES='''<section class="ask"><h2>Staircase ST-1 (branch stair-v1, for re
 <li><b>25 risers of 6"</b> from the parking floor (1' below the house floor, to be confirmed) to the balcony at the first-floor level: 15 in ST-1A, 10 in ST-1B. Treads 10", width 3'6".</li>
 <li><b>ST-1A</b> runs along the new west compound wall BW-07 (moved 4½" east of the boundary), from Y 4'4" to 16'; <b>landing ST-1L</b> 3'6" x 3'6" at +7'6" above the parking; <b>ST-1B</b> turns east over the car, 7'6" long, arriving on balcony 2.</li>
 <li><b>Balcony 2</b> is 2' shorter (6'6" x 4'3"); PW-01 shortened and PW-03 extended to meet the top of ST-1B.</li>
-<li><b>Finish:</b> grey flamed granite treads and risers, plastered sides in the outside colour, black MS railing with 4" gaps and a wood-look handrail at 3'. Low store FU-56 under the foot of ST-1A, opening to the east.</li>
+<li><b>Finish:</b> grey flamed granite treads and risers, plastered sides in the outside colour, black MS railing with 4" gaps and a wood-look handrail at 3'. Store FU-56 under the high end of ST-1A (4' to 6' high), door facing east; the low end of the stair is solid.</li>
 </ol></section>
 <section class="ask"><h2>Bore change (branch bore-v1, for review)</h2>
 <ol>
@@ -253,7 +253,7 @@ FURNITURE = [
  ('FU-53','G','Tap and wash platform',1.375,4.875,89.375,91.875,'washpad',None,'Side garden, paved with drain, in the corner of BW-02 and BW-03'),
  ('FU-54','G','Wash basin with tap',19.125,20.625,95.25,96.5,'basin',None,'Back garden, against GW-08 beside window W-08'),
  ('FU-55','G','Tap and wash platform',17.625,20.625,96.75,99.25,'washpad',None,'Back garden, paved, with floor drain'),
- ('FU-56','G','Low store under staircase 1',17.125,20.625,4.75,10.75,'store',None,'Parking, 3\'6" x 6\', under the low end of ST-1A (up to about 3\'8" high), door facing east'),
+ ('FU-56','G','Store under staircase 1',17.125,20.625,10.997,16.0,'store',None,'Parking, 3\'6" x 5\', under the high end of ST-1A (about 4\' high at the front, 6\' at the back); door 2\'6" x 3\'10" facing east; the low end of the stair is solid'),
 ]
 # door and window types (proposal)
 SPEC = {
