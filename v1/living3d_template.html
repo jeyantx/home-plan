@@ -71,6 +71,7 @@ import {RenderPass} from 'three/addons/postprocessing/RenderPass.js';
 import {GTAOPass} from 'three/addons/postprocessing/GTAOPass.js';
 import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';
 import {createBambooPlant} from './models/bamboo-plant.js';
+import {createNeemTree} from './models/neem-tree.js';
 import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
 
 const P=window.PLAN, F=0.3048, CEIL=10.0, EYE=5.25;
@@ -190,7 +191,7 @@ const LX1=3.5,LX2=20.25,LY1=46.75,LY2=58.75;
 // ---------------- walls with openings ----------------
 const floorOpen=t=>['door','double','arch','frame'].includes(t);
 function touchesLiving(w){const pad=0.8;return !(w.x2<LX1-pad||w.x1>LX2+pad||w.y2<LY1-pad||w.y1>LY2+pad)}
-const floorPatches=[[[[12.125,67.625],[13.5,67.625],[13.5,68.0],[12.125,68.0]],'Floor, kitchen | stair hall']];   // gaps between room floors
+const floorPatches=[];   // gaps between room floors (the stair hall polygon now reaches the kitchen)   // gaps between room floors
 function buildWall(w){
   if(['comp','pillar','planter','para'].includes(w.kind)) return;
   const horiz=(w.x2-w.x1)>(w.y2-w.y1);
@@ -301,7 +302,7 @@ for(const [q,t] of floorPatches) slab(q,MAT.floor,0,t);
  box(LX1,LX1+d,LY1,LY2,0,hS,MAT.skirt,{tip:'Tile skirting, 4"'});box(LX1+d,18.9,LY1,LY1+d,0,hS,MAT.skirt,{tip:'Tile skirting, 4"'});box(LX1+d,18.9,LY2-d,LY2,0,hS,MAT.skirt,{tip:'Tile skirting, 4"'});}
 box(-30,60,-20,130,-1.05,-1.0,MAT.grass,{cast:false});
 box(0.375,2.75,30.75,75.125,-1.0,-0.97,MAT.paving,{cast:false,tip:'G-13 Side passage'});
-box(2.75,6.0,68.375,75.125,-1.0,-0.97,MAT.paving,{cast:false,tip:'G-16 Bore court · open to the sky'});
+box(2.75,6.0,67.125,73.875,-1.0,-0.97,MAT.paving,{cast:false,tip:'G-16 Bore court · open to the sky'});
 // neighbours, from the site photos: east = 2-storey house (pale green ground floor, lavender upper floor); west = blue apartment with a peach ground floor;
 // across the 17' road = a row of 2-storey houses with black water tanks on the roofs
 {const nb=(c)=>std({color:c,roughness:0.95}),win=std({color:'#2b2e31',roughness:0.4}),G=-1;
@@ -663,23 +664,23 @@ function cabRun(id,what,x1,x2,y1,y2,z1,z2,face,segs,mat,plinth){
       for(const [p1,p2,q1,q2] of [[a+g,b-g,fz1,fz1+w],[a+g,b-g,fz2-w,fz2],[a+g,a+g+w,fz1+w,fz2-w],[b-g-w,b-g,fz1+w,fz2-w]]) lb(p1,p2,0,SH,q1,q2,MAT.blackMetal,{tip:tg});
       glassMeshes.push(lb(a+g+w,b-g-w,0.02,0.035,fz1+w,fz2-w,MAT.glass,{cast:false,tip:tg}));handle(a,b,hz)}
     else{panel(a+g,b-g,fz1,fz2);handle(a,b,hz)}}}
-{const X1=3.5,ky2=67.625,bY=65.625,W06=P.openings.find(o=>o.id==='W-06');
+{const X1=3.5,ky2=66.375,bY=64.375,W06=P.openings.find(o=>o.id==='W-06');
  // base cabinets: east run FU-15 on GW-01 (front faces +x), back run FU-16 on GW-14 (front faces -y); the corner is a blind corner with a carousel
- cabRun('FU-15','Base cabinets, east',X1,5.5,59.125,ky2,0,KCH-KTOP,'x+',[[60.375,62.0,'door'],[62.0,64.0,'drawers'],[64.0,bY,'door']],MAT.kLow,true);
+ cabRun('FU-15','Base cabinets, east',X1,5.5,59.125,ky2,0,KCH-KTOP,'x+',[[60.375,62.0,'door'],[62.0,bY,'drawers']],MAT.kLow,true);
  cabRun('FU-16','Base cabinets, back',5.5,8.6,bY,ky2,0,KCH-KTOP,'y-',[[5.5,6.45,'drawers'],[6.45,8.6,'door2']],MAT.kLow,true);
  const LOW=2.0;cabRun('FU-16.2','Low counter for the wet grinder',8.6,9.875,bY,ky2,0,LOW-KTOP,'y-',[[8.6,9.875,'door']],MAT.kLow,true);
  box(8.6,9.9,bY-0.06,ky2,LOW-KTOP,LOW,MAT.kTop,{tip:'FU-16.2 · Low counter top, 2\' from the floor'});
  box(X1,5.56,59.125,ky2,KCH-KTOP,KCH,MAT.kTop,{tip:'Counter top, 40 mm, east run'});box(5.56,8.6,bY-0.06,ky2,KCH-KTOP,KCH,MAT.kTop,{tip:'Counter top, 40 mm, back run'});
  // wall cabinets FU-19 (GW-14), FU-19.2 and FU-19.3 (GW-01, either side of W-06)
- cabRun('FU-19','Wall cabinets, back',4.69,9.875,66.375,ky2-0.012,UPZ1,UPZ2,'y-',[[4.75,6.5,'door'],[6.5,8.25,'glass'],[8.25,9.875,'door']],MAT.kUp,false);
- cabRun('FU-19.2','Wall cabinets, east',X1+0.012,4.75,65.0,ky2-0.012,UPZ1,UPZ2,'x+',[[65.0,66.375,'door']],MAT.kUp,false);
+ cabRun('FU-19','Wall cabinets, back',4.69,9.875,ky2-1.25,ky2-0.012,UPZ1,UPZ2,'y-',[[4.75,6.5,'door'],[6.5,8.25,'glass'],[8.25,9.875,'door']],MAT.kUp,false);
+ cabRun('FU-19.2','Wall cabinets, east corner',X1+0.012,4.75,65.0,ky2-0.012,UPZ1,UPZ2,'x+',[],MAT.kUp,false);   // blind corner behind FU-19
  cabRun('FU-19.3','Wall cabinets, east',X1+0.012,4.75,59.137,61.0,UPZ1,UPZ2,'x+',[[59.137,61.0,'glass']],MAT.kUp,false);
  // top row to the ceiling (FU-68 on GW-14, FU-69 on GW-01, right across above the window and chimney), with a black shadow line under it
  const TZ1=UPZ2+0.05,TZ2=CEIL-0.012;
- cabRun('FU-68','Top storage, back',4.69,9.875,66.375,ky2-0.012,TZ1,TZ2,'y-',[[4.75,6.5,'door'],[6.5,8.25,'door'],[8.25,9.875,'door']],MAT.kUp,false);
- cabRun('FU-69','Top storage, east',X1+0.012,4.75,59.137,ky2-0.012,TZ1,TZ2,'x+',[[59.137,61.0,'door'],[61.0,63.0,'door'],[63.0,65.0,'door'],[65.0,66.375,'door']],MAT.kUp,false);
- box(X1+0.012,4.6,59.137,ky2-0.012,UPZ2,TZ1,MAT.blackMetal,{cast:false,tip:'Shadow line, black'});box(4.6,9.8,66.5,ky2-0.012,UPZ2,TZ1,MAT.blackMetal,{cast:false,tip:'Shadow line, black'});
- for(const [a,b,c,d] of [[4.6,4.66,59.3,60.85],[4.6,4.66,65.15,66.3],[4.9,9.7,66.5,66.56]]) ledStrips.push(box(a,b,c,d,UPZ1-0.03,UPZ1,MAT.led,{cast:false,tip:'LED strip under the wall cabinets'}));
+ cabRun('FU-68','Top storage, back',4.69,9.875,ky2-1.25,ky2-0.012,TZ1,TZ2,'y-',[[4.75,6.5,'door'],[6.5,8.25,'door'],[8.25,9.875,'door']],MAT.kUp,false);
+ cabRun('FU-69','Top storage, east',X1+0.012,4.75,59.137,ky2-0.012,TZ1,TZ2,'x+',[[59.137,61.0,'door'],[61.0,63.0,'door'],[63.0,65.0,'door']],MAT.kUp,false);
+ box(X1+0.012,4.6,59.137,ky2-0.012,UPZ2,TZ1,MAT.blackMetal,{cast:false,tip:'Shadow line, black'});box(4.6,9.8,ky2-1.125,ky2-0.012,UPZ2,TZ1,MAT.blackMetal,{cast:false,tip:'Shadow line, black'});
+ for(const [a,b,c,d] of [[4.6,4.66,59.3,60.85],[4.6,4.66,65.15,66.3],[4.9,9.7,ky2-1.125,ky2-1.065]]) ledStrips.push(box(a,b,c,d,UPZ1-0.03,UPZ1,MAT.led,{cast:false,tip:'LED strip under the wall cabinets'}));
  const ul=new THREE.PointLight('#ffd7a3',0,m(9),2);ul.position.set(mx(6.0),m(4.2),m(65.0));scene.add(ul);towerLights.push(ul);
  // backsplash: cream 3" x 12" ceramic tiles between counter and wall cabinets; below the W-06 sill
  const st='Backsplash · cream 3" x 12" glazed tiles';
@@ -722,7 +723,7 @@ function setFinish(k){if(!KT[k])k='KT-1';const o=KT[k];finishMat(MAT.kLow,o.low)
 
 
 // ================= TOILET 2 (G-11), 5' x 6'4½": Indian pan on the bore-court wall GW-18 facing west, bucket and basin on GW-14, shower across the south end =================
-{const X1=6.75,X2=11.75,Y1=68.0,Y2=74.375,c=0.04,e=0.012,TZ=7.0,tw='Wall tile · greige matte porcelain, 2\' x 1\', to 7\'',v2=P.openings.find(o=>o.id==='V-02'),dr=P.openings.find(o=>o.id==='D-04');
+{const X1=6.75,X2=11.75,Y1=66.75,Y2=73.125,c=0.04,e=0.012,TZ=7.0,tw='Wall tile · greige matte porcelain, 2\' x 1\', to 7\'',v2=P.openings.find(o=>o.id==='V-02'),dr=P.openings.find(o=>o.id==='D-04');
  tile(X1,X2,Y1,Y1+c,0,TZ,MAT.tWall,tw);tile(X1,X2,Y2-c,Y2,0,TZ,MAT.tWall,tw);
  tile(X1,X1+c,Y1+c+e,v2.b,0,v2.sill,MAT.tWall,tw);tile(X1,X1+c,v2.b,Y2-c-e,0,TZ,MAT.tWall,tw);
  tile(X2-c,X2,Y1+c+e,dr.a,0,TZ,MAT.tWall,tw);tile(X2-c,X2,dr.b,Y2-c-e,0,TZ,MAT.tWall,tw);
@@ -733,7 +734,7 @@ function setFinish(k){if(!KT[k])k='KT-1';const o=KT[k];finishMat(MAT.kLow,o.low)
  box(pn.x1+0.05,pn.x2-0.05,pn.y1+0.05,pn.y2-0.05,PZ+0.006,PZ+0.07,MAT.ceramic,{round:0.03,cast:false,tip:pt0});
  const hole=new THREE.Mesh(new THREE.CylinderGeometry(m(0.3),m(0.3),m(0.01),28),std({color:'#9aa0a3',roughness:0.2,metalness:0.1}));hole.scale.set(1.6,1,1);hole.position.set(mx(pn.x2-0.6),m(PZ+0.072),m(py));scene.add(hole);named(hole,pt0);
  for(const fy of [py-0.42,py+0.42]) box(pn.x1+0.35,pn.x1+0.95,fy-0.17,fy+0.17,PZ+0.07,PZ+0.1,MAT.ceramic,{round:0.02,cast:false,tip:'Foot rest, ribbed'});
- box(X1+c,X1+c+0.12,70.0,70.2,1.4,1.75,MAT.blackMetal,{tip:'Health faucet, matte black, on GW-18 beside the pan'});
+ box(X1+c,X1+c+0.12,68.75,68.95,1.4,1.75,MAT.blackMetal,{tip:'Health faucet, matte black, on GW-18 beside the pan'});
  // bucket and bib tap FU-57 in front of the user
  const bk=fuG['FU-57'],bx=(bk.x1+bk.x2)/2,by=(bk.y1+bk.y2)/2;
  cyl(bx,by,0,1.05,0.4,std({color:'#8f969a',roughness:0.5}),{tip:`FU-57 · Bucket, grey · ${bk.note}`,rTop:0.45,seg:28});cyl(bx+0.25,by+0.3,1.05,1.35,0.12,std({color:'#cfd4d6',roughness:0.4}),{tip:'Mug'});
@@ -755,8 +756,8 @@ function setFinish(k){if(!KT[k])k='KT-1';const o=KT[k];finishMat(MAT.kLow,o.low)
  box(bxc-0.04,bxc+0.04,Y1+c,Y1+c+0.45,3.0,3.07,MAT.blackMetal,{tip:'Basin tap, wall-mounted, matte black'});
  box(b.x1+0.1,b.x2-0.1,Y1+c+e,Y1+c+0.04,3.5,5.7,MAT.mirror,{cast:false,tip:'Mirror with warm LED backlight'});ledStrips.push(box(b.x1+0.05,b.x2-0.05,Y1+c+e,Y1+c+0.03,3.45,3.5,MAT.led,{cast:false,tip:'Mirror backlight'}));
  const ml=new THREE.PointLight('#ffd7a3',0,m(6),2);ml.position.set(mx(bxc),m(4.8),m(Y1+1.0));scene.add(ml);towerLights.push(ml);
- box(X1+c+0.08,X1+c+0.11,70.6,71.6,5.2,5.24,MAT.blackMetal,{tip:'Towel rail, matte black, on GW-18'});box(X1+c+0.04,X1+c+0.16,70.7,71.5,3.9,5.25,std({color:'#e9e1d3',roughness:1,normalMap:T.linen.normalMap}),{round:0.05,tip:'Towel, oatmeal'});
- downlight(9.25,70.6,CEIL,'LED ceiling light, toilet (warm white)');}
+ box(X1+c+0.08,X1+c+0.11,69.35,70.35,5.2,5.24,MAT.blackMetal,{tip:'Towel rail, matte black, on GW-18'});box(X1+c+0.04,X1+c+0.16,69.45,70.25,3.9,5.25,std({color:'#e9e1d3',roughness:1,normalMap:T.linen.normalMap}),{round:0.05,tip:'Towel, oatmeal'});
+ downlight(9.25,69.4,CEIL,'LED ceiling light, toilet (warm white)');}
 
 // ================= BEDROOM 2 (G-12): same Japandi warm-oak design as bedroom 1 =================
 {const X1=10.25,X2=20.25,Y1=80.625,Y2=94.375;
@@ -828,11 +829,11 @@ X_(()=>{CURFL='F';ZOFF=FFZ;P.walls.F.forEach(buildWall);
    else{slab(r.pts,r.kind==='wet'?MAT.tFloor:MAT.floor,0,t);slab(r.pts,MAT.ceiling,CEIL-0.001,null,true)}}
  ZOFF=0;CURFL='G';});
 // roof slab of the ground floor (also the terrace floor) and its edge fascia
-const slabParts=[[2.75,11.667,15.5,19.75],[2.75,21,19.75,68.375],[6.0,21,68.375,73.75],[9.5,21,73.75,95.125],[6.0,9.5,73.75,75.125],[2.75,9.5,75.125,77.875]];   // open over the bore court X 2.75-6, Y 68.375-75.125
+const slabParts=[[2.75,11.667,15.5,19.75],[2.75,21,19.75,67.125],[6.0,21,67.125,73.75],[9.5,21,73.75,95.125],[6.0,9.5,73.75,73.875],[2.75,9.5,73.875,77.875]];   // open over the bore court X 2.75-6, Y 67.125-73.875
 X_(()=>{for(const [a,b,c,d] of slabParts) box(a,b,c,d,SLB,FFZ-0.05,MAT.white,{tip:'RCC roof slab and beams, ground floor (terrace floor above)'});
  const fz1=SLB-0.012,fz2=FFZ,ft='Slab edge fascia';
- for(const [a,b,c,d] of [[2.75,11.667,15.5-0.03,15.5-0.012],[2.75,6.0,68.375+0.012,68.375+0.03],[2.75,6.0,75.125-0.03,75.125-0.012],[11.667,21,19.75-0.03,19.75-0.012],[2.75,9.5,77.875+0.012,77.875+0.03],[9.5,21,95.125+0.012,95.125+0.03]]) box(a,b,c,d,fz1,fz2,MAT.extTrim,{tip:ft});
- for(const [a,b,c,d] of [[2.75-0.03,2.75-0.012,15.5,68.375],[2.75-0.03,2.75-0.012,75.125,77.875],[6.0-0.03,6.0-0.012,68.375,75.125],[11.667+0.012,11.667+0.03,15.5,19.75],[21+0.012,21+0.03,19.75,95.125],[9.5-0.03,9.5-0.012,77.875,95.125]]) box(a,b,c,d,fz1,fz2,MAT.extTrim,{tip:ft});
+ for(const [a,b,c,d] of [[2.75,11.667,15.5-0.03,15.5-0.012],[2.75,6.0,67.125+0.012,67.125+0.03],[2.75,6.0,73.875-0.03,73.875-0.012],[11.667,21,19.75-0.03,19.75-0.012],[2.75,9.5,77.875+0.012,77.875+0.03],[9.5,21,95.125+0.012,95.125+0.03]]) box(a,b,c,d,fz1,fz2,MAT.extTrim,{tip:ft});
+ for(const [a,b,c,d] of [[2.75-0.03,2.75-0.012,15.5,67.125],[2.75-0.03,2.75-0.012,73.875,77.875],[6.0-0.03,6.0-0.012,67.125,73.875],[11.667+0.012,11.667+0.03,15.5,19.75],[21+0.012,21+0.03,19.75,95.125],[9.5-0.03,9.5-0.012,77.875,95.125]]) box(a,b,c,d,fz1,fz2,MAT.extTrim,{tip:ft});
  // parapets PW-01..05, 3' high, 4½", with a coping; vertical louvers on the balcony front PW-01
  for(const w of P.walls.F.filter(w=>w.kind==='para')){box(w.x1,w.x2,w.y1,w.y2,FFZ-0.05,FFZ+w.h,MAT.ext,{tip:`${w.id} · ${w.desc} · 3' parapet`});
    box(w.x1-0.06,w.x2+0.06,w.y1-0.06,w.y2+0.06,FFZ+w.h,FFZ+w.h+0.15,MAT.extTrim,{tip:`${w.id} · parapet coping`});wallMeshes.push(scene.children[scene.children.length-2])}
@@ -856,7 +857,7 @@ for(const c of P.columns) if(!inWallG(c)){const me=box(c.x1,c.x2,c.y1,c.y2,GRD,S
  for(const b of P.beams.filter(b=>b.level==='G')) for(const [a,bb,c,d] of zones){const x1=Math.max(b.x1,a),x2=Math.min(b.x2,bb),y1=Math.max(b.y1,c),y2=Math.min(b.y2,d);
    if(x2-x1>0.05&&y2-y1>0.05) box(x1+0.006,x2-0.006,y1+0.006,y2-0.006,SLB-1.08,SLB+0.01,MAT.white,{tip:`${b.id} · Beam 9" x ${b.depth} · ${b.note}`})}}
 // ground: house plinth, porch with 3 steps, parking pavers, road
-for(const [a,b,c,d] of [[8.25,21,30.75,33.25],[2.75,21,33.25,68.375],[6.0,21,68.375,75.125],[9.5,21,75.125,95.125],[2.75,3.5,30.75,33.25]]) box(a,b,c,d,GRD,-0.03,MAT.extTrim,{cast:false,tip:'Plinth, 1\''});
+for(const [a,b,c,d] of [[8.25,21,30.75,33.25],[2.75,21,33.25,67.125],[6.0,21,67.125,73.875],[9.5,21,73.875,95.125],[2.75,3.5,30.75,33.25]]) box(a,b,c,d,GRD,-0.03,MAT.extTrim,{cast:false,tip:'Plinth, 1\''});
 slab([[2.75,33.25],[8.5,33.25],[8.5,40.5],[2.75,40.5]],MAT.otherFloor,0,'G-02 · Porch floor');
 for(let i=0;i<3;i++) box(3.5,8.25,30.75+i*0.833,33.25,GRD,GRD+(i+1)*0.333,MAT.stepStone,{tip:'Porch steps, granite, 4" risers'});
 box(0.375,21,0.75,30.75,GRD,GRD+0.03,MAT.paver,{cast:false,tip:'G-01 · Parking · grey interlocking pavers'});
@@ -896,10 +897,9 @@ function setGate(k){if(!GD[k])k='GD-1';for(const me of gateMeshes){me.geometry=m
 function setExt(k){if(!EXT[k])k='EX-1';const o=EXT[k];MAT.ext.color.set(o.wall);MAT.extTrim.color.set(o.trim);
   if(o.louver==='wood'){MAT.extWood.map=T.oakPanel.map;MAT.extWood.color.set('#c99a6a')}else{MAT.extWood.map=null;MAT.extWood.color.set('#3c3d3e')}MAT.extWood.needsUpdate=true;
   document.querySelectorAll('#extSeg button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.e===k));try{localStorage.setItem('lr3d-ext',k)}catch(e){};if(photo&&pt)pt.updateMaterials();invalidate()}
-// neem tree: simple stand-in until the site photos arrive
-{const tx=12.75,ty=4.25;cyl(tx,ty,GRD,8.0,0.75,MAT.bark,{tip:'Neem tree (stand-in: will be rebuilt from your site photos)',rTop:0.55});
- const r=rng(21);for(let i=0;i<16;i++){const a=r()*Math.PI*2,d=r()*4.2,s=2.2+r()*1.8;const b=new THREE.Mesh(new THREE.IcosahedronGeometry(m(s),1),MAT.canopy);
-   b.position.set(mx(tx+Math.cos(a)*d),m(10.5+r()*7),m(ty+2.5+Math.sin(a)*d));b.castShadow=true;scene.add(b);named(b,'Neem tree canopy (stand-in)')}}
+// neem tree (existing, rebuilt from the site photos; 3d/models/neem-tree.js): trunk 3'6" from the road, leaning south, south limb cut to a stub
+{const tree=createNeemTree(THREE,{seed:1,cut:true});tree.position.set(mx(12.75),m(GRD),m(4.25));scene.add(tree);
+ tree.traverse(o=>{if(o.isMesh){o.userData.keepUV=true;named(o,o.userData.tip||'Neem tree (existing)');if(o.name==='NeemTrunk'||o.name==='NeemStub')wallMeshes.push(o)}});}
 // staircase ST-1: simple stand-in until the staircase is designed
 {const st='ST-1 outside stair (stand-in: next to be designed)';
  for(let i=0;i<15;i++) box(17.5,21,4.333+i*(11.667/15),4.333+(i+1)*(11.667/15),GRD,GRD+(i+1)*(7.5/15),MAT.white,{tip:st});
@@ -976,7 +976,7 @@ function applyOption(i){const o=OPTIONS[i];curOpt=i;
   <li><b>Windows:</b> AC FU-46 centred above W-07, blowing across the bed; W-07 curtains on a wall track below it; W-08 curtains from the band. Back door D-10: white UPVC with a glass upper half.</li>
   </ul><h2>Toilet 2 (G-11)</h2><ul>
   <li>Same tiles as toilet 1: greige walls to 7' (shower walls too), anti-skid floor.</li>
-  <li><b>Layout (bore-v1):</b> 5' x 6'4½". Indian WC FU-26 on a 4" tiled platform against the bore-court wall GW-18 with V-02 above, user faces west; bucket, bib tap and health faucet FU-57 in front; wall-hung basin FU-27 with backlit mirror on GW-14 by the door; open shower FU-28 across the south end (5' x 2'6") with geyser FU-58 and the bath rack FU-70 on GW-16.</li>
+  <li><b>Layout (bore-v1):</b> 5' x 6'4½", 1'3" further north since the kitchen is now 7'3" deep. Indian WC FU-26 on a 4" tiled platform against the bore-court wall GW-18 with V-02 above, user faces west; bucket, bib tap and health faucet FU-57 in front; wall-hung basin FU-27 with backlit mirror on GW-14 by the door; open shower FU-28 across the south end (5' x 2'6") with geyser FU-58 and the bath rack FU-70 on GW-16.</li>
   </ul><h2>Toilet 1 (G-07)</h2><ul>
   <li><b>Tiles:</b> greige matte porcelain 2' x 1' to 7' high, shower walls included; matte anti-skid 1' x 1' floor. Paint above 7'.</li>
   <li><b>Fittings:</b> wall-hung WC FU-12 on a tiled concealed-cistern ledge, floating oak-look vanity FU-13 with a vessel basin and backlit mirror, open shower FU-14 (no screen) with a rain shower and a small square floor trap, black two-shelf bath rack FU-63 beside the basin, 15 L geyser above. All fittings matte black. WPC door D-03.</li>
@@ -1017,9 +1017,9 @@ const VIEWS=[
  {p:[12.6,EYE,81.5],t:[20.0,3.4,88.5]},   // bedroom 2 from the door: bed, headboard, side tables
  {p:[11.2,EYE,93.4],t:[20.25,3.6,85.5]},  // bedroom 2 from the back door: bed and wardrobe
  {p:[17.6,EYE,86.6],t:[10.25,5.6,87.0]},  // bedroom 2 window W-07 with the AC above it
- {p:[13.0,5.6,70.3],t:[6.9,2.2,70.6]},    // toilet 2 from the stair hall, through D-04
+ {p:[13.0,5.6,69.0],t:[6.9,2.2,69.3]},    // toilet 2 from the stair hall, through D-04
  {p:[15.2,34,87.5],t:[15.2,0,87.51],top:true},   // top of bedroom 2
- {p:[10.5,4.4,-18.0],t:[11.0,7.0,20.0]},  // from the road: gates, pillars, planter, front of the house
+ {p:[10.5,4.4,-18.0],t:[11.5,11.0,20.0]},  // from the road: gates, pillars, planter, front of the house
  {p:[4.6,4.2,2.6],t:[14.0,5.0,30.75]},    // inside the gate: parking, pillars, porch steps, front wall
  {p:[5.2,FFZ+5.25,22.6],t:[15.5,FFZ+3.5,72.0]},   // terrace, looking at the bedroom 3 block
  {p:[-26.0,52.0,-22.0],t:[11.0,6.0,46.0]},       // aerial from the north-east
