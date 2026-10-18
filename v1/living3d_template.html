@@ -908,8 +908,8 @@ function setExt(k){if(!EXT[k])k='EX-1';const o=EXT[k];MAT.ext.color.set(o.wall);
  tree.traverse(o=>{if(o.isMesh){o.userData.keepUV=true;named(o,o.userData.tip||'Neem tree (existing)');if(o.name==='NeemTrunk'||o.name==='NeemStub')wallMeshes.push(o)}});}
 // staircase ST-1: simple stand-in until the staircase is designed
 {const st='ST-1 outside stair (stand-in: next to be designed)';
- for(let i=0;i<15;i++) box(17.5,21,4.333+i*(11.667/15),4.333+(i+1)*(11.667/15),GRD,GRD+(i+1)*(7.5/15),MAT.white,{tip:st});
- box(17.5,21,16.0,19.5,GRD+7.5-0.5,GRD+7.5,MAT.white,{tip:st+' · landing ST-1L'});
+ for(let i=0;i<15;i++) box(17.5,20.625,4.333+i*(11.667/15),4.333+(i+1)*(11.667/15),GRD,GRD+(i+1)*(7.5/15),MAT.white,{tip:st});
+ box(17.5,20.625,16.0,19.5,GRD+7.5-0.5,GRD+7.5,MAT.white,{tip:st+' · landing ST-1L'});
  for(let i=0;i<8;i++){const xa=17.5-(i+1)*(5.833/8);box(xa,17.5-i*(5.833/8),16.0,19.5,GRD+7.5+i*(5.0/8),GRD+7.5+(i+1)*(5.0/8),MAT.white,{tip:st})}}
 // the two existing bores (BR-01, BR-02): 2' concrete chamber with a steel cap
 for(const [x,y,id] of [[7.75,78.66,'BR-01'],[4.0,71.85,'BR-02']]){box(x-1,x+1,y-1,y+1,GRD,GRD+0.5,MAT.white,{tip:`${id} · Borewell (existing) · concrete chamber`});cyl(x,y,GRD+0.5,GRD+0.7,0.45,MAT.steel,{tip:`${id} · borewell cap`})}
