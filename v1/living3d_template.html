@@ -49,20 +49,22 @@ canvas{display:block;width:100%;height:100%}
  <div class="row">
   <h1 title="↑↓ walk · ←→ turn · A/D slide · W/S tilt · Q/E lower/raise · Shift faster · Drag to look around · Scroll to walk · Right-drag to slide · Hover for names">Home 3D</h1>
   <div class="seg" id="lightSeg"><button data-l="day">Day</button><button data-l="eve">Evening</button></div>
-  <select id="areaSel" title="Choose an area, then a view"><option value="0">Living</option><option value="1">Bedroom 1</option><option value="2">Kitchen</option><option value="3">Bedroom 2</option><option value="4">Outside</option></select>
+  <div class="seg" id="floorSeg" title="Show one floor from above"><button data-fl="all">All</button><button data-fl="G">Ground</button><button data-fl="F">First</button></div>
+  <select id="areaSel" title="Choose an area, then a view"><option value="0">Living</option><option value="1">Bedroom 1</option><option value="2">Kitchen</option><option value="3">Bedroom 2</option><option value="4">Outside</option><option value="5">Stairs</option></select>
   
 <div class="seg cams" data-area="0"><button data-c="0">Entry</button><button data-c="1">Corner</button><button data-c="2">From sofa</button><button data-c="3">From TV</button><button data-c="4">From kitchen</button><button data-c="5">Top</button></div>  <div class="seg cams" data-area="1"><button data-c="6">Door</button><button data-c="7">Window</button><button data-c="8">Study</button><button data-c="9">Toilet</button><button data-c="10">Top</button></div>  <div class="seg cams" data-area="2"><button data-c="11">Kitchen</button><button data-c="12">Sink</button><button data-c="13">Hob</button><button data-c="14">Fridge</button><button data-c="15">Top</button></div>  <div class="seg cams" data-area="3"><button data-c="16">Door</button><button data-c="17">Bed</button><button data-c="18">Window</button><button data-c="19">Toilet 2</button><button data-c="20">Top</button></div>  <div class="seg cams" data-area="4"><button data-c="21">Gate</button><button data-c="22">Parking</button><button data-c="23">Terrace</button><button data-c="24">Aerial</button><button data-c="25">Side</button><button data-c="26">Stair</button></div>
-  <span class="lbl">Lens</span><div class="seg" id="lensSeg"><button data-f="60">Eye 60°</button><button data-f="75">Wide 75°</button></div>
+  <div class="seg cams" data-area="5"><button data-c="27">Spiral</button><button data-c="28">Landing</button><button data-c="29">Well</button><button data-c="26">ST-1</button></div>
   <span class="spacer"></span>
   <button class="btn" id="photoBtn" aria-pressed="false" title="Ray-traced photo of the current view. Uses the graphics card heavily for about a minute, then stops by itself.">Photo</button>
-  <button class="btn" id="saveBtn" title="Save the current image as PNG">Save image</button>
+  <button class="btn" id="saveBtn" title="Save the current image as PNG">Save</button>
   <button class="btn" id="notesBtn" aria-pressed="false">Notes</button>
-  <button class="btn" id="optBtn" aria-pressed="false" title="Show or hide the gate, colour and finish options">Options ▾</button>
+  <button class="btn" id="optBtn" aria-pressed="false" title="Show or hide the gate, colour, finish and lens options">Options ▾</button>
  </div>
  <div class="row hidden" id="optRow">
   <span class="lbl">Gate</span><div class="seg" id="gateSeg"><button data-g="GD-1">GD-1 Slats</button><button data-g="GD-2">GD-2 Bars</button><button data-g="GD-3">GD-3 Panels</button></div>
   <span class="lbl">Colour</span><div class="seg" id="extSeg"><button data-e="EX-1"><i style="background:#eeeae2"></i><i style="background:#c99a6a"></i>EX-1</button><button data-e="EX-2"><i style="background:#cbc2b4"></i><i style="background:#f1eee8"></i>EX-2</button><button data-e="EX-3"><i style="background:#dccaae"></i><i style="background:#4a4a48"></i>EX-3</button></div>
   <span class="lbl">Finish</span><div class="seg" id="finishSeg"><button data-k="KT-1"><i style="background:#c9a77c"></i><i style="background:#efe9df"></i>KT-1</button><button data-k="KT-2"><i style="background:#efe9df"></i><i style="background:#c9a77c"></i>KT-2</button><button data-k="KT-3"><i style="background:#7d5a3e"></i><i style="background:#efe9df"></i>KT-3</button></div>
+  <span class="lbl">Lens</span><div class="seg" id="lensSeg"><button data-f="60" title="Eye-like lens">60°</button><button data-f="75" title="Wide lens">75°</button></div>
   <span class="sub">↑↓ walk · ←→ turn · A/D slide · W/S tilt · Q/E lower/raise · Shift faster · Drag to look around · Scroll to walk · Right-drag to slide · Hover for names</span>
  </div>
 </header>
@@ -299,13 +301,17 @@ function buildOpening(o,w,horiz,s0,out=0){
 P.walls.G.forEach(buildWall);
 
 // ---------------- floors, ceilings ----------------
-function slab(pts,mat,z,tip,down=false){
-  const s=new THREE.Shape(pts.map(p=>new THREE.Vector2(mx(p[0]),down?m(p[1]):-m(p[1]))));const g=new THREE.ShapeGeometry(s);g.rotateX(down?Math.PI/2:-Math.PI/2);
+const WELL={x:P.spiral.c[0],y:P.spiral.c[1],r:P.spiral.well||3.0};   // ST-2 round hole in the slab over the stair hall
+const CEIL_G=[], ROOF_F=[];   // floor switch: ground-floor ceilings; first-floor ceilings and roof
+const tagAs=(arr,fn)=>{const n0=scene.children.length;fn();arr.push(...scene.children.slice(n0))};
+function slab(pts,mat,z,tip,down=false,holes=[]){
+  const s=new THREE.Shape(pts.map(p=>new THREE.Vector2(mx(p[0]),down?m(p[1]):-m(p[1]))));
+  for(const h of holes){const q=new THREE.Path();q.absarc(mx(h.x),down?m(h.y):-m(h.y),m(h.r),0,Math.PI*2,false);s.holes.push(q)}const g=new THREE.ShapeGeometry(s);g.rotateX(down?Math.PI/2:-Math.PI/2);
   const me=new THREE.Mesh(g,mat);me.position.y=m(z+ZOFF);me.receiveShadow=true;scene.add(me);if(tip)named(me,tip);return me}
 for(const r of P.rooms.G){
   if(['out','garden','covered'].includes(r.kind)) continue;
   if(!['G-07','G-11','G-02'].includes(r.id)) slab(r.pts,COMMON.has(r.id)?MAT.floor:MAT.otherFloor,0,`${r.id} · ${r.name}`);
-  ceilingMeshes.push(slab(r.pts,MAT.ceiling,CEIL-0.001,null,true));
+  const c=slab(r.pts,MAT.ceiling,CEIL-0.001,null,true,r.id==='G-10'?[WELL]:[]);ceilingMeshes.push(c);CEIL_G.push(c);
 }
 for(const [q,t] of floorPatches) slab(q,MAT.floor,0,t);
 {const hS=0.33,d=0.04;   // 4" tile skirting in the living room
@@ -840,11 +846,17 @@ const X_=fn=>{const n0=scene.children.length;fn();for(const o of scene.children.
 X_(()=>{CURFL='F';ZOFF=FFZ;P.walls.F.forEach(buildWall);
  for(const r of P.rooms.F){const t=`${r.id} · ${r.name}`;
    if(r.kind==='terr') slab(r.pts,MAT.terrTile,0,t+' · pressed clay terrace tiles on a weathering course');
-   else{slab(r.pts,r.kind==='wet'?MAT.tFloor:MAT.floor,0,t);slab(r.pts,MAT.ceiling,CEIL-0.001,null,true)}}
+   else{slab(r.pts,r.kind==='wet'?MAT.tFloor:MAT.floor,0,t,false,r.id==='F-04'?[{...WELL,r:WELL.r-0.01}]:[]);ROOF_F.push(slab(r.pts,MAT.ceiling,CEIL-0.001,null,true))}}
  ZOFF=0;CURFL='G';});
 // roof slab of the ground floor (also the terrace floor) and its edge fascia
-const slabParts=[[2.75,9.625,15.5,19.75],[2.75,21,19.75,67.125],[6.0,21,67.125,73.75],[9.5,21,73.75,95.125],[6.0,9.5,73.75,73.875],[2.75,9.5,73.875,77.875]];   // open over the bore court X 2.75-6, Y 67.125-73.875
+const slabParts=[[2.75,9.625,15.5,19.75],[2.75,21,19.75,67.125],[6.0,21,67.125,73.75],[6.0,9.5,73.75,73.875],[2.75,9.5,73.875,77.875]];
+function holeSlab(x1,x2,y1,y2,z1,z2,h,mat,tip){   // thick slab with a round hole (extruded upward from z1)
+  const sh=new THREE.Shape([[x1,y1],[x2,y1],[x2,y2],[x1,y2]].map(p=>new THREE.Vector2(mx(p[0]),-m(p[1]))));
+  const q=new THREE.Path();q.absarc(mx(h.x),-m(h.y),m(h.r),0,Math.PI*2,false);sh.holes.push(q);
+  const g=new THREE.ExtrudeGeometry(sh,{depth:m(z2-z1),bevelEnabled:false,curveSegments:48});g.rotateX(-Math.PI/2);
+  const me=new THREE.Mesh(g,mat);me.position.y=m(z1+ZOFF);me.castShadow=true;me.receiveShadow=true;scene.add(me);if(tip)named(me,tip);return me}   // open over the bore court X 2.75-6, Y 67.125-73.875
 X_(()=>{for(const [a,b,c,d] of slabParts) box(a,b,c,d,SLB,FFZ-0.05,MAT.white,{tip:'RCC roof slab and beams, ground floor (terrace floor above)'});
+ holeSlab(9.5,21,73.75,95.125,SLB,FFZ-0.05,WELL,MAT.white,'RCC slab over the stair hall and bedroom 2 · 6\' round hole for ST-2, edge beams round it');
  const fz1=SLB-0.012,fz2=FFZ,ft='Slab edge fascia';
  for(const [a,b,c,d] of [[2.75,9.625,15.5-0.03,15.5-0.012],[2.75,6.0,67.125+0.012,67.125+0.03],[2.75,6.0,73.875-0.03,73.875-0.012],[9.625,21,19.75-0.03,19.75-0.012],[2.75,9.5,77.875+0.012,77.875+0.03],[9.5,21,95.125+0.012,95.125+0.03]]) box(a,b,c,d,fz1,fz2,MAT.extTrim,{tip:ft});
  for(const [a,b,c,d] of [[2.75-0.03,2.75-0.012,15.5,67.125],[2.75-0.03,2.75-0.012,73.875,77.875],[6.0-0.03,6.0-0.012,67.125,73.875],[9.625+0.012,9.625+0.03,15.5,19.75],[21+0.012,21+0.03,19.75,95.125],[9.5-0.03,9.5-0.012,77.875,95.125]]) box(a,b,c,d,fz1,fz2,MAT.extTrim,{tip:ft});
@@ -853,7 +865,8 @@ X_(()=>{for(const [a,b,c,d] of slabParts) box(a,b,c,d,SLB,FFZ-0.05,MAT.white,{ti
    box(w.x1-0.06,w.x2+0.06,w.y1-0.06,w.y2+0.06,FFZ+w.h,FFZ+w.h+0.15,MAT.extTrim,{tip:`${w.id} · parapet coping`});wallMeshes.push(scene.children[scene.children.length-2])}
  for(let x=2.95;x<9.55;x+=0.33) box(x,x+0.12,15.5-0.15,15.5-0.035,FFZ-0.4,FFZ+3.0,MAT.extWood,{tip:'Balcony front louvers, wood-look aluminium'});
  // roof of the first floor (bedroom 3 block), low parapet, overhead tank FU-71 on a stand, cat ladder FU-72
- const RZ=FFZ+SLB,RT=RZ+1.0;box(9.5,21,73.125,97.375,RZ,RT,MAT.white,{tip:'RCC roof slab, first floor'});
+ let RZ,RT;tagAs(ROOF_F,()=>{
+ RZ=FFZ+SLB;RT=RZ+1.0;box(9.5,21,73.125,97.375,RZ,RT,MAT.white,{tip:'RCC roof slab, first floor'});
  for(const [a,b,c,d] of [[9.5,21,73.125,73.5],[9.5,21,97.0,97.375],[9.5,9.875,73.5,97.0],[20.625,21,73.5,97.0]]){box(a,b,c,d,RT,RT+1.5,MAT.ext,{tip:'Roof parapet, 1\'6"'});box(a-0.04,b+0.04,c-0.04,d+0.04,RT+1.5,RT+1.62,MAT.extTrim,{tip:'Roof parapet coping'})}
  slab([[9.875,73.5],[20.625,73.5],[20.625,97.0],[9.875,97.0]],MAT.terrTile,RT+0.005,'Roof of bedroom 3 · pressed clay tiles');
  const tk=fuG2['FU-71'],tx=(tk.x1+tk.x2)/2,ty=(tk.y1+tk.y2)/2;box(tk.x1+0.2,tk.x2-0.2,tk.y1+0.2,tk.y2-0.2,RT,RT+1.0,MAT.white,{tip:'RCC tank stand, 1\''});
@@ -861,6 +874,7 @@ X_(()=>{for(const [a,b,c,d] of slabParts) box(a,b,c,d,SLB,FFZ-0.05,MAT.white,{ti
  for(const z of [RT+2.2,RT+3.8]) cyl(tx,ty,z,z+0.12,2.48,MAT.tank,{tip:'Tank rib',seg:40});
  const ld=fuG2['FU-72'],ly=ld.y1+0.25;for(const x of [ld.x1,ld.x2-0.08]) box(x,x+0.08,ly-0.05,ly+0.05,FFZ,RT+1.62+2.5,MAT.blackMetal,{tip:`FU-72 · Cat ladder, MS, black · ${ld.note}`});
  for(let z=FFZ+1;z<RT+1.62+2.4;z+=1.0) box(ld.x1+0.08,ld.x2-0.08,ly-0.03,ly+0.03,z,z+0.06,MAT.blackMetal,{tip:'Ladder rung'});
+ });
  // column stubs left on the terrace for the future hall (C-01..C-13)
  for(const c of P.columns.filter(c=>c.floors==='G')) box(c.x1+0.012,c.x2-0.012,c.y1+0.012,c.y2-0.012,FFZ-0.05,FFZ+1.25,MAT.white,{tip:`${c.id} · pillar stub, 1'3" high, bars inside for the future hall`});
 });
@@ -948,6 +962,44 @@ function setExt(k){if(!EXT[k])k='EX-1';const o=EXT[k];MAT.ext.color.set(o.wall);
  for(const [arr,mt,t] of [[blk,MAT.blackMetal,'ST-1 railing · black MS, 4" gaps'],[wd,MAT.extWood,'ST-1 handrail · wood-look, 3\' high']]){const g=mergeGeometries(arr);metreUV(g);const me=new THREE.Mesh(g,mt);me.castShadow=true;me.receiveShadow=true;me.userData.keepUV=true;scene.add(me);named(me,t)}
  const L=new THREE.PointLight('#ffc98a',0,m(12),2);L.position.set(mx(20.5),m(LZ+6),m(17.75));scene.add(L);towerLights.push(L);
  box(20.6,20.625,17.4,18.1,LZ+5.6,LZ+6.3,MAT.paper,{cast:false,tip:'Wall light at the landing'});}
+// spiral stair ST-2: 5'10" across, 18 risers of 7 2/3", 17 oak treads of 30 deg + a 60 deg landing; climbs anticlockwise (plan angle up), handrail on the right
+{const S2=P.spiral,cx=S2.c[0],cy=S2.c[1],RO=S2.r,RC=S2.col||0.19,N=S2.n||18,A=S2.ang||30,A0=S2.start??345,LA=S2.land||60,R=FFZ/N,H=3.0;
+ const L1=A0+(N-1)*A,L2=L1+LA,d2r=Math.PI/180,pt=(a,r)=>[cx+r*Math.cos(a*d2r),cy+r*Math.sin(a*d2r)];
+ const oak=[],blk=[],rail=[];
+ const sector=(a1,a2,r1,r2,z1,z2,arr)=>{const k=Math.max(4,Math.ceil((a2-a1)/5)),pts=[];
+   for(let i=0;i<=k;i++)pts.push(pt(a1+(a2-a1)*i/k,r2));for(let i=k;i>=0;i--)pts.push(pt(a1+(a2-a1)*i/k,r1));
+   const sh=new THREE.Shape(pts.map(p=>new THREE.Vector2(mx(p[0]),-m(p[1]))));const g=new THREE.ExtrudeGeometry(sh,{depth:m(z2-z1),bevelEnabled:false});
+   g.rotateX(-Math.PI/2);g.translate(0,m(z1),0);arr.push(g)};
+ const P3=(x,y,z)=>new THREE.Vector3(mx(x),m(z),m(y));
+ const rod=(a,b,w,arr)=>{const d=new THREE.Vector3().subVectors(b,a),L=d.length(),g=new THREE.CylinderGeometry(m(w/2),m(w/2),L,8);g.translate(0,L/2,0);
+   g.applyQuaternion(new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0,1,0),d.clone().normalize()));g.translate(a.x,a.y,a.z);arr.push(g)};
+ const nose=a=>R*((a-A0)/A+1);   // height of the nosing line at plan angle a
+ // treads: black steel pan + 1¼" oak top, 1" overlap onto the next, hub sleeve on the pole, 4 balusters each (gaps under 4")
+ for(let k=1;k<N;k++){const a1=A0+(k-1)*A,a2=a1+A+2,z=k*R;
+   sector(a1,a2,RC+0.02,RO,z-0.1,z,oak);sector(a1+0.5,a2-0.5,RC+0.02,RO-0.04,z-0.15,z-0.1,blk);
+   const sl=new THREE.CylinderGeometry(m(0.27),m(0.27),m(0.3),20);sl.translate(mx(cx),m(z-0.2),m(cy));blk.push(sl);
+   for(let j=0;j<4;j++){const a=a1+A*(j+0.5)/4,[x,y]=pt(a,RO-0.1);rod(P3(x,y,z),P3(x,y,nose(a)+H-0.06),0.055,blk)}}
+ // landing at the first floor, filling the hole out to the slab edge
+ sector(L1,L2,RC+0.02,WELL.r-0.01,FFZ-0.1,FFZ,oak);sector(L1,L2,RC+0.02,WELL.r-0.05,FFZ-0.2,FFZ-0.1,blk);
+ // centre pole 4½" with a base plate and a cap
+ cyl(cx,cy,0,FFZ+H,RC,MAT.blackMetal,{tip:'ST-2 · centre pole, 4½" MS pipe, bolted to the floor and to the landing',seg:24});
+ cyl(cx,cy,0,0.03,0.45,MAT.blackMetal,{tip:'ST-2 · base plate'});cyl(cx,cy,FFZ+H,FFZ+H+0.1,RC+0.04,MAT.blackMetal,{tip:'ST-2 · pole cap'});
+ wallMeshes.push(scene.children[scene.children.length-3]);
+ // helical handrail on the outside, 3' above the nosing line, ending level with the landing
+ {const pts=[];for(let a=A0;a<=L1+0.01;a+=4){const [x,y]=pt(a,RO-0.1);pts.push(P3(x,y,nose(a)+H))}
+  const g=new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts),220,m(0.11),10,false);rail.push(g);
+  const [x0,y0]=pt(A0,RO-0.1);rod(P3(x0,y0,R),P3(x0,y0,R+H),0.09,blk)}   // newel post at tread 1
+ // first floor: guard rail round the hole (black balusters @ 4", oak top) and along the open side of the landing
+ {const rr=WELL.r-0.06,top=FFZ+H,pts=[];
+  for(let a=L2;a<=L1+360+0.01;a+=3){const [x,y]=pt(a,rr);pts.push(P3(x,y,top))}
+  rail.push(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts),200,m(0.11),10,false));
+  const n=Math.ceil((360-LA)*d2r*rr/0.36);for(let i=0;i<=n;i++){const a=L2+(360-LA)*i/n,[x,y]=pt(a,rr);rod(P3(x,y,FFZ),P3(x,y,top-0.06),i%6===0?0.1:0.055,blk)}
+  const [ex,ey]=pt(L2,rr),[px,py]=pt(L2,RC+0.05);rod(P3(px,py,top),P3(ex,ey,top),0.22,rail);
+  for(let i=1;i<8;i++){const [x,y]=pt(L2,RC+0.05+(rr-RC-0.05)*i/8);rod(P3(x,y,FFZ),P3(x,y,top-0.06),0.055,blk)}}
+ const st2oak=MAT.oakDark.clone();st2oak.roughness=0.85;   // matte oil finish, no glare on the treads
+ for(const [arr,mt,t] of [[oak,st2oak,'ST-2 spiral stair · oak tread 1¼" on a black steel pan, 30°, 7⅔" rise'],[blk,MAT.blackMetal,'ST-2 · black MS frame, hub sleeves and balusters, gaps under 4"'],[rail,st2oak,'ST-2 · oak handrail, 3\' high']]){
+   const g=mergeGeometries(arr.map(g=>g.index?g.toNonIndexed():g));metreUV(g);const me=new THREE.Mesh(g,mt);me.castShadow=true;me.receiveShadow=true;me.userData.keepUV=true;scene.add(me);named(me,t)}
+}
 // the two existing bores (BR-01, BR-02): 2' concrete chamber with a steel cap
 for(const [x,y,id] of [[7.75,78.66,'BR-01'],[4.0,71.85,'BR-02']]){box(x-1,x+1,y-1,y+1,GRD,GRD+0.5,MAT.white,{tip:`${id} · Borewell (existing) · concrete chamber`});cyl(x,y,GRD+0.5,GRD+0.7,0.45,MAT.steel,{tip:`${id} · borewell cap`})}
 // outside lights: porch and parking downlights
@@ -1068,10 +1120,22 @@ const VIEWS=[
  {p:[-26.0,52.0,-22.0],t:[11.0,6.0,46.0]},       // aerial from the north-east
  {p:[1.55,4.2,29.0],t:[1.55,4.3,72.0]},   // side passage
  {p:[7.0,5.5,27.0],t:[18.5,5.5,10.0]},    // staircase ST-1 from the parking
+ {p:[16.2,EYE,68.6],t:[17.6,4.6,77.0]},   // ST-2 from the open area: the first tread faces you
+ {p:[11.0,FFZ+EYE,79.3],t:[17.5,FFZ+2.6,76.2]},   // first-floor landing F-04, arriving off ST-2
+ {p:[14.6,FFZ+5.6,77.4],t:[17.4,1.0,76.6]},       // looking down the ST-2 well
 ];
+const FLOORVIEW={G:{p:[11,80,34],t:[11,0,64]},F:{p:[12,FFZ+58,52],t:[13,FFZ,78]},all:{p:[-26.0,52.0,-22.0],t:[11.0,6.0,46.0]}};
 let hfov=75;
 function applyFov(){const a=camera.aspect||1;camera.fov=THREE.MathUtils.radToDeg(2*Math.atan(Math.tan(THREE.MathUtils.degToRad(hfov)/2)/a));camera.updateProjectionMatrix()}
-function setView(i){const v=VIEWS[i];ceilingMeshes.forEach(c=>c.visible=!v.top);renderer.shadowMap.needsUpdate=true;camera.position.set(mx(v.p[0]),m(v.p[1]),m(v.p[2]));
+let floorMode='all',viewTop=false;
+function applyVis(){const hideUp=floorMode==='G'||viewTop;   // ground: drop the ground-floor ceilings and everything above; first: drop its ceilings and roof
+  ceilingMeshes.forEach(c=>c.visible=!hideUp);ROOF_F.forEach(c=>c.visible=!(hideUp||floorMode==='F'));
+  document.querySelectorAll('#floorSeg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.fl===floorMode));
+  renderer.shadowMap.needsUpdate=true;if(photo&&pt)pt.setScene(scene,camera);invalidate()}
+function setFloor(f){floorMode=f;viewTop=false;applyVis();aimAt(FLOORVIEW[f]);document.querySelectorAll('.cams button').forEach(b=>b.setAttribute('aria-pressed',false))}
+function aimAt(v){camera.position.set(mx(v.p[0]),m(v.p[1]),m(v.p[2]));
+  const d=new THREE.Vector3(mx(v.t[0]),m(v.t[1]),m(v.t[2])).sub(camera.position);yaw=Math.atan2(-d.x,-d.z);pitch=Math.atan2(d.y,Math.hypot(d.x,d.z));applyLook();invalidate()}
+function setView(i){const v=VIEWS[i];floorMode='all';viewTop=!!v.top;applyVis();camera.position.set(mx(v.p[0]),m(v.p[1]),m(v.p[2]));
   const d=new THREE.Vector3(mx(v.t[0]),m(v.t[1]),m(v.t[2])).sub(camera.position);yaw=Math.atan2(-d.x,-d.z);pitch=Math.atan2(d.y,Math.hypot(d.x,d.z));applyLook();
   document.querySelectorAll('.cams button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.c===i));
   const ar=document.querySelector(`.cams button[data-c="${i}"]`)?.parentElement.dataset.area;if(ar!=null)showArea(ar);invalidate()}
@@ -1080,6 +1144,7 @@ function applyLook(){pitch=Math.max(-1.55,Math.min(1.55,pitch));camera.rotation.
 function setLens(f){hfov=f;applyFov();document.querySelectorAll('#lensSeg button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.f===f));try{localStorage.setItem('lr3d-lens',f)}catch(e){};invalidate()}
 document.querySelectorAll('#lightSeg button').forEach(b=>b.onclick=()=>applyLight(b.dataset.l));
 document.querySelectorAll('.cams button').forEach(b=>b.onclick=()=>setView(+b.dataset.c));
+document.querySelectorAll('#floorSeg button').forEach(b=>b.onclick=()=>setFloor(b.dataset.fl));
 areaSel.onchange=()=>setView(+document.querySelector(`.cams[data-area="${areaSel.value}"] button`).dataset.c);   // jump to the first view of that area
 const optBtn=document.getElementById('optBtn'),optRow=document.getElementById('optRow');
 function setOpt(o){optRow.classList.toggle('hidden',!o);optBtn.setAttribute('aria-pressed',o);optBtn.textContent=o?'Options ▴':'Options ▾';try{localStorage.setItem('lr3d-opts',o?'1':'0')}catch(e){};resize()}

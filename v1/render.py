@@ -158,13 +158,32 @@ def stair_B(op=1,dash=''):
     E(f'<line x1="{a[0]:.3f}" y1="{a[1]:.3f}" x2="{b[0]:.3f}" y2="{b[1]:.3f}" stroke="#fff" stroke-width="0.08" marker-end="url(#arrW)"/></g>')
 
 def spiral(top=False):
-    x,y=S(*SPC)
-    dash='stroke-dasharray="0.25 0.15"' if top else ''
-    E(f'<circle cx="{x}" cy="{y}" r="{SPR}" fill="#c98b5e" stroke="#6b3a1c" stroke-width="0.05" opacity="{0.4 if top else 1}" {dash}/>')
-    for k in range(17):
-        a=math.radians(-90+k*300/16)
-        E(f'<line x1="{x}" y1="{y}" x2="{x+SPR*math.cos(a):.3f}" y2="{y+SPR*math.sin(a):.3f}" stroke="#6b3a1c" stroke-width="0.03" opacity="{0.4 if top else 1}"/>')
-    E(f'<circle cx="{x}" cy="{y}" r="0.25" fill="#3a2a1c"/>')
+    # ST-2: plan angle 0 = +X (west), 90 = +Y (south); climbs with the angle increasing
+    import model as _m
+    st=getattr(_m,'ST2',dict(n=18,ang=30,start=345,land=60,well=3.0,col=0.19))
+    cx,cy=SPC; A=st['ang']; s0=st['start']; nt=st['n']-1; l1=s0+nt*A; l2=l1+st['land']
+    P=lambda a,r:S(cx+r*math.cos(math.radians(a)),cy+r*math.sin(math.radians(a)))
+    def poly(pts,fill,stroke,sw,extra=''):
+        E('<polygon points="'+' '.join(f'{x:.3f},{y:.3f}' for x,y in pts)+f'" fill="{fill}" stroke="{stroke}" stroke-width="{sw}" {extra}/>')
+    def arc(a1,a2,r,k=48): return [P(a1+(a2-a1)*i/k,r) for i in range(k+1)]
+    def pline(pts,stroke,sw,extra=''):
+        E('<polyline points="'+' '.join(f'{x:.3f},{y:.3f}' for x,y in pts)+f'" fill="none" stroke="{stroke}" stroke-width="{sw}" {extra}/>')
+    op=0.4 if top else 1
+    E(f'<g class="ST-2">')
+    pline(arc(0,360,st['well'],96),'#6b3a1c',0.03,'stroke-dasharray="0.2 0.12"')          # 6' round hole in the slab
+    E(f'<g opacity="{op}">')
+    poly(arc(0,360,SPR,96),'#d9a37a','#6b3a1c',0.05,'stroke-dasharray="0.25 0.15"' if top else '')
+    poly([S(cx,cy)]+arc(s0,s0+A,SPR,8),'#b9774a','none',0)                                   # tread 1
+    for k in range(12): a=P(s0+k*A,st['col']); b=P(s0+k*A,SPR); line(cx+st['col']*math.cos(math.radians(s0+k*A)),cy+st['col']*math.sin(math.radians(s0+k*A)),cx+SPR*math.cos(math.radians(s0+k*A)),cy+SPR*math.sin(math.radians(s0+k*A)),'#6b3a1c',0.03)
+    E('</g>')
+    # landing at the first floor: solid on the first-floor plan, dashed overhead on the ground floor
+    poly([S(cx,cy)]+arc(l1,l2,SPR,12),'#c98b5e' if top else 'none','#6b3a1c',0.05,'' if top else 'stroke-dasharray="0.2 0.12"')
+    if top:   # well guard rail round the hole, and on the open side of the landing
+        pline(arc(l2,l1+360,st['well']-0.05,80),'#222',0.08); pline([S(cx,cy),P(l2,st['well'])],'#222',0.08)
+    else:     # UP arrow along the walking line
+        pts=arc(s0+8,s0+300,1.9,40); pline(pts,'#fff',0.08,'marker-end="url(#arrW)"')
+    E(f'<circle cx="{S(cx,cy)[0]}" cy="{S(cx,cy)[1]}" r="{st["col"]+0.03:.3f}" fill="#222"/>')
+    E('</g>')
 def vehicles():
     import model as _m
     cx1,cx2,cy1,cy2=getattr(_m,'CAR',(11.25,17.25,13.75,28.75))
@@ -386,7 +405,7 @@ def ground():
     E('<g class="L-rooms">'); room_labels('G')
     import model as _m
     for X,Y,t,sz in getattr(_m,'EXTRA_TEXT',[]): text(X,Y,t,sz,weight=600,fill='#555')
-    text(SPC[0]-2.75,SPC[1]-3.95,'ST-2 spiral stair',0.34,weight=600,fill='#3a1f0c')
+    text(SPC[0]-2.75,SPC[1]-3.95,'ST-2 spiral stair',0.34,weight=600,fill='#3a1f0c'); text(SPC[0]+2.3,SPC[1]-0.3,'UP',0.3,weight=700,fill='#3a1f0c')
     text(18.875,10.2,'ST-1A',0.36,weight=700,fill='#fff'); text(18.875,17.75,'ST-1L',0.32,weight=700,fill='#3a1f0c')
     E('</g>')
     borewell()
@@ -411,7 +430,7 @@ def first():
     E('</g>')
     E('<g class="L-rooms">'); room_labels('F')
     text(13.4,17.75,'ST-1B',0.36,weight=700,fill='#fff'); text(18.875,17.75,'ST-1L',0.32,weight=700,fill='#3a1f0c')
-    text(SPC[0]-3.0,SPC[1]-4.55,'ST-2 arrives',0.32,weight=600,fill='#3a1f0c')
+    text(SPC[0]-3.0,SPC[1]-4.55,'ST-2 arrives',0.32,weight=600,fill='#3a1f0c'); text(SPC[0]-1.6,SPC[1]+0.35,'landing',0.26,weight=600,fill='#3a1f0c')
     text(10.5,8.0,'below: parking, gates, neem tree',0.45,fill='#888')
     E('</g>')
     draw_struct('F')

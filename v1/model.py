@@ -122,7 +122,17 @@ OPENINGS = [
 # ---------- building outlines (outer wall faces) for built-up area ----------
 GF_OUTLINE=[(8.5,30.75),(21,30.75),(21,95.125),(9.5,95.125),(9.5,73.875),(6.0,73.875),(6.0,67.125),(2.75,67.125),(2.75,40.5),(8.5,40.5)]
 FF_OUTLINE=R(9.5,21.0,73.125,97.375)
-BRANCH_NOTES='''<section class="ask"><h2>Staircase ST-1 (branch stair-v1, for review)</h2>
+BRANCH_NOTES='''<section class="ask"><h2>Spiral stair ST-2 (branch spiral-v1, for review)</h2>
+<ol>
+<li><b>Size:</b> 5'10" across, in the stair hall against GW-05, centre 17' from east and 76'10½" from the road. Clear walking width about 2'7" (31"), 4½" steel centre pole.</li>
+<li><b>Steps:</b> 18 risers of 7⅔" (195 mm) for the 11'6" floor height, 17 oak treads of 30° (12 per full turn) plus a 60° landing. Tread depth is 7½" at the inner walk line and 12" where you normally walk; outer edge 18".</li>
+<li><b>Headroom:</b> 7'6" under the next turn and 6'10" under the landing, more than the 6'6" rule.</li>
+<li><b>Direction:</b> start at the west side facing south (coming from the dining side along GW-05), climb anticlockwise with the handrail on your right, arrive facing east onto the landing F-04, next to D-07 and D-09.</li>
+<li><b>Compared with ready kits:</b> 6' kits (Salter, Iron Shop) use the same 30° treads but up to 9½" risers and need a 6'2" square hole; Arke Kloè 160 cm uses 8¼" to 9¼" risers. Ours is a gentler 7⅔", close to a normal staircase.</li>
+<li><b>Structure:</b> 6' round hole in the slab over the stair hall, with edge beams round it (engineer to size). Pole bolted to the ground floor and to the landing edge.</li>
+<li><b>Finish:</b> black MS pole, frames and balusters (4 per tread, gaps under 4"), oak treads and oak handrail at 3'. Black MS rail with oak top round the hole on the first floor.</li>
+</ol></section>
+<section class="ask"><h2>Staircase ST-1 (branch stair-v1, for review)</h2>
 <ol>
 <li><b>25 risers of 6"</b> from the parking floor (1' below the house floor, to be confirmed) to the balcony at the first-floor level: 15 in ST-1A, 10 in ST-1B. Treads 10", width 3'6".</li>
 <li><b>ST-1A</b> runs along the new west compound wall BW-07 (moved 4½" east of the boundary), from Y 4'4" to 16'; <b>landing ST-1L</b> 3'6" x 3'6" at +7'6" above the parking; <b>ST-1B</b> turns east over the car, 7'6" long, arriving on balcony 2.</li>
@@ -176,7 +186,11 @@ TAGPOS={'GW-01':(3.125,53.0),'GW-05':(20.625,51.0),'GW-07':(9.875,91.5),'BW-01':
         'GW-15':(18.4,80.44),'GW-14':(8.0,66.56),'GW-10':(13.94,34.6),'GW-09':(9.06,43.0),'BW-03':(1.19,98.0),'BW-07':(20.81,25.0),'BW-08':(20.81,100.5),'BW-02':(0.6,89.19)}
 OPENTAGOFF={'W-01':-0.75,'V-01':-0.75,'W-02':0.9,'W-03':-1.0,'W-04':-1.0,'W-05':-1.0,'W-06':-1.0,'V-02':-1.0,'W-07':-1.0,'W-08':0.8,'D-01':-1.4,'D-02':-2.2,'D-03':-1.6,
             'O-01':-0.8,'D-04':1.6,'D-05':-1.5,'D-06':1.7,'D-07':1.7,'D-08':-1.4,'D-09':-1.6,'W-09':-0.8,'W-10':-1.0,'W-11':0.8,'W-12':-0.85,'D-10':0.9}
-SPC=(17.0,76.875); SPR=3.0
+SPC=(17.0,76.875); SPR=35/12   # ST-2 spiral: centre and outer radius (5'10" across)
+# ST-2: 18 risers of 7 2/3" (11'6" floor to floor), 17 oak treads of 30 deg + a 60 deg landing at the first floor.
+# Climbs anticlockwise (outer handrail on your right going up). Tread 1 starts on the 345 deg line (plan angle: 0 = west, 90 = south),
+# so you walk onto it heading south along GW-05; the landing (135-195 deg) opens east onto F-04. RCC well: 6' round hole.
+ST2=dict(n=18,ang=30,start=345,land=60,well=3.0,col=2.25/12)
 CH_G_E=[0,30.75,40.5,41.25,46.75,58.75,59.125,66.375,67.125,73.875,89.0,106.0]
 CH_G_W=[0,4.333,16.0,19.5,30.75,31.5,36.0,36.375,46.375,46.75,58.75,59.125,68.0,80.25,80.625,94.375,95.125,105.0]
 CH_G_BACK_Y=104.0

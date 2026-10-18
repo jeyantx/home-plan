@@ -78,7 +78,7 @@ panel=BN+f'''
 <section><h2>Staircases</h2>
 <ul>
 <li><b>ST-1 outside stair</b>, 3'6" wide inside the west compound wall BW-07, 6" risers and 10" treads, 25 risers in all (the parking floor is 1' below the house floor). ST-1A runs north to south along BW-07 from Y 4'4" to 16', 15 risers. ST-1L is a 3'6" x 3'6" landing at +7'6" above the parking. ST-1B turns east, 10 risers over 7'6", over the car, and arrives on balcony 2 at the first-floor level. Grey flamed granite, black MS railing with a wood-look handrail.</li>
-<li><b>ST-2 spiral stair</b>, 6' across, in the stair hall. It arrives on the first-floor stair landing F-04.</li>
+<li><b>ST-2 spiral stair</b>, 5'10" across, in the stair hall. 18 risers of 7⅔", 17 oak treads of 30° and a landing; climbs anticlockwise from the west side and arrives facing east on the first-floor stair landing F-04. 6' round hole in the slab.</li>
 </ul></section>
 <section><h2>Furniture I will propose next (for your approval)</h2>
 <ul>
