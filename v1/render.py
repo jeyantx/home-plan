@@ -352,6 +352,9 @@ def draw_furniture(fl,_late=False):
         elif k=='curtain':
             if w>d: line(x1,(y1+y2)/2,x2,(y1+y2)/2,'#b05a8a',0.05,extra='stroke-dasharray="0.15 0.08"')
             else: line((x1+x2)/2,y1,(x1+x2)/2,y2,'#b05a8a',0.05,extra='stroke-dasharray="0.15 0.08"')
+        elif k=='treepit':
+            a=S((x1+x2)/2,(y1+y2)/2); r=(x2-x1)/2
+            E(f'<circle cx="{a[0]:.3f}" cy="{a[1]:.3f}" r="{r:.3f}" fill="#8a5a3a" stroke="#777" stroke-width="0.33"/>')
         elif k=='fbed':
             import model as _mm
             q=[(x1,_mm.back_y(x1)-0.375),(x2,_mm.back_y(x2)-0.375),(x2,_mm.back_y(x2)-1.875),(x1,_mm.back_y(x1)-1.875)]

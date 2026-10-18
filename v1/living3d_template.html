@@ -281,7 +281,7 @@ function buildOpening(o,w,horiz,s0,out=0){
     const glassTop=/glass upper half/.test(P.spec[o.id]||'');
     const mat=o.id==='D-01'?MAT.teak:(['D-03','D-04','D-08'].includes(o.id)||glassTop?MAT.white:MAT.oak);
     const leaves=o.type==='double'?[[u1,(u1+u2)/2,'a'],[(u1+u2)/2,u2,'b']]:[[u1,u2,o.hinge||'a']];
-    const open={'D-01':1.15,'D-02':1.2,'D-03':1.2,'D-04':1.47,'D-06':1.5,'D-07':1.5,'D-08':1.45,'D-09':1.4}[o.id]||0;   // first-floor doors shown open too   // main door, bedroom 1 and toilet 1 doors shown open
+    const open={'D-01':1.15,'D-02':1.2,'D-03':1.2,'D-04':1.47,'D-06':1.5,'D-07':1.5,'D-08':1.45,'D-09':1.45}[o.id]||0;   // first-floor doors shown open too   // main door, bedroom 1 and toilet 1 doors shown open
     for(const [a,b,h] of leaves){const len=b-a, hingeU=h==='a'?a:b;
       const leaf=new THREE.Mesh(new THREE.BoxGeometry(m(len-0.24),m(o.h-0.14),m(th)),mat);leaf.castShadow=true;leaf.receiveShadow=true;
       const piv=new THREE.Group();const p=along(horiz,w,hingeU,T/2);piv.position.set(mx(p[0]),m(ZOFF),m(p[1]));
@@ -979,7 +979,13 @@ for(const c of P.columns) if(!inWallG(c)){const me=box(c.x1,c.x2,c.y1,c.y2,GRD,S
 for(const [a,b,c,d] of [[8.25,21,30.75,33.25],[2.75,21,33.25,67.125],[6.0,21,67.125,73.875],[9.5,21,73.875,95.125],[2.75,3.5,30.75,33.25]]) box(a,b,c,d,GRD,-0.03,MAT.extTrim,{cast:false,tip:'Plinth, 1\''});
 slab([[2.75,33.25],[8.5,33.25],[8.5,40.5],[2.75,40.5]],MAT.otherFloor,0,'G-02 · Porch floor');
 for(let i=0;i<3;i++) box(3.5,8.25,30.75+i*0.833,33.25,GRD,GRD+(i+1)*0.333,MAT.stepStone,{tip:'Porch steps, granite, 4" risers'});
-box(0.375,21,0.75,30.75,GRD,GRD+0.03,MAT.paver,{cast:false,tip:'G-01 · Parking · grey interlocking pavers'});
+{const tp=fuG['FU-76'],tx=(tp.x1+tp.x2)/2,ty=(tp.y1+tp.y2)/2,tr=(tp.x2-tp.x1)/2;   // tree pit FU-76: pavers stop at a granite kerb ring, open soil inside
+ holeSlab(0.375,21,0.75,30.75,GRD,GRD+0.03,{x:tx,y:ty,r:tr},MAT.paver,'G-01 · Parking · grey interlocking pavers').castShadow=false;
+ const sh=new THREE.Shape();sh.absarc(mx(tx),-m(ty),m(tr),0,Math.PI*2,false);const hl=new THREE.Path();hl.absarc(mx(tx),-m(ty),m(tr-0.33),0,Math.PI*2,true);sh.holes.push(hl);
+ const kg=new THREE.ExtrudeGeometry(sh,{depth:m(0.115),bevelEnabled:true,bevelThickness:m(0.01),bevelSize:m(0.01),bevelSegments:1,curveSegments:48});kg.rotateX(-Math.PI/2);
+ const kb=new THREE.Mesh(kg,MAT.stepStone);kb.position.y=m(GRD);kb.castShadow=true;kb.receiveShadow=true;scene.add(kb);named(kb,'FU-76 · Tree pit kerb ring, grey granite, 4" wide, 1" above the pavers');
+ const mulch=std({map:canvasTex(512,512,(g,w,h)=>{const r=rng(61);g.fillStyle='#5b3b25';g.fillRect(0,0,w,h);for(let i=0;i<5000;i++){const c=['#3f2818','#6e4a2e','#7d6a3e','#4a5a2a','#8a6a48'][Math.floor(r()*5)];g.fillStyle=c;g.globalAlpha=0.6;g.save();g.translate(r()*w,r()*h);g.rotate(r()*7);g.fillRect(-4,-1.5,8+r()*8,3);g.restore()}g.globalAlpha=1},0.6),roughness:1});
+ cyl(tx,ty,GRD-0.02,GRD+0.035,tr-0.33,mulch,{tip:`FU-76 · Tree pit · open soil with leaf mulch · ${tp.note}`,seg:48}).castShadow=false;}
 box(-40,70,-17,-0.02,GRD-0.02,GRD+0.02,MAT.paver,{cast:false,tip:'Road (north), 17\' wide · grey interlocking pavers'});
 // compound walls, gate pillars with lamps, planter pillar, gates
 for(const w of P.walls.G.filter(w=>w.kind==='comp')){const me=box(w.x1,w.x2,w.y1,w.y2,GRD,GRD+w.h,MAT.ext,{tip:`${w.id} · ${w.desc} · ${w.h}' high`});wallMeshes.push(me);
