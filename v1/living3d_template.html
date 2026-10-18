@@ -270,7 +270,7 @@ function buildOpening(o,w,horiz,s0,out=0){
     const vo=T-0.04;
     grillMesh(o,w,horiz,u1,u2,z1,z2,vo-0.08);
     boxAlong(horiz,w,u1-0.12,u2+0.12,-0.1,T*0.35-0.012,z1-0.06,z1+0.012,MAT.granite,{tip:'Granite window sill'});
-    if(out){   // outside box frame WF-1: wood-look brown cladding (same as the balcony louvers and the gate slats) round the window, deeper hood on top as the sunshade
+    if(out&&o.id!=='W-01'){   // outside box frame WF-1: wood-look brown cladding (same as the balcony louvers and the gate slats) round the window, deeper hood on top as the sunshade
       const vr=(a,b)=>out<0?[-b,-a]:[T+a,T+b],big=o.type==='window',fw2=big?0.5:0.33,d=big?0.33:0.25,hood=big&&w.id!=='GW-03'?1.25:d,ft=`${o.id} · window box frame WF-1 · RCC fins and sunshade clad in wood-look brown (HPL or aluminium), ${big?'6" frame, 1\'3" hood':'4" frame'}`;
       const S1=vr(0.012,d),SH=vr(0.012,hood);
       boxAlong(horiz,w,u1-fw2,u2+fw2,SH[0],SH[1],z2+0.012,z2+fw2,MAT.extWood,{tip:ft});                                  // top hood
@@ -984,6 +984,32 @@ X_(()=>{for(const [a,b,c,d] of slabParts) box(a,b,c,d,SLB,FFZ-0.05,MAT.white,{ti
  // column stubs left on the terrace for the future hall (C-01..C-13)
  for(const c of P.columns.filter(c=>c.floors==='G')) box(c.x1+0.012,c.x2-0.012,c.y1+0.012,c.y2-0.012,FFZ-0.05,FFZ+1.25,MAT.white,{tip:`${c.id} · pillar stub, 1'3" high, bars inside for the future hall`});
 });
+// W-01 (study, front wall GW-04): gable window canopy WF-2, after the owner's photo: sill shelf, two slim posts, a small gable with an arched trim, red clay-tile roof, scroll ornaments in the grill
+{const o=P.openings.find(o=>o.id==='W-01'),xa=o.a,xb=o.b,xc=(xa+xb)/2,z1=o.sill,z2=o.sill+o.h,Yf=30.75-0.035,tan=MAT.extWood,tt='W-01 · gable window canopy WF-2 · wood-look brown frame (aluminium or HPL), red clay-tile roof';
+ const prismXZ=(pts,y1,y2,mat,tip,holes=[])=>{const sh=new THREE.Shape(pts.map(([x,z])=>new THREE.Vector2(mx(x),m(z))));for(const h of holes)sh.holes.push(new THREE.Path(h.map(([x,z])=>new THREE.Vector2(mx(x),m(z)))));
+   const g=new THREE.ExtrudeGeometry(sh,{depth:m(y2-y1),bevelEnabled:false});const me=new THREE.Mesh(g,mat);me.position.z=m(y1);me.castShadow=true;me.receiveShadow=true;scene.add(me);named(me,tip);return me};
+ // sill shelf with a moulding under it
+ box(xa-0.75,xb+0.75,Yf-1.1,Yf,z1-0.35,z1-0.05,tan,{tip:tt+' · sill shelf'});box(xa-0.65,xb+0.65,Yf-0.95,Yf,z1-0.5,z1-0.35,tan,{tip:tt+' · sill moulding'});
+ // two slim posts and the beam they carry
+ const ZB=z2+0.2;for(const x of [xa-0.55,xb+0.25]) box(x,x+0.3,Yf-1.0,Yf-0.7,z1-0.05,ZB,tan,{tip:tt+' · post'});
+ box(xa-0.8,xb+0.8,Yf-1.15,Yf-0.6,ZB,ZB+0.2,tan,{tip:tt+' · beam'});
+ // gable: light pediment with an arched opening, brown bargeboards and arch band
+ const Z0=ZB+0.2,H=2.4,ea=xa-0.9,eb=xb+0.9,ax=xc,az=Z0+H;
+ const CR=0.8,R=((xc-xa)**2+CR*CR)/(2*CR),cz=Z0+CR-R,arc=(r,n=24)=>{const s0=Math.asin(Math.min(1,(Z0-cz)/r)),out=[];for(let i=0;i<=n;i++){const t=s0+(Math.PI-2*s0)*i/n;out.push([xc+r*Math.cos(t),cz+r*Math.sin(t)])}return out};
+ const inner=arc(R);prismXZ([[ea+0.3,Z0],[ax,az-0.25],[eb-0.3,Z0],...inner],Yf-1.15,Yf-1.05,MAT.ext,tt+' · gable panel');
+ const outerA=arc(R+0.22),band=[...outerA,...inner.slice().reverse()];prismXZ(band,Yf-1.2,Yf-1.03,tan,tt+' · arch trim');
+ const edge=(p,q,w)=>{const dx=q[0]-p[0],dz=q[1]-p[1],L=Math.hypot(dx,dz),nx=-dz/L*w,nz=dx/L*w;return [p,q,[q[0]+nx,q[1]+nz],[p[0]+nx,p[1]+nz]]};
+ prismXZ(edge([ea+0.15,Z0],[ax,az-0.05],-0.28),Yf-1.22,Yf-1.02,tan,tt+' · bargeboard');prismXZ(edge([ax,az-0.05],[eb-0.15,Z0],-0.28),Yf-1.22,Yf-1.02,tan,tt+' · bargeboard');
+ // roof: two tiled slopes from the ridge to the eaves, out past the gable
+ const tile=std({map:canvasTex(512,512,(g,w,h)=>{g.fillStyle='#9c3b24';g.fillRect(0,0,w,h);const r=rng(9);for(let row=0;row<8;row++){const y=row*h/8;for(let i=0;i<6;i++){const x=(i+(row%2)*0.5)*w/6;g.fillStyle=['#b4482b','#a8412a','#8f3520','#bd5232'][Math.floor(r()*4)];g.beginPath();g.ellipse(x+w/12,y+h/16,w/13,h/15,0,0,Math.PI);g.fill()}g.fillStyle='rgba(0,0,0,0.35)';g.fillRect(0,y+h/8-3,w,3)}},0.6),roughness:0.75});
+ prismXZ([[ea-0.15,Z0-0.12],[ax,az+0.12],[eb+0.15,Z0-0.12],[eb+0.15,Z0-0.24],[ax,az],[ea-0.15,Z0-0.24]],Yf-1.45,Yf,tile,tt+' · roof, red clay tiles (Mangalore style)');
+ box(ax-0.08,ax+0.08,Yf-1.45,Yf,az+0.08,az+0.2,std({color:'#8a3420',roughness:0.7}),{tip:tt+' · ridge tile'});
+ // scroll ornaments across the middle of the grill, in the frame brown
+ const orn=std({color:'#c49a6c',roughness:0.5,metalness:0.3}),gy=31.5-0.12;
+ for(const cx of [xc-0.95,xc,xc+0.95]){const cz2=z1+1.7;
+   for(const [dx,dz,rot] of [[-0.13,0.14,0],[-0.13,-0.14,0],[0.13,0.14,Math.PI],[0.13,-0.14,Math.PI]]){const t=new THREE.Mesh(new THREE.TorusGeometry(m(0.11),m(0.014),6,20,4.4),orn);t.rotation.z=rot+(dz>0?-0.6:0.6)+(rot?0:Math.PI)-Math.PI;t.position.set(mx(cx+dx),m(cz2+dz),m(gy));scene.add(t);named(t,'W-01 · grill scroll ornament, brown')}
+   const d=new THREE.Mesh(new THREE.TorusGeometry(m(0.09),m(0.014),6,4),orn);d.rotation.z=Math.PI/4;d.position.set(mx(cx),m(cz2),m(gy));scene.add(d);named(d,'W-01 · grill diamond ornament, brown')}
+}
 // ground-floor pillars that stand free (parking, porch) and the beam drops under the slab outside the rooms
 const inWallG=c=>P.walls.G.some(w=>!['comp','pillar','planter','para'].includes(w.kind)&&c.x1<w.x2-0.01&&c.x2>w.x1+0.01&&c.y1<w.y2-0.01&&c.y2>w.y1+0.01);
 for(const c of P.columns) if(!inWallG(c)){const me=box(c.x1,c.x2,c.y1,c.y2,c.y1<31?PKZ:GRD,SLB,MAT.ext,{tip:`${c.id} · Pillar 1' x 9" · ${c.note}`});wallMeshes.push(me)}
@@ -991,7 +1017,7 @@ for(const c of P.columns) if(!inWallG(c)){const me=box(c.x1,c.x2,c.y1,c.y2,c.y1<
  for(const b of P.beams.filter(b=>b.level==='G')) for(const [a,bb,c,d] of zones){const x1=Math.max(b.x1,a),x2=Math.min(b.x2,bb),y1=Math.max(b.y1,c),y2=Math.min(b.y2,d);
    if(x2-x1>0.05&&y2-y1>0.05) box(x1+0.006,x2-0.006,y1+0.006,y2-0.006,SLB-1.08,SLB+0.01,MAT.white,{tip:`${b.id} · Beam 9" x ${b.depth} · ${b.note}`})}}
 // ground: house plinth, porch with 3 steps, parking pavers, road
-for(const [a,b,c,d] of [[8.25,21,30.75,33.25],[2.75,21,33.25,67.125],[6.0,21,67.125,73.875],[9.5,21,73.875,95.125],[2.75,3.5,30.75,33.25]]) box(a,b,c,d,c<31?PKZ:GRD,-0.03,MAT.extBase,{cast:false,tip:'Plinth band · textured paint (or stone cladding) in the base colour'});
+for(const [a,b,c,d] of [[8.25,21,30.75,33.25],[2.75,21,33.25,67.125],[6.0,21,67.125,73.875],[9.5,21,73.875,95.125],[2.75,3.5,31.762,33.25]]) box(a,b,c,d,c<31.8?PKZ:GRD,-0.03,MAT.extBase,{cast:false,tip:'Plinth band · textured paint (or stone cladding) in the base colour'});
 slab([[2.75,33.25],[8.5,33.25],[8.5,40.5],[2.75,40.5]],MAT.otherFloor,0,'G-02 · Porch floor');
 for(let i=0;i<3;i++) box(3.5,8.25,30.75+i*0.833,33.25,PKZ,PKZ+(i+1)*(-PKZ/3),MAT.stepStone,{tip:`Porch steps, granite, ${Math.round(-PKZ/3*12)}" risers, from the parking`});
 box(0.375,2.75,30.75,30.79,PKZ,GRD,MAT.extTrim,{tip:'Step up from the parking to the side passage, 6"'});
