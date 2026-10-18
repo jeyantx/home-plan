@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Living Room 3D</title>
+<title>Home 3D · Japandi</title>
 <style>
 :root{--bg:#f4f2ee;--panel:#ffffff;--ink:#1f2328;--muted:#5d646d;--line:#dcd8d0;--accent:#2f6f4f;--accent-ink:#fff}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#16181b;--panel:#1f2226;--ink:#e8e6e1;--muted:#a3a8ae;--line:#33373c;--accent:#5fb08a;--accent-ink:#0d1a13}}
@@ -41,10 +41,10 @@ canvas{display:block;width:100%;height:100%}
 </head><body>
 <div id="app">
 <header>
- <div><h1>Living room · Japandi 3D</h1><div class="sub">↑↓ walk · ←→ turn · A/D slide · W/S tilt · Q/E lower/raise · Shift faster · Drag to look around · Scroll to walk · Right-drag to slide · Hover for names</div></div>
+ <div><h1>Japandi 3D · Living, Bedroom 1</h1><div class="sub">↑↓ walk · ←→ turn · A/D slide · W/S tilt · Q/E lower/raise · Shift faster · Drag to look around · Scroll to walk · Right-drag to slide · Hover for names</div></div>
  <span class="lbl">Light</span><div class="seg" id="lightSeg"><button data-l="day">Day</button><button data-l="eve">Evening</button></div>
- <span class="lbl">View</span><div class="seg" id="camSeg"><button data-c="0">Entry</button><button data-c="1">Corner</button><button data-c="2">From sofa</button><button data-c="3">From TV</button><button data-c="4">From kitchen</button><button data-c="5">Top</button></div>
- <span class="lbl">Grill</span><div class="seg" id="grillSeg"><button data-g="GR-1">GR-1 Bars</button><button data-g="GR-2">GR-2 Grid</button><button data-g="GR-3">GR-3 Flat lines</button><button data-g="GR-4">GR-4 Slats</button><button data-g="GR-5">GR-5 Shoji</button><button data-g="GR-6">GR-6 Diamond</button></div>
+ <span class="lbl">Living</span><div class="seg cams"><button data-c="0">Entry</button><button data-c="1">Corner</button><button data-c="2">From sofa</button><button data-c="3">From TV</button><button data-c="4">From kitchen</button><button data-c="5">Top</button></div>
+ <span class="lbl">Bedroom 1</span><div class="seg cams"><button data-c="6">Door</button><button data-c="7">Window</button><button data-c="8">Study</button><button data-c="9">Toilet</button><button data-c="10">Top</button></div>
  <span class="lbl">Lens</span><div class="seg" id="lensSeg"><button data-f="60">Eye 60°</button><button data-f="75">Wide 75°</button></div>
  <button class="btn" id="photoBtn" aria-pressed="false" title="Ray-traced photo of the current view. Uses the graphics card heavily for about a minute, then stops by itself.">Photo</button>
  <button class="btn" id="saveBtn" title="Save the current image as PNG">Save image</button>
@@ -163,7 +163,7 @@ function metreUV(geo){const p=geo.attributes.position,n=geo.attributes.normal;if
   geo.setAttribute('uv',new THREE.BufferAttribute(uv,2))}
 const roomsG=Object.fromEntries(P.rooms.G.map(r=>[r.id,r]));
 const fuG=Object.fromEntries(P.furniture.filter(f=>f.fl==='G').map(f=>[f.id,f]));
-const COMMON=new Set(['G-03','G-04','G-09','G-10']);
+const COMMON=new Set(['G-03','G-04','G-09','G-10','G-05','G-06']);   // oak-look floor; toilet 1 has its own tiles
 const LX1=3.5,LX2=20.25,LY1=46.75,LY2=58.75;
 
 // ---------------- walls with openings ----------------
@@ -193,48 +193,18 @@ function boxAlong(horiz,w,u1,u2,v1,v2,z1,z2,mat,o){
   if(horiz) return box(w.x1+u1,w.x1+u2,w.y1+v1,w.y1+v2,z1,z2,mat,o);
   return box(w.x1+v1,w.x1+v2,w.y1+u1,w.y1+u2,z1,z2,mat,o)}
 const glassMeshes=[];
-// ---------------- hall window grills: six designs, picked in the toolbar (Grill) ----------------
-const GRILL_WINS=['W-04','W-05'], grillMeshes=[];
-const GRILLS={
- 'GR-1':'plain vertical round bars, 12 mm @ 5", one middle flat',
- 'GR-2':'square grid, 12 mm square bars @ 6" x 6"',
- 'GR-3':'horizontal flats, 40 x 6 mm on edge @ 4"',
- 'GR-4':'vertical flat slats, 40 x 6 mm on edge @ 4", two cross flats',
- 'GR-5':'shoji (Japanese) grid, 12 mm square bars, 12" wide x 6" tall panes',
- 'GR-6':'diamond lattice, 12 mm square bars at 45 deg @ 6"'};
-// members in the window plane: u along the wall, z height, centred at depth vc (feet); each design merged into one geometry
-function grillGeos(U1,U2,Z1,Z2,vc){
-  const fr=0.08,a=U1+fr,b=U2-fr,c=Z1+fr,d=Z2-fr,r12=0.04,fl=0.02,fd=0.13;
-  const one=(u1,z1,u2,z2,wd,dp,round)=>{const L=Math.hypot(u2-u1,z2-z1);if(L<0.01)return null;
+// ---------------- window grill GR-1 (final): plain vertical round bars 12 mm @ 5", one middle flat, flat frame ----------------
+function grillMesh(o,w,horiz,U1,U2,Z1,Z2,vc){
+  const fr=0.08,a=U1+fr,b=U2-fr,c=Z1+fr,d=Z2-fr;   // members in the window plane: u along the wall, z height, centred at depth vc (feet)
+  const one=(u1,z1,u2,z2,wd,dp,round)=>{const L=Math.hypot(u2-u1,z2-z1);
     const g=round?new THREE.CylinderGeometry(wd/2,wd/2,L,10).rotateZ(-Math.PI/2):new THREE.BoxGeometry(L,wd,dp);
     return g.rotateZ(Math.atan2(z2-z1,u2-u1)).translate((u1+u2)/2,(z1+z2)/2,vc)};
-  const frame=()=>[one(U1,Z1+fr/2,U2,Z1+fr/2,fr,0.03),one(U1,Z2-fr/2,U2,Z2-fr/2,fr,0.03),one(U1+fr/2,c,U1+fr/2,d,fr,0.03),one(U2-fr/2,c,U2-fr/2,d,fr,0.03)];
-  const even=(lo,hi,step)=>{const n=Math.max(1,Math.round((hi-lo)/step)),out=[];for(let i=1;i<n;i++)out.push(lo+(hi-lo)*i/n);return out};
-  const V=(xs,wd,dp,round)=>xs.map(u=>one(u,c,u,d,wd,dp,round)), H=(zs,wd,dp)=>zs.map(z=>one(a,z,b,z,wd,dp));
-  const diag=step=>{const out=[];for(const sgn of [1,-1]){for(let k=-(b-a)-(d-c);k<(b-a)+(d-c);k+=step){
-      // line z-c = sgn*(u-a) + k, clipped to the inner rectangle
-      const pts=[];const zu=u=>c+sgn*(u-a)+k, uz=z=>a+(z-c-k)*sgn;
-      for(const u of [a,b]){const z=zu(u);if(z>=c-1e-6&&z<=d+1e-6)pts.push([u,z])}
-      for(const z of [c,d]){const u=uz(z);if(u>a+1e-6&&u<b-1e-6)pts.push([u,z])}
-      if(pts.length>=2)out.push(one(pts[0][0],pts[0][1],pts[1][0],pts[1][1],0.04,0.04))}}return out};
-  const sets={
-   'GR-1':[...V(even(a,b,0.42),r12,0,true),...H([(c+d)/2],0.08,0.03)],
-   'GR-2':[...V(even(a,b,0.5),0.04,0.04),...H(even(c,d,0.5),0.04,0.04)],
-   'GR-3':H(even(c,d,0.33),fl,fd),
-   'GR-4':[...V(even(a,b,0.33),fl,fd),...H([c+(d-c)/3,c+2*(d-c)/3],0.13,0.02)],
-   'GR-5':[...V(even(a,b,1.0),0.04,0.04),...H(even(c,d,0.5),0.04,0.04)],
-   'GR-6':diag(0.5*Math.SQRT2)};
-  const geos={};for(const k in sets)geos[k]=mergeGeometries([...frame(),...sets[k]].filter(Boolean));return geos}
-function grillMesh(o,w,horiz,u1,u2,z1,z2,vc){
-  const geos=grillGeos(u1,u2,z1,z2,vc),M=new THREE.Matrix4();
+  const n=Math.max(1,Math.round((b-a)/0.42)),parts=[one(U1,Z1+fr/2,U2,Z1+fr/2,fr,0.03),one(U1,Z2-fr/2,U2,Z2-fr/2,fr,0.03),one(U1+fr/2,c,U1+fr/2,d,fr,0.03),one(U2-fr/2,c,U2-fr/2,d,fr,0.03),one(a,(c+d)/2,b,(c+d)/2,0.08,0.03)];
+  for(let i=1;i<n;i++){const u=a+(b-a)*i/n;parts.push(one(u,c,u,d,0.04,0,true))}
+  const g=mergeGeometries(parts),M=new THREE.Matrix4();
   if(horiz)M.set(-F,0,0,-w.x1*F, 0,F,0,0, 0,0,F,w.y1*F, 0,0,0,1);else M.set(0,0,-F,-w.x1*F, 0,F,0,0, F,0,0,w.y1*F, 0,0,0,1);
-  for(const k in geos)geos[k].applyMatrix4(M);
-  const me=new THREE.Mesh(geos['GR-1'],MAT.grill);me.castShadow=true;me.receiveShadow=true;me.userData.keepUV=true;me.userData.geos=geos;me.userData.win=o.id;
-  scene.add(me);named(me,'');grillMeshes.push(me);return me}
-function setGrill(k){if(!GRILLS[k])k='GR-1';
-  for(const me of grillMeshes){me.geometry=me.userData.geos[k];me.userData.tip=`${me.userData.win} grill ${k} · MS, black powder-coat · ${GRILLS[k]}`}
-  document.querySelectorAll('#grillSeg button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.g===k));
-  try{localStorage.setItem('lr3d-grill',k)}catch(e){};renderer.shadowMap.needsUpdate=true;if(photo&&pt)pt.setScene(scene,camera);invalidate()}
+  g.applyMatrix4(M);const me=new THREE.Mesh(g,MAT.grill);me.castShadow=true;me.receiveShadow=true;me.userData.keepUV=true;
+  scene.add(me);named(me,`${o.id} grill GR-1 · MS, black powder-coat · plain vertical round bars, 12 mm @ 5", one middle flat`);return me}
 function buildOpening(o,w,horiz,s0){
   const T=horiz?w.y2-w.y1:w.x2-w.x1, u1=o.a-s0,u2=o.b-s0, tip=`${o.id} · ${o.note}${P.spec[o.id]?' · '+P.spec[o.id]:''}`;
   if(o.type==='window'||o.type==='vent'){
@@ -245,9 +215,7 @@ function buildOpening(o,w,horiz,s0){
     if(o.type==='window'){const mid=(u1+u2)/2;boxAlong(horiz,w,mid-0.07,mid+0.07,v0+0.02,v1-0.02,z1+fw,z2-fw,MAT.upvc,{tip});}
     const gl=boxAlong(horiz,w,u1+fw,u2-fw,v0+0.13,v0+0.16,z1+fw,z2-fw,MAT.glass,{tip,cast:false});glassMeshes.push(gl);
     const vo=T-0.04;
-    if(GRILL_WINS.includes(o.id)) grillMesh(o,w,horiz,u1,u2,z1,z2,vo-0.08);
-    else{for(let u=u1+0.33;u<u2-0.2;u+=0.42) cyl(...along(horiz,w,u,vo-0.05),z1,z2,0.03,MAT.blackMetal,{tip:'MS safety grill, 12 mm bars'});
-    boxAlong(horiz,w,u1,u2,vo-0.08,vo-0.02,z1+o.h*0.5-0.04,z1+o.h*0.5+0.04,MAT.blackMetal,{tip:'MS safety grill'});}
+    grillMesh(o,w,horiz,u1,u2,z1,z2,vo-0.08);
     boxAlong(horiz,w,u1-0.12,u2+0.12,-0.1,T*0.35-0.012,z1-0.06,z1+0.012,MAT.granite,{tip:'Granite window sill'});
   } else if(o.type==='fold'){
     const z1=o.sill,z2=o.sill+o.h,n=4,v0=T*0.4;
@@ -263,7 +231,7 @@ function buildOpening(o,w,horiz,s0){
     for(const vv of [[-0.07,-0.04],[T+0.04,T+0.07]]){boxAlong(horiz,w,u1-0.15,u1+0.1,vv[0],vv[1],0,o.h+0.1,MAT.oak,{tip:o.id+' architrave'});boxAlong(horiz,w,u2-0.1,u2+0.15,vv[0],vv[1],0,o.h+0.1,MAT.oak,{tip:o.id+' architrave'});boxAlong(horiz,w,u1-0.15,u2+0.15,vv[0],vv[1],o.h-0.1,o.h+0.12,MAT.oak,{tip:o.id+' architrave'})}
     const mat=o.id==='D-01'?MAT.teak:(['D-03','D-04','D-08'].includes(o.id)?MAT.white:MAT.oak);
     const leaves=o.type==='double'?[[u1,(u1+u2)/2,'a'],[(u1+u2)/2,u2,'b']]:[[u1,u2,o.hinge||'a']];
-    const open=o.id==='D-02'?0.55:(o.id==='D-06'?0.4:(o.id==='D-01'?1.15:0));   // main door D-01 shown open
+    const open={'D-01':1.15,'D-02':1.2,'D-03':1.2,'D-06':0.4}[o.id]||0;   // main door, bedroom 1 and toilet 1 doors shown open
     for(const [a,b,h] of leaves){const len=b-a, hingeU=h==='a'?a:b;
       const leaf=new THREE.Mesh(new THREE.BoxGeometry(m(len-0.24),m(o.h-0.14),m(th)),mat);leaf.castShadow=true;leaf.receiveShadow=true;
       const piv=new THREE.Group();const p=along(horiz,w,hingeU,T/2);piv.position.set(mx(p[0]),0,m(p[1]));
@@ -284,7 +252,7 @@ function slab(pts,mat,z,tip,down=false){
   const me=new THREE.Mesh(g,mat);me.position.y=m(z);me.receiveShadow=true;scene.add(me);if(tip)named(me,tip);return me}
 for(const r of P.rooms.G){
   if(['out','garden','covered'].includes(r.kind)) continue;
-  slab(r.pts,COMMON.has(r.id)?MAT.floor:MAT.otherFloor,0,`${r.id} · ${r.name}`);
+  if(r.id!=='G-07') slab(r.pts,COMMON.has(r.id)?MAT.floor:MAT.otherFloor,0,`${r.id} · ${r.name}`);
   ceilingMeshes.push(slab(r.pts,MAT.ceiling,CEIL-0.001,null,true));
 }
 ceilingMeshes.push(box(2.75,21,30.75,95.125,CEIL,CEIL+0.45,MAT.white));
@@ -395,8 +363,9 @@ box(s2.x2-1.3,s2.x2-0.35,s2.y2-1.35,s2.y2-0.85,1.42,2.3,cushMat('#efe6d6'),{roun
 const lampX=4.8,lampY=48.9;cyl(lampX,lampY,0,0.05,0.42,MAT.blackMetal,{tip:'Paper floor lamp'});cyl(lampX,lampY,0.05,4.4,0.025,MAT.blackMetal,{tip:'Paper floor lamp'});
 const shadeMesh=new THREE.Mesh(new THREE.SphereGeometry(m(0.72),32,24),MAT.paper);shadeMesh.position.set(mx(lampX),m(5.0),m(lampY));scene.add(shadeMesh);named(shadeMesh,'Paper floor lamp');
 const lampLight=new THREE.PointLight('#ffc98a',0,m(16),2);lampLight.position.copy(shadeMesh.position);lampLight.castShadow=true;lampLight.shadow.mapSize.set(512,512);lampLight.shadow.bias=-0.002;shadeMesh.castShadow=false;scene.add(lampLight);
-{// bamboo plant (3d/models/bamboo-plant.js); leaf instances baked into one mesh so Photo mode sees them too
- const plant=createBambooPlant(THREE,{seed:1,height:1.5});plant.position.set(mx(11.3),0,m(57.45));plant.rotation.y=0.6;
+// bamboo plant (3d/models/bamboo-plant.js); leaf instances baked into one mesh so Photo mode sees them too
+function addPlant(px,py,hM,seed,tip){
+ const plant=createBambooPlant(THREE,{seed,height:hM});plant.position.set(mx(px),0,m(py));plant.rotation.y=0.6;
  plant.children.slice().forEach(c=>{if(!c.isInstancedMesh)return;
   const g0=c.geometry.index?c.geometry.toNonIndexed():c.geometry,n=g0.attributes.position.count,k=c.count,M=new THREE.Matrix4(),N=new THREE.Matrix3(),col=new THREE.Color(),v=new THREE.Vector3();
   const P=new Float32Array(n*k*3),Nn=new Float32Array(n*k*3),U=new Float32Array(n*k*2),C=new Float32Array(n*k*3);
@@ -408,17 +377,18 @@ const lampLight=new THREE.PointLight('#ffc98a',0,m(16),2);lampLight.position.cop
   g.setAttribute('uv',new THREE.BufferAttribute(U,2));g.setAttribute('color',new THREE.BufferAttribute(C,3));
   const mat=c.material.clone();mat.vertexColors=true;const lm=new THREE.Mesh(g,mat);lm.name=c.name;lm.userData.tip=c.userData.tip;lm.castShadow=lm.receiveShadow=true;
   plant.remove(c);plant.add(lm)});
- scene.add(plant);plant.traverse(o=>{if(o.isMesh){o.userData.keepUV=true;named(o,'Bamboo plant in black pot · 5 ft')}})}
+ scene.add(plant);plant.traverse(o=>{if(o.isMesh){o.userData.keepUV=true;named(o,tip)}})}
+addPlant(11.3,57.45,1.5,1,'Bamboo plant in black pot · 5 ft');
 // sheer curtains: ripple-fold pleats on a ceiling track hung from the band
-function curtain(y1,y2){const w=y2-y1,h=BZ-0.12,segW=Math.round(w*14),segH=24;
+function curtain(y1,y2,xp=LX1+0.42){const w=y2-y1,h=BZ-0.12,segW=Math.round(w*14),segH=24;
   const g=new THREE.PlaneGeometry(m(w),m(h),segW,segH);const p=g.attributes.position;
   for(let i=0;i<p.count;i++){const u=p.getX(i)/m(w)+0.5,v=p.getY(i)/m(h)+0.5;
     const amp=m(0.11)*(1+0.25*(1-v));p.setZ(i,Math.sin(u*w/0.36*Math.PI*2)*amp+Math.sin(u*31+v*3)*m(0.01))}
   g.computeVertexNormals();
   const uv=g.attributes.uv;for(let i=0;i<uv.count;i++)uv.setXY(i,uv.getX(i)*m(w),uv.getY(i)*m(h));
-  const me=new THREE.Mesh(g,MAT.curtain);me.rotation.y=Math.PI/2;me.position.set(mx(LX1+0.42),m(h/2+0.04),m((y1+y2)/2));me.castShadow=true;me.receiveShadow=true;scene.add(me);
+  const me=new THREE.Mesh(g,MAT.curtain);me.rotation.y=Math.PI/2;me.position.set(mx(xp),m(h/2+0.04),m((y1+y2)/2));me.castShadow=true;me.receiveShadow=true;scene.add(me);
   named(me,'Sheer curtain · crepe georgette, ripple-fold on a ceiling track');me.userData.curtain=true;
-  box(LX1+0.36,LX1+0.48,y1,y2,BZ-0.08,BZ-0.012,MAT.blackMetal,{tip:'Curtain track'})}
+  box(xp-0.06,xp+0.06,y1,y2,BZ-0.08,BZ-0.012,MAT.blackMetal,{tip:'Curtain track'})}
 for(const o of P.openings.filter(o=>o.wall==='GW-01'&&o.type==='window'&&o.b<LY2&&o.a>LY1)){curtain(o.a-1.3,o.a+0.25);curtain(o.b-0.25,o.b+1.3)}
 function ceilingFan(cx,cy,rot){const hub=8.6;cyl(cx,cy,hub+0.3,CEIL,0.045,MAT.blackMetal,{tip:'Ceiling fan, 48", wood-finish blades'});cyl(cx,cy,hub,hub+0.35,0.3,MAT.blackMetal,{tip:'Ceiling fan'});
   const fan=new THREE.Group();fan.position.set(mx(cx),m(hub+0.1),m(cy));scene.add(fan);
@@ -434,17 +404,171 @@ function art(x1,x2,z1,z2,seed,palette){
 art(12.9,15.3,3.4,6.6,41,['#c8734a','#a6522f']);art(15.7,18.1,3.4,6.6,42,['#b9603b','#d08a5f']);
 box(LX2-0.02,LX2,47.6,48.1,4.0,4.4,MAT.white,{tip:'Switch board'});box(9.3,9.8,LY1,LY1+0.02,4.0,4.4,MAT.white,{tip:'Switch board'});
 
+
+// ================= BEDROOM 1 (G-05), its study corner (G-06) and TOILET 1 (G-07): same Japandi warm-oak style =================
+const BX1=9.25,BX2=20.25,BY1=36.375,BY2=46.375;   // bedroom 1 main rectangle; the study corner opens off its south-east side
+// ceiling band with cove pocket and LED, as in the living room
+bandSide(BX1,BX2,BY1,BY1+BW,'y+');bandSide(BX1,BX2,BY2-BW,BY2,'y-');
+bandSide(BX1,BX1+BW,BY1+BW,BY2-BW,'x+');bandSide(BX2-BW,BX2,BY1+BW,BY2-BW,'x-');
+function downlight(x,y,z,tip){cyl(x,y,z-0.01,z+0.005,0.2,MAT.led,{tip:tip||'Recessed LED downlight in the band (warm white)'}).castShadow=false;
+  const s=new THREE.SpotLight('#ffd7a3',0,m(16),0.75,0.6,2);s.position.set(mx(x),m(z-0.05),m(y));s.target.position.set(mx(x),0,m(y));scene.add(s,s.target);downs.push(s)}   // no shadow map: keeps the shader under the texture-unit limit
+for(const [x,y] of [[BX1+0.5,38.4],[BX1+0.5,44.6],[13.0,BY2-0.45],[16.6,BY1+0.45]]) downlight(x,y,BZ);
+downlight(11.5,34.0,CEIL,'Recessed LED downlight, study corner (warm white)');
+ceilingFan(14.6,41.4,0.3);
+{const hS=0.33,d=0.04,t='Tile skirting, 4"';   // skirting where the wall meets the floor (not behind the wardrobe)
+ box(BX1,BX1+d,31.5,BY2,0,hS,MAT.skirt,{tip:t});box(BX1+d,BX1+0.25,BY2-d,BY2,0,hS,MAT.skirt,{tip:t});box(12.5,13.75,BY2-d,BY2,0,hS,MAT.skirt,{tip:t});
+ box(13.75,14.5,BY1,BY1+d,0,hS,MAT.skirt,{tip:t});box(17.0,17.25,BY1,BY1+d,0,hS,MAT.skirt,{tip:t});box(BX1+d,12.5,31.5,31.5+d,0,hS,MAT.skirt,{tip:t});
+ box(13.75-d,13.75,31.5+d,33.75,0,hS,MAT.skirt,{tip:t});}
+// curtains on W-02, hung from the band in front of the AC
+for(const [a,b] of [[36.45,37.6],[39.65,41.2]]) curtain(a,b,10.1);
+// AC indoor unit FU-44 above W-02
+box(9.262,9.92,37.25,40.25,7.55,8.5,std({color:'#f4f4f2',roughness:0.35}),{round:0.08,tip:'FU-44 · AC indoor unit, 1.5 ton split · above W-02, 7\'6" high'});
+box(9.92,9.94,37.4,40.1,7.62,7.7,MAT.blackMetal,{cast:false,tip:'FU-44 · AC air outlet'});
+// --- queen bed FU-06: low oak platform, upholstered headboard pad on an oak-veneer wall panel with a ledge
+{const f=fuG['FU-06'],tip=`FU-06 · Queen bed · oak platform, 6'6" x 5' · ${f.note}`;
+ box(f.x1+0.35,f.x2-0.2,f.y1+0.3,f.y2-0.3,0,0.32,std({color:'#2a2622',roughness:0.8}),{tip});                       // shadow-gap plinth
+ box(f.x1,f.x2-0.15,f.y1,f.y2,0.32,1.02,MAT.oak,{round:0.04,tip});                                                    // platform frame
+ box(f.x1+0.12,f.x2-0.2,f.y1+0.1,f.y2-0.1,1.02,1.72,std({color:'#f3efe8',roughness:0.95,normalMap:T.linen.normalMap}),{round:0.12,tip:'Mattress, 6\'3" x 5\', 8"'});
+ const duvet=std({color:'#e6ddcf',roughness:1,normalMap:T.linen.normalMap,normalScale:new THREE.Vector2(0.9,0.9)});
+ box(f.x1+0.05,f.x2-1.55,f.y1+0.03,f.y2-0.03,1.45,1.8,duvet,{round:0.1,tip:'Duvet, oatmeal linen'});
+ box(f.x1+0.3,f.x1+1.6,f.y1+0.0,f.y2-0.0,1.79,1.88,std({color:'#b49a80',roughness:1,normalMap:T.linen.normalMap}),{round:0.04,tip:'Throw, mild brown (same as the sofa seats)'});
+ for(const [a,b] of [[f.y1+0.35,f.y1+2.35],[f.y2-2.35,f.y2-0.35]]) box(f.x2-1.45,f.x2-0.45,a,b,1.72,2.2,std({color:'#f6f3ee',roughness:1,normalMap:T.linen.normalMap}),{round:0.2,tip:'Pillow, white cotton'});
+ box(f.x2-1.85,f.x2-1.35,f.y1+1.7,f.y1+3.0,1.75,2.55,cushMat('#b5552e'),{round:0.16,tip:'Cushion, terracotta cotton'});
+ box(f.x2-1.85,f.x2-1.35,f.y1+2.8,f.y1+3.9,1.75,2.45,cushMat('#efe6d6'),{round:0.16,tip:'Cushion, beige linen'});
+ // headboard wall panel on GW-05: oak veneer with grooves to 3'4", a 3" ledge, linen pad below it
+ const hy1=41.2,hy2=BY2-0.012,ht=0.12,lz=3.35;
+ box(BX2-ht,BX2,hy1,hy2,0,lz,MAT.tvPanel,{tip:'Headboard wall panel · oak veneer with 3 mm grooves'});
+ for(let y=hy1+0.5;y<hy2-0.1;y+=0.5) box(BX2-ht-0.005,BX2-ht,y-0.008,y+0.008,0.05,lz-0.05,MAT.oakDark,{cast:false,tip:'Groove in the oak panel'});
+ box(BX2-0.42,BX2-ht,hy1,hy2,lz,lz+0.1,MAT.oak,{tip:'Headboard ledge, oak, 4" deep'});
+ ledStrips.push(box(BX2-0.4,BX2-0.34,hy1+0.15,hy2-0.15,lz-0.03,lz,MAT.led,{cast:false,tip:'LED strip under the ledge'}));
+ const hl=new THREE.PointLight('#ffd7a3',0,m(8),2);hl.position.set(mx(BX2-0.6),m(lz-0.3),m((hy1+hy2)/2));scene.add(hl);towerLights.push(hl);
+ box(BX2-0.3,BX2-ht,f.y1+0.25,f.y2-0.25,1.7,3.15,MAT.sofa,{round:0.08,tip:'Upholstered headboard pad, mild-brown linen'});
+ cyl(BX2-0.27,f.y1+0.45,lz+0.1,lz+0.65,0.13,std({color:'#e9e4da',roughness:0.55}),{tip:'Ceramic vase',rTop:0.08});
+ box(BX2-0.36,BX2-0.16,f.y2-1.4,f.y2-0.5,lz+0.1,lz+0.22,std({color:'#6f6a60',roughness:0.8}),{tip:'Books'});
+ // art above the ledge: one wide Japandi canvas, earthy sun and horizon
+ const ay1=42.3,ay2=45.3,az1=4.7,az2=6.7;
+ box(BX2-0.11,BX2-0.012,ay1,ay2,az1,az2,MAT.oakDark,{tip:'Photo frame, oak, 1" profile'});
+ const t=canvasTex(768,Math.round(768*(az2-az1)/(ay2-ay1)),(g,w,h)=>{const r=rng(91);const grd=g.createLinearGradient(0,0,0,h);grd.addColorStop(0,'#efe5d6');grd.addColorStop(1,'#dccbb3');g.fillStyle=grd;g.fillRect(0,0,w,h);
+   g.fillStyle='#b5683f';g.beginPath();g.arc(w*0.62,h*0.42,h*0.22,0,7);g.fill();
+   g.fillStyle='#8a6a4f';g.beginPath();g.moveTo(0,h*0.78);g.bezierCurveTo(w*0.3,h*0.62,w*0.55,h*0.86,w,h*0.7);g.lineTo(w,h);g.lineTo(0,h);g.fill();
+   for(let i=0;i<9000;i++){const v=(r()-.5)*0.06;g.fillStyle=v>0?`rgba(255,255,255,${v})`:`rgba(0,0,0,${-v})`;g.fillRect(r()*w,r()*h,2,2)}},1);t.repeat.set(1,1);
+ const pl=new THREE.Mesh(new THREE.PlaneGeometry(m(ay2-ay1-0.2),m(az2-az1-0.2)),std({map:t,roughness:0.9}));pl.rotation.y=Math.PI/2;pl.position.set(mx(BX2-0.115),m((az1+az2)/2),m((ay1+ay2)/2));scene.add(pl);named(pl,'Framed art · earthy sun and horizon, textured canvas');pl.userData.keepUV=true;}
+// --- L-wardrobe FU-09.1 + FU-09.2 with loft: oak-veneer shutters, black J-profile handles, shadow-gap plinth
+{const t1=`FU-09.1 · Wardrobe, part 1 · oak veneer, loft above · ${fuG['FU-09.1'].note}`, t2=`FU-09.2 · Wardrobe, part 2 · oak veneer, loft above · ${fuG['FU-09.2'].note}`;
+ const a=fuG['FU-09.1'],b=fuG['FU-09.2'],sh=0.06,pz=0.3,lz=7.55,gap=0.012;
+ box(a.x1,a.x2,a.y1+0.012,a.y2-sh,pz,BZ-0.005,MAT.oak,{tip:t1});box(b.x1+sh,b.x2,b.y1,b.y2-0.012,pz,BZ-0.005,MAT.oak,{tip:t2});
+ box(a.x1+0.06,a.x2,a.y1+0.012,a.y2-sh-0.06,0,pz,std({color:'#2a2622',roughness:0.8}),{tip:t1});box(b.x1+sh+0.06,b.x2,b.y1,b.y2-0.07,0,pz,std({color:'#2a2622',roughness:0.8}),{tip:t2});
+ // 09.1 front faces +Y (into the room), one shutter x 17.25-18.917; 09.2 front faces -X, two shutters
+ const doorsY=(x1,x2,y,n,tip)=>{const w=(x2-x1)/n;for(let i=0;i<n;i++){const u1=x1+i*w+gap,u2=x1+(i+1)*w-gap;
+   box(u1,u2,y-sh,y,pz+gap,lz-gap,MAT.oak,{tip:tip+' · shutter'});box(u1,u2,y-sh,y,lz+gap,BZ-0.03,MAT.oak,{tip:tip+' · loft shutter'});
+   const hx=i%2?u1+0.03:u2-0.07;box(hx,hx+0.04,y,y+0.05,3.0,5.6,MAT.blackMetal,{tip:'J-profile handle, black'})}};
+ const doorsX=(y1,y2,x,n,tip)=>{const w=(y2-y1)/n;for(let i=0;i<n;i++){const u1=y1+i*w+gap,u2=y1+(i+1)*w-gap;
+   box(x,x+sh,u1,u2,pz+gap,lz-gap,MAT.oak,{tip:tip+' · shutter'});box(x,x+sh,u1,u2,lz+gap,BZ-0.03,MAT.oak,{tip:tip+' · loft shutter'});
+   const hy=i%2?u1+0.03:u2-0.07;box(x-0.05,x,hy,hy+0.04,3.0,5.6,MAT.blackMetal,{tip:'J-profile handle, black'})}};
+ doorsY(a.x1+0.012,b.x1-0.012,a.y2,1,'FU-09.1 · Wardrobe');doorsX(b.y1+0.012,b.y2-0.012,b.x1,2,'FU-09.2 · Wardrobe');}
+// bedside runner rug: same two-tone as the living-room rug
+{const rx1=14.2,rx2=18.6,ry1=39.05,ry2=41.15,W=rx2-rx1,H=ry2-ry1;
+ const t=canvasTex(1024,Math.round(1024*H/W),(g,w,h)=>{const r=rng(78),b=Math.round(h*0.16);
+   g.fillStyle='#6e4a32';g.fillRect(0,0,w,h);g.fillStyle='#b49a80';g.fillRect(b,b,w-2*b,h-2*b);
+   for(let i=0;i<9000;i++){const v=(r()-.5)*0.08;g.fillStyle=v>0?`rgba(255,255,255,${v})`:`rgba(0,0,0,${-v})`;g.fillRect(r()*w,r()*h,2,2)}},1);t.repeat.set(1,1);
+ const nm=T.jute.normalMap.clone();nm.repeat.set(m(W)/0.27,m(H)/0.27);nm.needsUpdate=true;
+ box(rx1,rx2,ry1,ry2,0,0.03,std({map:t,normalMap:nm,roughness:1}),{cast:false,tip:'Bedside runner rug, two-tone: sofa-seat brown centre, dark-brown border · 4\'5" x 2\'1"'}).userData.keepUV=true;}
+// plant by the window: smaller bamboo
+addPlant(10.05,42.3,1.2,3,'Bamboo plant in black pot · 4 ft');
+// --- study corner G-06: floating oak desk FU-10 under W-01, wooden chair, open bookshelf FU-11, linen roman blind
+{const d=fuG['FU-10'],tip=`FU-10 · Study desk · oak top on black steel legs · ${d.note}`;
+ box(d.x1+0.012,d.x2,d.y1+0.012,d.y2,2.38,2.5,MAT.oak,{round:0.02,tip});
+ box(d.x2-1.6,d.x2-0.1,d.y1+0.1,d.y2-0.15,2.08,2.38,MAT.oak,{tip:'FU-10 · drawer, oak'});box(d.x2-1.0,d.x2-0.7,d.y2-0.15,d.y2-0.13,2.2,2.26,MAT.blackMetal,{cast:false,tip:'Drawer pull'});
+ for(const x of [d.x1+0.15,d.x2-0.2]){box(x,x+0.05,d.y1+0.15,d.y1+0.2,0,2.38,MAT.blackMetal,{tip});box(x,x+0.05,d.y2-0.25,d.y2-0.2,0,2.38,MAT.blackMetal,{tip});box(x,x+0.05,d.y1+0.15,d.y2-0.2,0.0,0.06,MAT.blackMetal,{tip})}
+ cyl(d.x1+0.6,d.y1+0.5,2.5,2.52,0.25,MAT.blackMetal,{tip:'Desk lamp, black'});cyl(d.x1+0.6,d.y1+0.5,2.52,3.9,0.025,MAT.blackMetal,{tip:'Desk lamp, black'});
+ cyl(d.x1+0.6,d.y1+0.85,3.6,3.95,0.2,MAT.blackMetal,{tip:'Desk lamp, black',rTop:0.06});
+ box(d.x1+1.5,d.x1+2.6,d.y1+0.6,d.y1+1.35,2.5,2.53,std({color:'#2b2b2b',roughness:0.4}),{tip:'Laptop'});
+ // chair: oak frame, linen seat, curved backrest
+ const cx=11.1,cy=34.4,cw=0.85,W=MAT.sofaWood,tc='Study chair · walnut-tone oak, linen seat';
+ for(const [lx,ly] of [[cx-cw,cy-0.75],[cx+cw-0.12,cy-0.75],[cx-cw,cy+0.6],[cx+cw-0.12,cy+0.6]]) box(lx,lx+0.12,ly,ly+0.12,0,1.5,W,{tip:tc});
+ box(cx-cw,cx+cw,cy-0.8,cy+0.75,1.5,1.62,W,{tip:tc});box(cx-cw+0.04,cx+cw-0.04,cy-0.76,cy+0.7,1.62,1.75,MAT.sofa,{round:0.05,tip:tc});
+ for(const lx of [cx-cw,cx+cw-0.12]) box(lx,lx+0.12,cy+0.6,cy+0.72,1.5,2.9,W,{tip:tc});box(cx-cw,cx+cw,cy+0.6,cy+0.72,2.35,2.85,W,{round:0.03,tip:tc});
+ // bookshelf FU-11 on GW-10, open towards the study
+ const s=fuG['FU-11'],ts=`FU-11 · Bookshelf · open oak shelves, 6' high · ${s.note}`;
+ box(s.x2-0.1,s.x2-0.012,s.y1,s.y2,0,6.0,MAT.oakDark,{tip:ts});
+ for(const y of [s.y1,s.y2-0.07]) box(s.x1,s.x2-0.1,y,y+0.07,0,6.0,MAT.oak,{tip:ts});
+ const r=rng(55);for(const z of [0.0,1.45,2.9,4.35,5.9]){box(s.x1,s.x2-0.1,s.y1+0.07,s.y2-0.07,z,z+0.1,MAT.oak,{tip:ts});
+   if(z>5)continue;let y=s.y1+0.15;while(y<s.y2-0.4){if(r()<0.7){const h=0.7+r()*0.5;box(s.x1+0.15,s.x2-0.2,y,y+0.12,z+0.101,z+0.1+h,std({color:['#b5a891','#d9d2c3','#6f6a60','#a2826a','#e8e3d8'][Math.floor(r()*5)],roughness:0.75}),{tip:'Books'});y+=0.13}else{cyl(s.x1+0.6,y+0.25,z+0.101,z+0.5,0.16,std({color:'#cdbfa8',roughness:0.55}),{tip:'Ceramic vase',rTop:0.1});y+=0.55}}}
+ // roman blind on W-01, half lowered
+ box(9.65,13.35,31.5+0.012,31.6,6.1,7.25,std({color:'#cdb69a',roughness:1,normalMap:T.linen.normalMap}),{tip:'Roman blind · light-brown linen, half lowered'});
+ for(const z of [6.3,6.7]) box(9.65,13.35,31.6,31.66,z,z+0.12,std({color:'#c2a98c',roughness:1,normalMap:T.linen.normalMap}),{cast:false,tip:'Roman blind fold'});}
+
+// ---------------- TOILET 1 (G-07): greige matte tiles to 7', wood-look tiles in the shower, wall-hung WC, floating vanity ----------------
+function tileTex(base,grout,tw,th,seed){const t=canvasTex(1024,Math.round(1024*th/tw),(g,w,h)=>{const r=rng(seed);g.fillStyle=base;g.fillRect(0,0,w,h);
+  for(let i=0;i<9000;i++){const v=(r()-.5)*0.045;g.fillStyle=v>0?`rgba(255,255,255,${v})`:`rgba(0,0,0,${-v})`;g.fillRect(r()*w,r()*h,3,3)}
+  for(let i=0;i<120;i++){g.fillStyle=`rgba(${r()<.5?'255,255,255':'120,110,95'},0.04)`;g.beginPath();g.ellipse(r()*w,r()*h,8+r()*40,4+r()*20,r()*3,0,7);g.fill()}
+  g.fillStyle=grout;for(let i=0;i<=2;i++)g.fillRect(i*w/2-1.5,0,3,h);for(let j=0;j<=2;j++)g.fillRect(0,j*h/2-1.5,w,3)},1);
+  t.repeat.set(1/m(2*tw),1/m(2*th));return t}
+Object.assign(MAT,{
+  tFloor:std({map:tileTex('#a99f91','#8b8276',1,1,31),roughness:0.75}),
+  tWall:std({map:tileTex('#e3dace','#cbc1b3',2,1,32),roughness:0.5}),
+  tWood:std({map:T.oak.map,normalMap:T.oak.normalMap,normalScale:new THREE.Vector2(0.3,0.3),color:'#efe3d2',roughness:0.5}),   // light wood-look, same oak family as the furniture
+  ceramic:std({color:'#f7f6f3',roughness:0.15}),
+  mirror:std({color:'#d7dadc',roughness:0.03,metalness:1}),
+});
+// tiles as thin cladding: UVs in world feet-to-metres so the grout lines run level from the floor
+function tile(x1,x2,y1,y2,z1,z2,mat,tip){const me=box(x1,x2,y1,y2,z1,z2,mat,{cast:false,tip});metreUV(me.geometry);
+  const uv=me.geometry.attributes.uv,p=me.geometry.attributes.position,n=me.geometry.attributes.normal;
+  for(let i=0;i<p.count;i++){const ax=Math.abs(n.getX(i)),ay=Math.abs(n.getY(i)),az=Math.abs(n.getZ(i));
+    if(ay>=ax&&ay>=az)uv.setXY(i,p.getX(i)+me.position.x,p.getZ(i)+me.position.z);else if(ax>=az)uv.setXY(i,p.getZ(i)+me.position.z,p.getY(i)+me.position.y);else uv.setXY(i,p.getX(i)+me.position.x,p.getY(i)+me.position.y)}
+  me.userData.keepUV=true;return me}
+{const X1=14.125,X2=20.25,Y1=31.5,Y2=36.0,c=0.04,e=0.012,TZ=7.0,tw='Wall tile · greige matte porcelain, 2\' x 1\', to 7\'',tsw='Shower wall tile · wood-look porcelain, to 7\'';
+ // front wall GW-04 (V-01 at x 16.25-18.25, sill 6')
+ tile(X1,17.25,Y1,Y1+c,0,6.0,MAT.tWall,tw);tile(17.25,X2,Y1,Y1+c,0,6.0,MAT.tWood,tsw);
+ tile(X1,16.25,Y1,Y1+c,6.0,TZ,MAT.tWall,tw);tile(18.25,X2,Y1,Y1+c,6.0,TZ,MAT.tWood,tsw);
+ // back wall GW-11 (door D-03 at x 14.5-17.0)
+ tile(X1,14.5,Y2-c,Y2,0,TZ,MAT.tWall,tw);tile(17.0,X2,Y2-c,Y2,0,TZ,MAT.tWall,tw);
+ // side walls, kept inside the front and back tiles so no faces overlap
+ tile(X1,X1+c,Y1+c+e,Y2-c-e,0,TZ,MAT.tWall,tw);
+ tile(X2-c,X2,Y1+c+e,33.6,0,TZ,MAT.tWood,tsw);tile(X2-c,X2,33.6,Y2-c-e,0,TZ,MAT.tWall,tw);
+ slab([[X1,Y1],[X2,Y1],[X2,Y2],[X1,Y2]],MAT.tFloor,0.006,'G-07 · Toilet 1 floor · matte anti-skid porcelain, 1\' x 1\', greige');
+ // shower FU-14: clear glass screen on a black profile, rain shower, mixer, linear drain, geyser above
+ const gs=box(18.0,X2-c-e,33.58,33.62,0.06,6.6,MAT.glass,{cast:false,tip:'FU-14 · Shower glass screen, 8 mm clear, black profile'});glassMeshes.push(gs);
+ box(18.0,X2-c-e,33.565,33.635,0.0,0.06,MAT.blackMetal,{tip:'Glass screen floor profile'});box(17.96,18.0,33.56,33.64,0,6.6,MAT.blackMetal,{tip:'Glass screen edge profile'});
+ box(X2-c-0.9,X2-c,32.53,32.57,7.02,7.07,MAT.blackMetal,{tip:'Rain shower arm, matte black'});cyl(X2-c-0.9,32.55,6.95,7.0,0.33,MAT.blackMetal,{tip:'Rain shower head, 8", matte black'});
+ cyl(X2-c-0.02,32.55,3.5,3.75,0.16,MAT.blackMetal,{tip:'Shower mixer, matte black',seg:24}).rotation.z=Math.PI/2;
+ box(17.5,X2-c-e,32.9,33.05,0.006,0.02,MAT.blackMetal,{cast:false,tip:'Linear floor drain'});
+ box(18.4,20.1,Y1+c+e,Y1+0.95,7.4,8.55,std({color:'#f4f4f2',roughness:0.35}),{round:0.12,tip:'Geyser, 15 L, horizontal'});
+ // WC FU-12: wall-hung bowl on a tiled concealed-cistern ledge, black flush plate, health faucet
+ const w=fuG['FU-12'];
+ tile(X2-0.6,X2-c-e,w.y1-0.15,w.y2+0.15,0,3.3,MAT.tWall,'Concealed cistern ledge, tiled · shelf on top');
+ box(X2-0.62,X2-c-e,w.y1-0.17,w.y2+0.17,3.3,3.38,MAT.oak,{tip:'Ledge top, oak-look'});
+ box(X2-0.61,X2-0.6,(w.y1+w.y2)/2-0.35,(w.y1+w.y2)/2+0.35,2.55,3.05,MAT.blackMetal,{cast:false,tip:'Flush plate, matte black'});
+ const bowl=new THREE.Mesh(new THREE.SphereGeometry(m(0.5),32,20),MAT.ceramic);bowl.scale.set(1.75,0.55,1.0);bowl.position.set(mx(X2-1.35),m(1.12),m((w.y1+w.y2)/2));bowl.castShadow=true;scene.add(bowl);named(bowl,`FU-12 · Western WC, wall-hung · ${w.note}`);
+ box(X2-2.1,X2-0.62,(w.y1+w.y2)/2-0.47,(w.y1+w.y2)/2+0.47,1.38,1.46,MAT.ceramic,{round:0.035,tip:'FU-12 · soft-close seat'});
+ cyl(X2-c-0.05,w.y1-0.45,3.0,3.5,0.06,MAT.blackMetal,{tip:'Health faucet, matte black'});
+ // vanity FU-13: floating oak vanity on GW-10, white top, vessel basin, wall tap, mirror with LED behind
+ const v=fuG['FU-13'];
+ box(X1+c+e,v.x2-0.1,v.y1+c+e,v.y2,1.75,2.55,MAT.oak,{tip:`FU-13 · Floating vanity · oak-look, moisture-proof · ${v.note}`});
+ box(X1+c+e,v.x2-0.05,v.y1+c+e,v.y2+0.05,2.55,2.65,MAT.ceramic,{tip:'Vanity top, white quartz'});
+ cyl((X1+v.x2)/2+0.05,(v.y1+v.y2)/2,2.65,3.0,0.48,MAT.ceramic,{tip:'Vessel basin, round, white',rTop:0.55});
+ box(X1+c+e,X1+0.55,(v.y1+v.y2)/2-0.04,(v.y1+v.y2)/2+0.04,3.35,3.42,MAT.blackMetal,{tip:'Wall-mounted basin tap, matte black'});
+ const mi=box(X1+c+e,X1+c+0.05,v.y1+0.25,v.y2-0.05,3.75,6.15,MAT.mirror,{cast:false,tip:'Mirror with warm LED backlight'});
+ ledStrips.push(box(X1+c+e,X1+c+0.03,v.y1+0.2,v.y2,3.7,3.75,MAT.led,{cast:false,tip:'Mirror backlight'}));
+ const ml=new THREE.PointLight('#ffd7a3',0,m(7),2);ml.position.set(mx(X1+1.0),m(5.0),m((v.y1+v.y2)/2));scene.add(ml);towerLights.push(ml);
+ // towel rail and towel on GW-11, between the door and the WC
+ box(17.2,18.0,Y2-c-0.15,Y2-c-0.12,5.2,5.24,MAT.blackMetal,{tip:'Towel rail, matte black'});
+ box(17.25,17.95,Y2-c-0.2,Y2-c-0.08,3.9,5.25,std({color:'#e9e1d3',roughness:1,normalMap:T.linen.normalMap}),{round:0.05,tip:'Towel, oatmeal'});
+ // ceiling light
+ downlight(16.9,33.75,CEIL,'LED ceiling light, toilet (warm white)');}
+
 // ---------------- other rooms: simple blocks so the views through openings look right ----------------
 const simpleH={bed:1.8,cab:2.3,desk:2.5,ward:7.5,store2:9.4,shelf:6,counter:2.8,counter2:3.0,fridge:5.6,wc:1.3,basin:2.7,wm:2.8,store:3.5,table:2.4,chair:1.5};
 const kmat={counter:MAT.granite,counter2:MAT.granite,fridge:std({color:'#d9dcdf',roughness:0.3,metalness:0.5}),ward:MAT.oak,store2:std({color:'#ebe5da',roughness:0.55}),bed:std({color:'#e9e4da',roughness:0.9}),cab:MAT.oak,desk:MAT.oak,shelf:MAT.oak};
-for(const f of P.furniture){ if(f.fl!=='G'||['FU-03.1','FU-03.2','FU-04','FU-05'].includes(f.id)) continue;
+for(const f of P.furniture){ if(f.fl!=='G'||['FU-03.1','FU-03.2','FU-04','FU-05','FU-06','FU-09.1','FU-09.2','FU-10','FU-11','FU-12','FU-13','FU-14'].includes(f.id)) continue;
   const h=simpleH[f.kind]; if(!h) continue;
   if(f.kind==='counter'||f.kind==='counter2'){box(f.x1,f.x2,f.y1,f.y2,0.3,h-0.12,MAT.cabinet,{tip:`${f.id} · ${f.name}`});box(f.x1,f.x2,f.y1,f.y2,h-0.12,h,MAT.granite,{tip:`${f.id} · ${f.name} · granite top`});continue}
   box(f.x1,f.x2,f.y1,f.y2,0,h,kmat[f.kind]||std({color:'#e6e2da',roughness:0.8}),{tip:`${f.id} · ${f.name}`});
 }
 scene.traverse(n=>{if(n.isMesh&&!n.userData.curtain&&!n.userData.keepUV) metreUV(n.geometry)});
 scene.updateMatrixWorld(true);   // wall positions ready for collision before the first frame
-scene.traverse(n=>{if(n.isMesh&&typeof n.userData.tip==='string'&&n.userData.tip.startsWith('FU-05'))wallMeshes.push(n)});   // the TV wall unit is solid too
+const SOLID=['FU-05','FU-06','FU-09','FU-11','FU-12','FU-13','FU-14'];
+scene.traverse(n=>{if(n.isMesh&&typeof n.userData.tip==='string'&&SOLID.some(k=>n.userData.tip.startsWith(k)))wallMeshes.push(n)});   // TV unit, bed, wardrobe, shelf, WC, vanity, shower glass are solid too
 
 // ---------------- light ----------------
 let skyTex=null;
@@ -480,8 +604,17 @@ function applyOption(i){const o=OPTIONS[i];curOpt=i;
   <h2>Same in all options</h2><ul>
   <li><b>Ceiling:</b> no false ceiling. A civil-work band 1'3" wide and 7" deep runs round the edge. Its inner edge has a cove pocket with a warm LED strip, and it carries 6 recessed downlights. Clear height is 10' in the middle and 9'5" under the band.</li>
   <li><b>TV wall FU-05:</b> two masonry niche towers with oak shelves, LED strips and oak base cupboards; an oak-veneer centre wall with grooves; a floating console; a 55" TV.</li>
-  <li><b>Windows:</b> UPVC sliding, MS grill (hall windows W-04, W-05: pick GR-1 to GR-6 with the Grill buttons), granite sill. Sheer crepe-georgette curtains in ripple folds hang from a track on the band.</li>
+  <li><b>Windows:</b> UPVC sliding, MS grill GR-1 (plain vertical round bars, 12 mm @ 5", one middle flat) on every window and ventilator, granite sill. Sheer crepe-georgette curtains in ripple folds hang from a track on the band.</li>
   <li><b>Kitchen glass W-12:</b> black bi-fold frames with an oak ledge. <b>Arch O-01:</b> round-top plastered arch.</li>
+  </ul><h2>Bedroom 1 (G-05) and study corner (G-06)</h2><ul>
+  <li><b>Floor, walls, ceiling:</b> same oak-look planks, light-peach walls and civil-work band with LED cove as the living room; 4 downlights in the band, one in the study corner; one ceiling fan.</li>
+  <li><b>Bed FU-06:</b> low oak platform with a shadow-gap base. Headboard wall: oak-veneer panel with grooves to 3'4", a 4" oak ledge with an LED strip under it, a mild-brown linen pad. One framed canvas above.</li>
+  <li><b>Wardrobe FU-09.1 + FU-09.2:</b> L-shaped, floor to band, oak-veneer shutters with lofts, black J-profile handles, shadow-gap plinth.</li>
+  <li><b>Window W-02:</b> light-brown sheer curtains; AC FU-44 above it. Bedside runner rug in the living-room two-tone. Small bamboo plant by the window.</li>
+  <li><b>Study:</b> floating oak desk FU-10 on black steel legs, walnut-tone chair with a linen seat, open oak bookshelf FU-11, linen roman blind on W-01.</li>
+  </ul><h2>Toilet 1 (G-07)</h2><ul>
+  <li><b>Tiles:</b> greige matte porcelain 2' x 1' to 7' high; wood-look porcelain on the shower walls; matte anti-skid 1' x 1' floor. Paint above 7'.</li>
+  <li><b>Fittings:</b> wall-hung WC FU-12 on a tiled concealed-cistern ledge, floating oak-look vanity FU-13 with a vessel basin and backlit mirror, clear glass shower screen FU-14 with a rain shower, 15 L geyser above. All fittings matte black. WPC door D-03.</li>
   </ul><h2>Textures</h2><div>Real CC0 scans from Poly Haven, stored locally in <code>3d/assets</code>. Use <b>Photo</b> for a ray-traced, near-photographic still.</div>`;
   try{localStorage.setItem('lr3d-opt',i)}catch(e){}
   renderer.shadowMap.needsUpdate=true;rebuildPhoto();invalidate();
@@ -505,17 +638,22 @@ const VIEWS=[
  {p:[4.9,3.7,53.2],t:[19.5,3.9,52.75]},   // seated on the 3-seater, looking at the TV wall
  {p:[18.2,EYE,47.6],t:[4.0,EYE,57.0]},    // from the TV wall corner
  {p:[16.0,EYE,66.0],t:[11.8,EYE,50.0]},   // from the open area through the arch
- {p:[11.9,32,52.75],t:[11.9,0,52.76]},    // top
+ {p:[11.9,32,52.75],t:[11.9,0,52.76],top:true},    // top
+ {p:[10.3,EYE,45.9],t:[20.0,3.6,39.0]},   // bedroom 1, from the door: bed, headboard, wardrobe
+ {p:[17.9,EYE,39.6],t:[9.25,5.2,40.6]},   // bedroom 1, from the wardrobe: window, AC, plant, study
+ {p:[11.8,EYE,42.4],t:[11.5,3.0,31.5]},   // study corner, from the middle of bedroom 1
+ {p:[16.0,5.6,36.15],t:[19.0,2.4,32.4]},   // toilet 1 from its doorway: WC, shower, geyser
+ {p:[14.2,34,39.0],t:[14.2,0,39.01],top:true},   // top of bedroom 1 and toilet 1
 ];
 let hfov=75;
 function applyFov(){const a=camera.aspect||1;camera.fov=THREE.MathUtils.radToDeg(2*Math.atan(Math.tan(THREE.MathUtils.degToRad(hfov)/2)/a));camera.updateProjectionMatrix()}
-function setView(i){const v=VIEWS[i];ceilingMeshes.forEach(c=>c.visible=i!==5);renderer.shadowMap.needsUpdate=true;camera.position.set(mx(v.p[0]),m(v.p[1]),m(v.p[2]));
+function setView(i){const v=VIEWS[i];ceilingMeshes.forEach(c=>c.visible=!v.top);renderer.shadowMap.needsUpdate=true;camera.position.set(mx(v.p[0]),m(v.p[1]),m(v.p[2]));
   const d=new THREE.Vector3(mx(v.t[0]),m(v.t[1]),m(v.t[2])).sub(camera.position);yaw=Math.atan2(-d.x,-d.z);pitch=Math.atan2(d.y,Math.hypot(d.x,d.z));applyLook();
-  document.querySelectorAll('#camSeg button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.c===i));invalidate()}
+  document.querySelectorAll('.cams button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.c===i));invalidate()}
 function applyLook(){pitch=Math.max(-1.55,Math.min(1.55,pitch));camera.rotation.set(pitch,yaw,0)}
 function setLens(f){hfov=f;applyFov();document.querySelectorAll('#lensSeg button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.f===f));try{localStorage.setItem('lr3d-lens',f)}catch(e){};invalidate()}
 document.querySelectorAll('#lightSeg button').forEach(b=>b.onclick=()=>applyLight(b.dataset.l));
-document.querySelectorAll('#camSeg button').forEach(b=>b.onclick=()=>setView(+b.dataset.c));
+document.querySelectorAll('.cams button').forEach(b=>b.onclick=()=>setView(+b.dataset.c));
 document.querySelectorAll('#lensSeg button').forEach(b=>b.onclick=()=>setLens(+b.dataset.f));
 const nb=document.getElementById('notesBtn');nb.onclick=()=>{const h=panel.classList.toggle('hidden');nb.setAttribute('aria-pressed',!h)};
 
@@ -554,8 +692,6 @@ function resize(){const w=view.clientWidth,h=view.clientHeight;renderer.setSize(
 addEventListener('resize',resize);resize();
 let so=0,sl='day',sf=75;try{so=0;sl=localStorage.getItem('lr3d-light')||'day';sf=+(localStorage.getItem('lr3d-lens')||75)}catch(e){}
 applyOption(so);applyLight(sl);setLens(sf);setView(0);
-{let g='GR-1';try{g=localStorage.getItem('lr3d-grill')||g}catch(e){};setGrill(g)}
-document.querySelectorAll('#grillSeg button').forEach(x=>x.onclick=()=>setGrill(x.dataset.g));
 // ---------------- navigation: look in place, walk with collision ----------------
 // Keys: Up/Down walk · Left/Right turn · A/D slide · W/S tilt up/down · Q/E lower/raise · Shift faster
 // Mouse: drag = look around (camera stays put) · scroll = walk · right-drag = slide sideways / up-down
