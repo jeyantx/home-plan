@@ -261,6 +261,7 @@ def draw_furniture(fl,_late=False):
                         a=S(cx+dx,(y1+y2)/2+dy); E(f'<circle cx="{a[0]:.3f}" cy="{a[1]:.3f}" r="0.3" fill="none" stroke="#ddd" stroke-width="0.05"/>')
         elif k=='fridge':
             R_(x1,x2,y1,y2,'#eef2f5','#777',0.04); text((x1+x2)/2,(y1+y2)/2,'FRIDGE',0.32,weight=700,fill='#666')
+        elif k=='appl': R_(x1,x2,y1,y2,'#e9ecef','#555',0.035,extra='rx="0.12"')
         elif k=='over': R_(x1,x2,y1,y2,'none','#555',0.04,extra='stroke-dasharray="0.2 0.12"')
         elif k=='tv':
             R_(x1,x2,y1,y2,'#8b6a45','#5a4128',0.04); R_(x1+0.15,x1+0.35,y1+0.6,y2-0.6,'#222','#111',0.02)
