@@ -121,7 +121,13 @@ FF_OUTLINE=R(9.5,21.0,73.125,97.375)
 # site levels, in feet above the road crown in front of the gate (house floor = +3.5)
 LEVELS=dict(road=0.0,hump=0.5,parking=2.0,garden=2.5,floor=3.5)
 RAMP=dict(y_hump=1.0,y_crest=3.25,y_top=14.5,drain=(2.5,3.25))   # gate bevel to Y 1', crest to 3'3" (drain at its inner edge), ramp 1 in 7.5 to Y 14'6"
-BRANCH_NOTES='''<section class="ask"><h2>Raised site levels (branch levels-v1, sample for review)</h2>
+BRANCH_NOTES='''<section class="ask"><h2>Outside windows and colours (branch exterior-v2, for review)</h2>
+<ol>
+<li><b>Window frame WF-1</b> on every outside window: a box frame round the window, 6" wide and 4" out from the wall, with a deeper 1'3" hood on top that works as the sunshade, and a thin black drip edge. Ventilators get a slimmer 4" frame. RCC fins and hood, clad in the same wood-look brown as the balcony louvers and the gate slats (HPL or aluminium wood finish).</li>
+<li><b>Plinth band:</b> the plinth below the floor is in a dark base colour (textured paint, or stone cladding).</li>
+<li><b>Colour schemes</b> (Options → Colour): <b>EX-4</b> white house, light sand first-floor block, charcoal plinth (recommended); <b>EX-5</b> beige house, white first-floor block, dark brown plinth; <b>EX-6</b> light grey house, dark grey first-floor block, charcoal plinth. All three keep the wood-brown frames, louvers and gates.</li>
+</ol></section>
+<section class="ask"><h2>Raised site levels (branch levels-v1, sample for review)</h2>
 <ol>
 <li><b>Levels above the road:</b> gate hump +6", parking +2'0", gardens, side passage and back yard +2'6", house floor +3'6" (1' plinth above the gardens).</li>
 <li><b>Gate:</b> a 1' bevel from the road to a 6" crest, a 2'3" level strip at the crest, then a covered drain across the drive (to the rainwater pit and the road drain).</li>

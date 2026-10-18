@@ -52,7 +52,7 @@ canvas{display:block;width:100%;height:100%}
   <div class="seg" id="floorSeg" title="Go to a floor at eye level"><button data-fl="G">Ground</button><button data-fl="F">First</button></div>
   <select id="areaSel" title="Choose an area, then a view"><option value="0">Living</option><option value="1">Bedroom 1</option><option value="2">Kitchen</option><option value="3">Bedroom 2</option><option value="4">Outside</option><option value="5">Stairs</option><option value="6">First floor</option></select>
   
-<div class="seg cams" data-area="0"><button data-c="0">Entry</button><button data-c="1">Corner</button><button data-c="2">From sofa</button><button data-c="3">From TV</button><button data-c="4">From kitchen</button><button data-c="5">Top</button></div>  <div class="seg cams" data-area="1"><button data-c="6">Door</button><button data-c="7">Window</button><button data-c="8">Study</button><button data-c="9">Toilet</button><button data-c="10">Top</button></div>  <div class="seg cams" data-area="2"><button data-c="11">Kitchen</button><button data-c="12">Sink</button><button data-c="13">Hob</button><button data-c="14">Fridge</button><button data-c="15">Top</button></div>  <div class="seg cams" data-area="3"><button data-c="16">Door</button><button data-c="17">Bed</button><button data-c="18">Window</button><button data-c="19">Toilet 2</button><button data-c="20">Top</button></div>  <div class="seg cams" data-area="4"><button data-c="21">Gate</button><button data-c="22">Parking</button><button data-c="23">Terrace</button><button data-c="24">Aerial</button><button data-c="25">Side</button><button data-c="26">Stair</button><button data-c="32">Back garden</button><button data-c="33">Gate levels</button></div>
+<div class="seg cams" data-area="0"><button data-c="0">Entry</button><button data-c="1">Corner</button><button data-c="2">From sofa</button><button data-c="3">From TV</button><button data-c="4">From kitchen</button><button data-c="5">Top</button></div>  <div class="seg cams" data-area="1"><button data-c="6">Door</button><button data-c="7">Window</button><button data-c="8">Study</button><button data-c="9">Toilet</button><button data-c="10">Top</button></div>  <div class="seg cams" data-area="2"><button data-c="11">Kitchen</button><button data-c="12">Sink</button><button data-c="13">Hob</button><button data-c="14">Fridge</button><button data-c="15">Top</button></div>  <div class="seg cams" data-area="3"><button data-c="16">Door</button><button data-c="17">Bed</button><button data-c="18">Window</button><button data-c="19">Toilet 2</button><button data-c="20">Top</button></div>  <div class="seg cams" data-area="4"><button data-c="21">Gate</button><button data-c="22">Parking</button><button data-c="23">Terrace</button><button data-c="24">Aerial</button><button data-c="25">Side</button><button data-c="26">Stair</button><button data-c="32">Back garden</button><button data-c="33">Gate levels</button><button data-c="34">Front</button></div>
   <div class="seg cams" data-area="5"><button data-c="27">Spiral</button><button data-c="28">Landing</button><button data-c="29">Well</button><button data-c="26">ST-1</button></div>
   <div class="seg cams" data-area="6"><button data-c="28">Landing</button><button data-c="30">Bedroom 3</button><button data-c="23">Terrace</button><button data-c="31">Top</button></div>
   <span class="spacer"></span>
@@ -63,7 +63,7 @@ canvas{display:block;width:100%;height:100%}
  </div>
  <div class="row hidden" id="optRow">
   <span class="lbl">Gate</span><div class="seg" id="gateSeg"><button data-g="GD-1">GD-1 Slats</button><button data-g="GD-2">GD-2 Bars</button><button data-g="GD-3">GD-3 Panels</button></div>
-  <span class="lbl">Colour</span><div class="seg" id="extSeg"><button data-e="EX-1"><i style="background:#eeeae2"></i><i style="background:#c99a6a"></i>EX-1</button><button data-e="EX-2"><i style="background:#cbc2b4"></i><i style="background:#f1eee8"></i>EX-2</button><button data-e="EX-3"><i style="background:#dccaae"></i><i style="background:#4a4a48"></i>EX-3</button></div>
+  <span class="lbl">Colour</span><div class="seg" id="extSeg"><button data-e="EX-4" title="Warm white walls, light sand first-floor block, wood-brown frames, charcoal plinth"><i style="background:#f1ece3"></i><i style="background:#d3c2a8"></i><i style="background:#8a5a3a"></i><i style="background:#4f4a45"></i>EX-4</button><button data-e="EX-5" title="Beige walls, white first-floor block, wood-brown frames, dark brown plinth"><i style="background:#d8c5a6"></i><i style="background:#f3efe7"></i><i style="background:#8a5a3a"></i><i style="background:#5a4234"></i>EX-5</button><button data-e="EX-6" title="Light grey walls, dark grey first-floor block, wood-brown frames, charcoal plinth"><i style="background:#c6c3bd"></i><i style="background:#6b6966"></i><i style="background:#8a5a3a"></i><i style="background:#3f4043"></i>EX-6</button></div>
   <span class="lbl">Finish</span><div class="seg" id="finishSeg"><button data-k="KT-1"><i style="background:#c9a77c"></i><i style="background:#efe9df"></i>KT-1</button><button data-k="KT-2"><i style="background:#efe9df"></i><i style="background:#c9a77c"></i>KT-2</button><button data-k="KT-3"><i style="background:#7d5a3e"></i><i style="background:#efe9df"></i>KT-3</button></div>
   <span class="lbl">Lens</span><div class="seg" id="lensSeg"><button data-f="60" title="Eye-like lens">60°</button><button data-f="75" title="Wide lens">75°</button></div>
   <span class="sub">↑↓ walk · ←→ turn · A/D slide · W/S tilt · Q/E lower/raise · Shift faster · Drag to look around · Scroll to walk · Right-drag to slide · Hover for names</span>
@@ -176,6 +176,8 @@ const MAT={
   skirt:std({roughness:0.5}),
   ext:std({roughness:0.95,normalMap:T.paint.normalMap,normalScale:new THREE.Vector2(0.15,0.15)}),
   extTrim:std({roughness:0.9}),
+  extUp:std({roughness:0.95,normalMap:T.paint.normalMap,normalScale:new THREE.Vector2(0.15,0.15)}),
+  extBase:std({roughness:0.85,normalMap:T.paint.normalMap,normalScale:new THREE.Vector2(0.4,0.4)}),   // plinth band: textured paint or stone cladding
   extWood:std({map:T.oakPanel.map,normalMap:T.oakPanel.normalMap,normalScale:new THREE.Vector2(0.3,0.3),roughness:0.6}),
   terrTile:std({map:clayTiles(),roughness:0.85}),
   paver:std({map:stoneTiles('#9d978d',62,4,4,0.75),roughness:0.9}),
@@ -233,7 +235,7 @@ function buildWall(w){
   let out=0;
   if(w.kind==='outer'){const mid=horiz?(w.x1+w.x2)/2:(w.y1+w.y2)/2,inA=horiz?inRoom(mid,w.y1-0.4):inRoom(w.x1-0.4,mid),inB=horiz?inRoom(mid,w.y2+0.4):inRoom(w.x2+0.4,mid);
     out=inA&&!inB?1:(!inA&&inB?-1:0);
-    if(out){const d=0.02,gs=new THREE.ExtrudeGeometry(mkShape(0.035,false),{depth:d,bevelEnabled:false,steps:1,curveSegments:24});gs.scale(F,F,F);const sk=new THREE.Mesh(gs,MAT.ext);
+    if(out){const d=0.02,gs=new THREE.ExtrudeGeometry(mkShape(0.035,false),{depth:d,bevelEnabled:false,steps:1,curveSegments:24});gs.scale(F,F,F);const sk=new THREE.Mesh(gs,CURFL==='F'?MAT.extUp:MAT.ext);   // first-floor block takes the accent colour
       if(horiz){sk.rotation.y=Math.PI;sk.position.set(mx(w.x1),m(ZOFF),m(out<0?w.y1-0.012:w.y2+0.012+d))}else{sk.rotation.y=-Math.PI/2;sk.position.set(mx(out<0?w.x1-0.012-d:w.x2+0.012),m(ZOFF),m(w.y1))}
       sk.castShadow=true;sk.receiveShadow=true;sk.userData.keepUV=false;scene.add(sk);named(sk,`${w.id} · outside paint`)}}
   for(const o of ops) buildOpening(o,w,horiz,s0,out);
@@ -268,7 +270,14 @@ function buildOpening(o,w,horiz,s0,out=0){
     const vo=T-0.04;
     grillMesh(o,w,horiz,u1,u2,z1,z2,vo-0.08);
     boxAlong(horiz,w,u1-0.12,u2+0.12,-0.1,T*0.35-0.012,z1-0.06,z1+0.012,MAT.granite,{tip:'Granite window sill'});
-    if(out&&o.type==='window'&&w.id!=='GW-03'){const zs=z2+0.45,v=out<0?[-1.5,0]:[T,T+1.5];boxAlong(horiz,w,u1-0.4,u2+0.4,v[0],v[1],zs,zs+0.3,MAT.extTrim,{tip:o.id+' sunshade, 1\'6" RCC'})}
+    if(out){   // outside box frame WF-1: wood-look brown cladding (same as the balcony louvers and the gate slats) round the window, deeper hood on top as the sunshade
+      const vr=(a,b)=>out<0?[-b,-a]:[T+a,T+b],big=o.type==='window',fw2=big?0.5:0.33,d=big?0.33:0.25,hood=big&&w.id!=='GW-03'?1.25:d,ft=`${o.id} · window box frame WF-1 · RCC fins and sunshade clad in wood-look brown (HPL or aluminium), ${big?'6" frame, 1\'3" hood':'4" frame'}`;
+      const S1=vr(0.012,d),SH=vr(0.012,hood);
+      boxAlong(horiz,w,u1-fw2,u2+fw2,SH[0],SH[1],z2+0.012,z2+fw2,MAT.extWood,{tip:ft});                                  // top hood
+      boxAlong(horiz,w,u1-fw2,u1-0.012,S1[0],S1[1],z1-(big?0.3:0.15),z2+0.012,MAT.extWood,{tip:ft});                   // east/left fin
+      boxAlong(horiz,w,u2+0.012,u2+fw2,S1[0],S1[1],z1-(big?0.3:0.15),z2+0.012,MAT.extWood,{tip:ft});                   // right fin
+      boxAlong(horiz,w,u1-0.012,u2+0.012,S1[0],S1[1],z1-(big?0.3:0.15),z1-0.06,MAT.extWood,{tip:ft});                  // bottom rail under the sill
+      if(big){const L=vr(0.012,0.05);boxAlong(horiz,w,u1-0.012,u2+0.012,L[0],L[1],z2-0.04,z2+0.012,MAT.blackMetal,{cast:false,tip:'Drip edge, black'})}}
   } else if(o.type==='fold'){
     const z1=o.sill,z2=o.sill+o.h,n=4,v0=T*0.4;
     for(let i=0;i<=n;i++){const u=Math.min(u2-0.07,Math.max(u1+0.07,u1+i*(u2-u1)/n));boxAlong(horiz,w,u-0.05,u+0.05,v0,v0+0.14,z1+0.09,z2-0.09,MAT.blackMetal,{tip})}
@@ -844,10 +853,10 @@ function setFinish(k){if(!KT[k])k='KT-1';const o=KT[k];finishMat(MAT.kLow,o.low)
 
 // ================= OUTSIDE: roof slab, first floor, terrace, front, parking, gates, compound walls (colour and gate picked in the toolbar) =================
 const FFZ=P.ff, SLB=CEIL+0.02;   // first-floor level 11'6"; slab soffit just above the room ceilings; ground 1' below the floor
-const EXT={
- 'EX-1':{name:'White + wood',wall:'#eeeae2',trim:'#e6e1d8',louver:'wood'},
- 'EX-2':{name:'Grey-beige + white',wall:'#cbc2b4',trim:'#f1eee8',louver:'wood'},
- 'EX-3':{name:'Sand + dark grey',wall:'#dccaae',trim:'#4a4a48',louver:'metal'}};
+const EXT={   // wood-look brown window frames, balcony louvers and gate slats in every scheme
+ 'EX-4':{name:'White house, light sand upper block, wood brown, charcoal base',wall:'#f1ece3',up:'#d3c2a8',trim:'#e4ddd1',base:'#4f4a45',louver:'wood'},
+ 'EX-5':{name:'Beige house, white upper block, wood brown, dark brown base',wall:'#d8c5a6',up:'#f3efe7',trim:'#f6f2ea',base:'#4e3a2c',louver:'wood'},
+ 'EX-6':{name:'Light grey house, dark grey upper block, wood brown, charcoal base',wall:'#c6c3bd',up:'#6b6966',trim:'#f4f2ee',base:'#3a3b3e',louver:'wood'}};
 const extMeshes=[];   // top views hide these too
 const X_=fn=>{const n0=scene.children.length;fn();for(const o of scene.children.slice(n0)){ceilingMeshes.push(o);extMeshes.push(o)}};   // mark what a block adds as 'roof level'
 // first floor: walls, openings, floors
@@ -964,7 +973,7 @@ X_(()=>{for(const [a,b,c,d] of slabParts) box(a,b,c,d,SLB,FFZ-0.05,MAT.white,{ti
  // roof of the first floor (bedroom 3 block), low parapet, overhead tank FU-71 on a stand, cat ladder FU-72
  let RZ,RT;tagAs(ROOF_F,()=>{
  RZ=FFZ+SLB;RT=RZ+1.0;box(9.5,21,73.125,97.375,RZ,RT,MAT.white,{tip:'RCC roof slab, first floor'});
- for(const [a,b,c,d] of [[9.5,21,73.125,73.5],[9.5,21,97.0,97.375],[9.5,9.875,73.5,97.0],[20.625,21,73.5,97.0]]){box(a,b,c,d,RT,RT+1.5,MAT.ext,{tip:'Roof parapet, 1\'6"'});box(a-0.04,b+0.04,c-0.04,d+0.04,RT+1.5,RT+1.62,MAT.extTrim,{tip:'Roof parapet coping'})}
+ for(const [a,b,c,d] of [[9.5,21,73.125,73.5],[9.5,21,97.0,97.375],[9.5,9.875,73.5,97.0],[20.625,21,73.5,97.0]]){box(a,b,c,d,RT,RT+1.5,MAT.extUp,{tip:'Roof parapet, 1\'6"'});box(a-0.04,b+0.04,c-0.04,d+0.04,RT+1.5,RT+1.62,MAT.extTrim,{tip:'Roof parapet coping'})}
  slab([[9.875,73.5],[20.625,73.5],[20.625,97.0],[9.875,97.0]],MAT.terrTile,RT+0.005,'Roof of bedroom 3 · pressed clay tiles');
  const tk=fuG2['FU-71'],tx=(tk.x1+tk.x2)/2,ty=(tk.y1+tk.y2)/2;box(tk.x1+0.2,tk.x2-0.2,tk.y1+0.2,tk.y2-0.2,RT,RT+1.0,MAT.white,{tip:'RCC tank stand, 1\''});
  cyl(tx,ty,RT+1.0,RT+5.6,2.45,MAT.tank,{tip:`FU-71 · Overhead water tank, 2000 L, white · ${tk.note}`,rTop:2.35,seg:40});cyl(tx,ty,RT+5.6,RT+5.95,0.8,MAT.tank,{tip:'Tank lid'});
@@ -982,7 +991,7 @@ for(const c of P.columns) if(!inWallG(c)){const me=box(c.x1,c.x2,c.y1,c.y2,c.y1<
  for(const b of P.beams.filter(b=>b.level==='G')) for(const [a,bb,c,d] of zones){const x1=Math.max(b.x1,a),x2=Math.min(b.x2,bb),y1=Math.max(b.y1,c),y2=Math.min(b.y2,d);
    if(x2-x1>0.05&&y2-y1>0.05) box(x1+0.006,x2-0.006,y1+0.006,y2-0.006,SLB-1.08,SLB+0.01,MAT.white,{tip:`${b.id} · Beam 9" x ${b.depth} · ${b.note}`})}}
 // ground: house plinth, porch with 3 steps, parking pavers, road
-for(const [a,b,c,d] of [[8.25,21,30.75,33.25],[2.75,21,33.25,67.125],[6.0,21,67.125,73.875],[9.5,21,73.875,95.125],[2.75,3.5,30.75,33.25]]) box(a,b,c,d,c<31?PKZ:GRD,-0.03,MAT.extTrim,{cast:false,tip:'Plinth, 1\''});
+for(const [a,b,c,d] of [[8.25,21,30.75,33.25],[2.75,21,33.25,67.125],[6.0,21,67.125,73.875],[9.5,21,73.875,95.125],[2.75,3.5,30.75,33.25]]) box(a,b,c,d,c<31?PKZ:GRD,-0.03,MAT.extBase,{cast:false,tip:'Plinth band · textured paint (or stone cladding) in the base colour'});
 slab([[2.75,33.25],[8.5,33.25],[8.5,40.5],[2.75,40.5]],MAT.otherFloor,0,'G-02 · Porch floor');
 for(let i=0;i<3;i++) box(3.5,8.25,30.75+i*0.833,33.25,PKZ,PKZ+(i+1)*(-PKZ/3),MAT.stepStone,{tip:`Porch steps, granite, ${Math.round(-PKZ/3*12)}" risers, from the parking`});
 box(0.375,2.75,30.75,30.79,PKZ,GRD,MAT.extTrim,{tip:'Step up from the parking to the side passage, 6"'});
@@ -1055,7 +1064,7 @@ const gateMeshes=[];
    hang(build(...far),jx,p2,`${o.id} (bi-fold, open)`);}}}
 function setGate(k){if(!GD[k])k='GD-1';for(const me of gateMeshes){me.geometry=me.userData.designs[k];me.userData.tip=`Gate ${me.userData.gate} · ${k} · MS frame, black powder-coat · ${GD[k]}`}
   document.querySelectorAll('#gateSeg button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.g===k));try{localStorage.setItem('lr3d-gate',k)}catch(e){};renderer.shadowMap.needsUpdate=true;if(photo&&pt)pt.setScene(scene,camera);invalidate()}
-function setExt(k){if(!EXT[k])k='EX-1';const o=EXT[k];MAT.ext.color.set(o.wall);MAT.extTrim.color.set(o.trim);
+function setExt(k){if(!EXT[k])k='EX-4';const o=EXT[k];MAT.ext.color.set(o.wall);MAT.extTrim.color.set(o.trim);MAT.extBase.color.set(o.base);MAT.extUp.color.set(o.up);
   if(o.louver==='wood'){MAT.extWood.map=T.oakPanel.map;MAT.extWood.color.set('#c99a6a')}else{MAT.extWood.map=null;MAT.extWood.color.set('#3c3d3e')}MAT.extWood.needsUpdate=true;
   document.querySelectorAll('#extSeg button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.e===k));try{localStorage.setItem('lr3d-ext',k)}catch(e){};if(photo&&pt)pt.updateMaterials();invalidate()}
 // neem tree (existing, rebuilt from the site photos; 3d/models/neem-tree.js): trunk 3'6" from the road, leaning south, south limb cut to a stub
@@ -1287,7 +1296,8 @@ const VIEWS=[
  {p:[11.4,FFZ+EYE,85.6],t:[19.5,FFZ+3.6,95.0],fl:'F'},   // bedroom 3 from its lobby
  {p:[15.2,FFZ+30,85.0],t:[15.2,FFZ,85.01],top:true,fl:'F'},   // top of the first floor (its roof and ceilings hidden)
  {p:[19.6,4.4,96.0],t:[6.0,0.6,104.3]},   // back garden: flower bed along BW-09, clothes line, Tulsi maadam beyond
- {p:[7.0,PKZ+5.25,24.0],t:[7.5,RDZ+0.8,-2.0]},   // levels at the gate: from the parking, looking down the ramp to the crest, the drain and the road: road, crest and drain, ramp, parking
+ {p:[7.0,PKZ+5.25,24.0],t:[7.5,RDZ+0.8,-2.0]},
+ {p:[9.0,RDZ+8.0,-14.0],t:[11.0,4.5,34.0]},   // front elevation from across the road, below the neem crown   // levels at the gate: from the parking, looking down the ramp to the crest, the drain and the road: road, crest and drain, ramp, parking
 ];
 let hfov=75;
 function applyFov(){const a=camera.aspect||1;camera.fov=THREE.MathUtils.radToDeg(2*Math.atan(Math.tan(THREE.MathUtils.degToRad(hfov)/2)/a));camera.updateProjectionMatrix()}
@@ -1351,7 +1361,7 @@ addEventListener('resize',resize);resize();
 {let o=false;try{o=localStorage.getItem('lr3d-opts')==='1'}catch(e){};setOpt(o)}   // options row starts closed unless left open
 let so=0,sl='day',sf=75;try{so=0;sl=localStorage.getItem('lr3d-light')||'day';sf=+(localStorage.getItem('lr3d-lens')||75)}catch(e){}
 applyOption(so);applyLight(sl);setLens(sf);setView(0);
-{let g='GD-1',e='EX-1';try{g=localStorage.getItem('lr3d-gate')||g;e=localStorage.getItem('lr3d-ext')||e}catch(x){};setGate(g);setExt(e)}
+{let g='GD-1',e='EX-4';try{g=localStorage.getItem('lr3d-gate')||g;e=localStorage.getItem('lr3d-ext')||e}catch(x){};setGate(g);setExt(e)}
 document.querySelectorAll('#gateSeg button').forEach(x=>x.onclick=()=>setGate(x.dataset.g));document.querySelectorAll('#extSeg button').forEach(x=>x.onclick=()=>setExt(x.dataset.e));
 {let k='KT-1';try{k=localStorage.getItem('lr3d-finish')||k}catch(e){};setFinish(k)}
 document.querySelectorAll('#finishSeg button').forEach(x=>x.onclick=()=>setFinish(x.dataset.k));
