@@ -171,6 +171,7 @@ const LX1=3.5,LX2=20.25,LY1=46.75,LY2=58.75;
 // ---------------- walls with openings ----------------
 const floorOpen=t=>['door','double','arch','frame'].includes(t);
 function touchesLiving(w){const pad=0.8;return !(w.x2<LX1-pad||w.x1>LX2+pad||w.y2<LY1-pad||w.y1>LY2+pad)}
+const floorPatches=[[[[10.25,67.625],[13.5,67.625],[13.5,68.0],[10.25,68.0]],'Floor, kitchen | stair hall']];   // gaps between room floors
 function buildWall(w){
   if(['comp','pillar','planter','para'].includes(w.kind)) return;
   const horiz=(w.x2-w.x1)>(w.y2-w.y1);
@@ -181,6 +182,7 @@ function buildWall(w){
     shape.lineTo(o.u1,0);
     if(o.type==='arch'){const r=(o.u2-o.u1)/2,spring=o.h-r;shape.lineTo(o.u1,spring);shape.absarc(o.u1+r,spring,r,Math.PI,0,true);shape.lineTo(o.u2,0)}
     else{shape.lineTo(o.u1,o.h);shape.lineTo(o.u2,o.h);shape.lineTo(o.u2,0)}
+    if(o.type==='arch'){const q=horiz?[[o.a,w.y1],[o.b,w.y1],[o.b,w.y2],[o.a,w.y2]]:[[w.x1,o.a],[w.x2,o.a],[w.x2,o.b],[w.x1,o.b]];floorPatches.push([q,o.id+' · floor under the arch'])}
   }
   shape.lineTo(L,0);shape.lineTo(L,CEIL);shape.lineTo(0,CEIL);shape.lineTo(0,0);
   for(const o of ops.filter(o=>!floorOpen(o.type))){const h=new THREE.Path();h.moveTo(o.u1,o.sill);h.lineTo(o.u2,o.sill);h.lineTo(o.u2,o.sill+o.h);h.lineTo(o.u1,o.sill+o.h);h.lineTo(o.u1,o.sill);shape.holes.push(h)}
@@ -227,6 +229,7 @@ function buildOpening(o,w,horiz,s0){
     boxAlong(horiz,w,u1-0.1,u2+0.1,-0.15,T+0.05,z1-0.1,z1+0.012,MAT.oak,{tip:'Oak ledge under the folding glass'});
   } else if(o.type==='door'||o.type==='double'){
     const fr=0.25,th=0.13;
+    if(o.id!=='D-01'){const q=horiz?[[o.a,w.y1],[o.b,w.y1],[o.b,w.y2],[o.a,w.y2]]:[[w.x1,o.a],[w.x2,o.a],[w.x2,o.b],[w.x1,o.b]];slab(q,MAT.floor,0,o.id+' · floor under the door')}
     // frame lining sits just inside the opening, so its faces never share a plane with the plastered reveal
     boxAlong(horiz,w,u1+0.012,u1+0.1,-0.04,T+0.04,0,o.h-0.012,MAT.oak,{tip:o.id+' frame'});boxAlong(horiz,w,u2-0.1,u2-0.012,-0.04,T+0.04,0,o.h-0.012,MAT.oak,{tip:o.id+' frame'});
     boxAlong(horiz,w,u1+0.012,u2-0.012,-0.04,T+0.04,o.h-0.1,o.h-0.012,MAT.oak,{tip:o.id+' frame'});
@@ -258,6 +261,7 @@ for(const r of P.rooms.G){
   ceilingMeshes.push(slab(r.pts,MAT.ceiling,CEIL-0.001,null,true));
 }
 ceilingMeshes.push(box(2.75,21,30.75,95.125,CEIL,CEIL+0.45,MAT.white));
+for(const [q,t] of floorPatches) slab(q,MAT.floor,0,t);
 box(2.75,21,30.75,95.125,-1,-0.03,MAT.wallOut,{cast:false});
 {const hS=0.33,d=0.04;   // 4" tile skirting in the living room
  box(LX1,LX1+d,LY1,LY2,0,hS,MAT.skirt,{tip:'Tile skirting, 4"'});box(LX1+d,18.9,LY1,LY1+d,0,hS,MAT.skirt,{tip:'Tile skirting, 4"'});box(LX1+d,18.9,LY2-d,LY2,0,hS,MAT.skirt,{tip:'Tile skirting, 4"'});}
@@ -585,45 +589,62 @@ const KT={
 function finishMat(mt,kind){if(kind==='oak'){mt.map=T.oak.map;mt.color.set('#ffffff')}else if(kind==='walnut'){mt.map=T.oakPanel.map;mt.color.setRGB(0.52,0.36,0.24)}else{mt.map=null;mt.color.set('#efe9df')}mt.needsUpdate=true}
 const KCH=2.83, KTOP=0.13, KPL=0.33, SH=0.06, UPZ1=4.9, UPZ2=7.0;   // counter 2'10", 40 mm top, 4" plinth; wall cabinets 4'11" to 7'
 const kTip=(id,what)=>{const f=fuG[id];return `${id} · ${what} · ${f?f.note:''}`};
-// one run of base or wall cabinets. face: 'x+' (front faces +x) or 'y-' (front faces -y) or 'y+' or 'x-'. segs: [a,b,type] along the front
+// one run of base or wall cabinets. face: 'x+' / 'x-' / 'y+' / 'y-' = the side the front faces. segs: [a,b,type] along the front;
+// type 'door', 'door2', 'drawers', or 'glass' (black-framed glass door on a hollow unit, contents visible)
 function cabRun(id,what,x1,x2,y1,y2,z1,z2,face,segs,mat,plinth){
-  const t=kTip(id,what),g=0.012;
-  const body={'x+':[x1,x2-SH,y1,y2],'x-':[x1+SH,x2,y1,y2],'y-':[x1,x2,y1+SH,y2],'y+':[x1,x2,y1,y2-SH]}[face];
-  box(body[0],body[1],body[2],body[3],z1+(plinth?KPL:0),z2,mat,{tip:t});
-  if(plinth){const r=0.12,p={'x+':[x1,x2-SH-r,y1,y2],'x-':[x1+SH+r,x2,y1,y2],'y-':[x1,x2,y1+SH+r,y2],'y+':[x1,x2,y1,y2-SH-r]}[face];box(p[0],p[1],p[2],p[3],z1,z1+KPL,MAT.plinth,{tip:t})}
-  const fz1=z1+(plinth?KPL:0)+g, fz2=z2-g;
-  const panel=(a,b,za,zb)=>{if(face==='x+')return box(x2-SH,x2,a,b,za,zb,mat,{tip:t+' · shutter'});if(face==='x-')return box(x1,x1+SH,a,b,za,zb,mat,{tip:t+' · shutter'});
-    if(face==='y-')return box(a,b,y1,y1+SH,za,zb,mat,{tip:t+' · shutter'});return box(a,b,y2-SH,y2,za,zb,mat,{tip:t+' · shutter'})};
-  const handle=(a,b,z)=>{const L=Math.min(0.9,(b-a)*0.6),m0=(a+b)/2;   // slim black bar handle along the top edge
-    if(face==='x+')box(x2,x2+0.04,m0-L/2,m0+L/2,z-0.03,z+0.03,MAT.blackMetal,{cast:false,tip:'Handle, matte black'});
-    else if(face==='x-')box(x1-0.04,x1,m0-L/2,m0+L/2,z-0.03,z+0.03,MAT.blackMetal,{cast:false,tip:'Handle, matte black'});
-    else if(face==='y-')box(m0-L/2,m0+L/2,y1-0.04,y1,z-0.03,z+0.03,MAT.blackMetal,{cast:false,tip:'Handle, matte black'});
-    else box(m0-L/2,m0+L/2,y2,y2+0.04,z-0.03,z+0.03,MAT.blackMetal,{cast:false,tip:'Handle, matte black'})};
+  const t=kTip(id,what),g=0.012,alongX=face[0]==='y';
+  const U0=alongX?x1:y1,U1=alongX?x2:y2,D=alongX?y2-y1:x2-x1;
+  // local box: u along the run, v from the front (0) to the wall (D)
+  const lb=(u1,u2,v1,v2,za,zb,mt,o={})=>{let a,b,c,d;
+    if(face==='x+'){a=x2-v2;b=x2-v1;c=u1;d=u2}else if(face==='x-'){a=x1+v1;b=x1+v2;c=u1;d=u2}
+    else if(face==='y-'){a=u1;b=u2;c=y1+v1;d=y1+v2}else{a=u1;b=u2;c=y2-v2;d=y2-v1}
+    return box(a,b,c,d,za,zb,mt,{tip:t,...o})};
+  const zb0=z1+(plinth?KPL:0), fz1=zb0+g, fz2=z2-g;
+  // carcass, leaving the glass units hollow
+  const gl=segs.filter(q=>q[2]==='glass').sort((p,q)=>p[0]-q[0]);let u=U0;
+  for(const [a,b] of gl){if(a>u)lb(u,a,SH,D,zb0,z2,mat);u=b}if(U1>u)lb(u,U1,SH,D,zb0,z2,mat);
+  if(plinth)lb(U0,U1,SH+0.12,D,z1,zb0,MAT.plinth);
+  const panel=(a,b,za,zb)=>lb(a,b,0,SH,za,zb,mat,{tip:t+' · shutter'});
+  const handle=(a,b,z)=>{const L=Math.min(0.9,(b-a)*0.6),m0=(a+b)/2;lb(m0-L/2,m0+L/2,-0.04,0,z-0.03,z+0.03,MAT.blackMetal,{cast:false,tip:'Handle, matte black'})};
   const hz=z1>=4?fz1+0.15:(z2>5?3.6:fz2-0.15);   // wall cabinets: handle at the bottom; tall units: at hand height; base units: at the top
   for(const [a,b,type] of segs){
     if(type==='drawers'){const n=3,h=(fz2-fz1)/n;for(let i=0;i<n;i++){const za=fz1+i*h+g,zb=fz1+(i+1)*h-g;panel(a+g,b-g,za,zb);handle(a,b,zb-0.15)}}
     else if(type==='door2'){const m0=(a+b)/2;panel(a+g,m0-g,fz1,fz2);panel(m0+g,b-g,fz1,fz2);handle(a,m0,hz);handle(m0,b,hz)}
+    else if(type==='glass'){const w=0.05,zm=(zb0+z2)/2,tg=t+' · glass door, black frame';
+      lb(a,b,D-0.05,D,zb0,z2,mat);lb(a,b,SH,D-0.05,z2-0.05,z2,mat);lb(a,b,SH,D-0.05,zb0,zb0+0.05,mat);lb(a,a+0.05,SH,D-0.05,zb0+0.05,z2-0.05,mat);lb(b-0.05,b,SH,D-0.05,zb0+0.05,z2-0.05,mat);
+      lb(a+0.05,b-0.05,SH+0.03,D-0.05,zm-0.02,zm+0.02,MAT.glass,{cast:false,tip:'Glass shelf'});
+      const r=rng(Math.round(a*100));for(const zs of [zb0+0.05,zm+0.02]){let q=a+0.18;while(q<b-0.25){const hh=0.35+r()*0.35,rr=0.1+r()*0.06,vc=SH+(D-SH)/2;
+        const c=alongX?[q,face==='y-'?y1+vc:y2-vc]:[face==='x+'?x2-vc:x1+vc,q];
+        cyl(c[0],c[1],zs,zs+hh,rr,std({color:['#e9e4da','#cdbfa8','#7a6a58','#f3efe6'][Math.floor(r()*4)],roughness:0.4}),{tip:'Jar',rTop:rr*0.9});q+=rr*2+0.12}}
+      for(const [p1,p2,q1,q2] of [[a+g,b-g,fz1,fz1+w],[a+g,b-g,fz2-w,fz2],[a+g,a+g+w,fz1+w,fz2-w],[b-g-w,b-g,fz1+w,fz2-w]]) lb(p1,p2,0,SH,q1,q2,MAT.blackMetal,{tip:tg});
+      glassMeshes.push(lb(a+g+w,b-g-w,0.02,0.035,fz1+w,fz2-w,MAT.glass,{cast:false,tip:tg}));handle(a,b,hz)}
     else{panel(a+g,b-g,fz1,fz2);handle(a,b,hz)}}}
-{const X1=3.5,ky2=67.625,bY=65.625;
+{const X1=3.5,ky2=67.625,bY=65.625,W06=P.openings.find(o=>o.id==='W-06');
  // base cabinets: east run FU-15 on GW-01 (front faces +x), back run FU-16 on GW-14 (front faces -y); the corner is a blind corner with a carousel
  cabRun('FU-15','Base cabinets, east',X1,5.5,59.125,ky2,0,KCH-KTOP,'x+',[[59.125,60.6,'door'],[60.6,62.0,'door'],[62.0,64.0,'drawers'],[64.0,bY,'door']],MAT.kLow,true);
  cabRun('FU-16','Base cabinets, back',5.5,9.875,bY,ky2,0,KCH-KTOP,'y-',[[5.5,6.6,'drawers'],[6.6,8.9,'door2'],[8.9,9.875,'door']],MAT.kLow,true);
  box(X1,5.56,59.125,ky2,KCH-KTOP,KCH,MAT.kTop,{tip:'Counter top, 40 mm, east run'});box(5.56,9.9,bY-0.06,ky2,KCH-KTOP,KCH,MAT.kTop,{tip:'Counter top, 40 mm, back run'});
  // wall cabinets FU-19 (GW-14), FU-19.2 and FU-19.3 (GW-01, either side of W-06)
- cabRun('FU-19','Wall cabinets, back',4.69,9.875,66.375,ky2-0.012,UPZ1,UPZ2,'y-',[[4.75,6.5,'door'],[6.5,8.25,'door'],[8.25,9.875,'door']],MAT.kUp,false);
+ cabRun('FU-19','Wall cabinets, back',4.69,9.875,66.375,ky2-0.012,UPZ1,UPZ2,'y-',[[4.75,6.5,'door'],[6.5,8.25,'glass'],[8.25,9.875,'door']],MAT.kUp,false);
  cabRun('FU-19.2','Wall cabinets, east',X1+0.012,4.75,65.0,ky2-0.012,UPZ1,UPZ2,'x+',[[65.0,66.375,'door']],MAT.kUp,false);
- cabRun('FU-19.3','Wall cabinets, east',X1+0.012,4.75,59.137,61.0,UPZ1,UPZ2,'x+',[[59.137,61.0,'door']],MAT.kUp,false);
+ cabRun('FU-19.3','Wall cabinets, east',X1+0.012,4.75,59.137,61.0,UPZ1,UPZ2,'x+',[[59.137,61.0,'glass']],MAT.kUp,false);
+ // top row to the ceiling (FU-68 on GW-14, FU-69 on GW-01, right across above the window and chimney), with a black shadow line under it
+ const TZ1=UPZ2+0.05,TZ2=CEIL-0.012;
+ cabRun('FU-68','Top storage, back',4.69,9.875,66.375,ky2-0.012,TZ1,TZ2,'y-',[[4.75,6.5,'door'],[6.5,8.25,'door'],[8.25,9.875,'door']],MAT.kUp,false);
+ cabRun('FU-69','Top storage, east',X1+0.012,4.75,59.137,ky2-0.012,TZ1,TZ2,'x+',[[59.137,61.0,'door'],[61.0,63.0,'door'],[63.0,65.0,'door'],[65.0,66.375,'door']],MAT.kUp,false);
+ box(X1+0.012,4.6,59.137,ky2-0.012,UPZ2,TZ1,MAT.blackMetal,{cast:false,tip:'Shadow line, black'});box(4.6,9.8,66.5,ky2-0.012,UPZ2,TZ1,MAT.blackMetal,{cast:false,tip:'Shadow line, black'});
  for(const [a,b,c,d] of [[4.6,4.66,59.3,60.85],[4.6,4.66,65.15,66.3],[4.9,9.7,66.5,66.56]]) ledStrips.push(box(a,b,c,d,UPZ1-0.03,UPZ1,MAT.led,{cast:false,tip:'LED strip under the wall cabinets'}));
  const ul=new THREE.PointLight('#ffd7a3',0,m(9),2);ul.position.set(mx(6.0),m(4.2),m(65.0));scene.add(ul);towerLights.push(ul);
  // backsplash: cream 3" x 12" ceramic tiles between counter and wall cabinets; below the W-06 sill
  const st='Backsplash · cream 3" x 12" glazed tiles';
- tile(X1,X1+0.03,59.137,61.0,KCH,UPZ1,MAT.kSplash,st);tile(X1,X1+0.03,61.0,65.0,KCH,3.5,MAT.kSplash,st);tile(X1,X1+0.03,65.0,ky2-0.042,KCH,UPZ1,MAT.kSplash,st);
+ tile(X1,X1+0.03,59.137,61.0,KCH,UPZ1,MAT.kSplash,st);tile(X1,X1+0.03,61.0,65.0,KCH,W06.sill,MAT.kSplash,st);tile(X1,X1+0.03,61.0,65.0,W06.sill+W06.h,UPZ2,MAT.kSplash,st);tile(X1,X1+0.03,65.0,ky2-0.042,KCH,UPZ1,MAT.kSplash,st);
  tile(X1+0.042,9.875,ky2-0.03,ky2,KCH,UPZ1,MAT.kSplash,st);
- // hob FU-52 under W-06, slim chimney above the window head, ducted out through GW-01
+ // hob FU-52 under W-06; chimney hood at the standard 2'6" above the counter, just above the lowered window head, ducted straight out through GW-01
  const h=fuG['FU-52'];box(h.x1+0.1,h.x2-0.1,h.y1+0.1,h.y2-0.1,KCH,KCH+0.03,MAT.blackGlass,{tip:`FU-52 · Hob, 3 burner, black glass · ${h.note}`});
  for(const [bx,by,r] of [[4.15,62.55,0.27],[4.15,63.45,0.22],[4.95,63.0,0.3]]) cyl(bx,by,KCH+0.03,KCH+0.09,r,std({color:'#3a3b3d',roughness:0.4,metalness:0.6}),{tip:'Burner',rTop:r*0.85});
- box(X1+0.012,5.2,62.1,63.9,7.1,7.95,MAT.blackGlass,{tip:'Slim chimney, black glass, above the W-06 head; ducted out through GW-01'});
- box(X1+0.012,4.0,62.6,63.4,7.95,CEIL-0.012,MAT.cabinet,{tip:'Chimney duct cover'});
+ const hz1=W06.sill+W06.h+0.1;   // hood bottom 5'4", about 2'6" above the counter
+ box(X1+0.012,5.3,62.05,63.95,hz1,hz1+0.28,MAT.blackGlass,{tip:'Chimney hood, 60 cm, black glass · 2\'6" above the counter · ducted out through GW-01 behind it'});
+ box(X1+0.012,4.25,62.5,63.5,hz1+0.28,UPZ2,std({color:'#2b2c2e',roughness:0.35,metalness:0.5}),{tip:'Chimney body, up to the top cabinets'});
  // sink FU-51 on the back counter, black gooseneck tap; mixer grinder FU-64; RO purifier FU-66
  const s=fuG['FU-51'];box(s.x1+0.1,s.x2-0.1,s.y1+0.08,s.y2-0.08,KCH,KCH+0.012,MAT.steel,{cast:false,tip:`FU-51 · Kitchen sink, single bowl, steel · ${s.note}`});
  box(s.x1+0.22,s.x2-0.22,s.y1+0.2,s.y2-0.2,KCH+0.012,KCH+0.016,std({color:'#6d7073',roughness:0.35,metalness:0.8}),{cast:false,tip:'Sink bowl'});
@@ -710,7 +731,7 @@ function applyOption(i){const o=OPTIONS[i];curOpt=i;
   <li><b>Study:</b> floating oak desk FU-10 on black steel legs, walnut-tone chair with a linen seat, open oak bookshelf FU-11, linen roman blind on W-01.</li>
   </ul><h2>Kitchen (G-08) and open area (G-09)</h2><ul>
   <li><b>Cabinet finish:</b> pick with the Finish buttons. KT-1 oak base and cream wall cabinets, black granite top. KT-2 cream base and oak wall cabinets, white quartz top. KT-3 walnut base and cream wall cabinets, white quartz top. All with slim black handles and a dark shadow-gap plinth.</li>
-  <li><b>Layout:</b> hob FU-52 under W-06 with a slim chimney above the window head; sink FU-51 on the back counter against GW-14; wall cabinets on GW-14 and GW-01; cream 3" x 12" backsplash tiles; LED strips under the wall cabinets.</li>
+  <li><b>Layout:</b> hob FU-52 under W-06 (window lowered to 4' x 2', head at 5'3") with the chimney hood at the standard 2'6" above the counter; sink FU-51 on the back counter against GW-14; wall cabinets on GW-14 and GW-01 (glass doors on the unit above the sink and the one left of the window), plus a top row FU-68 and FU-69 up to the ceiling; cream 3" x 12" backsplash tiles; LED strips under the wall cabinets.</li>
   <li><b>Appliances:</b> mixer grinder FU-64 beside the sink, wet grinder FU-65 in the GW-13 corner, RO purifier FU-66 on GW-14, microwave FU-67 on the breakfast counter FU-17 (now 7'6" long). Fridge FU-18 on GW-05 at the north end of the store cupboard FU-25, with a loft above.</li>
   </ul><h2>Toilet 1 (G-07)</h2><ul>
   <li><b>Tiles:</b> greige matte porcelain 2' x 1' to 7' high; wood-look porcelain on the shower walls; matte anti-skid 1' x 1' floor. Paint above 7'.</li>
