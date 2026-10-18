@@ -133,32 +133,32 @@ BRANCH_NOTES='''<section class="ask"><h2>Raised site levels (branch levels-v1, s
 <li><b>Headroom over the parking:</b> about 7'2" under ST-1B at the car's west edge and about 7'1" under the landing ST-1L (with a 6" landing slab); more toward the east.</li>
 <li><b>Compound walls</b> step down along the ramp and hold back the fill at the bottom (thicker base, weep holes): engineer to detail. About 2' of earth filling over the plot.</li>
 </ol></section>
-<section class="ask"><h2>Tree pit and terrace door (branch spiral-v1, for review)</h2>
+<section class="ask"><h2>Tree pit and terrace door (approved, from spiral-v1)</h2>
 <ol>
 <li><b>Tree pit FU-76:</b> a 5' round bed of open soil round the neem trunk, with a 4" granite kerb ring 1" above the pavers. Pavers stop at the kerb, so growing roots cannot lift them; water poured here stays at the roots.</li>
 <li><b>Door D-09</b> (landing to terrace corner) now opens inward, hinged at its north end, folding back against FW-02; a 1" raised sill outside keeps rain out.</li>
 </ol></section>
-<section class="ask"><h2>Terrace over the bore court (branch spiral-v1, for review)</h2>
+<section class="ask"><h2>Terrace over the bore court (approved, from spiral-v1)</h2>
 <ol>
 <li><b>Terrace slab is full</b> over the bore court G-16 now; the cut and parapets PW-06 to PW-09 are removed, PW-02 runs straight to the back parapet PW-05. F-02 and F-03 are plain rectangles.</li>
 <li><b>Bore court</b> stays open at the ground floor (to the side passage) for the borewell; only its top is closed.</li>
 <li><b>C-20 and C-21</b> (the two inner pillars at the bore court) now stop at the ground-floor roof: no stubs on the terrace, so the future hall stays clear in the middle; it will stand on the side pillars only (C-01 to C-12 on the east and west lines).</li>
 <li><b>Bedroom 3</b> finished in 3D in the same design as bedrooms 1 and 2; toilet 3 fitted out; all first-floor doors shown open.</li>
 </ol></section>
-<section class="ask"><h2>Back garden (branch spiral-v1, for review)</h2>
+<section class="ask"><h2>Back garden (approved, from spiral-v1)</h2>
 <ol>
 <li><b>BW-09 back wall</b> (existing, of the houses behind) now shown in 3D, with the houses behind it.</li>
 <li><b>Flower bed FU-73</b>, 1'6" deep, all along the back wall, 9" brick kerb. A row of 12 plants common in Tamil Nadu homes, east to west: Sembaruthi (red hibiscus), Malli (jasmine), Kanakambaram (orange crossandra), Nandiyavattai (white crape jasmine), Nithya kalyani (pink periwinkle), Karuveppilai (curry leaf), Malli, Vetchi / Idly poo (red ixora), Rose, Kanakambaram, Nithya kalyani, Sembaruthi. Tall ones at the ends, low ones in between.</li>
 <li><b>Tulsi maadam FU-74</b> in the side garden with Tulsi PL-13; <b>clothes line FU-75</b> in the back garden.</li>
 </ol></section>
-<section class="ask"><h2>Toilet 2 re-planned (branch spiral-v1, for review)</h2>
+<section class="ask"><h2>Toilet 2 re-planned (approved, from spiral-v1)</h2>
 <ol>
 <li><b>Door D-04</b> now opens inward, hinged at its north end; the leaf folds back over the shower area.</li>
 <li><b>Shower FU-28</b> moves to the north end (5' x 2'10½"), rose and geyser FU-58 on GW-14, bath rack FU-70 on GW-16 north of the door.</li>
 <li><b>Indian WC FU-26</b> sits on a bigger 4" platform FU-26.1 in the south-east corner: 3'6" front to back (east-west, the way you face) x 2'6" side to side; user faces west; V-02 moved over it; bucket and bib tap FU-57 on the front of the platform, on GW-06, on the left hand.</li>
 <li><b>Basin FU-27</b> on GW-06 in the corner by the door, beside the platform, clear of the swing, mirror above.</li>
 </ol></section>
-<section class="ask"><h2>Spiral stair ST-2 (branch spiral-v1, for review)</h2>
+<section class="ask"><h2>Spiral stair ST-2 (approved, from spiral-v1)</h2>
 <ol>
 <li><b>Size:</b> 5'10" across, in the stair hall against GW-05, centre 17' from east and 76'10½" from the road. Clear walking width about 2'7" (31"), 4½" steel centre pole.</li>
 <li><b>Steps:</b> 18 risers of 7⅔" (195 mm) for the 11'6" floor height, 17 oak treads of 30° (12 per full turn) plus a 60° landing. Tread depth is 7½" at the inner walk line and 12" where you normally walk; outer edge 18".</li>
@@ -168,7 +168,7 @@ BRANCH_NOTES='''<section class="ask"><h2>Raised site levels (branch levels-v1, s
 <li><b>Structure:</b> 6' round hole in the slab over the stair hall, with edge beams round it (engineer to size). Pole bolted to the ground floor and to the landing edge.</li>
 <li><b>Finish:</b> black MS pole, frames and balusters (4 per tread, gaps under 4"), oak treads and oak handrail at 3'. Black MS rail with oak top round the hole on the first floor.</li>
 </ol></section>
-<section class="ask"><h2>Staircase ST-1 (branch stair-v1, for review)</h2>
+<section class="ask"><h2>Staircase ST-1 (approved, from stair-v1)</h2>
 <ol>
 <li><b>25 risers of 6"</b> from the parking floor (1' below the house floor, to be confirmed) to the balcony at the first-floor level: 15 in ST-1A, 10 in ST-1B. Treads 10", width 3'6".</li>
 <li><b>ST-1A</b> runs along the new west compound wall BW-07 (moved 4½" east of the boundary), from Y 4'4" to 16'; <b>landing ST-1L</b> 3'6" x 3'6" at +7'6" above the parking; <b>ST-1B</b> turns east over the car, 7'6" long, arriving on balcony 2.</li>
