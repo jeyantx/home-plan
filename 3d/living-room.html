@@ -7,8 +7,13 @@
 :root[data-theme="dark"]{--bg:#16181b;--panel:#1f2226;--ink:#e8e6e1;--muted:#a3a8ae;--line:#33373c;--accent:#5fb08a;--accent-ink:#0d1a13}
 *{box-sizing:border-box}html,body{height:100%;margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;overflow:hidden}
 #app{position:fixed;inset:0;display:flex;flex-direction:column}
-header{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;padding:9px 14px;background:var(--panel);border-bottom:1px solid var(--line);z-index:2}
-h1{font-size:15px;margin:0}
+header{display:flex;flex-direction:column;gap:6px;padding:7px 12px;background:var(--panel);border-bottom:1px solid var(--line);z-index:2}
+h1{font-size:15px;margin:0;cursor:help}
+header .row{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center}
+header .row.hidden{display:none}
+.spacer{flex:1}
+.cams.off{display:none}
+#areaSel{border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--ink);font:inherit;font-size:13px;padding:5px 6px;cursor:pointer}
 .sub{color:var(--muted);font-size:12px}
 .seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
 .seg button{border:0;background:transparent;color:var(--ink);padding:6px 10px;font:inherit;font-size:13px;cursor:pointer}
@@ -41,20 +46,25 @@ canvas{display:block;width:100%;height:100%}
 </head><body>
 <div id="app">
 <header>
- <div><h1>Japandi 3D · Home</h1><div class="sub">↑↓ walk · ←→ turn · A/D slide · W/S tilt · Q/E lower/raise · Shift faster · Drag to look around · Scroll to walk · Right-drag to slide · Hover for names</div></div>
- <span class="lbl">Light</span><div class="seg" id="lightSeg"><button data-l="day">Day</button><button data-l="eve">Evening</button></div>
- <span class="lbl">Living</span><div class="seg cams"><button data-c="0">Entry</button><button data-c="1">Corner</button><button data-c="2">From sofa</button><button data-c="3">From TV</button><button data-c="4">From kitchen</button><button data-c="5">Top</button></div>
- <span class="lbl">Bedroom 1</span><div class="seg cams"><button data-c="6">Door</button><button data-c="7">Window</button><button data-c="8">Study</button><button data-c="9">Toilet</button><button data-c="10">Top</button></div>
- <span class="lbl">Kitchen</span><div class="seg cams"><button data-c="11">Kitchen</button><button data-c="12">Sink</button><button data-c="13">Hob</button><button data-c="14">Fridge</button><button data-c="15">Top</button></div>
- <span class="lbl">Bedroom 2</span><div class="seg cams"><button data-c="16">Door</button><button data-c="17">Bed</button><button data-c="18">Window</button><button data-c="19">Toilet 2</button><button data-c="20">Top</button></div>
- <span class="lbl">Outside</span><div class="seg cams"><button data-c="21">Gate</button><button data-c="22">Parking</button><button data-c="23">Terrace</button><button data-c="24">Aerial</button><button data-c="25">Side</button><button data-c="26">Stair</button></div>
- <span class="lbl">Gate</span><div class="seg" id="gateSeg"><button data-g="GD-1">GD-1 Slats</button><button data-g="GD-2">GD-2 Bars</button><button data-g="GD-3">GD-3 Panels</button></div>
- <span class="lbl">Colour</span><div class="seg" id="extSeg"><button data-e="EX-1"><i style="background:#eeeae2"></i><i style="background:#c99a6a"></i>EX-1</button><button data-e="EX-2"><i style="background:#cbc2b4"></i><i style="background:#f1eee8"></i>EX-2</button><button data-e="EX-3"><i style="background:#dccaae"></i><i style="background:#4a4a48"></i>EX-3</button></div>
- <span class="lbl">Finish</span><div class="seg" id="finishSeg"><button data-k="KT-1"><i style="background:#c9a77c"></i><i style="background:#efe9df"></i>KT-1</button><button data-k="KT-2"><i style="background:#efe9df"></i><i style="background:#c9a77c"></i>KT-2</button><button data-k="KT-3"><i style="background:#7d5a3e"></i><i style="background:#efe9df"></i>KT-3</button></div>
- <span class="lbl">Lens</span><div class="seg" id="lensSeg"><button data-f="60">Eye 60°</button><button data-f="75">Wide 75°</button></div>
- <button class="btn" id="photoBtn" aria-pressed="false" title="Ray-traced photo of the current view. Uses the graphics card heavily for about a minute, then stops by itself.">Photo</button>
- <button class="btn" id="saveBtn" title="Save the current image as PNG">Save image</button>
- <button class="btn" id="notesBtn" aria-pressed="false">Notes</button>
+ <div class="row">
+  <h1 title="↑↓ walk · ←→ turn · A/D slide · W/S tilt · Q/E lower/raise · Shift faster · Drag to look around · Scroll to walk · Right-drag to slide · Hover for names">Home 3D</h1>
+  <div class="seg" id="lightSeg"><button data-l="day">Day</button><button data-l="eve">Evening</button></div>
+  <select id="areaSel" title="Choose an area, then a view"><option value="0">Living</option><option value="1">Bedroom 1</option><option value="2">Kitchen</option><option value="3">Bedroom 2</option><option value="4">Outside</option></select>
+  
+<div class="seg cams" data-area="0"><button data-c="0">Entry</button><button data-c="1">Corner</button><button data-c="2">From sofa</button><button data-c="3">From TV</button><button data-c="4">From kitchen</button><button data-c="5">Top</button></div>  <div class="seg cams" data-area="1"><button data-c="6">Door</button><button data-c="7">Window</button><button data-c="8">Study</button><button data-c="9">Toilet</button><button data-c="10">Top</button></div>  <div class="seg cams" data-area="2"><button data-c="11">Kitchen</button><button data-c="12">Sink</button><button data-c="13">Hob</button><button data-c="14">Fridge</button><button data-c="15">Top</button></div>  <div class="seg cams" data-area="3"><button data-c="16">Door</button><button data-c="17">Bed</button><button data-c="18">Window</button><button data-c="19">Toilet 2</button><button data-c="20">Top</button></div>  <div class="seg cams" data-area="4"><button data-c="21">Gate</button><button data-c="22">Parking</button><button data-c="23">Terrace</button><button data-c="24">Aerial</button><button data-c="25">Side</button><button data-c="26">Stair</button></div>
+  <span class="lbl">Lens</span><div class="seg" id="lensSeg"><button data-f="60">Eye 60°</button><button data-f="75">Wide 75°</button></div>
+  <span class="spacer"></span>
+  <button class="btn" id="photoBtn" aria-pressed="false" title="Ray-traced photo of the current view. Uses the graphics card heavily for about a minute, then stops by itself.">Photo</button>
+  <button class="btn" id="saveBtn" title="Save the current image as PNG">Save image</button>
+  <button class="btn" id="notesBtn" aria-pressed="false">Notes</button>
+  <button class="btn" id="optBtn" aria-pressed="false" title="Show or hide the gate, colour and finish options">Options ▾</button>
+ </div>
+ <div class="row hidden" id="optRow">
+  <span class="lbl">Gate</span><div class="seg" id="gateSeg"><button data-g="GD-1">GD-1 Slats</button><button data-g="GD-2">GD-2 Bars</button><button data-g="GD-3">GD-3 Panels</button></div>
+  <span class="lbl">Colour</span><div class="seg" id="extSeg"><button data-e="EX-1"><i style="background:#eeeae2"></i><i style="background:#c99a6a"></i>EX-1</button><button data-e="EX-2"><i style="background:#cbc2b4"></i><i style="background:#f1eee8"></i>EX-2</button><button data-e="EX-3"><i style="background:#dccaae"></i><i style="background:#4a4a48"></i>EX-3</button></div>
+  <span class="lbl">Finish</span><div class="seg" id="finishSeg"><button data-k="KT-1"><i style="background:#c9a77c"></i><i style="background:#efe9df"></i>KT-1</button><button data-k="KT-2"><i style="background:#efe9df"></i><i style="background:#c9a77c"></i>KT-2</button><button data-k="KT-3"><i style="background:#7d5a3e"></i><i style="background:#efe9df"></i>KT-3</button></div>
+  <span class="sub">↑↓ walk · ←→ turn · A/D slide · W/S tilt · Q/E lower/raise · Shift faster · Drag to look around · Scroll to walk · Right-drag to slide · Hover for names</span>
+ </div>
 </header>
 <div id="view"><div id="loading">Loading 3D…</div><div id="panel" class="hidden"></div><div id="status"></div></div>
 </div>
@@ -299,7 +309,10 @@ for(const r of P.rooms.G){
 }
 for(const [q,t] of floorPatches) slab(q,MAT.floor,0,t);
 {const hS=0.33,d=0.04;   // 4" tile skirting in the living room
- box(LX1,LX1+d,LY1,LY2,0,hS,MAT.skirt,{tip:'Tile skirting, 4"'});box(LX1+d,18.9,LY1,LY1+d,0,hS,MAT.skirt,{tip:'Tile skirting, 4"'});box(LX1+d,18.9,LY2-d,LY2,0,hS,MAT.skirt,{tip:'Tile skirting, 4"'});}
+ box(LX1,LX1+d,LY1,LY2,0,hS,MAT.skirt,{tip:'Tile skirting, 4"'});
+ // north side only along GW-12 (foyer side is open, D-02 doorway left clear); south side stops at arch O-01
+ for(const [a,b] of [[8.875,9.5],[12.5,18.9]]) box(a,b,LY1,LY1+d,0,hS,MAT.skirt,{tip:'Tile skirting, 4"'});
+ for(const [a,b] of [[LX1+d,13.75],[17.75,18.9]]) box(a,b,LY2-d,LY2,0,hS,MAT.skirt,{tip:'Tile skirting, 4"'});}
 box(-30,60,-20,130,-1.05,-1.0,MAT.grass,{cast:false});
 box(0.375,2.75,30.75,75.125,-1.0,-0.97,MAT.paving,{cast:false,tip:'G-13 Side passage'});
 box(2.75,6.0,67.125,73.875,-1.0,-0.97,MAT.paving,{cast:false,tip:'G-16 Bore court · open to the sky'});
@@ -1060,11 +1073,17 @@ let hfov=75;
 function applyFov(){const a=camera.aspect||1;camera.fov=THREE.MathUtils.radToDeg(2*Math.atan(Math.tan(THREE.MathUtils.degToRad(hfov)/2)/a));camera.updateProjectionMatrix()}
 function setView(i){const v=VIEWS[i];ceilingMeshes.forEach(c=>c.visible=!v.top);renderer.shadowMap.needsUpdate=true;camera.position.set(mx(v.p[0]),m(v.p[1]),m(v.p[2]));
   const d=new THREE.Vector3(mx(v.t[0]),m(v.t[1]),m(v.t[2])).sub(camera.position);yaw=Math.atan2(-d.x,-d.z);pitch=Math.atan2(d.y,Math.hypot(d.x,d.z));applyLook();
-  document.querySelectorAll('.cams button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.c===i));invalidate()}
+  document.querySelectorAll('.cams button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.c===i));
+  const ar=document.querySelector(`.cams button[data-c="${i}"]`)?.parentElement.dataset.area;if(ar!=null)showArea(ar);invalidate()}
+function showArea(a){areaSel.value=a;document.querySelectorAll('.cams').forEach(g=>g.classList.toggle('off',g.dataset.area!==String(a)))}
 function applyLook(){pitch=Math.max(-1.55,Math.min(1.55,pitch));camera.rotation.set(pitch,yaw,0)}
 function setLens(f){hfov=f;applyFov();document.querySelectorAll('#lensSeg button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.f===f));try{localStorage.setItem('lr3d-lens',f)}catch(e){};invalidate()}
 document.querySelectorAll('#lightSeg button').forEach(b=>b.onclick=()=>applyLight(b.dataset.l));
 document.querySelectorAll('.cams button').forEach(b=>b.onclick=()=>setView(+b.dataset.c));
+areaSel.onchange=()=>setView(+document.querySelector(`.cams[data-area="${areaSel.value}"] button`).dataset.c);   // jump to the first view of that area
+const optBtn=document.getElementById('optBtn'),optRow=document.getElementById('optRow');
+function setOpt(o){optRow.classList.toggle('hidden',!o);optBtn.setAttribute('aria-pressed',o);optBtn.textContent=o?'Options ▴':'Options ▾';try{localStorage.setItem('lr3d-opts',o?'1':'0')}catch(e){};resize()}
+optBtn.onclick=()=>setOpt(optRow.classList.contains('hidden'));
 document.querySelectorAll('#lensSeg button').forEach(b=>b.onclick=()=>setLens(+b.dataset.f));
 const nb=document.getElementById('notesBtn');nb.onclick=()=>{const h=panel.classList.toggle('hidden');nb.setAttribute('aria-pressed',!h)};
 
@@ -1101,6 +1120,7 @@ renderer.domElement.addEventListener('pointerleave',()=>tipEl.style.display='non
 // ---------------- start ----------------
 function resize(){const w=view.clientWidth,h=view.clientHeight;renderer.setSize(w,h,false);composer.setSize(w,h);gtao.setSize(w,h);camera.aspect=w/h;applyFov();invalidate()}
 addEventListener('resize',resize);resize();
+{let o=false;try{o=localStorage.getItem('lr3d-opts')==='1'}catch(e){};setOpt(o)}   // options row starts closed unless left open
 let so=0,sl='day',sf=75;try{so=0;sl=localStorage.getItem('lr3d-light')||'day';sf=+(localStorage.getItem('lr3d-lens')||75)}catch(e){}
 applyOption(so);applyLight(sl);setLens(sf);setView(0);
 {let g='GD-1',e='EX-1';try{g=localStorage.getItem('lr3d-gate')||g;e=localStorage.getItem('lr3d-ext')||e}catch(x){};setGate(g);setExt(e)}
@@ -1155,7 +1175,7 @@ renderer.setAnimationLoop(()=>{
   else if(!hqDone&&now-lastChange>220){composer.render();hqDone=true;}
   if(saveReq&&hqDone){composer.render();doSave();saveReq=false}
 });
-window.__ready=true;window.__nav={cam:camera,step:(n)=>{for(let i=0;i<n;i++)tryMove(fwdVec().multiplyScalar(0.05))}};
+window.__ready=true;window.__nav={cam:camera,scene,step:(n)=>{for(let i=0;i<n;i++)tryMove(fwdVec().multiplyScalar(0.05))}};
 window.__bench=()=>{const gl=renderer.getContext();const t=(f,n)=>{gl.finish();const a=performance.now();for(let i=0;i<n;i++)f();gl.finish();return ((performance.now()-a)/n).toFixed(1)+' ms'};
   return {fast:t(()=>renderer.render(scene,camera),20),softShadows:t(()=>composer.render(),5),texturesPending:pending}};
 window.__photo=()=>({on:photo,building,samples:pt?Math.floor(pt.samples):0,compiling:pt?.isCompiling});
