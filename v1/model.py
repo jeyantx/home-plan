@@ -172,7 +172,7 @@ FURNITURE = [
  ('FU-11','G','Bookshelf',12.5,13.75,33.75,36.25,'shelf',None,'Study, on GW-10'),
  ('FU-12','G','Western WC',18.0,20.25,33.9,35.4,'wc','x2','Toilet 1, wall-mounted cistern'),
  ('FU-13','G','Wash basin',14.125,15.5,31.5,32.9,'basin',None,'Toilet 1'),
- ('FU-14','G','Shower area',17.25,20.25,31.5,33.6,'shower',None,'Toilet 1, open (no screen), floor slopes to a linear drain, geyser above'),
+ ('FU-14','G','Shower area',17.25,20.25,31.5,33.6,'shower',None,'Toilet 1, open (no screen), floor slopes to a 5" square floor trap, geyser above'),
  ('FU-63','G','Bath rack, 2 shelves',15.6,16.9,31.5,31.95,'over',None,'Toilet 1, wall-mounted on GW-04 between the basin and the shower, for soap, shampoo and toothbrushes'),
  ('FU-15','G','Kitchen counter, east',3.5,5.5,59.125,67.625,'counter',None,'Kitchen, 8\'6" x 2\' on GW-01'),
  ('FU-16','G','Kitchen counter, back (modular)',5.5,9.875,65.625,67.625,'counter',None,'Kitchen, 4\'4½" x 2\' on GW-14, with base drawers'),

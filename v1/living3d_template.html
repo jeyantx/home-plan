@@ -539,7 +539,7 @@ function tile(x1,x2,y1,y2,z1,z2,mat,tip){const me=box(x1,x2,y1,y2,z1,z2,mat,{cas
   for(const dx of [-0.04,0.05]) cyl(rx2-0.35+dx,ry+0.2,3.95,4.45,0.015,std({color:dx<0?'#6f8f7a':'#c9a27c',roughness:0.5}),{tip:'Toothbrush'});}
  box(X2-c-0.9,X2-c,32.53,32.57,7.02,7.07,MAT.blackMetal,{tip:'Rain shower arm, matte black'});cyl(X2-c-0.9,32.55,6.95,7.0,0.33,MAT.blackMetal,{tip:'Rain shower head, 8", matte black'});
  cyl(X2-c-0.02,32.55,3.5,3.75,0.16,MAT.blackMetal,{tip:'Shower mixer, matte black',seg:24}).rotation.z=Math.PI/2;
- box(17.5,X2-c-e,32.9,33.05,0.006,0.02,MAT.blackMetal,{cast:false,tip:'Linear floor drain'});
+ box(18.5,18.92,32.35,32.77,0.006,0.016,std({color:'#9a9893',roughness:0.4,metalness:0.6}),{cast:false,tip:'Floor trap, 5" square steel grating (floor slopes to it)'});
  box(18.4,20.1,Y1+c+e,Y1+0.95,7.4,8.55,std({color:'#f4f4f2',roughness:0.35}),{round:0.12,tip:'Geyser, 15 L, horizontal'});
  // WC FU-12: wall-hung bowl on a tiled concealed-cistern ledge, black flush plate, health faucet
  const w=fuG['FU-12'];
@@ -621,7 +621,7 @@ function applyOption(i){const o=OPTIONS[i];curOpt=i;
   <li><b>Study:</b> floating oak desk FU-10 on black steel legs, walnut-tone chair with a linen seat, open oak bookshelf FU-11, linen roman blind on W-01.</li>
   </ul><h2>Toilet 1 (G-07)</h2><ul>
   <li><b>Tiles:</b> greige matte porcelain 2' x 1' to 7' high; wood-look porcelain on the shower walls; matte anti-skid 1' x 1' floor. Paint above 7'.</li>
-  <li><b>Fittings:</b> wall-hung WC FU-12 on a tiled concealed-cistern ledge, floating oak-look vanity FU-13 with a vessel basin and backlit mirror, open shower FU-14 (no screen) with a rain shower and linear drain, black two-shelf bath rack FU-63 beside the basin, 15 L geyser above. All fittings matte black. WPC door D-03.</li>
+  <li><b>Fittings:</b> wall-hung WC FU-12 on a tiled concealed-cistern ledge, floating oak-look vanity FU-13 with a vessel basin and backlit mirror, open shower FU-14 (no screen) with a rain shower and a small square floor trap, black two-shelf bath rack FU-63 beside the basin, 15 L geyser above. All fittings matte black. WPC door D-03.</li>
   </ul><h2>Textures</h2><div>Real CC0 scans from Poly Haven, stored locally in <code>3d/assets</code>. Use <b>Photo</b> for a ray-traced, near-photographic still.</div>`;
   try{localStorage.setItem('lr3d-opt',i)}catch(e){}
   renderer.shadowMap.needsUpdate=true;rebuildPhoto();invalidate();
