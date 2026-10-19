@@ -1065,6 +1065,17 @@ if(SPL){const st=SPL.steps,L=[];
  const cp=new THREE.Mesh(cg,MAT.stepStone);scene.add(cp);named(cp,'FU-76 · Tree well coping, grey granite');
  const mulch=std({map:canvasTex(512,512,(g,w,h)=>{const r=rng(61);g.fillStyle='#5b3b25';g.fillRect(0,0,w,h);for(let i=0;i<5000;i++){const c=['#3f2818','#6e4a2e','#7d6a3e','#4a5a2a','#8a6a48'][Math.floor(r()*5)];g.fillStyle=c;g.globalAlpha=0.6;g.save();g.translate(r()*w,r()*h);g.rotate(r()*7);g.fillRect(-4,-1.5,8+r()*8,3);g.restore()}g.globalAlpha=1},0.6),roughness:1});
  cyl(tx,ty,RDZ-0.05,RDZ+0.04,tr-0.375,mulch,{tip:`FU-76 · Tree well · open soil with leaf mulch at today's ground · ${tp.note}`,seg:48}).castShadow=false;}
+// underground tanks and pits (UG-): only their covers show; hover a cover for the tank behind it
+if(P.underground){const iron=std({color:'#3d4043',roughness:0.55,metalness:0.6});
+  for(const [code,name,shape,g,inside,covers,note] of P.underground){const tip=`${code} · ${name} · ${inside} · ${note}`,front=(shape==='rect'?g[2]:g[1])<30.75;
+    const gAt=(x,y)=>front?hFront(x,y):GRD;
+    if(/sump/i.test(name)){const [x1,x2,y1,y2]=g;box(x1,x2,y1,y2,GRD-0.3,GRD+0.5,MAT.ext,{tip:`${code} · top of the sump, 6" above the garden · ${inside}`});}
+    for(const c of covers){
+      if(c.length===4){const z=/sump/i.test(name)?GRD+0.5:gAt((c[0]+c[1])/2,(c[2]+c[3])/2);box(c[0],c[1],c[2],c[3],z-0.02,z+0.04,iron,{cast:false,tip});}
+      else{const [cx,cy,r]=c,z=gAt(cx,cy),sl=(gAt(cx,cy+0.2)-gAt(cx,cy-0.2))/0.4,rain=/rain/i.test(name);
+        const me=new THREE.Mesh(new THREE.CylinderGeometry(m(r),m(r),m(0.06),40),rain?MAT.blackMetal:iron);me.position.set(mx(cx),m(z+0.01),m(cy));me.rotation.x=-Math.atan(sl);me.receiveShadow=true;scene.add(me);named(me,tip);
+        if(rain)for(let k=-r+0.15;k<r-0.1;k+=0.18){const w=Math.sqrt(Math.max(0,r*r-k*k));box(cx-w+0.05,cx+w-0.05,cy+k,cy+k+0.04,z+0.04,z+0.06,MAT.paver,{cast:false,tip})}}}
+    if(code==='UG-01')cyl(0.62,15.5,PKZ,PKZ+7.0,0.17,std({color:'#e9e6e0',roughness:0.6}),{tip:`${code} · septic tank vent pipe, 4" PVC, up the compound wall BW-01`});}}
 box(-40,70,-17,-0.02,RDZ-0.02,RDZ+0.02,MAT.paver,{cast:false,tip:'Road (north), 17\' wide · grey interlocking pavers · our gate crest is 6" above it, the parking 2\'0", the gardens 2\'6"'});
 // compound walls, gate pillars with lamps, planter pillar, gates
 for(const w of P.walls.G.filter(w=>w.kind==='comp')){   // stepped down along the drive (6' above the ground inside); the bottom holds back the fill

@@ -248,6 +248,39 @@ def platform_outlines(SP):
     arc=[(cx+r*_mm.cos(a0+(a1-a0)*k/16),cy+r*_mm.sin(a0+(a1-a0)*k/16)) for k in range(17)]
     out.append([(x2,y0)]+arc+[(xe,SP['y_end']),(x2,SP['y_end'])])
     return out
+def underground():
+    # tanks and pits below the ground: dashed outlines, covers solid, distance to the nearest borewell for the septic tank and soak pit
+    import model as _m, math as _mm
+    UG=getattr(_m,'UNDERGROUND',None)
+    if not UG: return
+    E('<g class="L-ug">')
+    for code,name,shape,g,inside,covers,note in UG:
+        water='sump' in name.lower() or 'rain' in name.lower()
+        fill,st=('#cfe3f3','#2a6f9e') if water else ('#ead9c3','#7a5230')
+        tipt=f'{code} · {name} · {inside} · {note}'
+        if shape=='rect':
+            x1,x2,y1,y2=g; rect(x1,x2,y1,y2,fill,st,0.06,extra=f'fill-opacity="0.75" stroke-dasharray="0.35 0.2" data-tip="{tip(tipt)}"'); cx,cy=(x1+x2)/2,(y1+y2)/2
+        else:
+            cx,cy,r=g; x,y=S(cx,cy); E(f'<circle cx="{x:.3f}" cy="{y:.3f}" r="{r}" fill="{fill}" fill-opacity="0.75" stroke="{st}" stroke-width="0.06" stroke-dasharray="0.35 0.2" data-tip="{tip(tipt)}"/>')
+        for c in covers:
+            if len(c)==4: rect(c[0],c[1],c[2],c[3],'#5d646d','#333',0.03)
+            else: x,y=S(c[0],c[1]); E(f'<circle cx="{x:.3f}" cy="{y:.3f}" r="{c[2]*0.8:.3f}" fill="none" stroke="#333" stroke-width="0.08"/>')
+        short=name.split(',')[0].replace('Underground water tank (sump)','Sump').replace(' for the septic tank','').replace('Rainwater recharge pit','Recharge pit')
+        cap=name.split(', ')[1] if ', ' in name else ''
+        ly=cy+(0.9 if shape=='rect' else 0.35)
+        if shape=='rect' and any(len(c)==4 and c[2]-1.2<ly<c[3]+1.2 for c in covers): ly=g[3]-1.4   # keep the label off the cover
+        text(cx,ly,f'{code}\n{short}'+(f'\n{cap}' if cap else ''),0.3,weight=700,fill=st)
+    # distances to borewell BR-02 (guideline: tank 15 m, soak pit 18 m)
+    bx,by=[(b[1],b[2]) for b in _m.BORES if b[0]=='BR-02'][0]
+    for code,name,shape,g,*_ in UG:
+        if code not in ('UG-01','UG-02'): continue
+        if shape=='rect': px,py=min(max(bx,g[0]),g[1]),min(max(by,g[2]),g[3])
+        else:
+            d=_mm.hypot(bx-g[0],by-g[1]); px,py=g[0]+(bx-g[0])*g[2]/d,g[1]+(by-g[1])*g[2]/d
+        L=_mm.hypot(bx-px,by-py)*0.3048
+        line(px,py,bx,by,'#b02a2a',0.05,extra='stroke-dasharray="0.6 0.3"')
+        text(px-0.5 if code=='UG-01' else px+1.6,py+(6.0 if code=='UG-01' else 22.0),f'{L:.1f} m to BR-02',0.3,weight=700,fill='#b02a2a')
+    E('</g>')
 def vehicles():
     import model as _m
     cx1,cx2,cy1,cy2=getattr(_m,'CAR',(11.25,17.25,13.75,28.75))
@@ -491,7 +524,7 @@ def draw_struct(fl):
 
 def ground():
     W=walls_of('G')
-    draw_plot('G'); draw_rooms('G'); porch_steps(); levels(); tree(); vehicles()
+    draw_plot('G'); draw_rooms('G'); porch_steps(); levels(); tree(); vehicles(); underground()
     draw_furniture('G'); plants(); _trunk(); text(11.0,106.7,'BW-09 back wall (existing, houses behind)',0.3,fill='#666')
     stair_A(); stair_L(); stair_B(op=0.45,dash='stroke-dasharray="0.2 0.12"')
     E('<g opacity="0.72">'); draw_furniture('G',_late=True); E('</g>')

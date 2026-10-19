@@ -124,7 +124,15 @@ RAMP=dict(y_hump=1.0,y_crest=3.25,y_top=10.75,ease=1.5,drain=(2.5,3.25))   # gat
 # small gate GT-02: three 6" steps up from the crest (risers in line with ST-1's treads), then a level platform at parking height between the tree well and ST-1A;
 # its east edge is a retaining kerb along the car's ramp (16" high at the north end, nothing where the ramp reaches the parking at Y 10'9")
 SIDE_PLATFORM=dict(well=(12.75,4.75,2.25),x1=13.5,x2=17.125,steps=(2.667,3.5,4.333),xe=12.5,y_end=10.75)
-BRANCH_NOTES='''<section class="ask"><h2>Parking plan (branch exterior-v2, for review)</h2>
+BRANCH_NOTES='''<section class="ask"><h2>Water and drainage (branch services-v1, for review)</h2>
+<ol>
+<li><b>Septic tank UG-01, 8,000 L</b>, at the front under the east walkway (inside 12' x 4', 7' deep, two chambers). The borewells are at the back, so the front is the only place far enough from them: 15.2 m from BR-02 (guideline at least 15 m). Heavy-duty RCC top, since the car drives over it; covers clear of the parked car and bikes; a desludging truck reaches it from the road.</li>
+<li><b>Soak pit UG-02</b> just north of it, under the drive, 19.4 m from BR-02 (guideline at least 18 m). If the town has an underground sewer on this road, connect to it instead and drop the soak pit.</li>
+<li><b>Sump UG-03, 6,000 L</b>, in the side garden next to BR-01 (inside 7'6" x 5', 6'5" deep), 60' or more from the septic tank. Filled from the bores, the town supply and a tanker inlet by the gate (a pipe along the side passage); a pump lifts the water to the overhead tank FU-71. The wash platform FU-53 moves 3' south to make room.</li>
+<li><b>Rainwater recharge pit UG-04</b> in the back garden: roof water through a filter into a 3' x 6' pebble pit, for the bores.</li>
+<li><b>To check on site:</b> any neighbour's well near the east wall (keep the soak pit 18 m from it too), the soil for the soak pit, and the footings of C-01 and BW-01 next to the septic tank (engineer).</li>
+</ol></section>
+<section class="ask"><h2>Parking plan (branch exterior-v2, for review)</h2>
 <ol>
 <li><b>Car:</b> VW Virtus size (14'11" x 5'9"), <b>reversed in</b>: nose to the gate, back 1' from the front wall, on the level parking (Y 14'9" to 29'9"), as far west as it can go (centre X 14', its west side 3" off the stair and store FU-56), leaving 5'6" between the scooter and the car. <b>Route along the east side</b> (owner's sketch): it drives out forward, with one short back-and-forth (2'5" forward, 10" back) to clear the low end of ST-1A, through GT-01 near its east leaf, and turns east along the road; coming in, it comes from the west, stops just past the gate and reverses back along the same path. Checked with a route planner using the Virtus turning circle; the gate stays as it is.</li>
 <li><b>Tree well FU-76</b>: 4'6" across, centred 6" south of the trunk, because the trunk leans south and must stay inside the ring up to the platform height. The ring has one level top, 1" above the small-gate platform, so on the ramp side it stands as a raised bed (up to 1'7" above the drive). Keep at least 10" of open soil round the trunk.</li>
@@ -331,7 +339,7 @@ FURNITURE = [
  ('FU-66','G','RO water purifier, wall-mounted',10.95,11.75,65.85,66.375,'over',None,'Kitchen, on GW-14 above the west end of the low counter FU-16.2; tap at about 3\'2", so a pot on the low counter fills easily (dashed)'),
  ('FU-67','G','Microwave oven',11.75,13.4,59.15,60.35,'appl',None,'Kitchen, on the west end of the breakfast counter FU-17'),
  ('FU-52','G','Hob (burner) with small chimney',3.6,5.4,62.0,64.0,'hob',None,'Kitchen, under window W-06; chimney hood 2\'6" above the counter, just above the window head, ducted straight out through GW-01'),
- ('FU-53','G','Tap and wash platform',1.375,4.875,89.375,91.875,'washpad',None,'Side garden, paved with drain, in the corner of BW-02 and BW-03'),
+ ('FU-53','G','Tap and wash platform',1.375,4.875,92.5,95.0,'washpad',None,'Side garden, paved with drain, in the corner of BW-02 and BW-03'),
  ('FU-54','G','Wash basin with tap',19.125,20.625,95.25,96.5,'basin',None,'Back garden, against GW-08 beside window W-08'),
  ('FU-55','G','Tap and wash platform',17.625,20.625,96.75,99.25,'washpad',None,'Back garden, paved, with floor drain'),
  ('FU-76','G','Tree well round the neem',10.5,15.0,2.5,7.0,'treepit',None,'Parking, 4\'6" across, centred 6" south of the trunk because the trunk leans south (it stays inside the ring up to the platform height): the trunk stays at today\'s ground; a low retaining ring, 4½" brick with a granite coping; about 10" of open soil with leaf mulch all round the 1\'6" trunk; small so the car can pass'),
@@ -357,6 +365,19 @@ for _o in OPENINGS:
     if _o[5]=='window' and _o[0] not in SPEC: SPEC[_o[0]]='UPVC 3-track sliding: 2 glass + 1 mosquito mesh, MS safety grill, 1\'6" sunshade outside'
     if _o[5]=='vent' and _o[0] not in SPEC: SPEC[_o[0]]='Louvred glass ventilator with exhaust fan opening'
 SPEC['V-03']='Louvred glass ventilator with exhaust fan opening'
+# underground tanks and pits: (code, name, shape, geometry, inside size note, covers, note)
+#   rect geometry = outer (x1,x2,y1,y2); circle geometry = (cx,cy,outer r); covers = list of (x1,x2,y1,y2) or (cx,cy,r)
+UNDERGROUND=[
+ ('UG-01','Septic tank, 8,000 L','rect',(3.75,8.75,9.0,22.0),"inside 12' x 4', 7' deep (6' of liquid), two chambers 8' + 4'",[(5.25,7.25,18.0,20.0),(5.25,7.25,11.0,13.0)],
+  "Under the east walkway, as far from the borewells as the plot allows: 15.2 m (49'10\") from BR-02, the guideline is at least 15 m. RCC walls and a heavy-duty top slab, since the car drives over it; two 2' x 2' ductile-iron covers, one per chamber, both clear of the parked car and bikes. Inlet at the house end (south), outlet at the gate end (north) to the soak pit UG-02. Vent pipe 4\" up the compound wall BW-01. Desludging truck reaches it from the road."),
+ ('UG-02','Soak pit for the septic tank','circle',(4.25,6.0,2.25),"4' across inside, about 8' deep, honeycomb brick with gravel round it",[(4.25,6.0,1.0)],
+  "Takes the cleared water from UG-01. 19.4 m from BR-02 (the guideline is at least 18 m). 6'5\" from the neem trunk, so dig by hand near the tree and keep big roots. Final depth from a soil (percolation) test. Heavy-duty round cover, on the drive."),
+ ('UG-03','Underground water tank (sump), 6,000 L','rect',(1.0,7.0,82.0,90.5),"inside 7'6\" x 5', 6'5\" deep (5'8\" of water)",[(3.0,5.0,85.25,87.25)],
+  "In the side garden, beside BR-01, 60' or more from the septic tank and the soak pit. Waterproofed RCC, top 6\" above the garden so surface water stays out, 2' x 2' lockable cover. Fed by the bores, the town supply (pipe along the side passage) and a tanker inlet by the gate (2\" pipe buried along the side passage). A 0.5 HP pump beside it lifts water to the overhead tank FU-71."),
+ ('UG-04','Rainwater recharge pit','circle',(12.0,99.5,1.5),"3' across, 6' deep, filled with pebbles, gravel and sand",[(12.0,99.5,1.5)],
+  "Back garden, 3' from the house. Roof downpipes run to it through a first-flush filter; it recharges the ground water for the bores (rainwater harvesting is compulsory in Tamil Nadu). Grated cover. The drive drain at the gate goes to the road drain."),
+]
+
 CAR=(11.125,16.875,14.75,29.75)   # VW Virtus size, 14'11" x 5'9" (4561 x 1752 mm), reversed in: nose to the gate, back 1' clear of GW-04; as far west as it can go (3" off the stair line and store FU-56); one short back-and-forth (2'5" forward, 10" back) on the way out
 # two-wheelers: (code, model, centre X, centre Y, length, width, facing); facing 'N' = front to the gate, 'S' = front to the house (length along Y)
 # side by side along BW-01, between C-01 and C-03, ridden in forward (front to the house); reached up the east walkway without passing the car
