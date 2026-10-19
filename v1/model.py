@@ -121,7 +121,12 @@ FF_OUTLINE=R(9.5,21.0,73.125,97.375)
 # site levels, in feet above the road crown in front of the gate (house floor = +3.5)
 LEVELS=dict(road=0.0,hump=0.5,parking=2.0,garden=2.5,floor=3.5)
 RAMP=dict(y_hump=1.0,y_crest=3.25,y_top=12.25,drain=(2.5,3.25))   # gate bevel to Y 1', crest to 3'3" (drain at its inner edge), ramp 1 in 6 to Y 12'3"
-BRANCH_NOTES='''<section class="ask"><h2>Outside windows and colours (branch exterior-v2, for review)</h2>
+BRANCH_NOTES='''<section class="ask"><h2>Parking plan (branch exterior-v2, for review)</h2>
+<ol>
+<li><b>Car:</b> VW Virtus (14'11" x 5'9"), nose to the house, 1' from the front wall, on the level parking (Y 14'9" to 29'9"). Driver's door on the ST-1 side (3'6" clear); left doors toward the two-wheelers (2'6" clear).</li>
+<li><b>Two-wheelers</b> moved away from pillar C-01 and the compound wall: TW-1 Royal Enfield Hunter 350 and TW-2 Ather 450X in one lane east of the car, front to the gate, leaving a 2'7" walkway from the gate to the porch. A third two-wheeler does not fit without blocking the walkway or the car doors.</li>
+</ol></section>
+<section class="ask"><h2>Outside windows and colours (branch exterior-v2, for review)</h2>
 <ol>
 <li><b>Window frame WF-1</b> on every outside window: a box frame round the window, 6" wide and 4" out from the wall, with a deeper 1'3" hood on top that works as the sunshade, and a thin black drip edge. Ventilators get a slimmer 4" frame, except V-01 (plain, no frame). RCC fins and hood, clad in the same wood-look brown as the balcony louvers and the gate slats (HPL or aluminium wood finish).</li>
 <li><b>W-01 (study, facing the parking): small gable frame WF-2</b>: a 4" brown frame that hugs the window, a sill ledge, and a little red clay-tile gable on top (1' high, 6" eaves past the frame, 10" out from the wall), with a light gable panel. Brown scroll ornaments across the middle of the grill.</li>
@@ -344,8 +349,10 @@ for _o in OPENINGS:
     if _o[5]=='window' and _o[0] not in SPEC: SPEC[_o[0]]='UPVC 3-track sliding: 2 glass + 1 mosquito mesh, MS safety grill, 1\'6" sunshade outside'
     if _o[5]=='vent' and _o[0] not in SPEC: SPEC[_o[0]]='Louvred glass ventilator with exhaust fan opening'
 SPEC['V-03']='Louvred glass ventilator with exhaust fan opening'
-CAR=(11.25,17.0,15.25,30.25)
-BIKES=(15.5,21.75,28.0)
+CAR=(11.25,17.0,14.75,29.75)   # VW Virtus, 14'11" x 5'9" (4561 x 1752 mm), nose to the house, 1' clear of GW-04; driver (right) side toward ST-1
+# two-wheelers: (code, model, centre X, centre Y, length, width), front to the gate, in one lane east of the car:
+# 2'7" walkway to the porch on their east side, 2'6" for the car's left doors on their west side, 2'7" clear of pillar C-01
+BIKES=[('TW-1','Royal Enfield Hunter 350',7.4,16.12,6.74,2.62),('TW-2','Ather 450X',7.4,23.27,6.03,2.42)]
 CH_G_FRONT=[0,0.75,12.0,13.5,20.25,21.0]
 
 # ---------- structure (proposal): RCC frame with side pillars only, no pillar inside any room ----------

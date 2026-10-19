@@ -225,11 +225,12 @@ def levels():
 def vehicles():
     import model as _m
     cx1,cx2,cy1,cy2=getattr(_m,'CAR',(11.25,17.25,13.75,28.75))
-    rect(cx1,cx2,cy1,cy2,'#fafafa','#555',0.06,extra='rx="1.0"'); rect(cx1+0.5,cx2-0.5,cy1+8.25,cy1+9.75,'#a9bccd','#555',0.03); rect(cx1+0.5,cx2-0.5,cy1+2.25,cy1+3.45,'#a9bccd','#555',0.03)
-    text((cx1+cx2)/2,cy1+5.75,'CAR 6\' x 15\'',0.42,weight=600,fill='#666')
-    for yc in getattr(_m,'BIKES',(7.0,13.5,20.0)):
-        bike(2.0,yc)
-    text(2.0,getattr(_m,'BIKES',(7.0,13.5,20.0))[-1]+4.0,'3 two-wheelers',0.34,fill='#555')
+    rect(cx1,cx2,cy1,cy2,'#fafafa','#555',0.06,extra='rx="1.0"'); rect(cx1+0.5,cx2-0.5,cy1+8.6,cy1+10.1,'#a9bccd','#555',0.03); rect(cx1+0.5,cx2-0.5,cy1+2.6,cy1+3.8,'#a9bccd','#555',0.03)
+    text((cx1+cx2)/2,cy1+5.6,'CAR\nVW Virtus\n14\'11" x 5\'9"',0.36,weight=600,fill='#666')
+    for b in getattr(_m,'BIKES',[]):
+        if isinstance(b,(int,float)): bike(2.0,b); continue
+        code,name,bx,by,bl,bw=b; bike(bx,by)
+        text(bx-2.4,by,code+'\n'+name.replace('Royal Enfield ','RE '),0.3,weight=600,fill='#555')
 def bike(cx,cy):
     # top view of a two-wheeler, 2'6" x 6', front toward the road
     for wy in (cy-2.35,cy+2.35):

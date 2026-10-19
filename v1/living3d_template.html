@@ -1197,9 +1197,9 @@ if(P.backwall){const bw=P.backwall,[a,b]=bw.pts,t=bw.t,old=std({color:'#cdc4b3',
 // parked vehicles, on the spots of the 2D plan: car (nose to the house), three two-wheelers on the east strip (front to the gate)
 {const [cx1,cx2,cy1,cy2]=P.car||[11.25,17.0,15.25,30.25],car=createCar(THREE,mergeGeometries,{color:'#d9dcdf'});
  car.position.set(mx((cx1+cx2)/2),m(PKZ),m((cy1+cy2)/2));scene.add(car);
- car.traverse(o=>{if(o.isMesh){o.userData.keepUV=true;named(o,`Car (sample, 14' x 5'8", silver) · parking spot ${((cx2-cx1)).toFixed(2).replace(/\.?0+$/,'')}' x ${cy2-cy1}' · nose to the house`);if(o.name==='body')wallMeshes.push(o)}});
- (P.bikes||[15.5,21.75,28.0]).forEach((y,i)=>{const b=i===1?createMotorbike(THREE,mergeGeometries,{}):createScooter(THREE,mergeGeometries,{color:i?'#5b6470':'#8b1e2b'});
-   b.position.set(mx(2.0),m(PKZ),m(y));b.rotation.y=Math.PI;scene.add(b);b.traverse(o=>{if(o.isMesh){o.userData.keepUV=true;named(o,`${i===1?'Motorcycle':'Scooter'} (sample) · two-wheeler spot ${i+1}, 2'6" x 6', front to the gate`)}})});}
+ car.traverse(o=>{if(o.isMesh){o.userData.keepUV=true;named(o,`Car · VW Virtus, 14'11" x 5'9" · nose to the house, 1' from the front wall`);if(o.name==='body')wallMeshes.push(o)}});
+ for(const [code,name,bx,by,bl,bw] of (P.bikes||[])){const b=/Hunter/.test(name)?createMotorbike(THREE,mergeGeometries,{}):createScooter(THREE,mergeGeometries,{});
+   b.position.set(mx(bx),m(PKZ),m(by));b.rotation.y=Math.PI;scene.add(b);b.traverse(o=>{if(o.isMesh){o.userData.keepUV=true;named(o,`${code} · ${name} · front to the gate, on its side stand`)}})}}
 // the two existing bores (BR-01, BR-02): 2' concrete chamber with a steel cap
 for(const [x,y,id] of [[7.75,78.66,'BR-01'],[4.0,71.85,'BR-02']]){box(x-1,x+1,y-1,y+1,GRD,GRD+0.5,MAT.white,{tip:`${id} · Borewell (existing) · concrete chamber`});cyl(x,y,GRD+0.5,GRD+0.7,0.45,MAT.steel,{tip:`${id} · borewell cap`})}
 // outside lights: porch and parking downlights
