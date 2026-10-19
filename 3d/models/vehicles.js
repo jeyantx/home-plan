@@ -360,8 +360,9 @@ export async function loadGLBVehicle(THREE, GLTFLoader, url, opts = {}) {
   const gltf = await new GLTFLoader().loadAsync(url);
   const model = gltf.scene;
   model.traverse(o => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true;
-    const fix = m => { const nm = m.name; if (opts.materials && opts.materials[nm]) return opts.materials[nm];
+    const fix = m => { const nm = m.name || ''; if (opts.materials && opts.materials[nm]) return opts.materials[nm];
       if (opts.tint && opts.tint[nm]) { const c = m.clone(); c.color.set(opts.tint[nm]); return c } return m };
+    o.userData.srcMats = (Array.isArray(o.material) ? o.material : [o.material]).map(m => m.name || '');
     o.material = Array.isArray(o.material) ? o.material.map(fix) : fix(o.material) } });
   const g = new THREE.Group(); g.name = opts.name ?? 'Vehicle';
   const holder = new THREE.Group(); holder.add(model); g.add(holder);
@@ -371,7 +372,10 @@ export async function loadGLBVehicle(THREE, GLTFLoader, url, opts = {}) {
   let bb = new THREE.Box3().setFromObject(tilt); const size = bb.getSize(new THREE.Vector3());
   tilt.scale.setScalar((opts.length ?? size.z) / size.z); g.updateMatrixWorld(true);
   bb = new THREE.Box3().setFromObject(tilt); const c = bb.getCenter(new THREE.Vector3());
-  tilt.position.set(-c.x, -bb.min.y, -c.z); g.updateMatrixWorld(true);
+  let floor = bb.min.y;   // opts.groundMaterial: stand the model on these meshes (the tyres), not on a stand that pokes below them
+  if (opts.groundMaterial) { const tb = new THREE.Box3(); model.traverse(o => { if (o.isMesh) { const ms = Array.isArray(o.material) ? o.material : [o.material];
+    if ((o.userData.srcMats || ms.map(m => m.name || '')).some(n => n.startsWith(opts.groundMaterial))) tb.expandByObject(o) } }); if (!tb.isEmpty()) floor = tb.min.y }
+  tilt.position.set(-c.x, -floor, -c.z); g.updateMatrixWorld(true);
   const fb = new THREE.Box3().setFromObject(g).getSize(new THREE.Vector3());
   g.userData.dims = { length: fb.z, width: fb.x, height: fb.y };
   return g;

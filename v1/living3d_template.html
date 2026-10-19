@@ -1095,8 +1095,13 @@ function setExt(k){if(!EXT[k])k='EX-4';const o=EXT[k];MAT.ext.color.set(o.wall);
   if(o.louver==='wood'){MAT.extWood.map=T.oakPanel.map;MAT.extWood.color.set('#c99a6a')}else{MAT.extWood.map=null;MAT.extWood.color.set('#3c3d3e')}MAT.extWood.needsUpdate=true;
   document.querySelectorAll('#extSeg button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.e===k));try{localStorage.setItem('lr3d-ext',k)}catch(e){};if(photo&&pt)pt.updateMaterials();invalidate()}
 // neem tree (existing, rebuilt from the site photos; 3d/models/neem-tree.js): trunk 3'6" from the road, leaning south, south limb cut to a stub
+const trunkAxis=[];const trunkAxisAt=hf=>{if(hf<0||hf>12)return null;const k=Math.floor(hf),a=trunkAxis[k],b=trunkAxis[Math.min(12,k+1)]||a;if(!a)return null;const t=hf-k;return [a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t,Math.max(a[2],b[2])]};
 {const tree=createNeemTree(THREE,{seed:1,cut:true});tree.position.set(mx(12.75),m(RDZ),m(4.25));scene.add(tree);   // the trunk stays at today's ground, in the tree well
- tree.traverse(o=>{if(o.isMesh){o.userData.keepUV=true;named(o,o.userData.tip||'Neem tree (existing)');if(o.name==='NeemTrunk'||o.name==='NeemStub')wallMeshes.push(o)}});}
+ tree.traverse(o=>{if(o.isMesh){o.userData.keepUV=true;named(o,o.userData.tip||'Neem tree (existing)');if(o.name==='NeemTrunk'||o.name==='NeemStub')wallMeshes.push(o)}});
+ // trunk axis and radius by height (plan feet), read from the model itself, so walking never ends up inside the leaning trunk
+ {tree.updateMatrixWorld(true);const tm=tree.getObjectByName('NeemTrunk');if(tm){const p=tm.geometry.attributes.position,v=new THREE.Vector3(),bins=[];
+   for(let i=0;i<p.count;i++){v.fromBufferAttribute(p,i).applyMatrix4(tm.matrixWorld);const hf=v.y/F-RDZ,k=Math.round(hf);if(k<0||k>12)continue;(bins[k]=bins[k]||[]).push([-v.x/F,v.z/F])}
+   bins.forEach((b,k)=>{if(!b)return;const cx=b.reduce((a,q)=>a+q[0],0)/b.length,cy=b.reduce((a,q)=>a+q[1],0)/b.length,r=Math.max(...b.map(q=>Math.hypot(q[0]-cx,q[1]-cy)));trunkAxis[k]=[cx,cy,r]})}}}
 // staircase ST-1: 27 risers of about 6½" from the gate crest, 10" treads, 3'6" wide; ST-1A south along BW-07 (17), landing ST-1L, ST-1B east over the car to balcony 2 (10)
 {const AX1=17.125,AX2=20.625,TD=10/12,LY1=16.0,LY2=19.5,BX2=17.125,NA=17,NB=10,Z0=HUZ,R=(FFZ-Z0)/(NA+NB),A0=LY1-(NA-1)*TD,LZ=Z0+NA*R;
  const gr='Granite tread and riser, grey flamed (anti-skid)',st=`ST-1 outside stair · RCC waist slab, ${(R*12).toFixed(1)}" risers, 10" treads, starts at the gate crest`;
@@ -1244,6 +1249,19 @@ function startAnim(){if(!carAnim.car)return;carAnim.track=carAnim.track||buildTr
   // watch from the house-front corner of the parking, looking out to the gate and the road
   setView(35)}
 function stopAnim(){carAnim.on=false;setCarPose(...CAR_ROUTE.park,0,0);renderer.shadowMap.needsUpdate=true;animBtn.textContent='Animate';animBtn.setAttribute('aria-pressed',false);invalidate()}
+// VFR800 file (old Blender) has only plain grey materials: restyle its parts by material name
+function vfrMats(){const P=(c,o={})=>new THREE.MeshPhysicalMaterial({color:c,roughness:0.35,metalness:0.1,...o});
+  const paint=P('#b0141c',{roughness:0.25,metalness:0.4,clearcoat:1,clearcoatRoughness:0.05}),blk=P('#1b1c1f',{roughness:0.5}),dgrey=P('#3a3c40',{roughness:0.45}),
+    chrome=P('#dde1e5',{roughness:0.1,metalness:1}),steel=P('#9a9ea3',{roughness:0.3,metalness:0.9}),dmetal=P('#4a4d52',{roughness:0.35,metalness:0.8}),
+    rubber=P('#18191b',{roughness:0.92,metalness:0}),lens=P('#e8eef2',{roughness:0.04,metalness:0.2,clearcoat:1,emissive:'#fff4dd',emissiveIntensity:0.12}),
+    amber=P('#e08a1e',{roughness:0.1,clearcoat:1}),redl=P('#a3101a',{roughness:0.1,clearcoat:1,emissive:'#5a0610',emissiveIntensity:0.3}),
+    screen=P('#3a4652',{roughness:0.05,metalness:0.1,transparent:true,opacity:0.55,clearcoat:1}),mirror=P('#cfd6dc',{roughness:0.02,metalness:1}),white=P('#e9e9e6',{roughness:0.4});
+  const m={orangepaint:paint,Plastic:blk,blackplastic:blk,'blackplastic.001':blk,'blackplastic.002':blk,keyplastic:blk,plastictube:blk,'plastictube.001':blk,'plastictube.002':dmetal,
+    panel:blk,'panel.001':dgrey,blackgear:blk,gray_plastic:dgrey,'gray_plastic.001':dgrey,'Material.004':dgrey,'Material.005':dgrey,chrome,'chrome.001':chrome,
+    metal:steel,'metal.002':steel,'metal.001':dmetal,rubber,'rubber.001':rubber,'rubber.002':rubber,'rubber.003':rubber,'rubber.004':rubber,
+    'glass.001':lens,'glass.002':lens,mirro:mirror,mirror,orange_plastic:amber,yellowplastic:amber,'yellowplastic.001':amber,yellow_plastic:amber,
+    redplastic:redl,red:redl,green:P('#1f9e3a'),whiteplastic:white,Material:screen,'Material.006':white,'Material.007':white,'':blk};
+  return new Proxy(m,{get:(t,k)=>k in t?t[k]:blk})}
 const SHOW_BIKES=false;   // the old code-made two-wheelers stay off; the downloaded models below are used
 const vehicleMeshes=[];
 {const [cx1,cx2,cy1,cy2]=P.car||[11.25,17.0,14.75,29.75];
@@ -1253,11 +1271,11 @@ const vehicleMeshes=[];
    car.traverse(o=>{if(o.isMesh){o.userData.keepUV=true;named(o,`Car · compact sedan (Free3D model, scaled to VW Virtus size, 4561 x 1752 mm body) · ${ft(d.length)} x ${ft(d.width)} with mirrors · reversed in, nose to the gate`);vehicleMeshes.push(o)}});
    renderer.shadowMap.needsUpdate=true;if(photo&&pt)pt.setScene(scene,camera);invalidate()}).catch(e=>console.warn('car model',e));
  // two-wheelers from the owner's downloaded models, sized to the real bikes they stand for, front to the gate
- for(const [code,name,bx,by,bl,bw] of (P.bikes||[])){const moto=/Hunter/.test(name);
-   loadGLBVehicle(THREE,GLTFLoader,moto?'assets/vehicles/motorcycle.glb':'assets/vehicles/scooter.glb',moto?{front:'+x',pitch:-0.035,length:2.055,name:code}:{front:'+z',length:1.837,name:code}).then(b=>{
+ for(const [code,name,bx,by,bl,bw] of (P.bikes||[])){const moto=/VFR|Hunter/.test(name);
+   loadGLBVehicle(THREE,GLTFLoader,moto?'assets/vehicles/vfr800.glb':'assets/vehicles/scooter.glb',moto?{front:'+z',length:2.12,groundMaterial:'rubber',name:code,materials:vfrMats()}:{front:'+z',length:1.837,name:code}).then(b=>{
      b.position.set(mx(bx),m(PKZ),m(by));b.rotation.y=Math.PI;scene.add(b);
      const d=b.userData.dims,ft=v=>{const i=Math.round(v/F*12);return `${Math.floor(i/12)}'${i%12}"`};
-     b.traverse(o=>{if(o.isMesh){o.userData.keepUV=true;named(o,`${code} · ${moto?'Motorcycle (Baotian Sanya model, sized to a Royal Enfield Hunter 350)':'Scooter (downloaded model, sized to an Ather 450X)'} · ${ft(d.length)} long, ${ft(d.height)} high · front to the gate`)}});
+     b.traverse(o=>{if(o.isMesh){o.userData.keepUV=true;named(o,`${code} · ${moto?'Motorcycle · Honda VFR800 (model by danielfc10, CC BY 3.0, Blend Swap), real size':'Scooter (downloaded model, sized to an Ather 450X)'} · ${ft(d.length)} long, ${ft(d.height)} high · front to the gate`)}});
      renderer.shadowMap.needsUpdate=true;if(photo&&pt)pt.setScene(scene,camera);invalidate()}).catch(e=>console.warn('bike model',e))}
  if(SHOW_BIKES) for(const [code,name,bx,by,bl,bw] of (P.bikes||[])){const b=/Hunter/.test(name)?createHunter350(THREE,mergeGeometries,{}):createAther450(THREE,mergeGeometries,{});
    b.position.set(mx(bx),m(PKZ),m(by));b.rotation.y=Math.PI;scene.add(b);b.traverse(o=>{if(o.isMesh){o.userData.keepUV=true;named(o,`${code} · ${name} · front to the gate, on its side stand`)}})}}
@@ -1471,6 +1489,9 @@ function rightVec(){return new THREE.Vector3(Math.cos(yaw),0,-Math.sin(yaw))}
 function tryMove(step){const len=step.length();if(!len)return;const dir=step.clone().normalize();
   const y=camera.position.y,knee=y<=m(CEIL+0.5)?0.35:y<=m(FFZ+CEIL)?m(FFZ)+0.35:y;   // knee-height check on the floor you are on, not the ground floor below
   for(const h of [knee,y]){colRay.set(new THREE.Vector3(camera.position.x,h,camera.position.z),dir);colRay.far=len+0.3;if(colRay.intersectObjects(wallMeshes,false).length)return}
+  { const nx=-(camera.position.x+step.x)/F,ny=(camera.position.z+step.z)/F,ox=-camera.position.x/F,oy=camera.position.z/F;   // neem trunk: never walk into it
+    for(const hf of [1.5,(camera.position.y-m(RDZ))/F]){ const a=trunkAxisAt(hf); if(!a)continue;
+      const R=a[2]+0.75, dn=Math.hypot(nx-a[0],ny-a[1]), d0=Math.hypot(ox-a[0],oy-a[1]); if(dn<R&&dn<d0)return } }
   camera.position.add(step);
   {const py=camera.position.z/F,px=-camera.position.x/F;   // in front of the house the ground slopes: keep the eye 5'3" above the drive or the road
    if(py<30.75&&px>-40&&px<60){const g=py<0?RDZ:zF(py),t=m(g+EYE);if(Math.abs(camera.position.y-t)<m(3.0))camera.position.y=t}}}
