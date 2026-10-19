@@ -1,11 +1,12 @@
 // Car route along the east side (owner's sketch): drive out forward in one curve past the scooter by the neem, through GT-01, east along the road;
-// come in from the west, stop just past the gate, reverse back along the same curve. Writes 3d/models/car-route.js.
+// come in from the west, stop just past the gate, reverse back along the same curve. Writes 3d/models/car-route.js (bikes on the stair side) or, with LAYOUT=BW, 3d/models/car-route-bw.js (bikes along BW-01).
 // Gaps: 3" round the body everywhere, 6" at the east gate leaf, the east pillar and the two-wheelers. Run: node car_route_east.mjs
 import fs from 'fs';
 process.env.MARGIN='0.25';
 const PARKX=+(process.env.PARKX||11.125), XE=+(process.env.XE||12.5), DRY=!!process.env.DRY;   // car spot centre X; east edge of the raised platform by the small gate
 let src=fs.readFileSync(new URL('car_route_plan.mjs',import.meta.url),'utf8');src=src.slice(0,src.indexOf('const S2=Math.PI/2;'));
-const BIKES=[[14.68,17.1,6.4,12.43],[17.455,19.865,12.3,19.26]];   // TW-2 along the stair side on the platform, TW-1 under ST-1A
+const BW=process.env.LAYOUT==='BW';   // bike layout: stair side (default) or both along BW-01
+const BIKES=BW?[[0.55,2.96,21.25,28.21],[3.2,5.62,22.17,28.2]]:[[14.68,17.1,6.4,12.43],[17.455,19.865,12.3,19.26]];   // BW: TW-1 and TW-2 along BW-01; else TW-2 on the platform, TW-1 under ST-1A
 const PLAT=[[XE,17.125,6.2,11.0],[13.5,17.125,2.667,6.2]];   // raised platform (kerb over 3" high north of Y 11') and the small-gate steps
 src+=`
 for(const b of ${JSON.stringify([...BIKES,...PLAT])})rects.push([b[0]-0.25,b[1]+0.25,b[2]-0.25,b[3]+0.25]);
@@ -19,24 +20,24 @@ const park=[PARKX,29.73-3.1,N2];
 const r=plan(park,[-40,-8,Math.PI],n=>n.y<-4&&n.x<-20&&ang(n.th,Math.PI)<0.15);
 if(!r.n){console.log(JSON.stringify({PARKX,XE,out:'none'}));process.exit(1)}
 let sw=0;for(let n=r.n;n&&n.par;n=n.par)if(n.dir!==n.par.dir&&n.par.par)sw++;if(sw){console.log(JSON.stringify({PARKX,XE,switches:sw}));if(!process.env.ALLOWSW)process.exit(1)}
-const P=[];for(let n=r.n;n;n=n.par)P.unshift([n.x,n.y,n.th]);
-// smooth the steering (moving average over 3 steps) and re-drive it, so the wheel turns gently
-const ks=[],dss=[];for(let i=1;i<P.length;i++){const ds=Math.hypot(P[i][0]-P[i-1][0],P[i][1]-P[i-1][1]);ks.push(Math.atan2(Math.sin(P[i][2]-P[i-1][2]),Math.cos(P[i][2]-P[i-1][2]))/ds);dss.push(ds)}
-const k=ks.map((_,i)=>(ks[Math.max(0,i-1)]+ks[i]+ks[Math.min(ks.length-1,i+1)])/3);
+const P=[];for(let n=r.n;n;n=n.par)P.unshift([n.x,n.y,n.th,n.dir]);
+// smooth the steering (moving average over 3 steps, within each forward or reverse leg) and re-drive it, so the wheel turns gently
+const ks=[],dss=[];for(let i=1;i<P.length;i++){const ds=P[i][3]*Math.hypot(P[i][0]-P[i-1][0],P[i][1]-P[i-1][1]);ks.push(Math.atan2(Math.sin(P[i][2]-P[i-1][2]),Math.cos(P[i][2]-P[i-1][2]))/ds);dss.push(ds)}
+const k=ks.map((_,i)=>{let a=ks[i],n=1;for(const j of [i-1,i+1])if(j>=0&&j<ks.length&&Math.sign(dss[j])===Math.sign(dss[i])){a+=ks[j];n++}return a/n});
 let [x,y,th]=P[0];const out=[[x,y,th,1]];
-for(let i=0;i<k.length;i++){const ds=dss[i],c=k[i];if(Math.abs(c)<1e-9){x+=Math.cos(th)*ds;y+=Math.sin(th)*ds}else{const t2=th+c*ds;x+=(Math.sin(t2)-Math.sin(th))/c;y+=(-Math.cos(t2)+Math.cos(th))/c;th=t2}out.push([x,y,th,1])}
+for(let i=0;i<k.length;i++){const ds=dss[i],c=k[i];if(Math.abs(c)<1e-9){x+=Math.cos(th)*ds;y+=Math.sin(th)*ds}else{const t2=th+c*ds;x+=(Math.sin(t2)-Math.sin(th))/c;y+=(-Math.cos(t2)+Math.cos(th))/c;th=t2}out.push([x,y,th,Math.sign(ds)])}
 const f=p=>[+p[0].toFixed(3),+p[1].toFixed(3),+p[2].toFixed(4),p[3]];
 const e=out.at(-1),inn=[];for(let d=64;d>0;d-=0.8)inn.push([e[0]-Math.cos(e[2])*d,e[1]-Math.sin(e[2])*d,e[2],1]);   // along the road from the west
-inn.push([e[0],e[1],e[2],1]);for(let i=out.length-2;i>=0;i--)inn.push([out[i][0],out[i][1],out[i][2],-1]);           // stop, reverse back along the curve
-if(DRY){console.log(JSON.stringify({PARKX,XE,out:'ok'}));process.exit(0)}
+inn.push([e[0],e[1],e[2],1]);for(let i=out.length-2;i>=0;i--)inn.push([out[i][0],out[i][1],out[i][2],-out[i+1][3]]);   // stop, then back along the same path (each leg driven the other way)
+if(DRY){console.log(JSON.stringify({PARKX,XE,BW,out:'ok'}));process.exit(0)}
 const R={wb:WB,ovr:3.1,ovf:3.16,park:[PARKX,26.63,-1.5708],in:inn.map(f),out:out.map(f)};
 R.park=R.in.at(-1).slice(0,3);
-fs.writeFileSync(new URL('../../3d/models/car-route.js',import.meta.url),`// Car parking route for the 3D animation, from v1/tools/car_route_east.mjs (hybrid A*, rear-axle bicycle model, steering smoothed).
+fs.writeFileSync(new URL(BW?'../../3d/models/car-route-bw.js':'../../3d/models/car-route.js',import.meta.url),`// Car parking route for the 3D animation, from v1/tools/car_route_east.mjs (hybrid A*, rear-axle bicycle model, steering smoothed).
 // VW Virtus: wheelbase 8'8", rear overhang 3'1", front overhang 3'2", rear-axle turning radius 11'7".
 // Route along the east side: out forward in one curve past the scooter TW-2 by the neem, through GT-01 near its east leaf, then east along the road;
 // in from the west, stop just past the gate, reverse back along the same curve (nose to the gate). Gaps: 6" or more at the gate leaf, the pillar and the bikes.
 // Plan feet: x from the east boundary, y from the road; th = heading in plan angle (direction (cos th, sin th)); dir = +1 forward, -1 reverse.
 // Poses are of the rear-axle centre.
-export const CAR_ROUTE = ${JSON.stringify(R)};
+export const ${BW?'CAR_ROUTE_BW':'CAR_ROUTE'} = ${JSON.stringify(R)};
 `);
 console.log('in',R.in.length,'out',R.out.length,'park',R.park);

@@ -250,10 +250,14 @@ def platform_outlines(SP):
     return out
 def vehicles():
     import model as _m
-    cx1,cx2,cy1,cy2=getattr(_m,'CAR',(11.25,17.25,13.75,28.75))
-    rect(cx1,cx2,cy1,cy2,'#fafafa','#555',0.06,extra='rx="1.0"'); rect(cx1+0.5,cx2-0.5,cy1+8.6,cy1+10.1,'#a9bccd','#555',0.03); rect(cx1+0.5,cx2-0.5,cy1+2.6,cy1+3.8,'#a9bccd','#555',0.03)
-    text((cx1+cx2)/2,cy1+5.6,'CAR\nVW Virtus\n14\'11" x 5\'9"',0.36,weight=600,fill='#666')
-    car_path(cx1,cy1)
+    for cls,key,fn in (('L-bikeS','CAR','car-route.js'),('L-bikeE','CAR_EAST','car-route-bw.js')):   # the car spot and route go with the bike layout
+        if not getattr(_m,key,None): continue
+        cx1,cx2,cy1,cy2=getattr(_m,key)
+        E(f'<g class="{cls}">')
+        rect(cx1,cx2,cy1,cy2,'#fafafa','#555',0.06,extra='rx="1.0"'); rect(cx1+0.5,cx2-0.5,cy1+8.6,cy1+10.1,'#a9bccd','#555',0.03); rect(cx1+0.5,cx2-0.5,cy1+2.6,cy1+3.8,'#a9bccd','#555',0.03)
+        text((cx1+cx2)/2,cy1+5.6,'CAR\nVW Virtus\n14\'11" x 5\'9"',0.36,weight=600,fill='#666')
+        car_path(cx1,cy1,fn)
+        E('</g>')
     for cls,key,lx in (('L-bikeS','BIKES',-2.4),('L-bikeE','BIKES_EAST',0.0)):   # chosen layout, and the BW-01 option (shown with its tick box)
         E(f'<g class="{cls}">')
         for b in getattr(_m,key,None) or []:
@@ -264,11 +268,11 @@ def vehicles():
             else: text(bx,by-4.1,lab,0.3,weight=600,fill='#555')
         if cls=='L-bikeE': text(3.1,29.4,'option: bikes along BW-01',0.28,weight=700,fill='#1f6f8b')
         E('</g>')
-def car_path(cx1,cy1):
+def car_path(cx1,cy1,fn='car-route.js'):
     # space the car needs going in (blue) and out (green): the swept outline of the body with mirrors, from the 3D animation route
     try:
         import json as _j, os as _o, math as _mm
-        _t=open(_o.path.join(_o.path.dirname(__file__),'..','3d','models','car-route.js')).read(); R=_j.loads(_t[_t.index('{'):_t.rindex('}')+1])
+        _t=open(_o.path.join(_o.path.dirname(__file__),'..','3d','models',fn)).read(); R=_j.loads(_t[_t.index('{'):_t.rindex('}')+1])
     except Exception: return
     hw=6.2/2; a0,a1=-R['ovr'],R['wb']+R['ovf']
     E('<g class="L-carpath">')

@@ -90,7 +90,9 @@ import {createNeemTree} from './models/neem-tree.js?v=__BUILD__';
 import {createTNPlant,TN_PLANTS} from './models/tn-plants.js?v=__BUILD__';
 import {createVirtus,createHunter350,createAther450,loadCarGLB,loadGLBVehicle} from './models/vehicles.js?v=__BUILD__';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
-import {CAR_ROUTE} from './models/car-route.js?v=__BUILD__';
+import {CAR_ROUTE as CAR_ROUTE_ST} from './models/car-route.js?v=__BUILD__';
+import {CAR_ROUTE_BW} from './models/car-route-bw.js?v=__BUILD__';
+let CAR_ROUTE=CAR_ROUTE_ST;   // the car spot and route go with the bike layout (see setBikes)
 import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
 
 const P=window.PLAN, F=0.3048, CEIL=10.0, EYE=5.25;
@@ -1291,6 +1293,7 @@ function placeBike(code){const o=bikeObjs[code];if(!o)return;const L=(bikeLayout
   const where=bikeLayout==='BW'?'along BW-01 (option)':code==='TW-1'?'under ST-1A':'on the small-gate platform';
   b.traverse(x=>{if(x.isMesh)named(x,`${code} · ${o.moto?'Motorcycle · Honda VFR800 (model by danielfc10, CC BY 3.0, Blend Swap), real size':'Scooter (downloaded model, sized to an Ather 450X)'} · ${ft(d.length)} long, ${ft(d.height)} high · ${where} · ${fac==='E'?'front to the east':fac==='S'?'front to the house (ridden in forward)':'front to the gate'}`)})}
 function setBikes(k){bikeLayout=k==='BW'?'BW':'ST';for(const c in bikeObjs)placeBike(c);
+  CAR_ROUTE=bikeLayout==='BW'?CAR_ROUTE_BW:CAR_ROUTE_ST;carAnim.track=null;if(carAnim.on)stopAnim();else setCarPose(...CAR_ROUTE.park,0,0);
   document.querySelectorAll('#bikeSeg button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.b===bikeLayout));try{localStorage.setItem('lr3d-bikes',bikeLayout)}catch(e){};
   renderer.shadowMap.needsUpdate=true;if(photo&&pt)pt.setScene(scene,camera);invalidate()}
 const SHOW_BIKES=false;   // the old code-made two-wheelers stay off; the downloaded models below are used
