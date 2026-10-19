@@ -727,6 +727,8 @@ const APM={glass:std({color:'#0b0c0d',roughness:0.05,metalness:0.3}),black:std({
 const cookMat=n=>{const nm=n.material?.name||'';return /gold/.test(nm)?APM.brass:/^Box002/.test(n.name)?APM.glass:/broun/.test(nm)?APM.enamel:APM.black};
 // FU-67 microwave (archibase.net 3DS, converted): restyle its parts: black body, dark glass door, steel trim, glass turntable
 const mwMat=n=>{const nm=n.material?.name||'';return /glassdark/.test(nm)?APM.win:/Croco/.test(nm)?APM.black:/03 - Default/.test(nm)?APM.steel:/04 - Default/.test(nm)?APM.glass:/1[01] - Default/.test(nm)?APM.grey:APM.enamel};
+// FU-18 fridge (archibase.net 3DS): silver doors, body and door trims, black handle and logo
+const FRB=std({color:'#d3d6d9',roughness:0.3,metalness:0.5}),fridgeMat=n=>/^Ö/.test(n.name||'')?APM.black:FRB;
 const wmMat=n=>{const nm=n.material?.name||'';return /clear_window/.test(nm)?APM.win:/standart_metal/.test(nm)?APM.steel:/black_st|broun/.test(nm)?APM.black:/panel/.test(nm)?APM.grey:APM.white};
 function cabRun(id,what,x1,x2,y1,y2,z1,z2,face,segs,mat,plinth){
   const t=kTip(id,what),g=0.012,alongX=face[0]==='y';
@@ -824,7 +826,8 @@ function cabRun(id,what,x1,x2,y1,y2,z1,z2,face,segs,mat,plinth){
  const mw=fuG['FU-67'];placeAppliance('assets/appliances/microwave.glb',(mw.x1+mw.x2)/2,(mw.y1+mw.y2)/2,KCH,Math.PI/2,mwMat,`FU-67 · Microwave oven · ${mw.note}`);   // front to the kitchen
  box(mw.x1+0.08,mw.x2-0.45,mw.y2-0.05,mw.y2-0.03,3.1,3.85,MAT.blackGlass,{cast:false,tip:'Microwave door, black glass'});
  // fridge FU-18 on GW-05, loft cabinets above it; tall store cupboard FU-25 south of it, floor to ceiling, oak with lofts
- const fr=fuG['FU-18'];box(fr.x1+0.12,fr.x2-0.05,fr.y1+0.06,fr.y2-0.06,0,5.75,std({color:'#c9ccce',roughness:0.3,metalness:0.6}),{round:0.05,tip:`FU-18 · Fridge, single door, 230 L · ${fr.note}`});
+ const fr=fuG['FU-18'];{const ft=`FU-18 · ${fr.name} · ${fr.note}`,cx=fr.x2-0.05-1.09,cy=(fr.y1+fr.y2)/2;placeAppliance('assets/appliances/fridge.glb',cx,cy,0,Math.PI/2,fridgeMat,ft);   // front to the east (the open area)
+  box(cx-0.99,cx+0.99,cy-0.99,cy+0.99,0,5.58,new THREE.MeshBasicMaterial({visible:false}),{cast:false,tip:ft})}   // invisible, so you cannot walk through it
  box(fr.x1+0.08,fr.x1+0.12,fr.y2-0.35,fr.y2-0.3,2.6,4.6,MAT.blackMetal,{tip:'Fridge handle'});
  cabRun('FU-18','Loft above the fridge',fr.x1,fr.x2-0.012,fr.y1+0.012,fr.y2,6.3,CEIL-0.012,'x-',[[fr.y1+0.012,fr.y2,'door']],MAT.oak,false);
  const cu=fuG['FU-25'],LZ=7.6;
@@ -1418,37 +1421,44 @@ function vfrMats(){const P=(c,o={})=>new THREE.MeshPhysicalMaterial({color:c,rou
 {const T=id=>{const f=fuG[id];return `${id} · ${f.name} · ${f.note}`},CZ=-0.97,SZ=CEIL+0.02,pg=std({color:'#c9ccd0',roughness:0.45,metalness:0.3});
  {const f=fuG['FU-83'];if(f){box(f.x1+0.05,f.x2,f.y1,f.y2,CZ+3.17,CZ+3.33,MAT.white,{tip:T('FU-83')});box(f.x1+0.05,f.x2,f.y2-0.05,f.y2,CZ+3.08,CZ+3.17,MAT.white,{tip:T('FU-83')+' · drip edge'})}}
  {const f=fuG['FU-84'];if(f){box(f.x2,f.x2+0.75,f.y1,f.y2,6.0,SZ,MAT.extUp,{tip:T('FU-84')+' · drop wall'});box(f.x1,f.x2,f.y1,f.y2,5.83,6.0,MAT.white,{tip:T('FU-84')})}}
- for(const [id,z0] of [['FU-86',CZ],['FU-85',0]]){const f=fuG[id];if(!f)continue;box(f.x1,f.x2,f.y1,f.y2,z0+4.5,z0+5.75,pg,{tip:T(id)});box(f.x1-0.012,f.x1,f.y1+0.1,f.y2-0.1,z0+5.3,z0+5.6,MAT.blackMetal,{cast:false,tip:T(id)+' · display and switches'});
-   const cy=(f.y1+f.y2)/2;box(f.x1+0.02,f.x2,cy-0.05,cy+0.05,z0,z0+4.5,pg,{cast:false,tip:T(id)+' · cable conduit'})}}
-// back garden: garden tap point FU-54 on GW-08 and its wash platform FU-55
+ // wall panels: FU-86 on GW-18 (wall along y, face toward -x), FU-85 and the EB meter FU-87 on GW-04 (wall along x, face toward the parking, -y)
+ for(const [id,z0,z1,z2] of [['FU-86',CZ,4.5,5.75],['FU-85',PKZ,4.5,5.75],['FU-87',PKZ,4.5,6.0]]){const f=fuG[id];if(!f)continue;const alongY=(f.x2-f.x1)<(f.y2-f.y1),meter=id==='FU-87';
+   box(f.x1,f.x2,f.y1,f.y2,z0+z1,z0+z2,pg,{tip:T(id)});
+   const win=meter?[z0+z1+0.55,z0+z2-0.25]:[z0+z2-0.45,z0+z2-0.15];
+   if(alongY)box(f.x1-0.012,f.x1,f.y1+0.1,f.y2-0.1,win[0],win[1],MAT.blackMetal,{cast:false,tip:T(id)+' · display and switches'});
+   else box(f.x1+0.12,f.x2-0.12,f.y1-0.012,f.y1,win[0],win[1],meter?std({color:'#9fb4bf',roughness:0.05,metalness:0.2,transparent:true,opacity:0.6}):MAT.blackMetal,{cast:false,tip:T(id)+(meter?' · glass window to read the meter':' · display and switches')});
+   if(meter)box(f.x1+0.35,f.x2-0.35,f.y1-0.008,f.y1-0.002,win[0]+0.2,win[0]+0.42,MAT.blackMetal,{cast:false,tip:'EB meter display'});
+   if(alongY){const cy=(f.y1+f.y2)/2;box(f.x1+0.02,f.x2,cy-0.05,cy+0.05,z0,z0+z1,pg,{cast:false,tip:T(id)+' · cable conduit'})}
+   else{const cx=(f.x1+f.x2)/2;box(cx-0.05,cx+0.05,f.y1+0.02,f.y2,z0+z2,CEIL,pg,{cast:false,tip:T(id)+' · cable conduit'})}}}
+// side garden, south-east: garden tap point FU-54 on the east compound wall BW-03 (face toward +x) and its wash platform FU-55
 {const f=fuG['FU-54'],p=fuG['FU-55'],T=g=>`${g.id} · ${g.name} · ${g.note}`,brass=std({color:'#b08d57',roughness:0.35,metalness:0.8}),grey=std({color:'#8f9294',roughness:0.85});
- if(f){const cx=f.x1+0.3,W0=95.125;box(f.x1,f.x2,f.y1,f.y2,GRD,GRD+0.33,grey,{tip:T(f)+' · 4" tiled step'});box(f.x1,f.x2,W0,W0+0.025,GRD+0.33,GRD+3.4,std({color:'#f4f4f1',roughness:0.2}),{tip:T(f)+' · white wall tiles'});
-   box(cx-0.1,cx+0.1,W0+0.025,W0+0.16,GRD+2.25,GRD+2.5,brass,{tip:T(f)+' · brass bib tap with a hose union'});cyl(cx,W0+0.2,GRD+2.0,GRD+2.3,0.05,brass,{tip:T(f)+' · tap spout'});
-   box(cx-0.12,cx+0.12,f.y2-0.5,f.y2-0.26,GRD+0.33,GRD+0.342,MAT.blackMetal,{cast:false,tip:T(f)+' · floor drain'});
-   const reel=new THREE.Mesh(new THREE.TorusGeometry(m(0.32),m(0.07),10,28),std({color:'#3f7a3a',roughness:0.6}));reel.position.set(mx(f.x2-0.3),m(GRD+3.1),m(W0+0.12));scene.add(reel);named(reel,T(f)+' · garden hose on a wall reel')}
+ if(f){const cy=f.y1+0.3,W0=f.x1;box(f.x1,f.x2,f.y1,f.y2,GRD,GRD+0.33,grey,{tip:T(f)+' · 4" tiled step'});box(W0,W0+0.025,f.y1,f.y2,GRD+0.33,GRD+3.4,std({color:'#f4f4f1',roughness:0.2}),{tip:T(f)+' · white wall tiles'});
+   box(W0+0.025,W0+0.16,cy-0.1,cy+0.1,GRD+2.25,GRD+2.5,brass,{tip:T(f)+' · brass bib tap with a hose union'});cyl(W0+0.2,cy,GRD+2.0,GRD+2.3,0.05,brass,{tip:T(f)+' · tap spout'});
+   box(f.x2-0.5,f.x2-0.26,cy-0.12,cy+0.12,GRD+0.33,GRD+0.342,MAT.blackMetal,{cast:false,tip:T(f)+' · floor drain'});
+   const reel=new THREE.Mesh(new THREE.TorusGeometry(m(0.32),m(0.07),10,28),std({color:'#3f7a3a',roughness:0.6}));reel.rotation.y=Math.PI/2;reel.position.set(mx(W0+0.12),m(GRD+3.1),m(f.y2-0.35));scene.add(reel);named(reel,T(f)+' · garden hose on a wall reel')}
  if(p){box(p.x1,p.x2,p.y1,p.y2,GRD,GRD+0.06,grey,{cast:false,tip:T(p)});box((p.x1+p.x2)/2-0.2,(p.x1+p.x2)/2+0.2,(p.y1+p.y2)/2-0.2,(p.y1+p.y2)/2+0.2,GRD+0.06,GRD+0.07,MAT.blackMetal,{cast:false,tip:T(p)+' · floor drain'})}}
-// side-garden utility along GW-07, just south of bore BR-01: platform FU-77 and utility basin FU-30 with its back to the wall, front to the garden (east)
+// side-garden utility on BW-01, across from bore BR-01: platform FU-77 and utility basin FU-30 with its back to the compound wall, front to the garden (west)
 {const pf=fuG['FU-77'],bs=fuG['FU-30'];
- if(pf&&bs){const PT=GRD+0.33,T=(f,t)=>`${f.id} · ${f.name} · ${t||f.note}`,WX=9.5;   // WX: the garden face of GW-07
+ if(pf&&bs){const PT=GRD+0.33,T=(f,t)=>`${f.id} · ${f.name} · ${t||f.note}`,WX=0.375,SG=1;   // WX: the garden face of BW-01; SG: plan x grows out from the wall
   const tile=std({map:canvasTex(256,256,(g,w,h)=>{g.fillStyle='#f4f4f1';g.fillRect(0,0,w,h);g.fillStyle='#d6d4ce';for(let i=0;i<=4;i++){g.fillRect(i*w/4-1,0,2,h);g.fillRect(0,i*h/4-1,w,2)}},0.6),roughness:0.15,metalness:0.0});
   const ftile=std({map:canvasTex(256,256,(g,w,h)=>{g.fillStyle='#8f9294';g.fillRect(0,0,w,h);const r=rng(4);for(let i=0;i<900;i++){g.fillStyle=r()<0.5?'#83878a':'#9a9d9f';g.fillRect(r()*w,r()*h,2,2)}g.fillStyle='#6f7376';g.fillRect(0,0,w,2);g.fillRect(0,0,2,h)},0.6),roughness:0.85});
   const white=std({color:'#f3f3f1',roughness:0.32,metalness:0.08}),grey=std({color:'#cfd2d5',roughness:0.4,metalness:0.2}),chrome=std({color:'#e3e6e9',roughness:0.12,metalness:1}),
         dark=std({color:'#23272b',roughness:0.25,metalness:0.2}),smoke=std({color:'#2b3a44',roughness:0.05,metalness:0.1,transparent:true,opacity:0.55}),ss=std({color:'#c9ccd0',roughness:0.25,metalness:0.9,side:THREE.DoubleSide});
-  // local frame: u along the wall (plan y), v out from the wall (plan x = WX - v), z height
-  const B=(u1,u2,v1,v2,z1,z2,mt,tip)=>box(WX-v2,WX-v1,u1,u2,z1,z2,mt,{tip}),Pw=(u,v,z)=>new THREE.Vector3(mx(WX-v),m(z),m(u));
+  // local frame: u along the wall (plan y), v out from the wall (plan x = WX + SG*v), z height
+  const B=(u1,u2,v1,v2,z1,z2,mt,tip)=>box(Math.min(WX+SG*v1,WX+SG*v2),Math.max(WX+SG*v1,WX+SG*v2),u1,u2,z1,z2,mt,{tip}),Pw=(u,v,z)=>new THREE.Vector3(mx(WX+SG*v),m(z),m(u));
   {const st=fuG['FU-79'];if(st)box(st.x1,st.x2,st.y1,st.y2,GRD-0.25,GRD+0.5,MAT.stepStone,{tip:`${st.id} · ${st.name} · ${st.note}`})}
   box(pf.x1,pf.x2,pf.y1,pf.y2,GRD-0.25,PT,ftile,{tip:T(pf)});
-  B(82.3,82.55,2.2,2.45,PT,PT+0.012,MAT.blackMetal,`${pf.id} · floor drain (trap) for the basin`);
-  B(pf.y1,pf.y2,-0.005,0.025,PT,PT+4.0,tile,T(pf,'white glazed wall tiles, 1\' x 1\', on GW-07 behind the basin'));
+  {const cu=(bs.y1+bs.y2)/2;B(cu-0.12,cu+0.12,(bs.x2-WX)+0.25,(bs.x2-WX)+0.49,PT,PT+0.012,MAT.blackMetal,`${pf.id} · floor drain (trap) for the basin`)}
+  B(pf.y1,pf.y2,-0.005,0.025,PT,PT+4.0,tile,T(pf,'white glazed wall tiles, 1\' x 1\', on BW-01 behind the basin'));
   // utility basin: granite counter on two granite legs, deep steel sink, swan-neck tap, low tap for buckets
-  {const u1=bs.y1,u2=bs.y2,vf=WX-bs.x1,cu=(u1+u2)/2,zt=PT+2.75,t=T(bs),gr=MAT.stepStone,su1=u1+0.22,su2=u2-0.22,sv1=0.2,sv2=vf-0.2;
+  {const u1=bs.y1,u2=bs.y2,vf=bs.x2-WX,cu=(u1+u2)/2,zt=PT+2.75,t=T(bs),gr=MAT.stepStone,su1=u1+0.22,su2=u2-0.22,sv1=0.2,sv2=vf-0.2;
    for(const [a2,b2] of [[u1+0.05,u1+0.2],[u2-0.2,u2-0.05]])B(a2,b2,0.1,vf-0.1,PT,zt-0.12,gr,t);
    B(u1,u2,0,sv1,zt-0.12,zt,gr,t);B(u1,u2,sv2,vf,zt-0.12,zt,gr,t);B(u1,su1,sv1,sv2,zt-0.12,zt,gr,t);B(su2,u2,sv1,sv2,zt-0.12,zt,gr,t);
    const bh=0.7,bowl=new THREE.Mesh(new THREE.BoxGeometry(m(sv2-sv1),m(bh),m(su2-su1)),[ss,ss,null,ss,ss,ss].map(x=>x||new THREE.MeshBasicMaterial({visible:false})));
    bowl.position.copy(Pw((su1+su2)/2,(sv1+sv2)/2,zt-0.12-bh/2));scene.add(bowl);named(bowl,t+' · deep stainless-steel sink');
-   cyl(WX-0.1,cu,zt,zt+0.7,0.05,chrome,{tip:t+' · swan-neck pillar tap'});
+   cyl(WX+SG*0.1,cu,zt,zt+0.7,0.05,chrome,{tip:t+' · swan-neck pillar tap'});
    const spout=new THREE.Mesh(new THREE.TorusGeometry(m(0.22),m(0.04),10,24,Math.PI),chrome);spout.position.copy(Pw(cu,0.32,zt+0.7));scene.add(spout);named(spout,t+' · tap spout');
-   cyl(WX-0.02,cu+0.25,PT+1.1,PT+1.18,0.06,chrome,{tip:t+' · low tap (bib cock) for filling buckets'});
+   cyl(WX+SG*0.02,cu+0.25,PT+1.1,PT+1.18,0.06,chrome,{tip:t+' · low tap (bib cock) for filling buckets'});
    const bucket=new THREE.Mesh(new THREE.CylinderGeometry(m(0.5),m(0.4),m(1.0),28,1,true),std({color:'#2f6fb0',roughness:0.5,side:THREE.DoubleSide}));bucket.position.copy(Pw(cu,0.65,PT+0.5));scene.add(bucket);named(bucket,t+' · bucket under the low tap');}
  }}
 // two-wheelers side by side along BW-01, between C-01 and C-03
