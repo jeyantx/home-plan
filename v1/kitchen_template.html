@@ -136,23 +136,27 @@ const wmMat=n=>{const nm=n.material?.name||'';return /clear_window/.test(nm)?APM
 // ---------------- the units ----------------
 const T=0.059,SH=0.06,G=0.01;   // 18 mm panels, 18 mm shutters, 3 mm gaps (feet)
 const fronts=[],modules=[];
-const SHELVES={'K-01':0,'K-04':0,'K-05':1,'K-07':1,'K-09':1,'K-11':1,'K-12':2,'K-14':2,'K-15':2,'K-16':1,'K-17':1,'K-13':0,'K-03':0};
+const SHELVES={'K-04':0,'K-05':1,'K-09':1,'K-11':1,'K-12':2,'K-15':2,'K-16':1,'K-17A':1,'K-17B':1,'K-13':0};
 function buildModule(m){const fr=frame(m),base=m.z1<1,isLoft=m.run==='Loft',up=m.run.startsWith('Wall')||isLoft,low=m.run==='Low counter',bf=m.run==='Breakfast counter';
-  const body=up?M.cream:M.oak,inner=up?M.creamIn:M.oakIn,zb0=m.z1+(base?K.KPL:0),zt=base?(low?K.KLOW-K.KTOP:bf?K.KBF:K.KCH-K.KTOP):m.z2;
+  const body=up?M.cream:M.oak,inner=up?M.creamIn:M.oakIn,zb0=m.z1+(base&&!m.noBottom?K.KPL:0),zt=base?(low?K.KLOW-K.KTOP:bf?K.KBF:K.KCH-K.KTOP):m.z2;
   const grp=new THREE.Group();scene.add(grp);const rec={m,grp,fr,fronts:[],zb0,zt,up,base};modules.push(rec);
   const U0=Math.max(fr.U0,Math.min(...m.fronts.map(f=>f.a)))-0.0,U1=Math.min(fr.U1,Math.max(...m.fronts.map(f=>f.b))),D=fr.D;
-  const uA=m.id==='K-17'?fr.U0:U0,uB=m.id==='K-17'?fr.U1:U1;
+  const full=m.id.startsWith('K-17')||!!m.shelfZ,uA=full?fr.U0:U0,uB=full?fr.U1:U1,oa=m.open_end==='a';
   // carcass: open-front box of 18 mm panels
   // panels fit between the two sides (no overlapping faces, so no flicker at the joints); a hair's gap between neighbouring units
-  const e=0.003;fr.box(uA+e,uA+T,SH,D,zb0,zt,body,grp);fr.box(uB-T,uB-e,SH,D,zb0,zt,body,grp);fr.box(uA+T,uB-T,D-T,D,zb0+T,up?zt-T:zt,inner,grp);fr.box(uA+T,uB-T,SH,D-T,zb0,zb0+T,inner,grp);if(up)fr.box(uA+T,uB-T,SH,D,zt-T,zt,body,grp);
-  for(let i=1;i<=(SHELVES[m.id]??0);i++){const z=zb0+(zt-zb0)*i/((SHELVES[m.id]??0)+1);fr.box(uA+T,uB-T,SH+0.06,D-T,z-0.03,z,inner,grp)}
-  if(base)fr.box(uA+e,uB-e,SH+0.12,D-0.01,m.z1,zb0-0.002,M.plinth,grp);
-  // worktop
-  if(base){const ztop=low?K.KLOW:bf?K.KBF+0.13:K.KCH;fr.box(uA,uB,-0.08,D,ztop-K.KTOP+0.002,ztop,M.granite,grp)}
+  // L-shaped corner cupboards: the part with no door opens into the unit round the corner (bottom and shelves run right to the front there); the other unit leaves out its side panel at that end
+  const e=0.003,iA=oa?uA+e:uA+T,iB=uB-T;if(!oa)fr.box(uA+e,uA+T,SH,D,zb0,zt,body,grp);fr.box(uB-T,uB-e,SH,D,zb0,zt,body,grp);fr.box(iA,iB,D-T,D,zb0+T,up?zt-T:zt,inner,grp);if(up)fr.box(iA,iB,SH,D,zt-T,zt,body,grp);
+  const fa=Math.min(...m.fronts.map(f=>f.a)),fb=Math.max(...m.fronts.map(f=>f.b)),parts=m.shelfZ&&!oa?(fa>uA+0.05?[[iA,fa,0.003],[fa,iB,SH]]:[[iA,fb,SH],[fb,iB,0.003]]):[[iA,iB,SH]];
+  if(!m.noBottom)for(const [p,q,v] of parts)fr.box(p,q,v,D-T,zb0,zb0+T,inner,grp);
+  for(let i=1;i<=(SHELVES[m.id]??0);i++){const z=zb0+(zt-zb0)*i/((SHELVES[m.id]??0)+1);fr.box(iA,iB,SH+0.06,D-T,z-0.03,z,inner,grp)}
+  for(const z of m.shelfZ||[])for(const [p,q,v] of parts)fr.box(p,q,v===SH?SH+0.06:v,D-T,z-0.03,z,inner,grp);
+  if(base&&!m.noBottom)fr.box(oa?uA-SH-0.12:uA+e,uB-e,SH+0.12,D-0.01,m.z1,zb0-0.002,M.plinth,grp);
+  // worktop (the unit opening into a corner cupboard of the same height starts past that one's front edge, so the two tops do not overlap)
+  if(base){const ztop=low?K.KLOW:bf?K.KBF+0.13:K.KCH;fr.box(oa&&!bf?uA+0.08:uA,uB,-0.08,D,ztop-K.KTOP+0.002,ztop,M.granite,grp)}
   for(const f of m.fronts)buildFront(rec,f);
   // label with the unit size (front width x front height x depth)
   const fw=uB-uA,fh=zt-zb0,c=fr.toPlan((uA+uB)/2,-0.15),lz=up?zb0-0.25:zt+0.32;
-  const short=m.name.replace(/^(Breakfast counter unit|Low counter unit), /,'').replace(/ with blind corner$/,'').replace(/ over the sink$/,'').replace(/, glass door$/,' (glass)');
+  const short=m.name.replace(/^(Breakfast counter unit|Low counter unit), /,'').replace(/ with blind corner$/,'').replace(/ over the sink$/,'').replace(/, glass door$/,' (glass)').replace(/^Corner cupboard, (north|south) \(L-shaped\), .*$/,'Corner cupboard (L)').replace(/^Loft, east \(.*\)$/,'Loft, east');
   rec.label=label(`${m.id} · ${short[0].toUpperCase()+short.slice(1)}`,W(c[0],c[1],lz),'');
 }
 function buildFront(rec,f){const {m,fr}=rec,up=rec.up,mat=up?M.cream:M.oak,a=f.a+G,b=f.b-G,za=f.za,zb=f.zb,D=fr.D;
@@ -183,29 +187,31 @@ function buildFront(rec,f){const {m,fr}=rec,up=rec.up,mat=up?M.cream:M.oak,a=f.a
 }
 function contents(rec,f,pivot,add){const {m,fr}=rec,a=f.a,b=f.b,za=f.za,D=fr.D,at=(u,v)=>fr.toPlan(u,v);
   const pot=(u,v,z,r,h,col)=>{const [X,Y]=at(u,v);add(cylW(X,Y,z,z+h,r,std({color:col,roughness:0.3,metalness:0.7}),pivot))};
-  if(m.id==='K-02'&&f.k==='door'){const [X,Y]=at((a+b)/2,D/2);add(boxW(X-0.45,X+0.45,Y-0.45,Y+0.45,za+0.02,za+0.15,M.handle,pivot));add(cylW(X,Y,za+0.15,za+1.9,0.52,M.red,pivot,0.5));add(cylW(X,Y,za+1.9,za+2.05,0.15,M.steel,pivot))}
-  if(m.id==='K-01'&&f.k==='blind'){const [X,Y]=at((a+b)/2,D/2);cylW(X,Y,za+0.02,za+1.8,0.52,M.red,scene,0.5)}
-  if(m.id==='K-01'&&f.k==='drawer'){const lev=m.fronts.filter(x=>x.k==='drawer').indexOf(f);if(lev===0){pot((a+b)/2-0.4,D/2,za+0.08,0.42,0.75,'#c0c4c8');pot((a+b)/2+0.45,D/2,za+0.08,0.32,0.6,'#c0c4c8')}
-    if(lev===1){pot((a+b)/2,D/2,za+0.08,0.55,0.25,'#3b3c3e');pot((a+b)/2+0.5,D/2+0.1,za+0.33,0.45,0.03,'#2a2a2a')}
-    if(lev===2)for(let k=1;k<6;k++){const u=a+0.1+(b-a-0.2)*k/6,[X1,Y1]=at(u,SH+0.05),[X2,Y2]=at(u,D-0.3);add(boxW(Math.min(X1,X2),Math.max(X1,X2)+0.02,Math.min(Y1,Y2),Math.max(Y1,Y2)+0.02,za+0.08,za+0.25,M.drawer,pivot))}}
+  // gas cylinder (26" high, 320 mm across) standing on the floor, 2'8" clear above it
+  if(m.id==='K-02'&&f.k==='door'){const [X,Y]=at((a+b)/2,D/2);cylW(X,Y,0,1.78,0.52,M.red,scene,0.5);cylW(X,Y,1.78,1.95,0.3,M.red,scene,0.22);cylW(X,Y,1.95,2.17,0.15,M.steel,scene)}
+  // L-shaped corner cupboards: big vessels on the floor and on the L-shaped shelf
+  const ZB=rec.zb0+T,ZS=1.45,stl='#c0c4c8',blk='#3b3c3e';
+  if(m.id==='K-01A'&&f===m.fronts[0]){pot(59.75,1.0,ZB,0.42,0.75,stl);pot(60.95,1.0,ZB,0.32,0.6,stl);pot(59.7,1.1,ZS,0.36,0.7,stl);pot(60.9,0.9,ZS,0.3,0.5,stl)}
+  if(m.id==='K-03A'&&f===m.fronts[0]){pot(63.75,1.0,ZB,0.55,0.25,blk);pot(65.4,1.0,ZB,0.45,0.6,stl);pot(65.4,1.0,ZS,0.5,0.22,blk);pot(63.75,0.9,ZS,0.38,0.45,stl)}
+  if(m.id==='K-03B'){const r=rng(77);for(const z of [ZB,ZS])for(let q=0;q<4;q++)pot(5.62+q*0.2,0.5+r()*1.0,z,0.09,0.55+r()*0.3,['#c98a2b','#7a3b16','#e8d9a8','#3f6a2a'][q])}
   if(m.id==='K-04'&&f.hinge==='a'){for(const d of [0.3,0.85]){const [X,Y]=at(a+0.15+d*0.5,D/2);add(boxW(X-0.22,X+0.22,Y-0.4,Y+0.4,za+0.05,za+1.4,std({color:d<0.5?'#3b7a4a':'#4a4f55',roughness:0.6}),pivot))}}
   if(m.id==='K-05'){pot((a+b)/2,D/2,za+0.06,0.4,1.1,'#5b8fc0')}
   if(m.id==='K-06'&&m.fronts.indexOf(f)===0)for(const d of [0.25,0.6]){const [X,Y]=at(a+(b-a)*d,D/2);add(boxW(X-0.3,X+0.3,Y-0.5,Y+0.5,za+0.06,za+0.85,M.appWhite,pivot))}
-  if(['K-07','K-09','K-11'].includes(m.id)){const z=rec.zb0+(rec.zt-rec.zb0)/2;for(let k=0;k<3;k++){const [X,Y]=at(a+0.35+k*0.45,D/2);for(let j=0;j<6;j++)cylW(X,Y,za+0.06+j*0.035,za+0.08+j*0.035,m.id==='K-09'?0.12:0.32,std({color:'#f6f3ee',roughness:0.3}),scene)}}
+  if(['K-01B','K-09','K-11'].includes(m.id)){const z=rec.zb0+(rec.zt-rec.zb0)/2;for(let k=0;k<3;k++){const [X,Y]=at(a+0.35+k*0.45,D/2);for(let j=0;j<6;j++)cylW(X,Y,za+0.06+j*0.035,za+0.08+j*0.035,m.id==='K-09'?0.12:0.32,std({color:'#f6f3ee',roughness:0.3}),scene)}}
   if(m.id==='K-13'){const z=rec.zb0+0.15;for(let k=0;k<9;k++){const [X,Y]=at(a+0.2+k*0.17,D/2);const pl=new THREE.Mesh(new THREE.CylinderGeometry(0.3*F,0.3*F,0.02*F,28),std({color:'#f6f3ee',roughness:0.3}));pl.rotation.z=Math.PI/2;if(m.face[0]==='y')pl.rotation.y=Math.PI/2;pl.position.copy(W(X,Y,z+0.32));scene.add(pl)}
     const [X,Y]=at((a+b)/2,D/2);boxW(X-0.8,X+0.8,Y-0.45,Y+0.45,z-0.02,z,M.steel,scene)}
   if(['K-12','K-14','K-15'].includes(m.id)){const r=rng(m.id.charCodeAt(3)*7);for(const zz of [rec.zb0+T,rec.zb0+(rec.zt-rec.zb0)/3,rec.zb0+2*(rec.zt-rec.zb0)/3]){let u=a+0.2;while(u<b-0.25){const rr=0.09+r()*0.06,[X,Y]=at(u,D/2);cylW(X,Y,zz,zz+0.3+r()*0.25,rr,std({color:['#e9e4da','#cdbfa8','#7a6a58','#c0392b','#f3efe6'][Math.floor(r()*5)],roughness:0.4}),scene,rr*0.9);u+=rr*2+0.1}}}}
 const runOf=new Map(),runKey=m=>m.face==='x+'?'E':m.face==='y+'?'F':'B';
 for(const m of K.modules){const n0=scene.children.length;buildModule(m);for(const o of scene.children.slice(n0))runOf.set(o,runKey(m))}
-// the corner of the back run behind the bottle pull-out: sealed, with its plinth and granite top
-{const n0=scene.children.length;boxW(3.5,5.5,64.375,66.375,K.KPL,K.KCH-K.KTOP,M.oakIn);boxW(3.5,5.5,64.5,66.375,0,K.KPL,M.plinth);boxW(3.5,5.5,64.295,66.375,K.KCH-K.KTOP,K.KCH,M.granite);
- boxW(3.503,5.497,64.363,64.372,K.KPL,K.KCH-K.KTOP,M.oak);for(const o of scene.children.slice(n0))runOf.set(o,'B')}
 // the blind corner wall unit behind K-12 (no front)
 boxW(3.512,4.75,65.0,66.363,K.KUP1R,K.KUP2,M.cream);
 // ---------------- appliances on and above the counters ----------------
 {const h=fu['FU-52'];placeAppliance('assets/appliances/cooktop.glb',(h.x1+h.x2)/2,(h.y1+h.y2)/2,K.KCH,-Math.PI/2,cookMat,null,'E');label('FU-52 · Gas stove (free-standing)',W((h.x1+h.x2)/2,(h.y1+h.y2)/2,K.KCH+0.75));
  {const r=fu['FU-80'];if(r){rackModel(r,K.KCH,(a,b,c,d,e,f,mt)=>boxW(a,b,c,d,e,f,mt),(x,y,z1,z2,rr,mt)=>cylW(x,y,z1,z2,rr,mt));label('FU-80 · Utensil drying rack',W((r.x1+r.x2)/2,(r.y1+r.y2)/2,K.KCH+1.95))}}
- const w6=P.openings.find(o=>o.id==='W-06'),hz=w6.sill+w6.h+0.1,cy=(h.y1+h.y2)/2;boxW(3.512,5.3,cy-0.95,cy+0.95,hz,hz+0.28,M.blackGlass);boxW(3.512,4.25,cy-0.5,cy+0.5,hz+0.28,K.KUP2,std({color:'#2b2c2e',roughness:0.35,metalness:0.5}));
+ const w6=P.openings.find(o=>o.id==='W-06'),hz=w6.sill+w6.h+0.1,cy=(h.y1+h.y2)/2;boxW(3.512,5.3,cy-0.984,cy+0.984,hz,hz+0.28,M.blackGlass);   // FU-81 hood, 60 cm wide
+ const chB=std({color:'#2b2c2e',roughness:0.35,metalness:0.5});boxW(3.512,4.25,cy-0.48,cy+0.48,hz+0.28,K.KLOFT2,chB);label('FU-81 · Chimney, 60 cm',W(5.0,cy,hz-0.25));   // body up the gap between K-17A and K-17B
+ {const DZ=8.5,d=new THREE.Mesh(new THREE.CylinderGeometry(0.25*F,0.25*F,1.0*F,24),M.steel);d.rotation.z=Math.PI/2;d.position.copy(W(3.0,cy,DZ));scene.add(d);   // 6" duct through GW-01
+  boxW(2.45,2.6,cy-0.32,cy+0.32,DZ-0.4,DZ+0.35,M.steel);boxW(2.6,2.75,cy-0.32,cy+0.32,DZ+0.2,DZ+0.35,M.steel);boxW(2.46,2.6,cy-0.3,cy+0.3,DZ-0.42,DZ-0.38,chB);label('FU-82 · Duct outlet (cowl outside GW-01)',W(2.5,cy,DZ+0.7))}
  const s=fu['FU-51'];boxW(s.x1+0.1,s.x2-0.1,s.y1+0.08,s.y2-0.08,K.KCH,K.KCH+0.012,M.steel);boxW(s.x1+0.22,s.x2-0.22,s.y1+0.2,s.y2-0.2,K.KCH-0.6,K.KCH+0.015,std({color:'#8c9094',metalness:0.85,roughness:0.3,side:THREE.BackSide}));
  const tx=(s.x1+s.x2)/2;cylW(tx,s.y2-0.05,K.KCH,K.KCH+1.15,0.05,M.handle);boxW(tx-0.04,tx+0.04,s.y2-0.7,s.y2-0.05,K.KCH+1.1,K.KCH+1.18,M.handle);
  const ro=fu['FU-66'],rz1=K.RO_Z1,rz2=rz1+K.RO_H;boxW(ro.x1,ro.x2,ro.y1,ro.y2-0.012,rz1,rz2,M.appWhite);boxW(ro.x1+0.12,ro.x2-0.12,ro.y1-0.01,ro.y1,rz2-0.62,rz2-0.3,M.blackGlass);cylW((ro.x1+ro.x2)/2,ro.y1+0.06,rz1-0.22,rz1,0.035,M.handle);

@@ -749,21 +749,24 @@ function cabRun(id,what,x1,x2,y1,y2,z1,z2,face,segs,mat,plinth){
       glassMeshes.push(lb(a+g+w,b-g-w,0.02,0.035,fz1+w,fz2-w,MAT.glass,{cast:false,tip:tg}));handle(a,b,hz)}
     else{panel(a+g,b-g,fz1,fz2);handle(a,b,hz)}}}
 {const X1=3.5,ky2=66.375,bY=64.375,W06=P.openings.find(o=>o.id==='W-06');
- // base cabinets: east run FU-15 on GW-01 (front faces +x), back run FU-16 on GW-14 (front faces -y); the corner is a blind corner with a carousel
- cabRun('FU-15','Base cabinets, east',X1,5.5,59.125,ky2,0,KCH-KTOP,'x+',[[60.375,62.0,'drawers'],[62.0,bY,'door']],MAT.kLow,true);   // K-01 pan drawers, K-02 one full door for the gas cylinder under the stove
- cabRun('FU-16','Base cabinets, back',5.5,8.6,bY,ky2,0,KCH-KTOP,'y-',[[5.5,6.45,'door'],[6.45,8.6,'door2']],MAT.kLow,true);   // K-03 bottle pull-out, K-04 sink unit
+ // base cabinets: east run FU-15 on GW-01 (front faces +x), back run FU-16 on GW-14 (front faces -y); both corners are L-shaped corner cupboards (K-01A/B, K-03A/B)
+ cabRun('FU-15','Base cabinets, east',X1,5.5,59.125,61.625,0,KCH-KTOP,'x+',[[60.375,61.625,'door']],MAT.kLow,true);   // K-01A, north corner cupboard
+ cabRun('FU-15','Base cabinets, east · gas cylinder unit',X1,5.5,61.625,63.125,0,KCH-KTOP,'x+',[[61.625,63.125,'door']],MAT.kLow,false);   // K-02: door down to the floor, no plinth, the cylinder stands on the floor
+ cabRun('FU-15','Base cabinets, east',X1,5.5,63.125,ky2,0,KCH-KTOP,'x+',[[63.125,bY,'door']],MAT.kLow,true);   // K-03A, south corner cupboard
+ cabRun('FU-16','Base cabinets, back',5.5,8.6,bY,ky2,0,KCH-KTOP,'y-',[[5.5,6.45,'door'],[6.45,8.6,'door2']],MAT.kLow,true);   // K-03B corner cupboard door, K-04 sink unit
  const LOW=2.0;cabRun('FU-16.2','Low counter, wet grinder and water',8.6,12.125,bY,ky2,0,LOW-KTOP,'y-',[[8.6,9.875,'door'],[9.875,12.125,'drawers2']],MAT.kLow,true);   // K-05 water pots, K-06 rice and atta drawers
  box(8.6,12.125,bY-0.06,ky2,LOW-KTOP,LOW,MAT.kTop,{tip:'FU-16.2 · Low counter top, 2\' from the floor'});
  box(X1,5.56,59.125,ky2,KCH-KTOP,KCH,MAT.kTop,{tip:'Counter top, 40 mm, east run'});box(5.56,8.6,bY-0.06,ky2,KCH-KTOP,KCH,MAT.kTop,{tip:'Counter top, 40 mm, back run'});
  // wall cabinets FU-19 (GW-14), FU-19.2 and FU-19.3 (GW-01, either side of W-06)
- cabRun('FU-19','Wall cabinets, back',4.69,6.5,ky2-1.25,ky2-0.012,P.kitchen.KUP1R,UPZ2,'y-',[[4.75,6.5,'door']],MAT.kUp,false);cabRun('FU-19','Wall cabinets, back',6.5,8.25,ky2-1.25,ky2-0.012,UPZ1,UPZ2,'y-',[[6.5,8.25,'door']],MAT.kUp,false);   // K-12 over the drying rack starts at 5'3"; K-13 dish drainer   // K-12 spices, K-13 dish drainer; the RO purifier takes K-14's place   // K-13 over the sink is the dish drainer
+ cabRun('FU-19','Wall cabinets, back',4.69,8.25,ky2-1.25,ky2-0.012,P.kitchen.KUP1R,UPZ2,'y-',[[4.75,6.5,'door'],[6.5,8.25,'door']],MAT.kUp,false);   // K-12 spices and K-13 dish drainer, both from 5'3"; the RO purifier takes K-14's place
  cabRun('FU-19.2','Wall cabinets, east corner',X1+0.012,4.75,65.0,ky2-0.012,P.kitchen.KUP1R,UPZ2,'x+',[],MAT.kUp,false);   // blind corner behind FU-19
  cabRun('FU-19.3','Wall cabinets, east',X1+0.012,4.75,59.137,61.0,UPZ1,UPZ2,'x+',[[59.137,61.0,'glass']],MAT.kUp,false);
  // top row to the ceiling (FU-68 on GW-14, FU-69 on GW-01, right across above the window and chimney), with a black shadow line under it
  const TZ1=UPZ2+0.05,TZ2=CEIL-0.012;
  cabRun('FU-68','Top storage, back',4.69,9.875,ky2-1.25,ky2-0.012,TZ1,TZ2,'y-',[[4.75,6.5,'door'],[6.5,8.25,'door'],[8.25,9.875,'door']],MAT.kUp,false);
- cabRun('FU-69','Top storage, east',X1+0.012,4.75,59.137,ky2-0.012,TZ1,TZ2,'x+',[[59.137,61.0,'door'],[61.0,63.0,'door'],[63.0,65.0,'door']],MAT.kUp,false);
- box(X1+0.012,4.6,59.137,ky2-0.012,UPZ2,TZ1,MAT.blackMetal,{cast:false,tip:'Shadow line, black'});box(4.6,9.8,ky2-1.125,ky2-0.012,UPZ2,TZ1,MAT.blackMetal,{cast:false,tip:'Shadow line, black'});
+ cabRun('FU-69','Top storage, east',X1+0.012,4.75,59.137,62.15,TZ1,TZ2,'x+',[[59.137,60.65,'door'],[60.65,62.15,'door']],MAT.kUp,false);   // K-17A
+ cabRun('FU-69','Top storage, east',X1+0.012,4.75,63.15,ky2-0.012,TZ1,TZ2,'x+',[[63.15,65.0,'door']],MAT.kUp,false);   // K-17B; the chimney goes up between them
+ box(X1+0.012,4.6,59.137,62.15,UPZ2,TZ1,MAT.blackMetal,{cast:false,tip:'Shadow line, black'});box(X1+0.012,4.6,63.15,ky2-0.012,UPZ2,TZ1,MAT.blackMetal,{cast:false,tip:'Shadow line, black'});box(4.6,9.8,ky2-1.125,ky2-0.012,UPZ2,TZ1,MAT.blackMetal,{cast:false,tip:'Shadow line, black'});
  for(const [a,b,c,d] of [[4.6,4.66,59.3,60.85],[4.6,4.66,65.15,66.3],[4.9,8.1,ky2-1.125,ky2-1.065]]) ledStrips.push(box(a,b,c,d,UPZ1-0.03,UPZ1,MAT.led,{cast:false,tip:'LED strip under the wall cabinets'}));
  const ul=new THREE.PointLight('#ffd7a3',0,m(9),2);ul.position.set(mx(6.0),m(4.2),m(65.0));scene.add(ul);towerLights.push(ul);
  // backsplash: cream 3" x 12" ceramic tiles between counter and wall cabinets; below the W-06 sill
@@ -775,8 +778,10 @@ function cabRun(id,what,x1,x2,y1,y2,z1,z2,face,segs,mat,plinth){
  {const r=fuG['FU-80'];if(r){const rt=`FU-80 · ${r.name} · ${r.note}`;rackModel(r,KCH,(a,b,c,d,e,f,mt)=>box(a,b,c,d,e,f,mt,{tip:rt}),(x,y,z1,z2,rr,mt)=>cyl(x,y,z1,z2,rr,mt,{tip:rt}))}}
  for(const [bx,by,r] of [[4.15,62.55,0.27],[4.15,63.45,0.22],[4.95,63.0,0.3]]) cyl(bx,by,KCH+0.03,KCH+0.09,r,std({color:'#3a3b3d',roughness:0.4,metalness:0.6}),{tip:'Burner',rTop:r*0.85});
  const hz1=W06.sill+W06.h+0.1;   // hood bottom 5'4", about 2'6" above the counter
- box(X1+0.012,5.3,(h.y1+h.y2)/2-0.95,(h.y1+h.y2)/2+0.95,hz1,hz1+0.28,MAT.blackGlass,{tip:'Chimney hood, 60 cm, black glass · 2\'6" above the counter · ducted out through GW-01 behind it'});
- box(X1+0.012,4.25,(h.y1+h.y2)/2-0.5,(h.y1+h.y2)/2+0.5,hz1+0.28,UPZ2,std({color:'#2b2c2e',roughness:0.35,metalness:0.5}),{tip:'Chimney body, up to the top cabinets'});
+ {const c=fuG['FU-81'],o=fuG['FU-82'],cy=(c.y1+c.y2)/2,ct=`FU-81 · ${c.name} · ${c.note}`,ot=`FU-82 · ${o.name} · ${o.note}`,DZ=8.5;
+  box(X1+0.012,5.3,c.y1,c.y2,hz1,hz1+0.28,MAT.blackGlass,{tip:ct});
+  box(X1+0.012,4.25,cy-0.48,cy+0.48,hz1+0.28,TZ2,std({color:'#2b2c2e',roughness:0.35,metalness:0.5}),{tip:ct});   // body and duct cover up the gap between the east lofts
+  box(o.x1,o.x2,o.y1,o.y2,DZ-0.4,DZ+0.35,MAT.steel,{tip:ot});box(o.x2,2.95,cy-0.25,cy+0.25,DZ-0.25,DZ+0.25,MAT.steel,{tip:ot});box(o.x1-0.01,o.x1+0.1,o.y1+0.03,o.y2-0.03,DZ-0.42,DZ-0.36,MAT.blackMetal,{cast:false,tip:ot})}
  // sink FU-51 on the back counter, black gooseneck tap; mixer grinder FU-64; RO purifier FU-66
  const s=fuG['FU-51'];box(s.x1+0.1,s.x2-0.1,s.y1+0.08,s.y2-0.08,KCH,KCH+0.012,MAT.steel,{cast:false,tip:`FU-51 · Kitchen sink, single bowl, steel · ${s.note}`});
  box(s.x1+0.22,s.x2-0.22,s.y1+0.2,s.y2-0.2,KCH+0.012,KCH+0.016,std({color:'#6d7073',roughness:0.35,metalness:0.8}),{cast:false,tip:'Sink bowl'});
@@ -1404,7 +1409,7 @@ for(const [x,y] of [[5.6,36.5],[7.5,22.0],[15.0,24.0]]) downlight(x,y,SLB,'LED d
 // ---------------- other rooms: simple blocks so the views through openings look right ----------------
 const simpleH={bed:1.8,cab:2.3,desk:2.5,ward:7.5,store2:9.4,shelf:6,counter:2.8,counter2:3.0,fridge:5.6,wc:1.3,basin:2.7,wm:2.8,store:3.5,table:2.4,chair:1.5};
 const kmat={counter:MAT.granite,counter2:MAT.granite,fridge:std({color:'#d9dcdf',roughness:0.3,metalness:0.5}),ward:MAT.oak,store2:std({color:'#ebe5da',roughness:0.55}),bed:std({color:'#e9e4da',roughness:0.9}),cab:MAT.oak,desk:MAT.oak,shelf:MAT.oak};
-for(const f of P.furniture){ if(f.fl!=='G'||['FU-03.1','FU-03.2','FU-04','FU-05','FU-06','FU-09.1','FU-09.2','FU-10','FU-11','FU-12','FU-13','FU-14','FU-15','FU-16','FU-16.2','FU-17','FU-18','FU-25','FU-27','FU-31','FU-32','FU-33','FU-34','FU-35','FU-56','FU-29','FU-30','FU-77','FU-79','FU-80'].includes(f.id)) continue;
+for(const f of P.furniture){ if(f.fl!=='G'||['FU-03.1','FU-03.2','FU-04','FU-05','FU-06','FU-09.1','FU-09.2','FU-10','FU-11','FU-12','FU-13','FU-14','FU-15','FU-16','FU-16.2','FU-17','FU-18','FU-25','FU-27','FU-31','FU-32','FU-33','FU-34','FU-35','FU-56','FU-29','FU-30','FU-77','FU-79','FU-80','FU-81','FU-82'].includes(f.id)) continue;
   const h=simpleH[f.kind]; if(!h) continue;
   if(f.kind==='counter'||f.kind==='counter2'){box(f.x1,f.x2,f.y1,f.y2,0.3,h-0.12,MAT.cabinet,{tip:`${f.id} · ${f.name}`});box(f.x1,f.x2,f.y1,f.y2,h-0.12,h,MAT.granite,{tip:`${f.id} · ${f.name} · granite top`});continue}
   box(f.x1,f.x2,f.y1,f.y2,0,h,kmat[f.kind]||std({color:'#e6e2da',roughness:0.8}),{tip:`${f.id} · ${f.name}`});
