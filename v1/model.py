@@ -125,7 +125,7 @@ RAMP=dict(y_hump=1.0,y_crest=3.25,y_top=10.75,ease=1.5,drain=(2.5,3.25))   # gat
 SIDE_PLATFORM=dict(well=(12.75,4.75,2.25),x1=13.5,x2=17.125,steps=(2.667,3.5,4.333),xe=12.5,y_end=10.75)
 BRANCH_NOTES='''<section class="ask"><h2>Modular kitchen (see the Kitchen tab)</h2>
 <ol>
-<li><b>Units K-01A to K-17B</b>, sized for daily Tamil Nadu cooking: two <b>L-shaped corner cupboards</b> with L-shaped shelves and one L-shaped door in 2 parts joined by a corner hinge, which folds and swings open in one go (K-01A and K-01B at the breakfast-counter corner for big vessels and plates, K-03A and K-03B at the sink corner for pans and bottles), so no corner is wasted; <b>gas cylinder unit K-02</b> under the stove with a plain door, no trolley, on a low 2" plinth with a bottom board, 29½" clear for the 26" cylinder; sink unit with two bins (K-04), low-counter units for water pots and rice and atta (K-05, K-06), breakfast-counter units for tiffin boxes, cutlery, glasses and dry stores (K-08 to K-11), wall units K-12 and K-13 (dish drainer) both from 5'3", glass unit K-15, and lofts with <b>normal hinged doors</b> to the ceiling (K-16, K-17A, K-17B).</li>
+<li><b>Units K-01A to K-17B</b>, sized for daily Tamil Nadu cooking: two <b>L-shaped corner cupboards</b> with L-shaped shelves and one L-shaped door in 2 parts joined by a corner hinge, which folds and swings open in one go (K-01A and K-01B at the breakfast-counter corner for big vessels and plates, K-03A and K-03B at the sink corner for pans and bottles), so no corner is wasted; <b>gas cylinder unit K-02</b> under the stove with a plain door, no trolley, on a low 2" plinth with a bottom board, 29½" clear for the 26" cylinder; sink unit with two bins (K-04), low-counter units for water pots and rice and atta (K-05, K-06), breakfast-counter units for tiffin boxes, cutlery, glasses and dry stores (K-08 to K-11), wall units K-12 and K-13 (dish drainer) both from 5'3", glass unit K-15, and lofts with <b>normal hinged doors</b> to the ceiling (K-16, K-18 over the RO and wet grinder, K-17A, K-17B); two orange plastic water kudams in K-05.</li>
 <li><b>Chimney FU-81, 60 cm wide</b>, over the stove; its body and a 6" round duct go up in a 1' gap between the east lofts K-17A and K-17B and out through GW-01 at 8'6" to a steel cowl FU-82 outside (downward opening, back-draft flap).</li>
 <li><b>Kitchen tab:</b> a 3D model of just the kitchen. Click any door or drawer to open or close it, or use Open all and Close all; Sizes shows the width, height and depth of every unit and the size of each drawer front; the Unit list gives the contents and the reason for each unit.</li>
 <li><b>RO purifier FU-66</b> moved next to the sink, over the east end of the low counter, so water pots fill standing on the 2' counter; <b>wet grinder FU-65</b> moved to the west end of the low counter, where the RO was.</li>
@@ -309,7 +309,7 @@ FURNITURE = [
  ('FU-17','G','Breakfast counter',5.5,13.5,59.125,60.375,'counter2',None,'Kitchen, 8\' x 1\'3" on GW-13, under the folding glass W-12; joins the east counter with no gap, extended into the old fridge place, microwave at its west end'),
  ('FU-18','G','Fridge',17.75,20.25,59.125,61.375,'fridge',None,'Open area, single door, on GW-05 at the north end of the FU-25 cupboard, flush with its face'),
  ('FU-19','G','Overhead cabinets, back',4.75,8.25,65.125,66.375,'over',None,'Kitchen, on GW-14 above the back counter and sink, glass doors on the unit above the sink, RO purifier below them (dashed)'),
- ('FU-68','G','Top storage, back',4.75,9.875,65.125,66.375,'over',None,'Kitchen, second row of cabinets on GW-14 from 7\' up to the ceiling (dashed)'),
+ ('FU-68','G','Top storage, back',4.75,12.125,65.125,66.375,'over',None,'Kitchen, second row of cabinets on GW-14 from 7\' up to the ceiling, right along to the end of the low counter, over the RO purifier and the wet grinder (K-16 and K-18) (dashed)'),
  ('FU-69','G','Top storage, east',3.5,4.75,59.125,66.375,'over',None,'Kitchen, second row of cabinets on GW-01 from 7\' up to the ceiling, right across above the window and chimney (dashed)'),
  ('FU-19.2','G','Overhead shelves, east',3.5,4.75,65.0,66.375,'over',None,'Kitchen, corner unit above the east counter beside the window (dashed)'),
  ('FU-19.3','G','Overhead shelves, east',3.5,4.75,59.125,61.0,'over',None,'Kitchen, above the east counter beside the window, glass door (dashed)'),
@@ -432,8 +432,8 @@ KITCHEN_MODULES=[
               dict(k='door',a=7.525,b=8.6,za=_B1,zb=_B2,hinge='b',what='cleaning things on a steel tray; RO purifier filter line')],
       inside='aluminium tray on the floor of the unit against leaks; two-bin pull-out; tray for cleaning things',need='waste bins and cleaning things under the sink'),
  dict(id='K-05',name='Low counter unit, water pots',run='Low counter',face='y-',x1=8.6,x2=9.875,y1=64.375,y2=66.375,z1=0,z2=KLOW,
-      fronts=[dict(k='door',a=8.6,b=9.875,za=_L1,zb=_L2,hinge='a',what='spare water cans and pot stands')],
-      inside='one shelf; RO purifier FU-66 above, so pots fill standing on the low counter',need='filling and keeping drinking water at a low, easy height'),
+      fronts=[dict(k='door',a=8.6,b=9.875,za=_L1,zb=_L2,hinge='a',what='2 plastic water kudams (about 12 L each, 10" across, 14" high), one behind the other')],
+      inside='no shelf, so two kudams stand one behind the other (18" clear inside); RO purifier FU-66 above, so pots fill standing on the low counter',need='filling and keeping drinking water at a low, easy height'),
  dict(id='K-06',name='Low counter unit, 2 drawers',run='Low counter',face='y-',x1=9.875,x2=12.125,y1=64.375,y2=66.375,z1=0,z2=KLOW,
       fronts=_drawers(9.875,12.125,_L1,_L2,[300,160],['rice and atta bins (25 kg)','wet grinder stone, batter boxes']),
       inside='deep bottom drawer for rice and atta bins; wet grinder FU-65 on the counter above',need='rice and atta by the wet grinder; batter making at a low, comfortable height'),
@@ -458,6 +458,9 @@ KITCHEN_MODULES=[
  dict(id='K-16',name='Loft, back',run='Loft',face='y-',x1=4.69,x2=9.875,y1=65.125,y2=66.363,z1=KUP2+0.05,z2=KLOFT2,
       fronts=[dict(k='door',a=4.75,b=6.5,za=KUP2+0.062,zb=KLOFT2-0.012,hinge='a',what='big vessels used for functions'),dict(k='door',a=6.5,b=8.25,za=KUP2+0.062,zb=KLOFT2-0.012,hinge='a',what='festival and pooja vessels'),
               dict(k='door',a=8.25,b=9.875,za=KUP2+0.062,zb=KLOFT2-0.012,hinge='b',what='spare stock')],inside='3 hinged doors (easy to close from a step stool)',need='things used a few times a year'),
+ dict(id='K-18',name='Loft, back (over the RO and wet grinder)',run='Loft',face='y-',x1=9.875,x2=12.125,y1=65.125,y2=66.363,z1=KUP2+0.05,z2=KLOFT2,
+      fronts=[dict(k='door',a=9.875,b=11.0,za=KUP2+0.062,zb=KLOFT2-0.012,hinge='a',what='spare rice and atta bags, wet grinder spare stone'),dict(k='door',a=11.0,b=12.125,za=KUP2+0.062,zb=KLOFT2-0.012,hinge='b',what='spare water cans, RO filter cartridges')],
+      inside='2 hinged doors, one shelf; continues K-16 to the end of the low counter, starting just above the RO purifier (7\' 0½")',need='more storage above the low counter'),
  dict(id='K-17A',name='Loft, east (north of the chimney)',run='Loft',face='x+',x1=3.512,x2=4.75,y1=59.137,y2=62.15,z1=KUP2+0.05,z2=KLOFT2,
       fronts=[dict(k='door',a=59.137,b=60.65,za=KUP2+0.062,zb=KLOFT2-0.012,hinge='a',what='spare stock'),dict(k='door',a=60.65,b=62.15,za=KUP2+0.062,zb=KLOFT2-0.012,hinge='b',what='light things only (next to the chimney)')],
       inside='2 hinged doors',need='things used a few times a year'),

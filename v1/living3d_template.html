@@ -773,10 +773,10 @@ function cabRun(id,what,x1,x2,y1,y2,z1,z2,face,segs,mat,plinth){
  cabRun('FU-19.3','Wall cabinets, east',X1+0.012,4.75,59.137,61.0,UPZ1,UPZ2,'x+',[[59.137,61.0,'glass']],MAT.kUp,false);
  // top row to the ceiling (FU-68 on GW-14, FU-69 on GW-01, right across above the window and chimney), with a black shadow line under it
  const TZ1=UPZ2+0.05,TZ2=CEIL-0.012;
- cabRun('FU-68','Top storage, back',4.69,9.875,ky2-1.25,ky2-0.012,TZ1,TZ2,'y-',[[4.75,6.5,'door'],[6.5,8.25,'door'],[8.25,9.875,'door']],MAT.kUp,false);
+ cabRun('FU-68','Top storage, back',4.69,12.125,ky2-1.25,ky2-0.012,TZ1,TZ2,'y-',[[4.75,6.5,'door'],[6.5,8.25,'door'],[8.25,9.875,'door'],[9.875,11.0,'door'],[11.0,12.125,'door']],MAT.kUp,false);   // K-16 and K-18 (over the RO and wet grinder)
  cabRun('FU-69','Top storage, east',X1+0.012,4.75,59.137,62.15,TZ1,TZ2,'x+',[[59.137,60.65,'door'],[60.65,62.15,'door']],MAT.kUp,false);   // K-17A
  cabRun('FU-69','Top storage, east',X1+0.012,4.75,63.15,ky2-0.012,TZ1,TZ2,'x+',[[63.15,65.0,'door']],MAT.kUp,false);   // K-17B; the chimney goes up between them
- box(X1+0.012,4.6,59.137,62.15,UPZ2,TZ1,MAT.blackMetal,{cast:false,tip:'Shadow line, black'});box(X1+0.012,4.6,63.15,ky2-0.012,UPZ2,TZ1,MAT.blackMetal,{cast:false,tip:'Shadow line, black'});box(4.6,9.8,ky2-1.125,ky2-0.012,UPZ2,TZ1,MAT.blackMetal,{cast:false,tip:'Shadow line, black'});
+ box(X1+0.012,4.6,59.137,62.15,UPZ2,TZ1,MAT.blackMetal,{cast:false,tip:'Shadow line, black'});box(X1+0.012,4.6,63.15,ky2-0.012,UPZ2,TZ1,MAT.blackMetal,{cast:false,tip:'Shadow line, black'});box(4.6,12.05,ky2-1.125,ky2-0.012,UPZ2,TZ1,MAT.blackMetal,{cast:false,tip:'Shadow line, black'});
  for(const [a,b,c,d] of [[4.6,4.66,59.3,60.85],[4.6,4.66,65.15,66.3],[4.9,8.1,ky2-1.125,ky2-1.065]]) ledStrips.push(box(a,b,c,d,UPZ1-0.03,UPZ1,MAT.led,{cast:false,tip:'LED strip under the wall cabinets'}));
  const ul=new THREE.PointLight('#ffd7a3',0,m(9),2);ul.position.set(mx(6.0),m(4.2),m(65.0));scene.add(ul);towerLights.push(ul);
  // backsplash: cream 3" x 12" ceramic tiles between counter and wall cabinets; below the W-06 sill

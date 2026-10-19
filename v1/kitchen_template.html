@@ -136,7 +136,7 @@ const wmMat=n=>{const nm=n.material?.name||'';return /clear_window/.test(nm)?APM
 // ---------------- the units ----------------
 const T=0.059,SH=0.06,G=0.01;   // 18 mm panels, 18 mm shutters, 3 mm gaps (feet)
 const fronts=[],modules=[],leaves=[];
-const SHELVES={'K-04':0,'K-05':1,'K-09':1,'K-12':2,'K-15':2,'K-16':1,'K-17A':1,'K-17B':1,'K-13':0};
+const SHELVES={'K-04':0,'K-05':0,'K-18':1,'K-09':1,'K-12':2,'K-15':2,'K-16':1,'K-17A':1,'K-17B':1,'K-13':0};
 function buildModule(m){const fr=frame(m),base=m.z1<1,isLoft=m.run==='Loft',up=m.run.startsWith('Wall')||isLoft,low=m.run==='Low counter',bf=m.run==='Breakfast counter';
   const body=up?M.cream:M.oak,inner=up?M.creamIn:M.oakIn,zb0=m.z1+(base?(m.plinth??K.KPL):0),zt=base?(low?K.KLOW-K.KTOP:bf?K.KBF:K.KCH-K.KTOP):m.z2;
   const grp=new THREE.Group();scene.add(grp);const rec={m,grp,fr,fronts:[],zb0,zt,up,base};modules.push(rec);
@@ -221,7 +221,9 @@ function contents(rec,f,pivot,add){const {m,fr}=rec,a=f.a,b=f.b,za=f.za,D=fr.D,a
   if(m.id==='K-03A'&&f===m.fronts[0]){pot(63.75,1.0,ZB,0.55,0.25,blk);pot(65.4,1.0,ZB,0.45,0.6,stl);pot(65.4,1.0,ZS,0.5,0.22,blk);pot(63.75,0.9,ZS,0.38,0.45,stl)}
   if(m.id==='K-03B'){const r=rng(77);for(const z of [ZB,ZS])for(let q=0;q<4;q++)pot(5.62+q*0.2,0.5+r()*1.0,z,0.09,0.55+r()*0.3,['#c98a2b','#7a3b16','#e8d9a8','#3f6a2a'][q])}
   if(m.id==='K-04'&&f.hinge==='a'){for(const d of [0.3,0.85]){const [X,Y]=at(a+0.15+d*0.5,D/2);add(boxW(X-0.22,X+0.22,Y-0.4,Y+0.4,za+0.05,za+1.4,std({color:d<0.5?'#3b7a4a':'#4a4f55',roughness:0.6}),pivot))}}
-  if(m.id==='K-05'){pot((a+b)/2,D/2,za+0.06,0.4,1.1,'#5b8fc0')}
+  // K-05: two orange plastic water kudams, one behind the other (profile from the owner's picture: narrow base, wide shoulder, short neck with a rim)
+  if(m.id==='K-05'){const pr=[[0,0],[3.6,0],[4.2,0.6],[4.9,4],[5.15,7.2],[5.2,7.8],[4.8,9.2],[3.9,10.6],[3.0,11.4],[2.75,11.8],[2.75,12.9],[3.25,13.0],[3.3,13.7],[2.9,14]].map(([r,h])=>new THREE.Vector2(r/12*F,h/12*F));
+    for(const v of [0.55,1.45]){const [X,Y]=at((a+b)/2,v),me=new THREE.Mesh(new THREE.LatheGeometry(pr,32),std({color:'#e8731a',roughness:0.45,metalness:0}));me.position.copy(W(X,Y,rec.zb0+T));me.castShadow=true;scene.add(me)}}
   if(m.id==='K-06'&&m.fronts.indexOf(f)===0)for(const d of [0.25,0.6]){const [X,Y]=at(a+(b-a)*d,D/2);add(boxW(X-0.3,X+0.3,Y-0.5,Y+0.5,za+0.06,za+0.85,M.appWhite,pivot))}
   if(['K-01B','K-09'].includes(m.id)){const z=rec.zb0+(rec.zt-rec.zb0)/2;for(let k=0;k<3;k++){const [X,Y]=at(a+0.35+k*0.45,D/2);for(let j=0;j<6;j++)cylW(X,Y,za+0.06+j*0.035,za+0.08+j*0.035,m.id==='K-09'?0.12:0.32,std({color:'#f6f3ee',roughness:0.3}),scene)}}
   if(m.id==='K-13'){const z=rec.zb0+0.15;for(let k=0;k<9;k++){const [X,Y]=at(a+0.2+k*0.17,D/2);const pl=new THREE.Mesh(new THREE.CylinderGeometry(0.3*F,0.3*F,0.02*F,28),std({color:'#f6f3ee',roughness:0.3}));pl.rotation.z=Math.PI/2;if(m.face[0]==='y')pl.rotation.y=Math.PI/2;pl.position.copy(W(X,Y,z+0.32));scene.add(pl)}
