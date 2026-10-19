@@ -1489,7 +1489,7 @@ function resize(){const w=view.clientWidth,h=view.clientHeight;renderer.setSize(
 addEventListener('resize',resize);resize();
 {let o=false;try{o=localStorage.getItem('lr3d-opts')==='1'}catch(e){};setOpt(o)}   // options row starts closed unless left open
 let so=0,sl='day',sf=75;try{so=0;sl=localStorage.getItem('lr3d-light')||'day';sf=+(localStorage.getItem('lr3d-lens')||75)}catch(e){}
-applyOption(so);applyLight(sl);setLens(sf);setView(0);
+applyOption(so);applyLight(sl);setLens(sf);setView(21);   // open at the gate, outside
 {let g='GD-1',e='EX-4';try{g=localStorage.getItem('lr3d-gate')||g;e=localStorage.getItem('lr3d-ext')||e}catch(x){};setGate(g);setExt(e)}
 document.querySelectorAll('#gateSeg button').forEach(x=>x.onclick=()=>setGate(x.dataset.g));document.querySelectorAll('#extSeg button').forEach(x=>x.onclick=()=>setExt(x.dataset.e));
 {let k='KT-1';try{k=localStorage.getItem('lr3d-finish')||k}catch(e){};setFinish(k)}

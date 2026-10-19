@@ -84,12 +84,12 @@ import {EffectComposer} from 'three/addons/postprocessing/EffectComposer.js';
 import {RenderPass} from 'three/addons/postprocessing/RenderPass.js';
 import {GTAOPass} from 'three/addons/postprocessing/GTAOPass.js';
 import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';
-import {createBambooPlant} from './models/bamboo-plant.js?v=1792402317';
-import {createNeemTree} from './models/neem-tree.js?v=1792402317';
-import {createTNPlant,TN_PLANTS} from './models/tn-plants.js?v=1792402317';
-import {createVirtus,createHunter350,createAther450,loadCarGLB,loadGLBVehicle} from './models/vehicles.js?v=1792402317';
+import {createBambooPlant} from './models/bamboo-plant.js?v=1792402556';
+import {createNeemTree} from './models/neem-tree.js?v=1792402556';
+import {createTNPlant,TN_PLANTS} from './models/tn-plants.js?v=1792402556';
+import {createVirtus,createHunter350,createAther450,loadCarGLB,loadGLBVehicle} from './models/vehicles.js?v=1792402556';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
-import {CAR_ROUTE} from './models/car-route.js?v=1792402317';
+import {CAR_ROUTE} from './models/car-route.js?v=1792402556';
 import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
 
 const P=window.PLAN, F=0.3048, CEIL=10.0, EYE=5.25;
@@ -1283,14 +1283,14 @@ function vfrMats(){const P=(c,o={})=>new THREE.MeshPhysicalMaterial({color:c,rou
 const SHOW_BIKES=false;   // the old code-made two-wheelers stay off; the downloaded models below are used
 const vehicleMeshes=[];
 {const [cx1,cx2,cy1,cy2]=P.car||[11.25,17.0,14.75,29.75];
- loadCarGLB(THREE,GLTFLoader,'assets/vehicles/compact-car.glb?v=1792402317',{color:'#2f5d8c',length:4.561,bodyWidth:1.752,name:'Car'}).then(car=>{
+ loadCarGLB(THREE,GLTFLoader,'assets/vehicles/compact-car.glb?v=1792402556',{color:'#2f5d8c',length:4.561,bodyWidth:1.752,name:'Car'}).then(car=>{
    scene.add(car);window.__car=car;carAnim.car=car;setCarPose(...CAR_ROUTE.park,0,0);
    const d=car.userData.dims,ft=v=>{const i=Math.round(v/F*12);return `${Math.floor(i/12)}'${i%12}"`};
    car.traverse(o=>{if(o.isMesh){o.userData.keepUV=true;named(o,`Car · compact sedan (Free3D model, scaled to VW Virtus size, 4561 x 1752 mm body) · ${ft(d.length)} x ${ft(d.width)} with mirrors · reversed in, nose to the gate`);vehicleMeshes.push(o)}});
    renderer.shadowMap.needsUpdate=true;if(photo&&pt)pt.setScene(scene,camera);invalidate()}).catch(e=>console.warn('car model',e));
  // two-wheelers from the owner's downloaded models, sized to the real bikes they stand for, front to the gate
  for(const [code,name,bx,by,bl,bw,fac] of (P.bikes||[])){const moto=/VFR|Hunter/.test(name),east=fac==='E',south=fac==='S';
-   loadGLBVehicle(THREE,GLTFLoader,moto?'assets/vehicles/vfr800.glb?v=1792402317':'assets/vehicles/scooter.glb?v=1792402317',moto?{front:'+z',length:2.12,groundMaterial:'rubber',name:code,materials:vfrMats()}:{front:'+z',length:1.837,name:code}).then(b=>{
+   loadGLBVehicle(THREE,GLTFLoader,moto?'assets/vehicles/vfr800.glb?v=1792402556':'assets/vehicles/scooter.glb?v=1792402556',moto?{front:'+z',length:2.12,groundMaterial:'rubber',name:code,materials:vfrMats()}:{front:'+z',length:1.837,name:code}).then(b=>{
      b.position.set(mx(bx),m(PKZ),m(by));b.rotation.y=east?Math.PI/2:south?0:Math.PI;scene.add(b);
      const d=b.userData.dims,ft=v=>{const i=Math.round(v/F*12);return `${Math.floor(i/12)}'${i%12}"`};
      b.traverse(o=>{if(o.isMesh){o.userData.keepUV=true;named(o,`${code} · ${moto?'Motorcycle · Honda VFR800 (model by danielfc10, CC BY 3.0, Blend Swap), real size':'Scooter (downloaded model, sized to an Ather 450X)'} · ${ft(d.length)} long, ${ft(d.height)} high · ${east?'front to the east':south?'front to the house (ridden in forward)':'front to the gate'}`)}});
@@ -1489,7 +1489,7 @@ function resize(){const w=view.clientWidth,h=view.clientHeight;renderer.setSize(
 addEventListener('resize',resize);resize();
 {let o=false;try{o=localStorage.getItem('lr3d-opts')==='1'}catch(e){};setOpt(o)}   // options row starts closed unless left open
 let so=0,sl='day',sf=75;try{so=0;sl=localStorage.getItem('lr3d-light')||'day';sf=+(localStorage.getItem('lr3d-lens')||75)}catch(e){}
-applyOption(so);applyLight(sl);setLens(sf);setView(0);
+applyOption(so);applyLight(sl);setLens(sf);setView(21);   // open at the gate, outside
 {let g='GD-1',e='EX-4';try{g=localStorage.getItem('lr3d-gate')||g;e=localStorage.getItem('lr3d-ext')||e}catch(x){};setGate(g);setExt(e)}
 document.querySelectorAll('#gateSeg button').forEach(x=>x.onclick=()=>setGate(x.dataset.g));document.querySelectorAll('#extSeg button').forEach(x=>x.onclick=()=>setExt(x.dataset.e));
 {let k='KT-1';try{k=localStorage.getItem('lr3d-finish')||k}catch(e){};setFinish(k)}
