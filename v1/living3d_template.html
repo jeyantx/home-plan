@@ -66,7 +66,7 @@ canvas{display:block;width:100%;height:100%}
   <button class="btn" id="optBtn" aria-pressed="false" title="Show or hide the gate, colour, finish and lens options">Options ▾</button>
  </div>
  <div class="row hidden" id="optRow">
-  <span class="lbl">Parking tile</span><div class="seg" id="ptileSeg"><button data-pt="PT-1" title="Grey herringbone (current), 400 x 400 mm"><i style="background:#8f8f8d"></i>PT-1</button><button data-pt="PT-2" title="Grey clover interlock, 400 x 400 mm"><i style="background:#7e807f"></i>PT-2</button><button data-pt="PT-3" title="Wood-look parquet, 400 x 400 mm"><i style="background:#a08466"></i>PT-3</button><button data-pt="PT-4" title="Charcoal, textured, 400 x 400 mm"><i style="background:#56595c"></i>PT-4</button><button data-pt="PT-5" title="Light grey, textured, 400 x 400 mm"><i style="background:#adafb1"></i>PT-5</button><button data-pt="PT-6" title="Blue-grey, textured, 400 x 400 mm"><i style="background:#7f8993"></i>PT-6</button></div>
+  <span class="lbl">Parking tile</span><div class="seg" id="ptileSeg"><button data-pt="PT-1" title="Grey herringbone (current), 400 x 400 mm"><i style="background:#8f8f8d"></i>PT-1</button><button data-pt="PT-2" title="Grey clover interlock, 400 x 400 mm"><i style="background:#7e807f"></i>PT-2</button><button data-pt="PT-3" title="Wood-look parquet, 400 x 400 mm"><i style="background:#a08466"></i>PT-3</button><button data-pt="PT-4" title="Charcoal, textured, 400 x 400 mm"><i style="background:#56595c"></i>PT-4</button><button data-pt="PT-5" title="Light grey, textured, 400 x 400 mm"><i style="background:#adafb1"></i>PT-5</button><button data-pt="PT-6" title="Blue-grey, textured, 400 x 400 mm"><i style="background:#7f8993"></i>PT-6</button><button data-pt="PT-7" title="Pale silver-grey, textured, 400 x 400 mm"><i style="background:#c4c5ca"></i>PT-7</button><button data-pt="PT-8" title="Light beige (sand), textured, 400 x 400 mm"><i style="background:#cdc3b4"></i>PT-8</button></div>
   <span class="lbl">Lens</span><div class="seg" id="lensSeg"><button data-f="60" title="Eye-like lens">60°</button><button data-f="75" title="Wide lens">75°</button></div>
   <span class="sub">↑↓ walk · ←→ turn · A/D slide · W/S tilt · Q/E lower/raise · Shift faster · Drag to look around · Scroll to walk · Right-drag to slide · Hover for names</span>
  </div>
@@ -171,7 +171,9 @@ const PTILES={'PT-1':{name:'Grey herringbone (Code36603 type)',sw:'#8f8f8d',tex:
   'PT-3':{name:'Wood-look parquet with a centre diamond',sw:'#a08466',tex:parquetTile,rough:0.62},
   'PT-4':{name:'Charcoal, textured',sw:'#56595c',tex:()=>plainTile('#56595c',451,false),rough:0.86},
   'PT-5':{name:'Light grey, textured',sw:'#adafb1',tex:()=>plainTile('#adafb1',452,true),rough:0.86},
-  'PT-6':{name:'Blue-grey, textured',sw:'#7f8993',tex:()=>plainTile('#7f8993',453,true),rough:0.86}};
+  'PT-6':{name:'Blue-grey, textured',sw:'#7f8993',tex:()=>plainTile('#7f8993',453,true),rough:0.86},
+  'PT-7':{name:'Pale silver-grey, textured',sw:'#c4c5ca',tex:()=>plainTile('#c4c5ca',454,true),rough:0.86},
+  'PT-8':{name:'Light beige (sand), textured',sw:'#cdc3b4',tex:()=>plainTile('#cdc3b4',455,true),rough:0.86}};
 function stoneTiles(base,seed,tx,ty,tileFt){return canvasTex(1024,1024*ty/tx,(g,w,h)=>{const r=rng(seed);g.fillStyle=base;g.fillRect(0,0,w,h);
   for(let i=0;i<9000;i++){const v=(r()-.5)*0.05;g.fillStyle=v>0?`rgba(255,255,255,${v})`:`rgba(0,0,0,${-v})`;g.fillRect(r()*w,r()*h,3,3)}
   for(let i=0;i<220;i++){g.fillStyle=`rgba(${r()<.5?'255,255,255':'120,110,95'},0.05)`;g.beginPath();g.ellipse(r()*w,r()*h,8+r()*40,4+r()*20,r()*3,0,7);g.fill()}
