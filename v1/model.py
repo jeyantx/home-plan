@@ -144,7 +144,7 @@ BRANCH_NOTES='''<section class="ask"><h2>Garden plan (branch garden-v1, for revi
 </ol></section>
 <section class="ask"><h2>Side garden utility and bedroom 2 window (branch utility-v1, for review)</h2>
 <ol>
-<li><b>Utility along GW-07</b>, just south of bore BR-01: washing machine FU-29 (front-load, 8 kg) and utility basin FU-30 (granite counter, deep steel sink, tall tap and a low bucket tap) on a 4" tiled platform FU-77 with a floor drain, with white tiles on GW-07 behind them. Tap, hose and a weatherproof socket for the machine on the wall. The way out of D-05 into the garden stays clear; the AC outdoor unit FU-47 moves south of window W-07.</li>
+<li><b>Utility along GW-07</b>, just south of bore BR-01: utility basin FU-30 (granite counter, deep steel sink, tall tap and a low bucket tap) on a 4" tiled platform FU-77 with a floor drain, with white tiles on GW-07 behind them. Tap, hose and a weatherproof socket for the machine on the wall. The way out of D-05 into the garden stays clear; the AC outdoor unit FU-47 moves south of window W-07. The washing machine FU-29 now stands in the bore court (covered), under the drying rack FU-75.</li>
 <li><b>D-05</b> opens out to the side garden, hinged at its north end so it folds back against the toilet-2 wall; a granite step FU-79 outside it, since its sill is 1' above the garden.</li>
 <li><b>Bedroom 2 back door D-10 removed.</b> The back wall gets one big picture window W-08 instead: 8'6" wide and 5' high with a low 2' sill, fixed glass in the middle and a sliding pane each side. In place of bars, an <b>invisible grill</b> of thin stainless-steel wires 2" apart, so the view of the back garden stays open. The back garden is reached through D-05 and the side garden.</li>
 </ol></section>
@@ -378,7 +378,7 @@ FURNITURE = [
  ('FU-70','G','Bath rack, 2 shelves',11.33,11.75,66.85,67.7,'over',None,'Toilet 2, wall-mounted on GW-16 in the shower, north of the door, for soap and shampoo'),
  ('FU-79','G','Step outside D-05',8.5,9.5,74.0,77.5,'plat',None,'Granite step, 6" up from the garden; D-05 is 1\' above the garden, so it is two 6" risers down to the garden; the door leaf clears the step'),
  ('FU-77','G','Utility platform',6.75,9.5,80.0,84.5,'plat',None,'Side garden utility, along GW-07 just south of bore BR-01, 4" above the garden, grey anti-skid tiles, floor drain in front of the machines; white tiles on GW-07 behind them'),
- ('FU-29','G','Washing machine, front-load 8 kg',7.5,9.45,80.25,82.25,'wm',None,'Side garden utility, against GW-07 on the platform, front to the east; 60 x 60 x 85 cm; tap, hose and a covered (IP55) socket on GW-07, drain to the floor trap'),
+ ('FU-29','G','Washing machine, front-load 8 kg',3.5,5.45,67.2,69.2,'wm',None,'Bore court G-16, under the terrace slab (no sun or rain), back to GW-17, front to the south; right below the drying rack FU-75, so you wash and hang in one place; tap, socket and drain come through GW-17 from the kitchen sink line; 60 x 60 x 85 cm; about 2\'8" clear in front, to BR-02; move it out if the bore is ever serviced'),
  ('FU-30','G','Utility wash basin with tap',8.0,9.5,82.5,84.25,'basin',None,'Side garden utility, against GW-07: granite counter 2\'9" high with a deep steel sink, tall swan-neck tap, a low tap for buckets, white tiles behind'),
  ('FU-31','G','Queen bed',13.75,20.25,85.0,90.0,'bed','x2','Bedroom 2, head to GW-05'),
  ('FU-32','G','Side table',18.75,20.25,83.25,84.75,'cab',None,'Bedroom 2'),

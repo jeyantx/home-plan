@@ -33,7 +33,11 @@ canvas{display:block;width:100%;height:100%}
 #panel ul{margin:0;padding-left:16px}#panel li{margin:3px 0}
 #panel .sw{display:inline-block;width:12px;height:12px;border-radius:3px;border:1px solid #0002;vertical-align:-2px;margin-right:5px}
 #status{position:absolute;left:12px;bottom:12px;background:rgba(20,22,25,.78);color:#fff;font-size:12.5px;padding:6px 10px;border-radius:8px;display:none}
-#loading{position:absolute;inset:0;display:grid;place-items:center;color:var(--muted)}
+#loading{position:absolute;inset:0;display:grid;place-items:center;color:var(--muted);background:var(--bg,#f4f1ea);z-index:5}
+#loading .ld{width:min(320px,80%);text-align:center;font-size:14px}
+#loading .bar{height:8px;border-radius:99px;background:#0001;margin-top:10px;overflow:hidden}
+#loading .bar i{display:block;height:100%;width:5%;background:var(--accent,#3f6f4f);border-radius:99px;transition:width .25s}
+#loading.over{background:rgba(244,241,234,.55)}
 #tourCap{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);background:rgba(20,22,25,.8);color:#fff;font-size:15px;font-weight:600;padding:8px 16px;border-radius:999px;display:none;pointer-events:none;white-space:nowrap}
 #tourCap small{font-weight:400;opacity:.8;margin-left:8px;font-size:12.5px}
 .btn{border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:8px;padding:6px 10px;font:inherit;font-size:13px;cursor:pointer}
@@ -72,7 +76,7 @@ canvas{display:block;width:100%;height:100%}
   <span class="lbl">Lens</span><div class="seg" id="lensSeg"><button data-f="60" title="Eye-like lens">60°</button><button data-f="75" title="Wide lens">75°</button></div>
  </div>
 </header>
-<div id="view"><div id="loading">Loading 3D…</div><div id="panel" class="hidden"></div><div id="status"></div><div id="tourCap"></div></div>
+<div id="view"><div id="loading"><div class="ld"><div id="ldText">Building the house…</div><div class="bar"><i id="ldBar"></i></div></div></div><div id="panel" class="hidden"></div><div id="status"></div><div id="tourCap"></div></div>
 </div>
 <div id="tip"></div>
 <script>window.PLAN=__PLAN__;</script>
@@ -119,6 +123,7 @@ let photo=false, pt=null; const PHOTO_SAMPLES=256;
 function invalidate(){dirty=true;if(photo&&pt)pt.updateCamera()}
 
 // ---------------- textures: real CC0 scans from Poly Haven, stored locally in assets/ ----------------
+const dl={a:0,b:0};THREE.DefaultLoadingManager.onProgress=(u,a,b)=>{dl.a=a;dl.b=b};   // download count for the loading bar
 const loader=new THREE.TextureLoader(); let pending=0;
 function tex(path,srgb,repeatM){pending++;const t=loader.load(path,()=>{pending--;renderer.shadowMap.needsUpdate=true;invalidate()},undefined,()=>{pending--});
   t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(1/repeatM,1/repeatM);t.anisotropy=8;if(srgb)t.colorSpace=THREE.SRGBColorSpace;return t}
@@ -1401,9 +1406,15 @@ function vfrMats(){const P=(c,o={})=>new THREE.MeshPhysicalMaterial({color:c,rou
     'glass.001':lens,'glass.002':lens,mirro:mirror,mirror,orange_plastic:amber,yellowplastic:amber,'yellowplastic.001':amber,yellow_plastic:amber,
     redplastic:redl,red:redl,green:P('#1f9e3a'),whiteplastic:white,Material:screen,'Material.006':white,'Material.007':white,'':blk};
   return new Proxy(m,{get:(t,k)=>k in t?t[k]:blk})}
-// side-garden utility along GW-07, just south of bore BR-01: platform FU-77, washing machine FU-29 and utility basin FU-30 with their backs to the wall, fronts to the garden (east)
-{const pf=fuG['FU-77'],wm=fuG['FU-29'],bs=fuG['FU-30'];
- if(pf&&wm&&bs){const PT=GRD+0.33,T=(f,t)=>`${f.id} · ${f.name} · ${t||f.note}`,WX=9.5;   // WX: the garden face of GW-07
+// washing machine FU-29 in the bore court, under the drying rack FU-75: back to GW-17, front to the south; tap, socket and drain through GW-17 from the kitchen side
+{const wm=fuG['FU-29'];if(wm){const t=`${wm.id} · ${wm.name} · ${wm.note}`,CZ=-0.97,cx=(wm.x1+wm.x2)/2,cy=(wm.y1+wm.y2)/2,Y0=67.125,chrome=std({color:'#e3e6e9',roughness:0.12,metalness:1});
+  placeAppliance('assets/appliances/washing-machine.glb',cx,cy,CZ,0,wmMat,t);   // front to the south, toward BR-02
+  box(wm.x2-0.45,wm.x2-0.33,Y0,Y0+0.14,CZ+3.55,CZ+3.62,chrome,{tip:`${wm.id} · washing machine tap (angle valve) on GW-17`});
+  box(wm.x1+0.1,wm.x1+0.45,Y0,Y0+0.1,CZ+3.4,CZ+3.75,std({color:'#e4e4e0',roughness:0.5}),{tip:`${wm.id} · switch socket with a flip cover`});
+  box(cx-0.15,cx+0.15,wm.y2+0.25,wm.y2+0.5,CZ,CZ+0.012,MAT.blackMetal,{cast:false,tip:`${wm.id} · floor drain (trap) for the washing machine`})}}
+// side-garden utility along GW-07, just south of bore BR-01: platform FU-77 and utility basin FU-30 with its back to the wall, front to the garden (east)
+{const pf=fuG['FU-77'],bs=fuG['FU-30'];
+ if(pf&&bs){const PT=GRD+0.33,T=(f,t)=>`${f.id} · ${f.name} · ${t||f.note}`,WX=9.5;   // WX: the garden face of GW-07
   const tile=std({map:canvasTex(256,256,(g,w,h)=>{g.fillStyle='#f4f4f1';g.fillRect(0,0,w,h);g.fillStyle='#d6d4ce';for(let i=0;i<=4;i++){g.fillRect(i*w/4-1,0,2,h);g.fillRect(0,i*h/4-1,w,2)}},0.6),roughness:0.15,metalness:0.0});
   const ftile=std({map:canvasTex(256,256,(g,w,h)=>{g.fillStyle='#8f9294';g.fillRect(0,0,w,h);const r=rng(4);for(let i=0;i<900;i++){g.fillStyle=r()<0.5?'#83878a':'#9a9d9f';g.fillRect(r()*w,r()*h,2,2)}g.fillStyle='#6f7376';g.fillRect(0,0,w,2);g.fillRect(0,0,2,h)},0.6),roughness:0.85});
   const white=std({color:'#f3f3f1',roughness:0.32,metalness:0.08}),grey=std({color:'#cfd2d5',roughness:0.4,metalness:0.2}),chrome=std({color:'#e3e6e9',roughness:0.12,metalness:1}),
@@ -1412,14 +1423,8 @@ function vfrMats(){const P=(c,o={})=>new THREE.MeshPhysicalMaterial({color:c,rou
   const B=(u1,u2,v1,v2,z1,z2,mt,tip)=>box(WX-v2,WX-v1,u1,u2,z1,z2,mt,{tip}),Pw=(u,v,z)=>new THREE.Vector3(mx(WX-v),m(z),m(u));
   {const st=fuG['FU-79'];if(st)box(st.x1,st.x2,st.y1,st.y2,GRD-0.25,GRD+0.5,MAT.stepStone,{tip:`${st.id} · ${st.name} · ${st.note}`})}
   box(pf.x1,pf.x2,pf.y1,pf.y2,GRD-0.25,PT,ftile,{tip:T(pf)});
-  B(82.3,82.55,2.2,2.45,PT,PT+0.012,MAT.blackMetal,`${pf.id} · floor drain (trap) for the washing machine and the basin`);
-  B(pf.y1,pf.y2,-0.005,0.025,PT,PT+4.0,tile,T(pf,'white glazed wall tiles, 1\' x 1\', on GW-07 behind the machines'));
-  // washing machine
-  {const u1=wm.y1+0.02,u2=wm.y2-0.02,v1=WX-wm.x2,v2=WX-wm.x1,cu=(u1+u2)/2,zb=PT+0.08,zt=PT+2.79,t=T(wm);
-   placeAppliance('assets/appliances/washing-machine.glb',WX-(v1+v2)/2,cu,PT,Math.PI/2,wmMat,t);   // front to the east (the garden)
-   B(u2-0.45,u2-0.33,0,0.14,GRD+3.55,GRD+3.62,chrome,`${wm.id} · washing machine tap (angle valve)`);
-   const hose=new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([Pw(u2-0.39,0.14,GRD+3.55),Pw(u2-0.39,0.2,GRD+3.3),Pw(u2-0.5,v1+0.05,zt+0.05),Pw(u2-0.5,v1+0.02,zt-0.3)]),20,m(0.03),8),grey);scene.add(hose);named(hose,`${wm.id} · inlet hose`);
-   B(u1+0.1,u1+0.45,0,0.1,GRD+3.4,GRD+3.75,std({color:'#e4e4e0',roughness:0.5}),`${wm.id} · weatherproof (IP55) switch socket with a flip cover`);}
+  B(82.3,82.55,2.2,2.45,PT,PT+0.012,MAT.blackMetal,`${pf.id} · floor drain (trap) for the basin`);
+  B(pf.y1,pf.y2,-0.005,0.025,PT,PT+4.0,tile,T(pf,'white glazed wall tiles, 1\' x 1\', on GW-07 behind the basin'));
   // utility basin: granite counter on two granite legs, deep steel sink, swan-neck tap, low tap for buckets
   {const u1=bs.y1,u2=bs.y2,vf=WX-bs.x1,cu=(u1+u2)/2,zt=PT+2.75,t=T(bs),gr=MAT.stepStone,su1=u1+0.22,su2=u2-0.22,sv1=0.2,sv2=vf-0.2;
    for(const [a2,b2] of [[u1+0.05,u1+0.2],[u2-0.2,u2-0.05]])B(a2,b2,0.1,vf-0.1,PT,zt-0.12,gr,t);
@@ -1531,6 +1536,24 @@ function applyOption(i){const o=OPTIONS[i];curOpt=i;
   try{localStorage.setItem('lr3d-opt',i)}catch(e){}
   renderer.shadowMap.needsUpdate=true;rebuildPhoto();invalidate();
 }
+// evening lights: the house has about 60 (16 cove strips, 30 downlights and spots, 14 lamps). Lighting every surface with all of them is what hung low-end machines.
+// So in the normal view only the nearest few are real lights, from a fixed pool that follows the camera (the light count never changes, so shaders compile once);
+// all the originals stay in the scene, switched off, and are used as they are in Photo mode.
+const NIGHT=[...towerLights,...downs,...coveLights,lampLight];
+const POOL={point:[],spot:[],rect:[]},PN={point:6,spot:4,rect:2};
+for(let i=0;i<PN.point;i++){const l=new THREE.PointLight('#ffd7a3',0,m(8),2);l.visible=false;scene.add(l);POOL.point.push(l)}
+for(let i=0;i<PN.spot;i++){const l=new THREE.SpotLight('#ffd7a3',0,m(16),0.75,0.6,2);l.visible=false;scene.add(l,l.target);POOL.spot.push(l)}
+for(let i=0;i<PN.rect;i++){const l=new THREE.RectAreaLight('#ffcf94',0,1,1);l.visible=false;scene.add(l);POOL.rect.push(l)}
+const poolAll=()=>[...POOL.point,...POOL.spot,...POOL.rect];
+const nightSrc={point:NIGHT.filter(l=>l.isPointLight),spot:NIGHT.filter(l=>l.isSpotLight),rect:NIGHT.filter(l=>l.isRectAreaLight)};
+for(const l of NIGHT){l.updateWorldMatrix(true,false);l.userData.wp=l.getWorldPosition(new THREE.Vector3());if(l.isSpotLight){l.target.updateWorldMatrix(true,false);l.userData.wt=l.target.getWorldPosition(new THREE.Vector3())}}
+let poolAt=null;
+function syncPool(force){const c=camera.position;if(!force&&poolAt&&poolAt.distanceTo(c)<m(0.6))return;poolAt=c.clone();
+  for(const k of ['point','spot','rect']){const src=nightSrc[k].filter(l=>l.intensity>0).sort((a,b)=>a.userData.wp.distanceToSquared(c)-b.userData.wp.distanceToSquared(c));
+    POOL[k].forEach((p,i)=>{const o=src[i];if(!o){p.intensity=0;return}p.position.copy(o.userData.wp);p.color.copy(o.color);p.intensity=o.intensity;
+      if(k!=='rect'){p.distance=o.distance;p.decay=o.decay}
+      if(k==='spot'){p.angle=o.angle;p.penumbra=o.penumbra;p.target.position.copy(o.userData.wt);p.target.updateMatrixWorld()}
+      if(k==='rect'){p.width=o.width;p.height=o.height;p.quaternion.copy(o.getWorldQuaternion(new THREE.Quaternion()))}})}}
 function applyLight(mode){const day=mode==='day';curLight=mode;
   sun.visible=day;sun.intensity=day?4.0:0;hemi.intensity=day?0.3:0.03;
   scene.environment=(photo&&day&&skyTex)?skyTex:roomEnv;scene.environmentIntensity=day?(photo?1.0:0.55):0.05;   // raster: neutral fill; photo: real sky, walls occlude it
@@ -1539,6 +1562,7 @@ function applyLight(mode){const day=mode==='day';curLight=mode;
   towerLights.forEach(l=>{l.visible=!day;l.intensity=photo?1.2:2.2});downs.forEach(s=>{s.visible=!day;s.intensity=22});
   MAT.led.emissiveIntensity=day?0:(photo?14:3);MAT.paper.emissiveIntensity=day?0:(photo?3:1.6);lampLight.visible=!day;lampLight.intensity=photo?6:14;
   renderer.toneMappingExposure=photo?(day?2.6:1.5):(day?1.0:1.15);
+  for(const l of NIGHT)l.visible=photo&&!day&&!coveLights.includes(l);for(const l of poolAll())l.visible=!day&&!photo;if(!day&&!photo)syncPool(true);   // normal view: the light pool; Photo: the real lights
   document.querySelectorAll('#lightSeg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.l===mode));
   try{localStorage.setItem('lr3d-light',mode)}catch(e){}
   renderer.shadowMap.needsUpdate=true;rebuildPhoto();invalidate();
@@ -1600,7 +1624,10 @@ function setView(i){const v=VIEWS[i];applyVis(v);camera.position.set(mx(v.p[0]),
 function showArea(a){areaSel.value=a;document.querySelectorAll('.cams').forEach(g=>g.classList.toggle('off',g.dataset.area!==String(a)))}
 function applyLook(){pitch=Math.max(-1.55,Math.min(1.55,pitch));camera.rotation.set(pitch,yaw,0)}
 function setLens(f){hfov=f;applyFov();document.querySelectorAll('#lensSeg button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.f===f));try{localStorage.setItem('lr3d-lens',f)}catch(e){};invalidate()}
-document.querySelectorAll('#lightSeg button').forEach(b=>b.onclick=()=>applyLight(b.dataset.l));
+// switching Day / Evening: if anything still needs compiling, show the loader instead of freezing
+async function switchLight(mode){if(preparing||mode===curLight)return;applyLight(mode);const t=setTimeout(()=>ldShow(mode==='day'?'Switching to day…':'Switching to evening…',0.6,true),150);
+  preparing=true;await renderer.compileAsync(scene,camera);preparing=false;clearTimeout(t);ldHide();invalidate()}
+document.querySelectorAll('#lightSeg button').forEach(b=>b.onclick=()=>switchLight(b.dataset.l));
 document.querySelectorAll('.cams button').forEach(b=>b.onclick=()=>setView(+b.dataset.c));
 document.querySelectorAll('#floorSeg button').forEach(b=>b.onclick=()=>setFloor(b.dataset.fl));
 areaSel.onchange=()=>setView(+document.querySelector(`.cams[data-area="${areaSel.value}"] button`).dataset.c);   // jump to the first view of that area
@@ -1652,6 +1679,7 @@ function setRatio(k){frameRatio=/^\d+:\d+$/.test(k)?k:'fill';document.querySelec
 document.querySelectorAll('#ratioSeg button').forEach(x=>x.onclick=()=>setRatio(x.dataset.r));
 {let k='fill';try{k=localStorage.getItem('lr3d-ratio')||k}catch(e){};frameRatio=/^\d+:\d+$/.test(k)?k:'fill';document.querySelectorAll('#ratioSeg button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.r===frameRatio))}
 addEventListener('resize',resize);resize();
+if(window.ResizeObserver)new ResizeObserver(()=>resize()).observe(view);   // the toolbar can wrap after load and change the view height
 {let o=false;try{o=localStorage.getItem('lr3d-opts')==='1'}catch(e){};setOpt(o)}   // options row starts closed unless left open
 let so=0,sl='day',sf=75;try{so=0;sl=localStorage.getItem('lr3d-light')||'day';sf=+(localStorage.getItem('lr3d-lens')||75)}catch(e){}
 applyOption(so);applyLight(sl);setLens(sf);setView(21);   // open at the gate, outside
@@ -1782,8 +1810,20 @@ window.__tourSim=()=>{if(!tour.segs){const b=buildTour();tour.segs=b.segs;tour.T
   return {T:tour.T.toFixed(1),maxDegPerS:(mx_*180/Math.PI).toFixed(1),at:at.toFixed(1),segT}};
 window.__tourAt=t=>{if(!tour.segs){const b=buildTour();tour.segs=b.segs;tour.T=b.T}tourPose(t,0);yaw=yaw_;pitch=pitch_;applyLook();invalidate();
   return [(-camera.position.x/F).toFixed(2),(camera.position.z/F).toFixed(2),(camera.position.y/F).toFixed(2),tour.T.toFixed(1),tour.label]};
-document.getElementById('loading').remove();
+// loading: a bar for the downloads (textures, models), then the shaders for both day and evening are compiled up front, so switching later does not hang
+const ld=document.getElementById('loading'),ldText=document.getElementById('ldText'),ldBar=document.getElementById('ldBar');
+let preparing=true;
+function ldShow(t,p,over){ld.style.display='grid';ld.classList.toggle('over',!!over);ldText.textContent=t;if(p!=null)ldBar.style.width=Math.round(p*100)+'%'}
+function ldHide(){ld.style.display='none'}
+const tick=()=>new Promise(r=>setTimeout(r,30));
+(async()=>{const t0=performance.now();
+  while(dl.b&&dl.a<dl.b&&performance.now()-t0<25000){ldShow(`Loading textures and models · ${dl.a} of ${dl.b}`,0.1+0.6*dl.a/dl.b);await new Promise(r=>setTimeout(r,120))}
+  const mode=curLight,vis=l=>{const d=l==='day';sun.visible=d&&!photo;for(const p of poolAll())p.visible=!d&&!photo};
+  ldShow('Preparing day lighting…',0.75);await tick();vis('day');try{await renderer.compileAsync(scene,camera)}catch(e){}
+  ldShow('Preparing evening lighting…',0.9);await tick();vis('eve');syncPool(true);try{await renderer.compileAsync(scene,camera)}catch(e){}
+  applyLight(mode);ldShow('Ready',1);await tick();preparing=false;ldHide();renderer.shadowMap.needsUpdate=true;invalidate()})();
 renderer.setAnimationLoop(()=>{
+  if(preparing)return;
   walk();
   if(carAnim.on)animStep(performance.now());
   if(tour.on)tourStep(performance.now());
@@ -1793,7 +1833,7 @@ renderer.setAnimationLoop(()=>{
     pt.renderSample();statusEl.textContent=pt.isCompiling?'Compiling ray tracer…':`Ray tracing: ${Math.floor(pt.samples)} / ${PHOTO_SAMPLES} samples · keep still`;
     if(saveReq){doSave();saveReq=false} return}
   const now=performance.now();
-  if(dirty){renderer.render(scene,camera);dirty=false;lastChange=now;hqDone=false;}
+  if(dirty){if(curLight!=='day')syncPool();renderer.render(scene,camera);dirty=false;lastChange=now;hqDone=false;}
   else if(!hqDone&&now-lastChange>220){composer.render();hqDone=true;}
   if(saveReq&&hqDone){composer.render();doSave();saveReq=false}
 });
