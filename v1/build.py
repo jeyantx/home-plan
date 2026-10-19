@@ -194,14 +194,14 @@ _how=next(s for s in _secs if _title(s).startswith('How to read'))
 # 2D tab: the plan with only the room list and the reading guide beside it
 open(ROOT+'plan-2d.html','w').write(out.replace(panel,_how).replace(f'<div><h1>Home plan · {BRANCH}</h1></div>',''))   # the app's tab already names it
 GROUPS=[('overview','Overview',lambda t:t.startswith(('Areas','Staircases','Existing on site','Still open','How to read'))),
-        ('details','Details',lambda t:t.startswith(('Water and drainage','Parking plan','Outside windows','Raised site levels','Tree pit','Rooms and areas','Walls','Doors, windows','Structure','Pillars','Beams','Furniture')))]
+        ('details','Details',lambda t:t.startswith(('Modular kitchen','Side garden utility','Water and drainage','Parking plan','Outside windows','Raised site levels','Tree pit','Rooms and areas','Walls','Doors, windows','Structure','Pillars','Beams','Furniture')))]
 _tidy=lambda s:_re.sub(r' \((branch [\w-]+|approved), ?(from [\w-]+)?[^)]*\)','',s)
 _slug=lambda t:'d-'+_re.sub(r'[^a-z0-9]+','-',t.lower()).strip('-')[:40]
 _used=set();_tabs=[]
 for key,name,test in GROUPS:
     picked=[_tidy(s) for i,s in enumerate(_secs) if i not in _used and test(_title(s)) and not _used.add(i)]
     if key=='details':   # one page, in a sensible order, with short jump links to each part
-        ORDER=[('Water and drainage','Water and drainage'),('Parking plan','Parking'),('Outside windows','Outside windows'),('Raised site levels','Site levels'),('Tree pit','Tree pit'),('Rooms and areas','Rooms'),('Walls','Walls'),
+        ORDER=[('Modular kitchen','Modular kitchen'),('Side garden utility','Utility and window'),('Water and drainage','Water and drainage'),('Parking plan','Parking'),('Outside windows','Outside windows'),('Raised site levels','Site levels'),('Tree pit','Tree pit'),('Rooms and areas','Rooms'),('Walls','Walls'),
                ('Doors, windows','Doors and windows'),('Structure','Structure'),('Pillars','Pillars'),('Beams','Beams'),('Furniture I will','Furniture plan'),('Furniture and fixtures','Furniture list')]
         rank=lambda s:next((i for i,(p,_) in enumerate(ORDER) if _title(s).startswith(p)),99)
         chip=lambda s:next((c for p,c in ORDER if _title(s).startswith(p)),_title(s))
@@ -270,10 +270,11 @@ td.c{{font-weight:700;white-space:nowrap;color:var(--accent)}}
 .wide{{overflow-x:auto}}
 @media (max-width:640px){{header{{flex-direction:column;align-items:stretch;gap:0}}h1{{margin:0 0 4px}}.doc{{padding:12px 10px 40px}}}}
 </style></head><body>
-<header><h1>Home Plan</h1><nav role="tablist">{_btn('3d','3D view')}{_btn('2d','2D plan')}{''.join(_btn(k,n) for k,n,b in _tabs if b)}</nav></header>
+<header><h1>Home Plan</h1><nav role="tablist">{_btn('3d','3D view')}{_btn('2d','2D plan')}{_btn('kitchen','Kitchen')}{''.join(_btn(k,n) for k,n,b in _tabs if b)}</nav></header>
 <main>
 <div class="pane" id="p-3d"><iframe data-src="3d/living-room.html" title="3D view" allow="fullscreen"></iframe></div>
 <div class="pane" id="p-2d"><iframe data-src="plan-2d.html" title="2D plan"></iframe></div>
+<div class="pane" id="p-kitchen"><iframe data-src="3d/kitchen.html" title="Modular kitchen"></iframe></div>
 {''.join(f'<div class="pane" id="p-{k}"><div class="doc wide">{b}</div></div>' for k,n,b in _tabs if b)}
 </main>
 <script>

@@ -720,7 +720,7 @@ function cabRun(id,what,x1,x2,y1,y2,z1,z2,face,segs,mat,plinth){
   const handle=(a,b,z)=>{const L=Math.min(0.9,(b-a)*0.6),m0=(a+b)/2;lb(m0-L/2,m0+L/2,-0.04,0,z-0.03,z+0.03,MAT.blackMetal,{cast:false,tip:'Handle, matte black'})};
   const hz=z1>=4?fz1+0.15:(z2>5?3.6:fz2-0.15);   // wall cabinets: handle at the bottom; tall units: at hand height; base units: at the top
   for(const [a,b,type] of segs){
-    if(type==='drawers'){const n=3,h=(fz2-fz1)/n;for(let i=0;i<n;i++){const za=fz1+i*h+g,zb=fz1+(i+1)*h-g;panel(a+g,b-g,za,zb);handle(a,b,zb-0.15)}}
+    if(type==='drawers'||type==='drawers2'){const n=type==='drawers2'?2:3,h=(fz2-fz1)/n;for(let i=0;i<n;i++){const za=fz1+i*h+g,zb=fz1+(i+1)*h-g;panel(a+g,b-g,za,zb);handle(a,b,zb-0.15)}}
     else if(type==='door2'){const m0=(a+b)/2;panel(a+g,m0-g,fz1,fz2);panel(m0+g,b-g,fz1,fz2);handle(a,m0,hz);handle(m0,b,hz)}
     else if(type==='glass'){const w=0.05,zm=(zb0+z2)/2,tg=t+' · glass door, black frame';
       lb(a,b,D-0.05,D,zb0,z2,mat);lb(a,b,SH,D-0.05,z2-0.05,z2,mat);lb(a,b,SH,D-0.05,zb0,zb0+0.05,mat);lb(a,a+0.05,SH,D-0.05,zb0+0.05,z2-0.05,mat);lb(b-0.05,b,SH,D-0.05,zb0+0.05,z2-0.05,mat);
@@ -734,12 +734,12 @@ function cabRun(id,what,x1,x2,y1,y2,z1,z2,face,segs,mat,plinth){
 {const X1=3.5,ky2=66.375,bY=64.375,W06=P.openings.find(o=>o.id==='W-06');
  // base cabinets: east run FU-15 on GW-01 (front faces +x), back run FU-16 on GW-14 (front faces -y); the corner is a blind corner with a carousel
  cabRun('FU-15','Base cabinets, east',X1,5.5,59.125,ky2,0,KCH-KTOP,'x+',[[60.375,62.0,'door'],[62.0,bY,'drawers']],MAT.kLow,true);
- cabRun('FU-16','Base cabinets, back',5.5,8.6,bY,ky2,0,KCH-KTOP,'y-',[[5.5,6.45,'drawers'],[6.45,8.6,'door2']],MAT.kLow,true);
- const LOW=2.0;cabRun('FU-16.2','Low counter, wet grinder and water',8.6,12.125,bY,ky2,0,LOW-KTOP,'y-',[[8.6,9.875,'door'],[9.875,12.125,'door2']],MAT.kLow,true);
+ cabRun('FU-16','Base cabinets, back',5.5,8.6,bY,ky2,0,KCH-KTOP,'y-',[[5.5,6.45,'door'],[6.45,8.6,'door2']],MAT.kLow,true);   // K-03 bottle pull-out, K-04 sink unit
+ const LOW=2.0;cabRun('FU-16.2','Low counter, wet grinder and water',8.6,12.125,bY,ky2,0,LOW-KTOP,'y-',[[8.6,9.875,'door'],[9.875,12.125,'drawers2']],MAT.kLow,true);   // K-05 water pots, K-06 rice and atta drawers
  box(8.6,12.125,bY-0.06,ky2,LOW-KTOP,LOW,MAT.kTop,{tip:'FU-16.2 · Low counter top, 2\' from the floor'});
  box(X1,5.56,59.125,ky2,KCH-KTOP,KCH,MAT.kTop,{tip:'Counter top, 40 mm, east run'});box(5.56,8.6,bY-0.06,ky2,KCH-KTOP,KCH,MAT.kTop,{tip:'Counter top, 40 mm, back run'});
  // wall cabinets FU-19 (GW-14), FU-19.2 and FU-19.3 (GW-01, either side of W-06)
- cabRun('FU-19','Wall cabinets, back',4.69,9.875,ky2-1.25,ky2-0.012,UPZ1,UPZ2,'y-',[[4.75,6.5,'door'],[6.5,8.25,'glass'],[8.25,9.875,'door']],MAT.kUp,false);
+ cabRun('FU-19','Wall cabinets, back',4.69,9.875,ky2-1.25,ky2-0.012,UPZ1,UPZ2,'y-',[[4.75,6.5,'door'],[6.5,8.25,'door'],[8.25,9.875,'door']],MAT.kUp,false);   // K-13 over the sink is the dish drainer
  cabRun('FU-19.2','Wall cabinets, east corner',X1+0.012,4.75,65.0,ky2-0.012,UPZ1,UPZ2,'x+',[],MAT.kUp,false);   // blind corner behind FU-19
  cabRun('FU-19.3','Wall cabinets, east',X1+0.012,4.75,59.137,61.0,UPZ1,UPZ2,'x+',[[59.137,61.0,'glass']],MAT.kUp,false);
  // top row to the ceiling (FU-68 on GW-14, FU-69 on GW-01, right across above the window and chimney), with a black shadow line under it
@@ -765,14 +765,14 @@ function cabRun(id,what,x1,x2,y1,y2,z1,z2,face,segs,mat,plinth){
  const tx=(s.x1+s.x2)/2;cyl(tx,s.y2-0.05,KCH,KCH+1.15,0.05,MAT.blackMetal,{tip:'Sink tap, gooseneck, matte black'});box(tx-0.04,tx+0.04,s.y2-0.7,s.y2-0.05,KCH+1.1,KCH+1.18,MAT.blackMetal,{tip:'Sink tap, gooseneck, matte black'});
  const mg=fuG['FU-64'];box(mg.x1+0.05,mg.x2-0.05,mg.y1+0.1,mg.y2-0.1,KCH,KCH+0.42,MAT.appWhite,{round:0.06,tip:`FU-64 · Mixer grinder · ${mg.note}`});
  cyl((mg.x1+mg.x2)/2,(mg.y1+mg.y2)/2,KCH+0.42,KCH+1.15,0.22,std({color:'#d8dde0',roughness:0.15,metalness:0.4}),{tip:'Mixer jar',rTop:0.26});
- {const ro=fuG['FU-66'],px=(ro.x1+ro.x2)/2;cyl(px,ro.y1-0.25,LOW,LOW+1.0,0.38,MAT.steel,{tip:'Water pot, steel, filled from the RO tap',rTop:0.3});cyl(px-0.9,ro.y1-0.3,LOW,LOW+0.85,0.32,std({color:'#b4703f',roughness:0.35,metalness:0.7}),{tip:'Water pot, copper',rTop:0.24})}
+ {const ro=fuG['FU-66'],px=(ro.x1+ro.x2)/2;cyl(px,ro.y1-0.25,LOW,LOW+1.0,0.38,MAT.steel,{tip:'Water pot, steel, filled from the RO tap',rTop:0.3});cyl(px+0.9,ro.y1-0.3,LOW,LOW+0.85,0.32,std({color:'#b4703f',roughness:0.35,metalness:0.7}),{tip:'Water pot, copper',rTop:0.24})}
  const ro=fuG['FU-66'];box(ro.x1,ro.x2,ro.y1,ro.y2-0.012,3.4,4.75,MAT.appWhite,{round:0.06,tip:`FU-66 · RO water purifier · ${ro.note}`});box(ro.x1+0.1,ro.x2-0.1,ro.y1-0.01,ro.y1,4.15,4.45,MAT.blackGlass,{cast:false,tip:'RO purifier display'});
  cyl((ro.x1+ro.x2)/2,ro.y1+0.05,3.2,3.4,0.03,MAT.blackMetal,{tip:'RO tap'});
  // wet grinder FU-65 on the 2' low counter FU-16.2
  const wg=fuG['FU-65'],wx=(wg.x1+wg.x2)/2,wy=(wg.y1+wg.y2)/2,WZ=LOW;cyl(wx,wy,WZ,WZ+0.38,0.6,MAT.appWhite,{tip:`FU-65 · Wet grinder, table-top · ${wg.note}`,rTop:0.55});
  cyl(wx,wy,WZ+0.38,WZ+1.0,0.44,MAT.steel,{tip:'Wet grinder drum, steel'});cyl(wx,wy,WZ+1.0,WZ+1.08,0.46,std({color:'#d8dde0',roughness:0.2}),{tip:'Wet grinder lid'});
  // breakfast counter FU-17 on GW-13 under W-12 (front faces +y), microwave FU-67 on its west end
- const b=fuG['FU-17'];cabRun('FU-17','Breakfast counter',b.x1,b.x2,b.y1+0.012,b.y2,0,2.87,'y+',[[5.5,7.1,'door'],[7.1,8.7,'door'],[8.7,10.3,'door'],[10.3,11.9,'door'],[11.9,13.5,'door']],MAT.kLow,true);
+ const b=fuG['FU-17'];cabRun('FU-17','Breakfast counter',b.x1,b.x2,b.y1+0.012,b.y2,0,2.87,'y+',[[5.5,7.1,'door'],[7.1,8.7,'drawers'],[8.7,10.3,'door'],[10.3,11.9,'drawers'],[11.9,13.5,'door']],MAT.kLow,true);
  box(b.x1,b.x2,b.y1+0.012,b.y2+0.06,2.87,2.99,MAT.kTop,{tip:'Breakfast counter top, 40 mm'});
  const mw=fuG['FU-67'];box(mw.x1,mw.x2,mw.y1+0.05,mw.y2-0.05,2.99,3.95,std({color:'#3a3c3f',roughness:0.4,metalness:0.4}),{round:0.04,tip:`FU-67 · Microwave oven · ${mw.note}`});
  box(mw.x1+0.08,mw.x2-0.45,mw.y2-0.05,mw.y2-0.03,3.1,3.85,MAT.blackGlass,{cast:false,tip:'Microwave door, black glass'});

@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Modular Kitchen</title>
+<style>
+:root{--bg:#f4f2ee;--panel:#ffffff;--ink:#1f2328;--muted:#5d646d;--line:#dcd8d0;--accent:#2f6f4f;--accent-ink:#fff;--chip:#eef3ef}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#16181b;--panel:#1f2226;--ink:#e8e6e1;--muted:#a3a8ae;--line:#33373c;--accent:#5fb08a;--accent-ink:#0d1a13;--chip:#23302a}}
+:root[data-theme="dark"]{--bg:#16181b;--panel:#1f2226;--ink:#e8e6e1;--muted:#a3a8ae;--line:#33373c;--accent:#5fb08a;--accent-ink:#0d1a13;--chip:#23302a}
+*{box-sizing:border-box}html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font:14px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;display:flex;flex-direction:column}
+header{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:8px 14px;background:var(--panel);border-bottom:1px solid var(--line)}
+h1{font-size:15px;margin:0 6px 0 0;font-weight:650}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:8px;padding:6px 11px;font:inherit;font-size:13px;cursor:pointer}
+.btn[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:600}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{border:0;background:transparent;color:var(--ink);padding:6px 10px;font:inherit;font-size:13px;cursor:pointer}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);font-weight:600}
+.sp{margin-left:auto}
+main{flex:1;min-height:0;display:flex}
+#view{flex:1;position:relative;min-width:0}
+#view canvas{display:block}
+#hint{position:absolute;left:12px;bottom:10px;background:rgba(20,22,25,.72);color:#fff;font-size:12px;padding:5px 10px;border-radius:8px;pointer-events:none}
+#tip{position:absolute;pointer-events:none;background:#1f2328;color:#fff;font-size:12.5px;line-height:1.35;padding:6px 9px;border-radius:7px;max-width:320px;display:none;z-index:5}
+#tip b{color:#9fe0bf}
+aside{width:380px;flex:none;border-left:1px solid var(--line);background:var(--panel);overflow:auto;padding:12px 14px 24px}
+aside.off{display:none}
+aside h2{font-size:12px;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin:14px 0 6px}
+aside h2:first-child{margin-top:0}
+.t{width:100%;border-collapse:collapse;font-size:12.5px}
+.t td,.t th{border-bottom:1px solid var(--line);padding:5px 4px;vertical-align:top;text-align:left}
+.t th{color:var(--muted);font-weight:600}
+.t tr.mod{cursor:pointer}.t tr.mod:hover td{background:var(--chip)}
+.t tr.sel td{background:var(--chip)}
+td.c{font-weight:700;color:var(--accent);white-space:nowrap}
+.sub{color:var(--muted);font-size:12px}
+ul{margin:0;padding-left:18px}li{margin:3px 0}
+.lab{font:600 10px/1.2 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:#fff;background:rgba(31,35,40,.82);padding:2px 6px;border-radius:5px;white-space:nowrap;pointer-events:none}
+.lab.dim{background:rgba(47,111,79,.92)}
+.lab.small{font-weight:500;font-size:9.5px;background:rgba(31,35,40,.7)}
+.nolab .lab{display:none}
+@media (max-width:760px){aside{width:100%;max-height:40vh;border-left:0;border-top:1px solid var(--line)}main{flex-direction:column}}
+</style>
+<script type="importmap">{"imports":{"three":"./vendor/three/build/three.module.js","three/addons/":"./vendor/three/examples/jsm/"}}</script>
+</head><body>
+<header>
+ <h1>Modular kitchen · KT-1</h1>
+ <button class="btn" id="openAll">Open all</button><button class="btn" id="closeAll">Close all</button>
+ <button class="btn" id="sizes" aria-pressed="true" title="Show the sizes of every unit, door and drawer">Sizes</button>
+ <button class="btn" id="walls" aria-pressed="true" title="Show or hide the kitchen walls">Walls</button>
+ <div class="seg" id="views"><button data-v="all" aria-pressed="true">Whole kitchen</button><button data-v="east">East run</button><button data-v="back">Back run</button><button data-v="bf">Breakfast counter</button><button data-v="up">Wall units</button></div>
+ <button class="btn sp" id="panelBtn" aria-pressed="true">Unit list</button>
+</header>
+<main>
+ <div id="view"><div id="tip"></div><div id="hint">Click a door or drawer to open or close it · drag to turn · scroll to zoom · right-drag to move</div></div>
+ <aside id="panel"></aside>
+</main>
+<script>window.PLAN=__PLAN__;</script>
+<script type="module">
+import * as THREE from 'three';
+import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
+import {CSS2DRenderer,CSS2DObject} from 'three/addons/renderers/CSS2DRenderer.js';
+const P=window.PLAN,K=P.kitchen,F=0.3048,fu=Object.fromEntries(P.furniture.filter(f=>f.fl==='G').map(f=>[f.id,f]));
+const MM=ft=>Math.round(ft*304.8),FI=ft=>{const i=Math.round(ft*12*2)/2;const f=Math.floor(i/12),r=i-f*12;return `${f}'${r%1?Math.floor(r)+'½':r}"`};
+const W=(X,Y,Z)=>new THREE.Vector3(-X*F,Z*F,Y*F);      // plan feet (X from the east boundary, Y from the road, Z height) to world metres
+// ---------------- renderer, scene, camera ----------------
+const view=document.getElementById('view');
+const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(2,devicePixelRatio));renderer.outputColorSpace=THREE.SRGBColorSpace;
+renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.05;renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;view.appendChild(renderer.domElement);
+const labels=new CSS2DRenderer();labels.domElement.style.position='absolute';labels.domElement.style.top='0';labels.domElement.style.pointerEvents='none';view.appendChild(labels.domElement);
+const scene=new THREE.Scene();scene.background=new THREE.Color(matchMedia('(prefers-color-scheme: dark)').matches?'#1b1d20':'#ece9e3');
+const camera=new THREE.PerspectiveCamera(45,1,0.05,80);
+const controls=new OrbitControls(camera,renderer.domElement);controls.enableDamping=true;controls.dampingFactor=0.09;controls.maxPolarAngle=Math.PI*0.52;controls.minDistance=0.6;controls.maxDistance=12;
+scene.add(new THREE.HemisphereLight('#fffaf0','#b9b2a6',1.25));
+const sun=new THREE.DirectionalLight('#fff4e2',1.5);sun.position.copy(W(14,52,14));sun.target.position.copy(W(7,63,0));scene.add(sun,sun.target);
+sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);Object.assign(sun.shadow.camera,{left:-4,right:4,top:4,bottom:-4,near:0.5,far:20});sun.shadow.bias=-0.0004;
+const fill=new THREE.DirectionalLight('#eef3ff',0.55);fill.position.copy(W(2,70,8));scene.add(fill);
+// ---------------- materials ----------------
+function canvasTex(w,h,draw,rep=1){const c=document.createElement('canvas');c.width=w;c.height=h;draw(c.getContext('2d'),w,h);const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(rep,rep);t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=8;return t}
+function rng(s){return()=>{s=(s*16807)%2147483647;return s/2147483647}}
+const oakTex=canvasTex(512,512,(g,w,h)=>{const r=rng(11);g.fillStyle='#b8905f';g.fillRect(0,0,w,h);for(let i=0;i<140;i++){g.strokeStyle=`rgba(${r()<.5?'90,60,30':'230,200,150'},${0.06+r()*0.08})`;g.lineWidth=1+r()*3;const x=r()*w;g.beginPath();g.moveTo(x,0);for(let y=0;y<=h;y+=32)g.lineTo(x+Math.sin(y*0.02+i)*6,y);g.stroke()}});
+const granTex=canvasTex(512,512,(g,w,h)=>{const r=rng(5);g.fillStyle='#26282b';g.fillRect(0,0,w,h);for(let i=0;i<9000;i++){g.fillStyle=r()<.5?'rgba(160,160,160,.35)':'rgba(10,10,10,.5)';g.fillRect(r()*w,r()*h,1+r()*2,1+r()*2)}},2);
+const tileTex=canvasTex(256,256,(g,w,h)=>{g.fillStyle='#efe7d6';g.fillRect(0,0,w,h);g.fillStyle='#d9cfbc';for(let i=0;i<=4;i++)g.fillRect(0,i*h/4-1,w,2);for(let j=0;j<4;j++)for(let i=0;i<=1;i++)g.fillRect(((i+(j%2)*0.5)%1)*w-1,j*h/4,2,h/4)},3);
+const floorTex=canvasTex(512,512,(g,w,h)=>{const r=rng(9);g.fillStyle='#d8d2c6';g.fillRect(0,0,w,h);for(let i=0;i<3000;i++){g.fillStyle=`rgba(${r()<.5?'255,255,255':'120,110,95'},0.06)`;g.fillRect(r()*w,r()*h,3,3)}g.fillStyle='#bdb5a6';g.fillRect(0,0,w,3);g.fillRect(0,0,3,h)},6);
+const std=o=>new THREE.MeshStandardMaterial(o);
+const M={oak:std({map:oakTex,roughness:0.55}),oakIn:std({color:'#d8c29f',roughness:0.7}),cream:std({color:'#efe9df',roughness:0.5}),creamIn:std({color:'#f4f0e8',roughness:0.7}),
+ granite:std({map:granTex,roughness:0.28,metalness:0.1}),plinth:std({color:'#2a2b2d',roughness:0.6}),handle:std({color:'#1c1d1f',roughness:0.4,metalness:0.6}),
+ steel:std({color:'#c9ccd0',roughness:0.25,metalness:0.9}),wire:std({color:'#b9bdc1',roughness:0.3,metalness:0.9}),wall:std({color:'#f3efe8',roughness:0.95}),
+ tile:std({map:tileTex,roughness:0.3}),floor:std({map:floorTex,roughness:0.6}),glass:std({color:'#cfe3ea',roughness:0.05,metalness:0,transparent:true,opacity:0.3}),
+ blackGlass:std({color:'#121314',roughness:0.08,metalness:0.3}),appWhite:std({color:'#f2f2f0',roughness:0.35}),red:std({color:'#b3201f',roughness:0.45}),
+ drawer:std({color:'#e9e2d6',roughness:0.7}),sel:std({color:'#2f6f4f',transparent:true,opacity:0.18,depthWrite:false})};
+// ---------------- geometry helpers ----------------
+function boxW(X1,X2,Y1,Y2,Z1,Z2,mat,parent=scene){const a=W(Math.min(X1,X2),Math.min(Y1,Y2),Math.min(Z1,Z2)),b=W(Math.max(X1,X2),Math.max(Y1,Y2),Math.max(Z1,Z2));
+  const g=new THREE.BoxGeometry(Math.abs(b.x-a.x),Math.abs(b.y-a.y),Math.abs(b.z-a.z));const me=new THREE.Mesh(g,mat);me.position.set((a.x+b.x)/2,(a.y+b.y)/2,(a.z+b.z)/2);me.castShadow=me.receiveShadow=true;parent.add(me);return me}
+function cylW(X,Y,Z1,Z2,r,mat,parent=scene,rTop){const me=new THREE.Mesh(new THREE.CylinderGeometry((rTop??r)*F,r*F,(Z2-Z1)*F,28),mat);me.position.copy(W(X,Y,(Z1+Z2)/2));me.castShadow=me.receiveShadow=true;parent.add(me);return me}
+function label(text,pos,cls='',parent=scene){const d=document.createElement('div');d.className='lab '+cls;d.textContent=text;const o=new CSS2DObject(d);o.position.copy(pos);parent.add(o);return o}
+// a module's local frame: u along the run, v = depth into the unit from its front face, z = height (all plan feet)
+function frame(m){const f=m.face;
+  const toPlan=(u,v)=>f==='x+'?[m.x2-v,u]:f==='y-'?[u,m.y1+v]:[u,m.y2-v];
+  const D=f[0]==='x'?m.x2-m.x1:m.y2-m.y1,U0=f[0]==='x'?m.y1:m.x1,U1=f[0]==='x'?m.y2:m.x2;
+  const out=f==='x+'?W(1,0,0).sub(W(0,0,0)).normalize():f==='y-'?W(0,-1,0).sub(W(0,0,0)).normalize():W(0,1,0).sub(W(0,0,0)).normalize();
+  const along=f[0]==='x'?W(0,1,0).sub(W(0,0,0)).normalize():W(1,0,0).sub(W(0,0,0)).normalize();
+  return {toPlan,D,U0,U1,out,along,box:(u1,u2,v1,v2,z1,z2,mat,parent)=>{const [Xa,Ya]=toPlan(u1,v1),[Xb,Yb]=toPlan(u2,v2);return boxW(Xa,Xb,Ya,Yb,z1,z2,mat,parent)}}}
+// ---------------- room: floor, the two walls behind the units, the low wall under the folding window, backsplash ----------------
+const room=new THREE.Group();scene.add(room);
+boxW(3.5,16.5,58.9,66.75,-0.1,0,M.floor,room);
+const wallsG=new THREE.Group();scene.add(wallsG);
+{const w6=P.openings.find(o=>o.id==='W-06'),w12=P.openings.find(o=>o.id==='W-12'),H=10.0;
+ // east wall GW-01 with window W-06
+ boxW(2.95,3.5,58.75,61.0,0,H,M.wall,wallsG);boxW(2.95,3.5,65.0,66.75,0,H,M.wall,wallsG);boxW(2.95,3.5,61.0,65.0,0,w6.sill,M.wall,wallsG);boxW(2.95,3.5,61.0,65.0,w6.sill+w6.h,H,M.wall,wallsG);
+ boxW(3.1,3.2,61.0,65.0,w6.sill,w6.sill+w6.h,M.glass,wallsG);
+ // back wall (GW-17 / GW-14) and the low part of GW-13 under the folding window
+ boxW(3.5,13.5,66.375,66.95,0,H,M.wall,wallsG);
+ boxW(3.5,13.5,58.75,59.125,0,w12.sill,M.wall,wallsG);boxW(11.5,13.5,58.75,59.125,w12.sill,H,M.wall,wallsG);boxW(3.5,5.5,58.75,59.125,w12.sill,H,M.wall,wallsG);
+ // backsplash tiles between the counter and the wall units
+ const sp=(a,b,c,d,z1,z2)=>boxW(a,b,c,d,z1,z2,M.tile,wallsG);
+ sp(3.5,3.53,59.137,61.0,K.KCH,K.KUP1);sp(3.5,3.53,61.0,65.0,K.KCH,w6.sill);sp(3.5,3.53,65.0,66.363,K.KCH,K.KUP1);sp(3.53,8.6,66.345,66.375,K.KCH,K.KUP1);sp(8.6,12.125,66.345,66.375,K.KLOW,K.KUP1);}
+// ---------------- the units ----------------
+const T=0.059,SH=0.06,G=0.01;   // 18 mm panels, 18 mm shutters, 3 mm gaps (feet)
+const fronts=[],modules=[];
+const SHELVES={'K-01':0,'K-04':0,'K-05':1,'K-07':1,'K-09':1,'K-11':1,'K-12':2,'K-14':2,'K-15':2,'K-16':1,'K-17':1,'K-13':0,'K-03':0};
+function buildModule(m){const fr=frame(m),base=m.z1<1,isLoft=m.run==='Loft',up=m.run.startsWith('Wall')||isLoft,low=m.run==='Low counter',bf=m.run==='Breakfast counter';
+  const body=up?M.cream:M.oak,inner=up?M.creamIn:M.oakIn,zb0=m.z1+(base?K.KPL:0),zt=base?(low?K.KLOW-K.KTOP:bf?K.KBF:K.KCH-K.KTOP):m.z2;
+  const grp=new THREE.Group();scene.add(grp);const rec={m,grp,fr,fronts:[],zb0,zt,up,base};modules.push(rec);
+  const U0=Math.max(fr.U0,Math.min(...m.fronts.map(f=>f.a)))-0.0,U1=Math.min(fr.U1,Math.max(...m.fronts.map(f=>f.b))),D=fr.D;
+  const uA=m.id==='K-17'?fr.U0:U0,uB=m.id==='K-17'?fr.U1:U1;
+  // carcass: open-front box of 18 mm panels
+  fr.box(uA,uA+T,SH,D,zb0,zt,body,grp);fr.box(uB-T,uB,SH,D,zb0,zt,body,grp);fr.box(uA,uB,D-T,D,zb0,zt,inner,grp);fr.box(uA,uB,SH,D,zb0,zb0+T,inner,grp);if(up)fr.box(uA,uB,SH,D,zt-T,zt,body,grp);
+  for(let i=1;i<=(SHELVES[m.id]??0);i++){const z=zb0+(zt-zb0)*i/((SHELVES[m.id]??0)+1);fr.box(uA+T,uB-T,SH+0.06,D-T,z-0.03,z,inner,grp)}
+  if(base)fr.box(uA,uB,SH+0.12,D,m.z1,zb0,M.plinth,grp);
+  // worktop
+  if(base){const ztop=low?K.KLOW:bf?K.KBF+0.13:K.KCH;fr.box(uA,uB,-0.08,D,ztop-K.KTOP,ztop,M.granite,grp)}
+  for(const f of m.fronts)buildFront(rec,f);
+  // label with the unit size (front width x front height x depth)
+  const fw=uB-uA,fh=zt-zb0,c=fr.toPlan((uA+uB)/2,-0.15),lz=up?zb0-0.25:zt+0.32;
+  rec.label=label(`${m.id} · ${MM(fw)} × ${MM(fh+(base?K.KPL+(low||bf?0:K.KTOP):0))} × ${MM(D)}`,W(c[0],c[1],lz),'');
+  // width dimension along the front, on the floor (base) or just under (wall units)
+  if(!isLoft){const zf=base?0.03:zb0-0.08,a=fr.toPlan(uA+0.02,-0.45),b=fr.toPlan(uB-0.02,-0.45),pts=[W(a[0],a[1],zf),W(b[0],b[1],zf)];
+    const ln=new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts),new THREE.LineBasicMaterial({color:'#2f6f4f'}));scene.add(ln);rec.dimLine=ln;
+    for(const p of [a,b]){const t1=fr.toPlan(0,-0.3),t2=fr.toPlan(0,-0.6);const tick=new THREE.Line(new THREE.BufferGeometry().setFromPoints([W(p[0]+(t1[0]-fr.toPlan(0,-0.45)[0]),p[1]+(t1[1]-fr.toPlan(0,-0.45)[1]),zf),W(p[0]+(t2[0]-fr.toPlan(0,-0.45)[0]),p[1]+(t2[1]-fr.toPlan(0,-0.45)[1]),zf)]),ln.material);scene.add(tick);(rec.ticks=rec.ticks||[]).push(tick)}
+    const mid=fr.toPlan((uA+uB)/2,-0.45);rec.dimLab=label(`${MM(fw)} mm`,W(mid[0],mid[1],zf+0.02),'dim')}}
+function buildFront(rec,f){const {m,fr}=rec,up=rec.up,mat=up?M.cream:M.oak,a=f.a+G,b=f.b-G,za=f.za,zb=f.zb,D=fr.D;
+  const pivot=new THREE.Group();scene.add(pivot);const item={rec,f,pivot,open:0,target:0,kind:f.k,meshes:[]};
+  const add=(me)=>{item.meshes.push(me);me.userData.front=item;return me};
+  if(f.k==='blind'){const me=fr.box(a,b,0,SH,za,zb,mat,pivot);add(me);me.userData.front=null;contents(rec,f,pivot,()=>{});rec.fronts.push(item);return}
+  // the front panel and its handle, built in place, then re-parented to a pivot
+  const panel=add(fr.box(a,b,0,SH,za,zb,f.glass?M.glass:mat,pivot));
+  if(f.glass){for(const [p1,p2,q1,q2] of [[a,b,za,za+0.06],[a,b,zb-0.06,zb],[a,a+0.06,za,zb],[b-0.06,b,za,zb]])add(fr.box(p1,p2,-0.005,SH+0.005,q1,q2,M.handle,pivot))}
+  const hz=up?za+0.18:(f.k==='door'&&zb-za>1.5?zb-0.22:zb-0.14),hl=Math.min(0.9,(b-a)*0.55),hm=(a+b)/2;
+  if(f.k==='door'&&!up){const hu=f.hinge==='a'?b-0.2:a+0.2;add(fr.box(hu-0.03,hu+0.03,-0.05,0,zb-0.75,zb-0.15,M.handle,pivot))}
+  else add(fr.box(hm-hl/2,hm+hl/2,-0.05,0,hz-0.03,hz+0.03,M.handle,pivot));
+  // drawer box / pull-out basket travel with the front
+  if(f.k==='drawer'||f.k==='pullout'){const v1=SH,v2=D-0.18,hh=f.k==='drawer'?Math.max(0.25,(zb-za)-0.18):zb-za-0.12,z0=za+0.04;
+    for(const [p1,p2,q1,q2,zz1,zz2] of [[a+0.06,a+0.1,v1,v2,z0,z0+hh],[b-0.1,b-0.06,v1,v2,z0,z0+hh],[a+0.06,b-0.06,v2-0.04,v2,z0,z0+hh],[a+0.06,b-0.06,v1,v2,z0,z0+0.04]])
+      add(fr.box(p1,p2,q1,q2,zz1,zz2,f.k==='pullout'?M.wire:M.drawer,pivot));
+    if(f.k==='pullout')for(const z of [za+0.35,za+0.95,za+1.6]){add(fr.box(a+0.1,b-0.1,v1+0.05,v2-0.05,z,z+0.03,M.wire,pivot));const r=rng(Math.round(z*100));for(let q=0;q<4;q++){const uu=a+0.25+q*((b-a-0.5)/3),[X,Y]=fr.toPlan(uu,v1+0.4+r()*(v2-v1-0.8));add(cylW(X,Y,z+0.03,z+0.55+r()*0.25,0.09,std({color:['#c98a2b','#7a3b16','#e8d9a8','#3f6a2a'][q%4],roughness:0.3}),pivot,0.07))}}}
+  contents(rec,f,pivot,(f.k==='drawer'||f.k==='pullout')?add:(me=>me));   // things in drawers ride out with them; things behind doors stay put
+  rec.fronts.push(item);if(f.k!=='blind')fronts.push(item);
+  // hinge / slide set-up: doors swing out about the hinge edge, lift-ups about the top edge, drawers slide straight out
+  if(f.k==='door'||f.k==='lift'){const hingeU=f.k==='door'?(f.hinge==='a'?a:b):(a+b)/2,hz2=f.k==='lift'?zb:(za+zb)/2,[HX,HY]=fr.toPlan(hingeU,0);item.origin=W(HX,HY,hz2);
+    item.axis=f.k==='door'?new THREE.Vector3(0,1,0):fr.along.clone();
+    const freeU=f.k==='door'?(f.hinge==='a'?b:a):(a+b)/2,freeZ=f.k==='door'?(za+zb)/2:za,[FX,FY]=fr.toPlan(freeU,0),free=W(FX,FY,freeZ).sub(item.origin);
+    const test=free.clone().applyAxisAngle(item.axis,0.3).sub(free);item.sign=test.dot(fr.out)>0?1:-1;item.maxA=f.k==='door'?1.75:1.45}
+  else{item.dir=fr.out.clone();item.maxT=(f.k==='pullout'?D-0.25:(D-0.3)*0.85)*F}
+  // hover info
+  item.info=`<b>${m.id}</b> · ${m.name}<br>${f.k==='drawer'?'Drawer':f.k==='pullout'?'Pull-out':f.k==='lift'?'Lift-up door':'Door'}: ${MM(b-a+2*G)} wide × ${MM(zb-za)} high mm (${FI(b-a+2*G)} × ${FI(zb-za)})<br>${f.what}`;
+  if(f.k==='drawer'||f.k==='pullout'){const c=fr.toPlan((a+b)/2,-0.12);item.hlab=label(`front ${MM(b-a+2*G)} × ${MM(zb-za)} mm`,W(c[0],c[1],(za+zb)/2),'small',pivot);item.meshes.push(item.hlab);item.hlab.visible=false}}
+function contents(rec,f,pivot,add){const {m,fr}=rec,a=f.a,b=f.b,za=f.za,D=fr.D,at=(u,v)=>fr.toPlan(u,v);
+  const pot=(u,v,z,r,h,col)=>{const [X,Y]=at(u,v);add(cylW(X,Y,z,z+h,r,std({color:col,roughness:0.3,metalness:0.7}),pivot))};
+  if(m.id==='K-01'&&f.k==='door'){const [X,Y]=at((a+b)/2,D/2);add(boxW(X-0.45,X+0.45,Y-0.45,Y+0.45,za+0.02,za+0.15,M.handle,pivot));add(cylW(X,Y,za+0.15,za+1.9,0.52,M.red,pivot,0.5));add(cylW(X,Y,za+1.9,za+2.05,0.15,M.steel,pivot))}
+  if(m.id==='K-01'&&f.k==='blind'){const [X,Y]=at((a+b)/2,D/2);cylW(X,Y,za+0.02,za+1.8,0.52,M.red,scene,0.5)}
+  if(m.id==='K-02'){const lev=m.fronts.indexOf(f);if(lev===0){pot((a+b)/2-0.4,D/2,za+0.08,0.42,0.75,'#c0c4c8');pot((a+b)/2+0.45,D/2,za+0.08,0.32,0.6,'#c0c4c8')}
+    if(lev===1){pot((a+b)/2,D/2,za+0.08,0.55,0.25,'#3b3c3e');pot((a+b)/2+0.5,D/2+0.1,za+0.33,0.45,0.03,'#2a2a2a')}
+    if(lev===2)for(let k=1;k<6;k++){const u=a+0.1+(b-a-0.2)*k/6,[X1,Y1]=at(u,SH+0.05),[X2,Y2]=at(u,D-0.3);add(boxW(Math.min(X1,X2),Math.max(X1,X2)+0.02,Math.min(Y1,Y2),Math.max(Y1,Y2)+0.02,za+0.08,za+0.25,M.drawer,pivot))}}
+  if(m.id==='K-04'&&f.hinge==='a'){for(const d of [0.3,0.85]){const [X,Y]=at(a+0.15+d*0.5,D/2);add(boxW(X-0.22,X+0.22,Y-0.4,Y+0.4,za+0.05,za+1.4,std({color:d<0.5?'#3b7a4a':'#4a4f55',roughness:0.6}),pivot))}}
+  if(m.id==='K-05'){pot((a+b)/2,D/2,za+0.06,0.4,1.1,'#5b8fc0')}
+  if(m.id==='K-06'&&m.fronts.indexOf(f)===0)for(const d of [0.25,0.6]){const [X,Y]=at(a+(b-a)*d,D/2);add(boxW(X-0.3,X+0.3,Y-0.5,Y+0.5,za+0.06,za+0.85,M.appWhite,pivot))}
+  if(['K-07','K-09','K-11'].includes(m.id)){const z=rec.zb0+(rec.zt-rec.zb0)/2;for(let k=0;k<3;k++){const [X,Y]=at(a+0.35+k*0.45,D/2);for(let j=0;j<6;j++)cylW(X,Y,za+0.06+j*0.035,za+0.08+j*0.035,m.id==='K-09'?0.12:0.32,std({color:'#f6f3ee',roughness:0.3}),scene)}}
+  if(m.id==='K-13'){const z=rec.zb0+0.15;for(let k=0;k<9;k++){const [X,Y]=at(a+0.2+k*0.17,D/2);const pl=new THREE.Mesh(new THREE.CylinderGeometry(0.3*F,0.3*F,0.02*F,28),std({color:'#f6f3ee',roughness:0.3}));pl.rotation.z=Math.PI/2;if(m.face[0]==='y')pl.rotation.y=Math.PI/2;pl.position.copy(W(X,Y,z+0.32));scene.add(pl)}
+    const [X,Y]=at((a+b)/2,D/2);boxW(X-0.8,X+0.8,Y-0.45,Y+0.45,z-0.02,z,M.steel,scene)}
+  if(['K-12','K-14','K-15'].includes(m.id)){const r=rng(m.id.charCodeAt(3)*7);for(const zz of [rec.zb0+T,rec.zb0+(rec.zt-rec.zb0)/3,rec.zb0+2*(rec.zt-rec.zb0)/3]){let u=a+0.2;while(u<b-0.25){const rr=0.09+r()*0.06,[X,Y]=at(u,D/2);cylW(X,Y,zz,zz+0.3+r()*0.25,rr,std({color:['#e9e4da','#cdbfa8','#7a6a58','#c0392b','#f3efe6'][Math.floor(r()*5)],roughness:0.4}),scene,rr*0.9);u+=rr*2+0.1}}}}
+for(const m of K.modules)buildModule(m);
+// the blind corner wall unit behind K-12 (no front)
+boxW(3.512,4.75,65.0,66.363,K.KUP1,K.KUP2,M.cream);
+// ---------------- appliances on and above the counters ----------------
+{const h=fu['FU-52'];boxW(h.x1+0.1,h.x2-0.1,h.y1+0.1,h.y2-0.1,K.KCH,K.KCH+0.03,M.blackGlass);for(const [bx,by,r] of [[4.15,(h.y1+h.y2)/2-0.45,0.27],[4.15,(h.y1+h.y2)/2+0.45,0.22],[4.95,(h.y1+h.y2)/2,0.3]])cylW(bx,by,K.KCH+0.03,K.KCH+0.09,r,std({color:'#3a3b3d',metalness:0.6,roughness:0.4}));
+ const w6=P.openings.find(o=>o.id==='W-06'),hz=w6.sill+w6.h+0.1,cy=(h.y1+h.y2)/2;boxW(3.512,5.3,cy-0.95,cy+0.95,hz,hz+0.28,M.blackGlass);boxW(3.512,4.25,cy-0.5,cy+0.5,hz+0.28,K.KUP2,std({color:'#2b2c2e',roughness:0.35,metalness:0.5}));
+ const s=fu['FU-51'];boxW(s.x1+0.1,s.x2-0.1,s.y1+0.08,s.y2-0.08,K.KCH,K.KCH+0.012,M.steel);boxW(s.x1+0.22,s.x2-0.22,s.y1+0.2,s.y2-0.2,K.KCH-0.6,K.KCH+0.015,std({color:'#8c9094',metalness:0.85,roughness:0.3,side:THREE.BackSide}));
+ const tx=(s.x1+s.x2)/2;cylW(tx,s.y2-0.05,K.KCH,K.KCH+1.15,0.05,M.handle);boxW(tx-0.04,tx+0.04,s.y2-0.7,s.y2-0.05,K.KCH+1.1,K.KCH+1.18,M.handle);
+ const ro=fu['FU-66'];boxW(ro.x1,ro.x2,ro.y1,ro.y2-0.012,3.4,4.75,M.appWhite);boxW(ro.x1+0.1,ro.x2-0.1,ro.y1-0.01,ro.y1,4.15,4.45,M.blackGlass);cylW((ro.x1+ro.x2)/2,ro.y1+0.05,3.2,3.4,0.03,M.handle);
+ cylW((ro.x1+ro.x2)/2,ro.y1-0.35,K.KLOW,K.KLOW+1.0,0.38,M.steel,scene,0.3);
+ const wg=fu['FU-65'],wx=(wg.x1+wg.x2)/2,wy=(wg.y1+wg.y2)/2;cylW(wx,wy,K.KLOW,K.KLOW+0.38,0.6,M.appWhite,scene,0.55);cylW(wx,wy,K.KLOW+0.38,K.KLOW+1.0,0.44,M.steel);
+ const mg=fu['FU-64'];boxW(mg.x1+0.05,mg.x2-0.05,mg.y1+0.1,mg.y2-0.1,K.KCH,K.KCH+0.42,M.appWhite);cylW((mg.x1+mg.x2)/2,(mg.y1+mg.y2)/2,K.KCH+0.42,K.KCH+1.15,0.22,std({color:'#d8dde0',roughness:0.15,metalness:0.4}),scene,0.26);
+ const mw=fu['FU-67'];boxW(mw.x1,mw.x2,mw.y1+0.05,mw.y2-0.05,K.KBF+0.13,K.KBF+1.09,std({color:'#3a3c3f',roughness:0.4,metalness:0.4}));}
+// overall heights on the east end of the back run
+{const c=W(13.0,66.0,0);for(const [z,t] of [[K.KCH,`counter ${MM(K.KCH)} mm (${FI(K.KCH)})`],[K.KLOW,`low counter ${MM(K.KLOW)} mm (${FI(K.KLOW)})`],[K.KUP1,`wall units from ${MM(K.KUP1)} mm`],[K.KUP2,`wall units to ${MM(K.KUP2)} mm, loft above`]])label(t,W(12.6,66.2,z),'dim')}
+// ---------------- interaction ----------------
+const ray=new THREE.Raycaster(),mouse=new THREE.Vector2(),tip=document.getElementById('tip');
+const pickables=()=>fronts.flatMap(f=>f.meshes);
+function hit(e){const r=renderer.domElement.getBoundingClientRect();mouse.set((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);ray.setFromCamera(mouse,camera);const h=ray.intersectObjects(pickables(),false)[0];return h?h.object.userData.front:null}
+let down=null;renderer.domElement.addEventListener('pointerdown',e=>{down=[e.clientX,e.clientY]});
+renderer.domElement.addEventListener('pointerup',e=>{if(!down||Math.hypot(e.clientX-down[0],e.clientY-down[1])>5)return;const f=hit(e);if(f){toggle(f);select(f.rec.m.id,false)}});
+renderer.domElement.addEventListener('pointermove',e=>{if(e.buttons){tip.style.display='none';return}const f=hit(e);renderer.domElement.style.cursor=f?'pointer':'';if(f){const r=view.getBoundingClientRect();tip.innerHTML=f.info+(f.target?'<br><i>click to close</i>':'<br><i>click to open</i>');tip.style.display='block';tip.style.left=Math.min(r.width-330,e.clientX-r.left+14)+'px';tip.style.top=(e.clientY-r.top+14)+'px'}else tip.style.display='none'});
+function toggle(f,v){f.target=v===undefined?(f.target?0:1):v}
+// re-parent each front so it rotates or slides from its pivot
+for(const f of fronts){const g=new THREE.Group();if(f.origin){g.position.copy(f.origin);scene.add(g);for(const me of f.meshes){me.position.sub(f.origin);g.add(me)}}else{scene.add(g);for(const me of f.meshes)g.add(me)}f.g=g}
+function animate(dt){let moving=false;for(const f of fronts){const k=1-Math.exp(-dt*7);const o=f.open+(f.target-f.open)*k;if(Math.abs(o-f.open)>1e-4)moving=true;f.open=Math.abs(f.target-o)<1e-3?f.target:o;
+  if(f.origin){f.g.quaternion.setFromAxisAngle(f.axis,f.sign*f.maxA*f.open)}else{f.g.position.copy(f.dir).multiplyScalar(f.maxT*f.open)}
+  if(f.hlab)f.hlab.visible=f.open>0.5}return moving}
+document.getElementById('openAll').onclick=()=>fronts.forEach(f=>toggle(f,1));document.getElementById('closeAll').onclick=()=>fronts.forEach(f=>toggle(f,0));
+const sizesBtn=document.getElementById('sizes');sizesBtn.onclick=()=>{const on=sizesBtn.getAttribute('aria-pressed')!=='true';sizesBtn.setAttribute('aria-pressed',on);view.classList.toggle('nolab',!on);for(const r of modules){if(r.dimLine)r.dimLine.visible=on;(r.ticks||[]).forEach(t=>t.visible=on)}};
+const wallsBtn=document.getElementById('walls');wallsBtn.onclick=()=>{const on=wallsBtn.getAttribute('aria-pressed')!=='true';wallsBtn.setAttribute('aria-pressed',on);wallsG.visible=on};
+// views
+const VIEWS={all:{p:[17.2,61.2,7.6],t:[7.0,63.0,3.2]},east:{p:[12.6,62.6,5.6],t:[4.2,62.8,3.2]},back:{p:[8.6,59.6,5.6],t:[8.0,66.0,2.6]},bf:{p:[9.0,66.0,6.2],t:[9.0,59.6,2.0]},up:{p:[11.0,61.0,4.6],t:[6.0,65.4,7.0]}};
+let fly=null;function goView(k){const v=VIEWS[k];fly={p0:camera.position.clone(),t0:controls.target.clone(),p1:W(...v.p),t1:W(...v.t),s:0};document.querySelectorAll('#views button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===k))}
+document.querySelectorAll('#views button').forEach(b=>b.onclick=()=>goView(b.dataset.v));
+camera.position.copy(W(...VIEWS.all.p));controls.target.copy(W(...VIEWS.all.t));
+// ---------------- panel: unit list with sizes, needs and notes ----------------
+const panel=document.getElementById('panel');
+{const runs=[...new Set(K.modules.map(m=>m.run))];let h='<h2>Units</h2><div class="sub">W × H × D in mm (front width, height from the floor or the unit height, depth). Click a row to open that unit.</div>';
+ for(const run of runs){h+=`<h2>${run}</h2><table class="t">`;for(const m of K.modules.filter(m=>m.run===run)){const fr=frame(m),base=m.z1<1,low=m.run==='Low counter',bf=m.run==='Breakfast counter';
+   const uA=Math.min(...m.fronts.map(f=>f.a)),uB=Math.max(...m.fronts.map(f=>f.b)),Hh=base?(low?K.KLOW:bf?K.KBF+0.13:K.KCH):m.z2-m.z1;
+   const fl=m.fronts.filter(f=>f.k!=='blind').map(f=>`${f.k==='drawer'?'drawer':f.k==='pullout'?'pull-out':f.k==='lift'?'lift-up':'door'} ${MM(f.b-f.a)}×${MM(f.zb-f.za)}: ${f.what}`).join('<br>');
+   h+=`<tr class="mod" data-id="${m.id}"><td class="c">${m.id}</td><td><b>${m.name}</b><br><span class="sub">${MM(uB-uA)} × ${MM(Hh)} × ${MM(fr.D)} mm · ${FI(uB-uA)} × ${FI(Hh)} × ${FI(fr.D)}</span><br>${fl}<br><span class="sub">Inside: ${m.inside}</span><br><span class="sub">For: ${m.need}</span></td></tr>`}h+='</table>'}
+ h+='<h2>Design notes</h2><ul>'+K.notes.map(n=>`<li>${n}</li>`).join('')+'</ul>';panel.innerHTML=h;
+ panel.querySelectorAll('tr.mod').forEach(tr=>tr.onclick=()=>select(tr.dataset.id,true))}
+function select(id,openIt){panel.querySelectorAll('tr.mod').forEach(tr=>tr.classList.toggle('sel',tr.dataset.id===id));const rec=modules.find(r=>r.m.id===id);if(!rec)return;
+  if(openIt){const any=rec.fronts.some(f=>f.target);rec.fronts.forEach(f=>f.kind!=='blind'&&toggle(f,any?0:1));
+    const c=rec.fr.toPlan((rec.fr.U0+rec.fr.U1)/2,rec.fr.D/2),zc=(rec.zb0+rec.zt)/2,o=rec.fr.toPlan((rec.fr.U0+rec.fr.U1)/2,-7.5);fly={p0:camera.position.clone(),t0:controls.target.clone(),p1:W(o[0],o[1],zc+2.6),t1:W(c[0],c[1],zc),s:0}}
+  const row=panel.querySelector(`tr[data-id="${id}"]`);if(row&&!openIt)row.scrollIntoView({block:'nearest',behavior:'smooth'})}
+const panelBtn=document.getElementById('panelBtn');panelBtn.onclick=()=>{const on=panelBtn.getAttribute('aria-pressed')!=='true';panelBtn.setAttribute('aria-pressed',on);panel.classList.toggle('off',!on);resize()};
+// ---------------- loop ----------------
+function resize(){const w=view.clientWidth,h=view.clientHeight;renderer.setSize(w,h);labels.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix()}
+addEventListener('resize',resize);resize();
+let last=performance.now();
+renderer.setAnimationLoop(()=>{const now=performance.now(),dt=Math.min(0.05,(now-last)/1000);last=now;
+  if(fly){fly.s=Math.min(1,fly.s+dt/0.9);const e=fly.s*fly.s*(3-2*fly.s);camera.position.lerpVectors(fly.p0,fly.p1,e);controls.target.lerpVectors(fly.t0,fly.t1,e);if(fly.s>=1)fly=null}
+  animate(dt);controls.update();renderer.render(scene,camera);labels.render(scene,camera)});
+window.__k={fronts,modules,toggle,goView,scene,camera};
+</script></body></html>
