@@ -7,6 +7,7 @@ fu=[dict(id=f[0],fl=f[1],name=f[2],x1=f[3],x2=f[4],y1=f[5],y2=f[6],kind=f[7],sid
 data=dict(walls=dict(G=walls('G'),F=walls('F')),rooms=dict(G=rooms('G'),F=rooms('F')),openings=ops,furniture=fu,
           plot=M.PLOT,car=getattr(M,'CAR',None),porchY=getattr(M,'PORCH_STEPS_Y',30.75),underground=getattr(M,'UNDERGROUND',None),kitchen=dict(modules=getattr(M,'KITCHEN_MODULES',[]),notes=getattr(M,'KITCHEN_NOTES',[]),KCH=M.KCH,KTOP=M.KTOP,KPL=M.KPL,KLOW=M.KLOW,KBF=M.KBF,KUP1=M.KUP1,KUP2=M.KUP2,KLOFT2=M.KLOFT2,RO_Z1=M.RO_Z1,RO_H=M.RO_H,KUP1R=M.KUP1R),bikes=getattr(M,'BIKES',None),spiral=dict(c=M.SPC,r=M.SPR,**getattr(M,'ST2',{})),spec=getattr(M,'SPEC',{}),
           columns=[dict(id=c[0],floors=c[1],x1=c[2],x2=c[3],y1=c[4],y2=c[5],note=c[6]) for c in getattr(M,'COLUMNS',[])],
-          beams=[dict(id=b[0],level=b[1],x1=b[2],x2=b[3],y1=b[4],y2=b[5],depth=b[6],note=b[7]) for b in getattr(M,'BEAMS',[])],ff=M.FF_LEVEL,backwall=getattr(M,'BACK_WALL',None),platform=getattr(M,'SIDE_PLATFORM',None),levels=getattr(M,'LEVELS',None),ramp=getattr(M,'RAMP',None),plants=[dict(id=c,type=t,x=x,y=y) for c,t,x,y in getattr(M,'PLANTS',[])])
+          beams=[dict(id=b[0],level=b[1],x1=b[2],x2=b[3],y1=b[4],y2=b[5],depth=b[6],note=b[7]) for b in getattr(M,'BEAMS',[])],ff=M.FF_LEVEL,backwall=getattr(M,'BACK_WALL',None),platform=getattr(M,'SIDE_PLATFORM',None),levels=getattr(M,'LEVELS',None),ramp=getattr(M,'RAMP',None),plants=[dict(id=c,type=t,x=x,y=y) for c,t,x,y in getattr(M,'PLANTS',[])],
+          garden=[dict(g,stones=M.garden_stones(g)) if g['kind']=='path' else g for g in getattr(M,'GARDEN',[])],gardenNames=getattr(M,'GARDEN_NAMES',{}))
 if __name__=='__main__':
     print(json.dumps(data))

@@ -117,7 +117,7 @@ td.c{font-weight:700;white-space:nowrap;color:var(--accent)}
 #tip{position:fixed;z-index:50;pointer-events:none;max-width:320px;background:#1f2328;color:#fff;font-size:12.5px;line-height:1.35;padding:6px 9px;border-radius:7px;box-shadow:0 4px 14px rgba(0,0,0,.25);display:none}
 #tip b{color:#9fe0bf}
 .fu:hover>*{filter:brightness(1.08)}
-.hide-L-ug .L-ug,.hide-L-struct .L-struct,.hide-L-carpath .L-carpath,.hide-L-furn .L-furn,.hide-L-rooms .L-rooms,.hide-L-walls .L-walls,.hide-L-open .L-open,.hide-L-dims .L-dims{display:none}
+.hide-L-garden .L-garden,.hide-L-ug .L-ug,.hide-L-struct .L-struct,.hide-L-carpath .L-carpath,.hide-L-furn .L-furn,.hide-L-rooms .L-rooms,.hide-L-walls .L-walls,.hide-L-open .L-open,.hide-L-dims .L-dims{display:none}
 #measure[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:600}
 .mread{font-variant-numeric:tabular-nums;font-size:13px;color:var(--ink);background:var(--chip);border:1px solid var(--line);border-radius:8px;padding:5px 10px;min-height:30px;display:none;align-items:center}
 .mread.on{display:inline-flex}
@@ -156,6 +156,7 @@ out=f'''<!doctype html>
   <label><input type="checkbox" data-layer="L-open" checked>Door and window codes</label>
   <label><input type="checkbox" data-layer="L-dims" checked>Dimensions</label>
   <label><input type="checkbox" data-layer="L-furn" checked>Furniture</label>
+  <label><input type="checkbox" data-layer="L-garden" checked>Garden</label>
   <label><input type="checkbox" data-layer="L-struct" checked>Pillars and beams</label>
   <label><input type="checkbox" data-layer="L-carpath">Car path</label>
   <label><input type="checkbox" data-layer="L-ug" checked>Tanks and pits (underground)</label>
@@ -194,14 +195,14 @@ _how=next(s for s in _secs if _title(s).startswith('How to read'))
 # 2D tab: the plan with only the room list and the reading guide beside it
 open(ROOT+'plan-2d.html','w').write(out.replace(panel,_how).replace(f'<div><h1>Home plan · {BRANCH}</h1></div>',''))   # the app's tab already names it
 GROUPS=[('overview','Overview',lambda t:t.startswith(('Areas','Staircases','Existing on site','Still open','How to read'))),
-        ('details','Details',lambda t:t.startswith(('Modular kitchen','Side garden utility','Water and drainage','Parking plan','Outside windows','Raised site levels','Tree pit','Rooms and areas','Walls','Doors, windows','Structure','Pillars','Beams','Furniture')))]
+        ('details','Details',lambda t:t.startswith(('Garden plan','Modular kitchen','Side garden utility','Water and drainage','Parking plan','Outside windows','Raised site levels','Tree pit','Rooms and areas','Walls','Doors, windows','Structure','Pillars','Beams','Furniture')))]
 _tidy=lambda s:_re.sub(r' \((branch [\w-]+|approved), ?(from [\w-]+)?[^)]*\)','',s)
 _slug=lambda t:'d-'+_re.sub(r'[^a-z0-9]+','-',t.lower()).strip('-')[:40]
 _used=set();_tabs=[]
 for key,name,test in GROUPS:
     picked=[_tidy(s) for i,s in enumerate(_secs) if i not in _used and test(_title(s)) and not _used.add(i)]
     if key=='details':   # one page, in a sensible order, with short jump links to each part
-        ORDER=[('Modular kitchen','Modular kitchen'),('Side garden utility','Utility and window'),('Water and drainage','Water and drainage'),('Parking plan','Parking'),('Outside windows','Outside windows'),('Raised site levels','Site levels'),('Tree pit','Tree pit'),('Rooms and areas','Rooms'),('Walls','Walls'),
+        ORDER=[('Garden plan','Garden'),('Modular kitchen','Modular kitchen'),('Side garden utility','Utility and window'),('Water and drainage','Water and drainage'),('Parking plan','Parking'),('Outside windows','Outside windows'),('Raised site levels','Site levels'),('Tree pit','Tree pit'),('Rooms and areas','Rooms'),('Walls','Walls'),
                ('Doors, windows','Doors and windows'),('Structure','Structure'),('Pillars','Pillars'),('Beams','Beams'),('Furniture I will','Furniture plan'),('Furniture and fixtures','Furniture list')]
         rank=lambda s:next((i for i,(p,_) in enumerate(ORDER) if _title(s).startswith(p)),99)
         chip=lambda s:next((c for p,c in ORDER if _title(s).startswith(p)),_title(s))

@@ -56,7 +56,7 @@ canvas{display:block;width:100%;height:100%}
   <div class="seg" id="floorSeg" title="Go to a floor at eye level"><button data-fl="G">Ground</button><button data-fl="F">First</button></div>
   <select id="areaSel" title="Choose an area, then a view"><option value="0">Living</option><option value="1">Bedroom 1</option><option value="2">Kitchen</option><option value="3">Bedroom 2</option><option value="4">Outside</option><option value="5">Stairs</option><option value="6">First floor</option></select>
   
-<div class="seg cams" data-area="0"><button data-c="0">Entry</button><button data-c="1">Corner</button><button data-c="2">From sofa</button><button data-c="3">From TV</button><button data-c="4">From kitchen</button><button data-c="5">Top</button></div>  <div class="seg cams" data-area="1"><button data-c="6">Door</button><button data-c="7">Window</button><button data-c="8">Study</button><button data-c="9">Toilet</button><button data-c="10">Top</button></div>  <div class="seg cams" data-area="2"><button data-c="11">Kitchen</button><button data-c="12">Sink</button><button data-c="13">Hob</button><button data-c="14">Fridge</button><button data-c="15">Top</button></div>  <div class="seg cams" data-area="3"><button data-c="16">Door</button><button data-c="17">Bed</button><button data-c="18">Window</button><button data-c="19">Toilet 2</button><button data-c="20">Top</button></div>  <div class="seg cams" data-area="4"><button data-c="21">Gate</button><button data-c="22">Parking</button><button data-c="23">Terrace</button><button data-c="24">Aerial</button><button data-c="25">Side</button><button data-c="26">Stair</button><button data-c="32">Back garden</button><button data-c="33">Gate levels</button><button data-c="34">Front</button></div>
+<div class="seg cams" data-area="0"><button data-c="0">Entry</button><button data-c="1">Corner</button><button data-c="2">From sofa</button><button data-c="3">From TV</button><button data-c="4">From kitchen</button><button data-c="5">Top</button></div>  <div class="seg cams" data-area="1"><button data-c="6">Door</button><button data-c="7">Window</button><button data-c="8">Study</button><button data-c="9">Toilet</button><button data-c="10">Top</button></div>  <div class="seg cams" data-area="2"><button data-c="11">Kitchen</button><button data-c="12">Sink</button><button data-c="13">Hob</button><button data-c="14">Fridge</button><button data-c="15">Top</button></div>  <div class="seg cams" data-area="3"><button data-c="16">Door</button><button data-c="17">Bed</button><button data-c="18">Window</button><button data-c="19">Toilet 2</button><button data-c="20">Top</button></div>  <div class="seg cams" data-area="4"><button data-c="21">Gate</button><button data-c="22">Parking</button><button data-c="23">Terrace</button><button data-c="24">Aerial</button><button data-c="25">Side</button><button data-c="26">Stair</button><button data-c="32">Back garden</button><button data-c="33">Gate levels</button><button data-c="34">Front</button><button data-c="36">Side garden</button><button data-c="37">Porch</button></div>
   <div class="seg cams" data-area="5"><button data-c="27">Spiral</button><button data-c="28">Landing</button><button data-c="29">Well</button><button data-c="26">ST-1</button></div>
   <div class="seg cams" data-area="6"><button data-c="28">Landing</button><button data-c="30">Bedroom 3</button><button data-c="23">Terrace</button><button data-c="31">Top</button></div>
   <span class="spacer"></span>
@@ -89,6 +89,7 @@ import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';
 import {createBambooPlant} from './models/bamboo-plant.js?v=__BUILD__';
 import {createNeemTree} from './models/neem-tree.js?v=__BUILD__';
 import {createTNPlant,TN_PLANTS} from './models/tn-plants.js?v=__BUILD__';
+import {createBanana,createArecaPalm,createMoringa} from './models/garden-plants.js?v=__BUILD__';
 import {createVirtus,createHunter350,createAther450,loadCarGLB,loadGLBVehicle} from './models/vehicles.js?v=__BUILD__';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {CAR_ROUTE} from './models/car-route.js?v=__BUILD__';
@@ -775,8 +776,8 @@ function cabRun(id,what,x1,x2,y1,y2,z1,z2,face,segs,mat,plinth){
  const TZ1=UPZ2+0.05,TZ2=CEIL-0.012;
  cabRun('FU-68','Top storage, back',4.69,12.125,ky2-1.25,ky2-0.012,TZ1,TZ2,'y-',[[4.75,6.5,'door'],[6.5,8.25,'door'],[8.25,9.875,'door'],[9.875,11.0,'door'],[11.0,12.125,'door']],MAT.kUp,false);   // K-16 and K-18 (over the RO and wet grinder)
  cabRun('FU-69','Top storage, east',X1+0.012,4.75,59.137,62.15,TZ1,TZ2,'x+',[[59.137,60.65,'door'],[60.65,62.15,'door']],MAT.kUp,false);   // K-17A
- cabRun('FU-69','Top storage, east',X1+0.012,4.75,63.15,ky2-0.012,TZ1,TZ2,'x+',[[63.15,65.0,'door']],MAT.kUp,false);   // K-17B; the chimney goes up between them
- box(X1+0.012,4.6,59.137,62.15,UPZ2,TZ1,MAT.blackMetal,{cast:false,tip:'Shadow line, black'});box(X1+0.012,4.6,63.15,ky2-0.012,UPZ2,TZ1,MAT.blackMetal,{cast:false,tip:'Shadow line, black'});box(4.6,12.05,ky2-1.125,ky2-0.012,UPZ2,TZ1,MAT.blackMetal,{cast:false,tip:'Shadow line, black'});
+ cabRun('FU-69','Top storage, east',X1+0.012,4.75,62.15,ky2-0.012,TZ1,TZ2,'x+',[[62.15,63.15,'door'],[63.15,65.0,'door']],MAT.kUp,false);   // K-17C over the chimney, K-17B
+ box(X1+0.012,4.6,59.137,ky2-0.012,UPZ2,TZ1,MAT.blackMetal,{cast:false,tip:'Shadow line, black'});box(4.6,12.05,ky2-1.125,ky2-0.012,UPZ2,TZ1,MAT.blackMetal,{cast:false,tip:'Shadow line, black'});
  for(const [a,b,c,d] of [[4.6,4.66,59.3,60.85],[4.6,4.66,65.15,66.3],[4.9,8.1,ky2-1.125,ky2-1.065]]) ledStrips.push(box(a,b,c,d,UPZ1-0.03,UPZ1,MAT.led,{cast:false,tip:'LED strip under the wall cabinets'}));
  const ul=new THREE.PointLight('#ffd7a3',0,m(9),2);ul.position.set(mx(6.0),m(4.2),m(65.0));scene.add(ul);towerLights.push(ul);
  // backsplash: cream 3" x 12" ceramic tiles between counter and wall cabinets; below the W-06 sill
@@ -787,17 +788,16 @@ function cabRun(id,what,x1,x2,y1,y2,z1,z2,face,segs,mat,plinth){
  const h=fuG['FU-52'],ht=`FU-52 · ${h.name} · ${h.note}`;placeAppliance('assets/appliances/cooktop.glb',(h.x1+h.x2)/2,(h.y1+h.y2)/2,KCH,-Math.PI/2,cookMat,ht);   // front to the west, length along the east run
  {const r=fuG['FU-80'];if(r){const rt=`FU-80 · ${r.name} · ${r.note}`;rackModel(r,KCH,(a,b,c,d,e,f,mt)=>box(a,b,c,d,e,f,mt,{tip:rt}),(x,y,z1,z2,rr,mt)=>cyl(x,y,z1,z2,rr,mt,{tip:rt}))}}
  const hz1=W06.sill+W06.h+0.1;   // hood bottom 5'4", about 2'6" above the counter
- {const c=fuG['FU-81'],o=fuG['FU-82'],cy=(c.y1+c.y2)/2,ct=`FU-81 · ${c.name} · ${c.note}`,ot=`FU-82 · ${o.name} · ${o.note}`,DZ=8.5;
+ {const c=fuG['FU-81'],o=fuG['FU-82'],cy=(c.y1+c.y2)/2,ct=`FU-81 · ${c.name} · ${c.note}`,ot=`FU-82 · ${o.name} · ${o.note}`,DZ=6.35;
   // like the owner's picture (60 cm): intake tray, sloping black glass hood, short upright body; about 41 cm high, 48 cm deep
   const x0=X1+0.012,Dp=c.x2-x0,zb=hz1,chB=std({color:'#2b2c2e',roughness:0.35,metalness:0.5});
   box(x0,c.x2,c.y1,c.y2,zb,zb+0.12,chB,{tip:ct});box(x0+0.15,c.x2-0.1,c.y1+0.1,c.y2-0.1,zb-0.01,zb,std({color:'#55585c',roughness:0.4,metalness:0.6}),{cast:false,tip:ct});
   {const sh=new THREE.Shape([[x0,zb+0.12],[c.x2,zb+0.12],[c.x2,zb+0.2],[x0+0.95,zb+0.48],[x0,zb+0.48]].map(([X,Z])=>new THREE.Vector2(mx(X),m(Z+ZOFF))));
    const me=new THREE.Mesh(new THREE.ExtrudeGeometry(sh,{depth:m(c.y2-c.y1),bevelEnabled:false}),MAT.blackGlass);me.position.z=m(c.y1);me.castShadow=true;scene.add(me);named(me,ct)}
   box(x0,x0+0.9,cy-0.49,cy+0.49,zb+0.48,zb+1.35,MAT.blackGlass,{tip:ct});
-  // 6" duct up the gap between the east lofts, then out through GW-01 to the cowl
-  {const al=std({color:'#d3d6d9',roughness:0.35,metalness:0.3}),px=3.9,dt='Chimney duct, 6" round, aluminium · out through GW-01 to the cowl FU-82';cyl(px,cy,zb+1.35,DZ,0.25,al,{tip:dt,seg:20});
-   const d=new THREE.Mesh(new THREE.CylinderGeometry(m(0.25),m(0.25),m(px-o.x2),20),al);d.rotation.z=Math.PI/2;d.position.set(mx((px+o.x2)/2),m(DZ+ZOFF),m(cy));scene.add(d);named(d,dt);
-   const el=new THREE.Mesh(new THREE.SphereGeometry(m(0.25),20,14),al);el.position.set(mx(px),m(DZ+ZOFF),m(cy));scene.add(el);named(el,dt)}
+  // 6" duct straight back from the top of the chimney body through GW-01 to the cowl (hidden behind the chimney)
+  {const al=std({color:'#d3d6d9',roughness:0.35,metalness:0.3}),px=3.95,dt='Chimney duct, 6" round, aluminium · straight back through GW-01 to the cowl FU-82';
+   const d=new THREE.Mesh(new THREE.CylinderGeometry(m(0.25),m(0.25),m(px-o.x2),20),al);d.rotation.z=Math.PI/2;d.position.set(mx((px+o.x2)/2),m(DZ+ZOFF),m(cy));scene.add(d);named(d,dt)}
   box(o.x1,o.x2,o.y1,o.y2,DZ-0.4,DZ+0.35,MAT.steel,{tip:ot});box(o.x2,2.95,cy-0.25,cy+0.25,DZ-0.25,DZ+0.25,MAT.steel,{tip:ot});box(o.x1-0.01,o.x1+0.1,o.y1+0.03,o.y2-0.03,DZ-0.42,DZ-0.36,MAT.blackMetal,{cast:false,tip:ot})}
  // sink FU-51 on the back counter, black gooseneck tap; mixer grinder FU-64; RO purifier FU-66
  const s=fuG['FU-51'];box(s.x1+0.1,s.x2-0.1,s.y1+0.08,s.y2-0.08,KCH,KCH+0.012,MAT.steel,{cast:false,tip:`FU-51 · Kitchen sink, single bowl, steel · ${s.note}`});
@@ -1299,25 +1299,58 @@ if(P.backwall){const bw=P.backwall,[a,b]=bw.pts,t=bw.t,old=std({color:'#cdc4b3',
     if(fl===1)cyl((x1+x2)/2,y1+6,NBZ+13.5,NBZ+18,2.3,std({color:'#1f2124',roughness:0.6}),{tip:'Black water tank (house behind)'})}
   // their compound walls along the side boundaries behind ours
   for(const x of [1.0,21.0]) box(x-0.19,x+0.19,backY(x)+0.05,backY(x)+3.0,NBZ,NBZ+6,old,{tip:'Compound wall of the houses behind (existing)'});}
-// back flower bed FU-73: 1'6" deep along BW-09, 9" brick kerb, red soil; a row of Tamil Nadu flowering plants; Tulsi maadam FU-74; clothes line FU-75
+// back flower bed FU-73: 1'6" deep along BW-09, 9" brick kerb, red soil; a row of Tamil Nadu flowering plants; clothes line FU-75
 {const fb=fuG['FU-73'],x1=fb.x1,x2=fb.x2,iy=x=>backY(x)-0.375,KZ=GRD+0.75;
  const kerb=std({color:'#a8553a',roughness:0.9}),soil=std({color:'#7a3f26',roughness:1});
  prism([[x1,iy(x1)],[x2,iy(x2)],[x2,iy(x2)-1.5],[x1,iy(x1)-1.5]],GRD,KZ-0.12,soil,`FU-73 · ${fb.name} · red soil · ${fb.note}`);
  prism([[x1,iy(x1)-1.37],[x2,iy(x2)-1.37],[x2,iy(x2)-1.5],[x1,iy(x1)-1.5]],GRD,KZ,kerb,'FU-73 · brick kerb, 9" high, terracotta red');
  box(x1,x1+0.13,iy(x1)-1.5,iy(x1),GRD,KZ,kerb,{tip:'FU-73 · brick kerb'});box(x2-0.13,x2,iy(x2)-1.5,iy(x2),GRD,KZ,kerb,{tip:'FU-73 · brick kerb'});
  for(const pl of (P.plants||[])){const sp=TN_PLANTS[pl.type];if(!sp)continue;const g=createTNPlant(THREE,mergeGeometries,{type:pl.type,seed:+pl.id.slice(3)});
-   const onBed=pl.id!=='PL-13';g.position.set(mx(pl.x),m(onBed?KZ-0.12:GRD+3.2),m(pl.y));g.rotation.y=+pl.id.slice(3)*1.7;scene.add(g);
+   g.position.set(mx(pl.x),m(KZ-0.12),m(pl.y));g.rotation.y=+pl.id.slice(3)*1.7;scene.add(g);
    g.traverse(o=>{if(o.isMesh){o.userData.keepUV=true;named(o,`${pl.id} · ${sp.name} · ${sp.note}`)}})}
- // Tulsi maadam: plastered pedestal with a lamp niche facing east and a planter on top
- const tm=fuG['FU-74'],cx=(tm.x1+tm.x2)/2,cy=(tm.y1+tm.y2)/2,wm=std({color:'#f1e9d8',roughness:0.9}),tt=`FU-74 · Tulsi maadam · ${tm.note}`;
- box(tm.x1-0.15,tm.x2+0.15,tm.y1-0.15,tm.y2+0.15,GRD,GRD+0.35,wm,{tip:tt});box(tm.x1,tm.x2,tm.y1,tm.y2,GRD+0.35,GRD+2.6,wm,{tip:tt});
- box(tm.x1-0.1,tm.x2+0.1,tm.y1-0.1,tm.y2+0.1,GRD+2.6,GRD+3.2,wm,{tip:tt});box(tm.x1-0.006,tm.x1+0.25,cy-0.3,cy+0.3,GRD+1.0,GRD+1.7,std({color:'#6b3a1c',roughness:0.9}),{tip:'Lamp niche (vilakku maadam), facing east'});
- for(const [dx,dy] of [[-1,-1],[1,-1],[1,1],[-1,1]]) box(cx+dx*0.75-0.06,cx+dx*0.75+0.06,cy+dy*0.75-0.06,cy+dy*0.75+0.06,GRD+3.2,GRD+3.4,std({color:'#c9a96b',roughness:0.7}),{tip:'Tulsi maadam corner'});
- box(tm.x1+0.12,tm.x2-0.12,tm.y1+0.12,tm.y2-0.12,GRD+3.15,GRD+3.21,soil,{tip:'Soil'});
  // clothes line: two black MS posts with T-arms and three wires
  const cl=fuG['FU-75'],cyy=(cl.y1+cl.y2)/2,tc=`FU-75 · Clothes drying line · ${cl.note}`;
  for(const x of [cl.x1,cl.x2]){box(x-0.06,x+0.06,cyy-0.06,cyy+0.06,GRD,GRD+6,MAT.blackMetal,{tip:tc});box(x-0.04,x+0.04,cyy-0.6,cyy+0.6,GRD+5.9,GRD+6.0,MAT.blackMetal,{tip:tc})}
  for(const dy of [-0.5,0,0.5]) box(cl.x1,cl.x2,cyy+dy-0.012,cyy+dy+0.012,GRD+5.95,GRD+5.975,MAT.steel,{cast:false,tip:tc});}
+// garden plan GD-01 to GD-11 (model.py GARDEN): CC0 plants from Poly Haven (assets/plants, see 3d/ASSETS.md) and code-made ones (models/garden-plants.js, tn-plants.js)
+{const GD=P.garden||[],GN=P.gardenNames||{};
+ const terra=std({color:'#b5643a',roughness:0.9}),soilG=std({color:'#4a2f1e',roughness:1}),brick=std({color:'#a8553a',roughness:0.9}),granite=std({color:'#8a8d90',roughness:0.85}),
+       wire=std({color:'#c9ccd0',roughness:0.3,metalness:0.9}),bracket=std({color:'#26282b',roughness:0.5,metalness:0.6}),blackPot=std({color:'#2b2d30',roughness:0.6});
+ const T=(g,extra)=>`${g.id} · ${g.name}${extra?' · '+extra:''} · ${g.where}`;
+ const tipAll=(o,t)=>o.traverse(n=>{if(n.isMesh){n.userData.keepUV=true;n.castShadow=true;n.receiveShadow=true;named(n,t)}});
+ const refresh=()=>{renderer.shadowMap.needsUpdate=true;if(photo&&pt)pt.setScene(scene,camera);invalidate()};
+ const glbCache={},loadGLB=url=>glbCache[url]||(glbCache[url]=new Promise((res,rej)=>new GLTFLoader().load(url+'?v=__BUILD__',g=>res(g.scene),undefined,rej)));
+ // a downloaded plant, scaled so its height (h, feet) or width (w, feet) fits, standing at plan x, y on height z (feet)
+ const placeGLB=(url,x,y,z,size,rot,t)=>loadGLB(url).then(src=>{const o=src.clone(true),sz=new THREE.Box3().setFromObject(o).getSize(new THREE.Vector3());
+   o.scale.setScalar(size.h?m(size.h)/sz.y:m(size.w)/Math.max(sz.x,sz.z));o.rotation.y=rot||0;o.position.set(mx(x),m(z),m(y));scene.add(o);tipAll(o,t);refresh();return o}).catch(e=>console.warn('plant model',url,e));
+ // a round terracotta pot: rim radius r, height ph (feet), soil just below the rim; returns the soil height
+ const pot=(x,y,z,r,ph,t,mt)=>{cyl(x,y,z,z+ph-0.08,r*0.75,mt||terra,{rTop:r*0.97,tip:t});cyl(x,y,z+ph-0.08,z+ph,r,mt||terra,{tip:t});cyl(x,y,z+ph-0.14,z+ph-0.1,r*0.93,soilG,{tip:t});return z+ph-0.11};
+ const add=(o,x,y,z,t,rot)=>{o.position.set(mx(x),m(z),m(y));o.rotation.y=rot||0;scene.add(o);tipAll(o,t);return o};
+ const tn=(type,seed,x,y,z,t)=>{if(!TN_PLANTS[type])return null;return add(createTNPlant(THREE,mergeGeometries,{type,seed}),x,y,z,t,seed*1.7)};
+ const basin=(x,y,r,t)=>{cyl(x,y,GRD-0.05,GRD+0.04,r,soilG,{tip:t,seg:28});const rim=new THREE.Mesh(new THREE.TorusGeometry(m(r),m(0.12),6,32),soilG);rim.rotation.x=Math.PI/2;rim.position.set(mx(x),m(GRD+0.04),m(y));scene.add(rim);named(rim,t)};
+ for(const g of GD){const zB=g.z==='porch'?0:GRD,t=T(g);
+  if(g.kind==='path'){for(const [cx,cy,ax] of g.stones){const hx=ax?g.sl/2:g.w/2,hy=ax?g.w/2:g.sl/2;box(cx-hx,cx+hx,cy-hy,cy+hy,GRD-0.1,GRD+0.05,granite,{tip:T(g,'granite slab'),cast:false})}}
+  else if(g.kind==='pot'){
+   if(g.model==='areca'){const s=pot(g.x,g.y,zB,g.r,1.2,t);add(createArecaPalm(THREE,mergeGeometries,{seed:3,height:m(g.h-1.2),face:[0,-1],spread:0.2}),g.x,g.y,s,t,0).scale.x=0.75}
+   else if(g.model==='anthurium'){const s=pot(g.x,g.y,zB,g.r,0.85,t,blackPot);placeGLB('assets/plants/anthurium.glb',g.x,g.y,s-0.05,{h:g.h-0.8},0.6,T(g,'model: Poly Haven, CC0'))}
+   else if(g.model==='syngonium')placeGLB('assets/plants/syngonium-pot.glb',g.x,g.y,zB,{h:g.h},2.0,T(g,'model: Poly Haven, CC0'));
+   else if(g.model==='aloe')(g.xs||[g.x]).forEach((x,i)=>placeGLB('assets/plants/aloe-pot.glb',x,g.y,zB,{h:g.h},i*1.3,T(g,'model: Poly Haven, CC0')));
+   else if(g.model==='elumichai'){const s=pot(g.x,g.y,zB,g.r,1.4,t);tn('elumichai',11,g.x,g.y,s,t)}}
+  else if(g.kind==='wallpots'){for(const [i,y] of g.ys.entries()){const cx=g.x+g.r+0.02,z=GRD+g.zb;
+    box(g.x,g.x+0.06,y-0.05,y+0.05,z-0.3,z+0.4,bracket,{tip:T(g,'steel wall bracket')});box(g.x,cx+0.1,y-0.04,y+0.04,z-0.05,z,bracket,{tip:T(g,'steel wall bracket')});
+    const s=pot(cx,y,z,g.r,0.6,t,blackPot);placeGLB('assets/plants/fern.glb',cx,y,s-0.04,{w:1.15},i*1.1,T(g,'Boston fern · model: Poly Haven, CC0'))}}
+  else if(g.kind==='creeper'){const zs=GRD+0.5;
+   box(g.x1,g.x2,g.y1,g.y2,GRD-0.1,zs,brick,{tip:T(g,'9" wall bed, brick kerb')});box(g.x1+0.06,g.x2-0.06,g.y1+0.06,g.y2-0.06,zs,zs+0.02,soilG,{tip:t});
+   for(let k=0;k<4;k++){const y=g.y1+0.4+k*(g.y2-g.y1-0.8)/3;box(g.x1+0.04,g.x1+0.07,y-0.012,y+0.012,zs,GRD+g.h,wire,{cast:false,tip:T(g,'steel trellis wire')})}
+   for(const z of [GRD+2.5,GRD+4.0,GRD+5.5])box(g.x1+0.04,g.x1+0.07,g.y1+0.4,g.y2-0.4,z-0.012,z+0.012,wire,{cast:false,tip:T(g,'steel trellis wire')});
+   const c=tn('mullai',5,g.x1+0.42,(g.y1+g.y2)/2,zs,t);if(c)c.scale.set(0.28,1,1)}
+  else if(g.kind==='tree'){basin(g.x,g.y,g.r,T(g,'soil basin for watering'));
+   if(g.model==='banana')add(createBanana(THREE,mergeGeometries,{seed:6,height:m(g.h/0.87),avoid:[[1,0],[-1,0]],avoidCos:0.6}),g.x,g.y,GRD,t,0);
+   else if(g.model==='moringa')add(createMoringa(THREE,mergeGeometries,{seed:8,height:m(g.h),crown:m(g.cr),avoid:[1,0]}),g.x,g.y,GRD,t,0)}
+  else if(g.kind==='bed'){const k=0.375,zt=GRD+g.kh,tb=T(g,'brick kerb, 1\' high');
+   box(g.x1,g.x2,g.y1,g.y1+k,GRD-0.1,zt,brick,{tip:tb});box(g.x1,g.x2,g.y2-k,g.y2,GRD-0.1,zt,brick,{tip:tb});box(g.x1,g.x1+k,g.y1+k,g.y2-k,GRD-0.1,zt,brick,{tip:tb});box(g.x2-k,g.x2,g.y1+k,g.y2-k,GRD-0.1,zt,brick,{tip:tb});
+   box(g.x1+k,g.x2-k,g.y1+k,g.y2-k,GRD-0.1,zt-0.12,soilG,{tip:T(g,'red soil with compost'),cast:false});
+   g.plants.forEach(([tp,x,y],i)=>tn(tp,i+3,x,y,zt-0.12,`${g.id} · ${GN[tp]||tp} · ${g.name} · ${g.where}`))}}}
 // parked vehicles, on the spots of the 2D plan: car (nose to the house), two-wheelers in a lane east of the car (front to the gate)
 // ---- car pose and the parking animation (route planned in v1/tools/car_route_plan.mjs) ----
 const carAnim={car:null,on:false,t0:0,track:null,lastShadow:0};
@@ -1543,10 +1576,12 @@ const VIEWS=[
  {p:[14.6,FFZ+5.6,77.4],t:[17.4,1.0,76.6],fl:'F'},       // looking down the ST-2 well
  {p:[11.4,FFZ+EYE,85.6],t:[19.5,FFZ+3.6,95.0],fl:'F'},   // bedroom 3 from its lobby
  {p:[15.2,FFZ+30,85.0],t:[15.2,FFZ,85.01],top:true,fl:'F'},   // top of the first floor (its roof and ceilings hidden)
- {p:[19.6,4.4,96.0],t:[6.0,0.6,104.3]},   // back garden: flower bed along BW-09, clothes line, Tulsi maadam beyond
+ {p:[19.6,4.4,96.0],t:[6.0,0.6,104.3]},   // back garden: flower bed along BW-09, clothes line
  {p:[7.0,PKZ+5.25,24.0],t:[7.5,RDZ+0.8,-2.0]},   // levels at the gate: from the parking, looking down the ramp to the crest, the drain and the road: road, crest and drain, ramp, parking
  {p:[9.0,RDZ+8.0,-14.0],t:[11.0,4.5,34.0]},   // front elevation from across the road, below the neem crown
  {p:[4.2,PKZ+9.5,29.6],t:[11.5,RDZ+1.0,-2.0]},   // watch the car: from the house-front corner of the parking, out to the gate and the road
+ {p:[5.4,EYE+GRD,74.6],t:[3.0,1.6,96.0]},   // side garden from the D-05 path: jasmine, banana, vegetable bed, drumstick, herb bed
+ {p:[7.3,PKZ+5.25,32.2],t:[3.4,1.4,39.6]},   // porch pots from the parking bay: areca palm, anthurium, syngonium
 ];
 let hfov=75;
 function applyFov(){const a=camera.aspect||1;camera.fov=a>=1?THREE.MathUtils.radToDeg(2*Math.atan(Math.tan(THREE.MathUtils.degToRad(hfov)/2)/a)):hfov;camera.updateProjectionMatrix()}   // the lens angle spans the longer side

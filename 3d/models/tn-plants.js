@@ -17,6 +17,17 @@ export const TN_PLANTS = {
   rose:           { name: 'Rose (pink)', note: 'Indian pink rose', h: 0.75, w: 0.55, leaf: [0.05, 0.03], leafC: '#355e2b', nLeaf: 160, fl: 'rose', flC: '#c2185b', flR: 0.032, nFl: 8 },
   karuveppilai:   { name: 'Karuveppilai (Curry leaf)', note: 'for the kitchen, small tree kept trimmed', h: 1.4, w: 0.6, leaf: [0.035, 0.014], leafC: '#3d6b2b', nLeaf: 520, fl: null },
   tulsi:          { name: 'Tulsi (Holy basil)', note: 'in the Tulsi maadam, worshipped daily', h: 0.6, w: 0.5, leaf: [0.035, 0.022], leafC: '#3f6a32', nLeaf: 260, fl: 'spike', flC: '#7a4a7e', flR: 0.012, nFl: 14 },
+  // garden plan (branch garden-v1): kitchen vegetables and herbs in the raised beds, climbing jasmine on the wall, lemon in a pot
+  thakkali:       { name: 'Thakkali (Tomato)', note: 'in the vegetable bed GD-07', h: 0.8, w: 0.55, leaf: [0.06, 0.035], leafC: '#3f7330', nLeaf: 200, fl: 'ball', flC: '#d8341c', flR: 0.026, nFl: 9 },
+  kathiri:        { name: 'Kathirikkai (Brinjal)', note: 'in the vegetable bed GD-07', h: 0.7, w: 0.5, leaf: [0.1, 0.06], leafC: '#4a6e3a', nLeaf: 120, fl: 'ball', flC: '#4a1d5e', flR: 0.04, nFl: 5 },
+  milagai:        { name: 'Milagai (Chilli)', note: 'in the vegetable bed GD-07', h: 0.55, w: 0.45, leaf: [0.05, 0.02], leafC: '#356b2c', nLeaf: 170, fl: 'spike', flC: '#c4161c', flR: 0.009, nFl: 12 },
+  keerai:         { name: 'Keerai (Amaranth greens)', note: 'in the vegetable bed GD-07, cut every 3 weeks', h: 0.35, w: 0.4, leaf: [0.06, 0.04], leafC: '#5b8a2c', nLeaf: 110, fl: null },
+  pudina:         { name: 'Pudina (Mint)', note: 'in the herb bed GD-09', h: 0.22, w: 0.45, leaf: [0.035, 0.024], leafC: '#4f8f3a', nLeaf: 200, fl: null },
+  karpooravalli:  { name: 'Karpooravalli (Ajwain leaf)', note: 'in the herb bed GD-09, for coughs and colds', h: 0.32, w: 0.4, leaf: [0.05, 0.045], leafC: '#76a052', nLeaf: 110, fl: null },
+  kothamalli:     { name: 'Kothamalli (Coriander)', note: 'in the herb bed GD-09, sow every month', h: 0.28, w: 0.35, leaf: [0.025, 0.02], leafC: '#5f9a3e', nLeaf: 180, fl: null },
+  vallarai:       { name: 'Vallarai (Gotu kola)', note: 'in the herb bed GD-09, low and spreading', h: 0.15, w: 0.45, leaf: [0.03, 0.03], leafC: '#4c8a36', nLeaf: 120, fl: null },
+  mullai:         { name: 'Mullai (Climbing jasmine)', note: 'on the wire trellis GD-05', h: 1.6, w: 1.2, leaf: [0.07, 0.035], leafC: '#2f5e2a', nLeaf: 480, fl: 'star', flC: '#fbfaf3', flR: 0.02, nFl: 90, cenC: '#f1ecc8', base: 0.05 },
+  elumichai:      { name: 'Elumichai (Lemon)', note: 'in a big pot GD-11', h: 1.15, w: 0.75, leaf: [0.07, 0.035], leafC: '#2f6b2a', nLeaf: 330, fl: 'ball', flC: '#e3cf2a', flR: 0.03, nFl: 14, base: 0.3, trunk: true },
 };
 
 export function createTNPlant(THREE, mergeGeometries, opts = {}) {
@@ -49,19 +60,19 @@ export function createTNPlant(THREE, mergeGeometries, opts = {}) {
   };
 
   // canopy envelope: an ellipsoid sitting on a short bare base
-  const H = sp.h * rr(0.9, 1.1), R = sp.w / 2 * rr(0.9, 1.1), base = H * (opts.type === 'karuveppilai' ? 0.35 : 0.12);
+  const H = sp.h * rr(0.9, 1.1), R = sp.w / 2 * rr(0.9, 1.1), base = H * (sp.base ?? (opts.type === 'karuveppilai' ? 0.35 : 0.12)), woody = opts.type === 'karuveppilai' || sp.trunk;
   const cy = base + (H - base) * 0.55, ry = (H - base) * 0.5;
   const onShell = (k = 1) => { const t = rr(0, Math.PI * 2), u = rr(-0.55, 1); const c = Math.sqrt(1 - u * u);
     return V(Math.cos(t) * c * R * k, cy + u * ry * k, Math.sin(t) * c * R * k) };
 
   // branches from the base to points on the canopy shell
-  const nB = opts.type === 'karuveppilai' ? 5 : Math.round(rr(6, 9)), tips = [];
+  const nB = woody ? 5 : Math.round(rr(6, 9)), tips = [];
   for (let i = 0; i < nB; i++) {
     const tip = onShell(rr(0.75, 0.95)), mid = V(tip.x * 0.45 + rr(-0.04, 0.04), base + (tip.y - base) * 0.5, tip.z * 0.45 + rr(-0.04, 0.04));
-    const r0 = opts.type === 'karuveppilai' ? 0.016 : 0.006;
+    const r0 = woody ? 0.016 : 0.006;
     stem(V(rr(-0.02, 0.02), 0, rr(-0.02, 0.02)), mid, r0); stem(mid, tip, r0 * 0.6); tips.push(tip);
   }
-  if (opts.type === 'karuveppilai') stem(V(0, 0, 0), V(0, base + 0.1, 0), 0.025);
+  if (woody) stem(V(0, 0, 0), V(0, base + 0.1, 0), 0.025);
 
   // leaves on the canopy, facing outward and a little up
   const cen = V(0, cy, 0);
