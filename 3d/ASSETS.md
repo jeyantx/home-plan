@@ -39,7 +39,7 @@ All CC0 (public domain) from Poly Haven, https://polyhaven.com
 ## Downloaded models (`assets/vehicles/`)
 | File | What | Source | Licence |
 |---|---|---|---|
-| `compact-car.glb` | Car in the parking (scaled to VW Virtus size, 4561 x 1752 mm body); materials restyled in `models/vehicles.js` (`loadCarGLB`) | Free3D "Compact Car (Generic)", https://free3d.com/3d-model/compact-car-generic-875091.html, converted from `202009122216-2.blend` with Blender 5.2 | Personal use only: do not share or publish this model |
-| `vfr800.glb` | Two-wheeler TW-1 under ST-1: Honda VFR800 at its real length (2120 mm); converted from `vfr800.blend` (mirror applied, smoothing off, backdrop removed); its plain materials restyled in the 3D page (`vfrMats`) | "Honda VFR800" by danielfc10, Blend Swap, http://www.blendswap.com/blends/view/45121 | CC BY 3.0: credit danielfc10 |
+| `compact-car.glb` | Car in the parking (scaled to VW Virtus size, 4561 x 1752 mm body); materials restyled in `models/vehicles.js` (`loadCarGLB`) | Free3D "Compact Car (Generic)", https://free3d.com/3d-model/compact-car-generic-875091.html, converted from `202009122216-2.blend` with Blender 5.2 | Personal use only (Free3D licence); published here at the owner's choice |
+| `vfr800.glb` | Two-wheeler TW-1 along BW-01: Honda VFR800 at its real length (2120 mm); converted from `vfr800.blend` (mirror applied, smoothing off, backdrop removed); its plain materials restyled in the 3D page (`vfrMats`) | "Honda VFR800" by danielfc10, Blend Swap, http://www.blendswap.com/blends/view/45121 | CC BY 3.0: credit danielfc10 |
 | `motorcycle.glb` | (not used now) Baotian Sanya motorcycle | Provided by the owner | Not recorded |
-| `scooter.glb` | Two-wheeler TW-2 along BW-07 (sized to an Ather 450X, 1837 mm), textures reduced to 1024 px; converted from the owner's `Scooter Textured.blend` | Provided by the owner | Not recorded: check before sharing |
+| `scooter.glb` | Two-wheeler TW-2 along BW-01 (sized to an Ather 450X, 1837 mm), textures reduced to 1024 px; converted from the owner's `Scooter Textured.blend` | Provided by the owner | Not recorded: check before sharing |

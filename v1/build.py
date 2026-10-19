@@ -201,6 +201,33 @@ for key,name,test in GROUPS:
         if i in _used or not test(_title(s)): continue
         _used.add(i); body+=_re.sub(r' \((branch [\w-]+|approved), ?(from [\w-]+)?[^)]*\)','',s)
     _tabs.append((key,name,body))
+def _md(md):   # small Markdown to HTML for the credits tab (headings, tables, lists, paragraphs, `code`, links)
+    import html as _h
+    def inl(t):
+        t=_h.escape(t);t=_re.sub(r'`([^`]+)`',r'<code>\1</code>',t)
+        return _re.sub(r'(https?://[^\s|<)]+)',r'<a href="\1" target="_blank" rel="noopener">\1</a>',t)
+    out,sec,rows,lst=[],[],[],[]
+    def flush():
+        nonlocal rows,lst
+        if rows:
+            hd,*bd=[r for r in rows if not _re.match(r'^\|[-| ]+\|$',r)]
+            cells=lambda r:[c.strip() for c in r.strip('|').split('|')]
+            sec.append('<table class="t"><tr>'+''.join(f'<th>{inl(c)}</th>' for c in cells(hd))+'</tr>'+''.join('<tr>'+''.join(f'<td>{inl(c)}</td>' for c in cells(r))+'</tr>' for r in bd)+'</table>');rows=[]
+        if lst: sec.append('<ul>'+''.join(f'<li>{inl(x)}</li>' for x in lst)+'</ul>');lst=[]
+    for line in md.split('\n'):
+        if line.startswith('# '): continue
+        if line.startswith('## '):
+            flush()
+            if sec and sec[0].startswith('<h2>'): out.append('<section>'+''.join(sec)+'</section>')
+            sec=[f'<h2>{inl(line[3:])}</h2>'];continue
+        if line.startswith('|'): rows.append(line.strip());continue
+        if line.startswith('- '): lst.append(line[2:]);continue
+        flush()
+        if line.strip(): sec.append(f'<p class="note">{inl(line)}</p>')
+    flush()
+    if sec: out.append('<section>'+''.join(sec)+'</section>')
+    return ''.join(out)
+_tabs.append(('credits','Credits','<section><h2>Credits</h2><p>Libraries, textures, the sky image and the downloaded 3D models used by this plan, with their sources and licences. Everything else (the plan, the drawings and the code-made models) was made for this house.</p></section>'+_md(open(ROOT+'3d/ASSETS.md').read())))
 def _btn(k,n): return f'<button role="tab" data-tab="{k}" aria-selected="false">{n}</button>'
 app=f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Home Plan</title>
@@ -230,7 +257,7 @@ main{{flex:1;min-height:0;position:relative}}
 .t td{{border-bottom:1px solid var(--line);padding:5px 6px;vertical-align:top}}
 .t .n{{text-align:right;font-variant-numeric:tabular-nums}}.t .lbl{{color:var(--muted)}}.t tr.tot td{{font-weight:650}}
 td.c{{font-weight:700;white-space:nowrap;color:var(--accent)}}
-.note{{color:var(--muted);font-size:12.5px;margin:6px 0 0}}
+.note{{color:var(--muted);font-size:12.5px;margin:6px 0 0}}\n.doc code{{font:12px ui-monospace,Menlo,monospace;background:var(--chip);padding:1px 4px;border-radius:4px}}\n.doc a{{color:var(--accent)}}.doc p{{margin:6px 0}}
 .wide{{overflow-x:auto}}
 @media (max-width:640px){{header{{flex-direction:column;align-items:stretch;gap:0}}h1{{margin:0 0 4px}}.doc{{padding:12px 10px 40px}}}}
 </style></head><body>
