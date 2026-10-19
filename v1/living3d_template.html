@@ -1126,7 +1126,12 @@ if(P.underground){const iron=std({color:'#3d4043',roughness:0.55,metalness:0.6})
     const gAt=(x,y)=>front?hFront(x,y):GRD;
     if(/sump/i.test(name)){const [x1,x2,y1,y2]=g;box(x1,x2,y1,y2,GRD-0.3,GRD+0.5,MAT.ext,{tip:`${code} · top of the sump, 6" above the garden · ${inside}`});}
     for(const c of covers){
-      if(c.length===4){const z=/sump/i.test(name)?GRD+0.5:gAt((c[0]+c[1])/2,(c[2]+c[3])/2);box(c[0],c[1],c[2],c[3],z-0.02,z+0.04,iron,{cast:false,tip});}
+      if(c.length===4&&/septic/i.test(name)){const z=gAt((c[0]+c[1])/2,(c[2]+c[3])/2)+0.03,[a,b,e,f]=c,rim=0.06,steel=std({color:'#9ea3a7',roughness:0.35,metalness:0.85}),
+          tt=`${code} · recessed (tile-in) cover, 2' x 2': a steel tray filled with the same parking tile, so it blends into the floor; lift it with the two keys to clean the tank · ${tip}`;
+        box(a+rim,b-rim,e+rim,f-rim,z-0.06,z+0.004,MAT.parkTile,{cast:false,tip:tt});                       // tile infill, flush with the floor
+        for(const [x1,x2,y1,y2] of [[a,b,e,e+rim],[a,b,f-rim,f],[a,a+rim,e+rim,f-rim],[b-rim,b,e+rim,f-rim]])box(x1,x2,y1,y2,z-0.06,z+0.008,steel,{cast:false,tip:tt});   // thin steel rim
+        for(const kx of [a+0.35,b-0.35])box(kx-0.04,kx+0.04,(e+f)/2-0.015,(e+f)/2+0.015,z+0.004,z+0.006,MAT.blackMetal,{cast:false,tip:tt+' · key hole'});}
+      else if(c.length===4){const z=/sump/i.test(name)?GRD+0.5:gAt((c[0]+c[1])/2,(c[2]+c[3])/2);box(c[0],c[1],c[2],c[3],z-0.02,z+0.04,iron,{cast:false,tip});}
       else{const [cx,cy,r]=c,z=gAt(cx,cy),sl=(gAt(cx,cy+0.2)-gAt(cx,cy-0.2))/0.4,rain=/rain/i.test(name);
         const me=new THREE.Mesh(new THREE.CylinderGeometry(m(r),m(r),m(0.06),40),rain?MAT.blackMetal:iron);me.position.set(mx(cx),m(z+0.01),m(cy));me.rotation.x=-Math.atan(sl);me.receiveShadow=true;scene.add(me);named(me,tip);
         if(rain)for(let k=-r+0.15;k<r-0.1;k+=0.18){const w=Math.sqrt(Math.max(0,r*r-k*k));box(cx-w+0.05,cx+w-0.05,cy+k,cy+k+0.04,z+0.04,z+0.06,MAT.paver,{cast:false,tip})}}}

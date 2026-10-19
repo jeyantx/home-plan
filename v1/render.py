@@ -263,7 +263,7 @@ def underground():
         else:
             cx,cy,r=g; x,y=S(cx,cy); E(f'<circle cx="{x:.3f}" cy="{y:.3f}" r="{r}" fill="{fill}" fill-opacity="0.75" stroke="{st}" stroke-width="0.06" stroke-dasharray="0.35 0.2" data-tip="{tip(tipt)}"/>')
         for c in covers:
-            if len(c)==4: rect(c[0],c[1],c[2],c[3],'#5d646d','#333',0.03)
+            if len(c)==4: rect(c[0],c[1],c[2],c[3],'#c9cac6' if code=='UG-01' else '#5d646d','#333',0.05 if code=='UG-01' else 0.03)   # septic tank: tile-in covers
             else: x,y=S(c[0],c[1]); E(f'<circle cx="{x:.3f}" cy="{y:.3f}" r="{c[2]*0.8:.3f}" fill="none" stroke="#333" stroke-width="0.08"/>')
         short=name.split(',')[0].replace('Underground water tank (sump)','Sump').replace(' for the septic tank','').replace('Rainwater recharge pit','Recharge pit')
         cap=name.split(', ')[1] if ', ' in name else ''
