@@ -120,10 +120,10 @@ GF_OUTLINE=[(8.5,30.75),(21,30.75),(21,95.125),(9.5,95.125),(9.5,73.875),(6.0,73
 FF_OUTLINE=R(9.5,21.0,73.125,97.375)
 # site levels, in feet above the road crown in front of the gate (house floor = +3.5)
 LEVELS=dict(road=0.0,hump=0.5,parking=2.0,garden=2.5,floor=3.5)
-RAMP=dict(y_hump=1.0,y_crest=3.25,y_top=12.25,drain=(2.5,3.25))   # gate bevel to Y 1', crest to 3'3" (drain at its inner edge), ramp 1 in 6 to Y 12'3"; the ramp is for the car gate GT-01 only
+RAMP=dict(y_hump=1.0,y_crest=3.25,y_top=10.75,ease=1.5,drain=(2.5,3.25))   # gate bevel to Y 1', crest to 3'3" (drain at its inner edge), ramp to Y 10'9": 1'6" at 1 in 8, 4'6" at 1 in 4 (14 deg), 1'6" at 1 in 8; for the car gate GT-01 only
 # small gate GT-02: three 6" steps up from the crest (risers in line with ST-1's treads), then a level platform at parking height between the tree well and ST-1A;
-# its east edge is a retaining kerb along the car's ramp (16" high at the north end, nothing where the ramp reaches the parking at Y 12'3")
-SIDE_PLATFORM=dict(x1=13.5,x2=17.125,steps=(2.667,3.5,4.333),xe=12.5,y_end=12.25)
+# its east edge is a retaining kerb along the car's ramp (16" high at the north end, nothing where the ramp reaches the parking at Y 10'9")
+SIDE_PLATFORM=dict(x1=13.5,x2=17.125,steps=(2.667,3.5,4.333),xe=12.5,y_end=10.75)
 BRANCH_NOTES='''<section class="ask"><h2>Parking plan (branch exterior-v2, for review)</h2>
 <ol>
 <li><b>Car:</b> VW Virtus size (14'11" x 5'9"), <b>reversed in</b>: nose to the gate, back 1' from the front wall, on the level parking (Y 14'9" to 29'9"), now 1' further east (centre X 11'1½"): a 3'5" aisle to TW-1 on its west side and a 7'10" walkway on its east side to the porch. <b>Route along the east side</b> (owner's sketch): it drives out forward in one smooth curve, through GT-01 near its east leaf, and turns east along the road; coming in, it comes from the west, stops just past the gate and reverses back along the same curve (one stop). Gaps: 7" to the folded east gate leaf, 11½" to the east pillar, 1'1" to the tree well, 1'5" to the platform kerb, 2' to the scooter. Checked with a route planner using the Virtus turning circle; the gate stays as it is.</li>
@@ -145,7 +145,7 @@ BRANCH_NOTES='''<section class="ask"><h2>Parking plan (branch exterior-v2, for r
 <ol>
 <li><b>Levels above the road:</b> gate hump +6", parking +2'0", gardens, side passage and back yard +2'6", house floor +3'6" (1' plinth above the gardens).</li>
 <li><b>Gate:</b> a 1' bevel from the road to a 6" crest, a 2'3" level strip at the crest, then a covered drain across the drive (to the rainwater pit and the road drain).</li>
-<li><b>Drive ramp:</b> 1 in 6 (steeper, shorter), from Y 3'3" to 12'3", rising 1'6" to the parking; level from 12'3" inside the gate. Round off the top and bottom of the ramp by about 1' so low cars do not scrape. The car parks on the level part (Y 15'3" to 30'3").</li>
+<li><b>Drive ramp:</b> short and steep: 1 in 4 (14 deg) in the middle with 1'6" of 1 in 8 at the top and bottom, from Y 3'3" to 10'9", rising 1'6" to the parking; level from 10'9" inside the gate. The 1 in 8 ends keep each change of slope to about 7 deg, so the Virtus clears it (it scrapes beyond about 15 deg). Brush-finished pavers or grooved concrete for grip.</li>
 <li><b>Gates GT-01 and GT-02</b> become inward folding (bi-fold) gates, so their leaves stay over the level crest and never hit the ramp. Shown folded open in 3D, so you can walk out to the road (the view follows the ramp).</li>
 <li><b>Outside stair ST-1</b> now starts at the crest by the small gate: 27 risers of about 6½" (17 in ST-1A from Y 2'8", landing, 10 in ST-1B); balcony 2 unchanged.</li>
 <li><b>Neem tree:</b> trunk kept at today's ground in a 5'6" tree well FU-76 with a low retaining ring; no fill against the trunk.</li>
@@ -361,6 +361,8 @@ CAR=(8.25,14.0,14.75,29.75)   # VW Virtus size, 14'11" x 5'9" (4561 x 1752 mm), 
 # two-wheelers: (code, model, centre X, centre Y, length, width, facing); facing 'N' = front to the gate, 'S' = front to the house (length along Y)
 BIKES=[('TW-1','Honda VFR800',18.66,15.78,6.96,2.41,'S'),   # under the high end of ST-1A and the landing (its 4' windscreen where the underside is 5' or more), ridden in forward, front to the house
        ('TW-2','Ather 450X',15.71,9.415,6.03,2.42,'N')]     # on the small-gate platform along ST-1A, clear of the leaning neem trunk, ridden in from the parking, front to the gate
+# option: both two-wheelers side by side along BW-01, between C-01 and C-03, ridden in forward (front to the house); reached up the east walkway without passing the car
+BIKES_EAST=[('TW-1','Honda VFR800',1.755,24.73,6.96,2.41,'S'),('TW-2','Ather 450X',4.41,25.185,6.03,2.42,'S')]
 CH_G_FRONT=[0,0.75,12.0,13.5,20.25,21.0]
 
 # ---------- structure (proposal): RCC frame with side pillars only, no pillar inside any room ----------

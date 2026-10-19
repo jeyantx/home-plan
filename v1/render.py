@@ -226,7 +226,7 @@ def levels():
     E(f'<line x1="{a[0]:.3f}" y1="{a[1]:.3f}" x2="{b[0]:.3f}" y2="{b[1]:.3f}" stroke="#1f6f8b" stroke-width="0.09" marker-end="url(#arrT)"/>')
     text(4.4,-0.45,'ROAD '+ft(L['road']),0.3,weight=700,fill='#1f6f8b')
     text(5.4,1.95,'gate crest '+ft(L['hump']-L['road'])+', drain',0.42,weight=600,fill='#1f6f8b')
-    text(4.6,9.0,'RAMP up\n1 in 6',0.48,weight=700,fill='#1f6f8b')
+    text(4.6,7.4,'RAMP up\n1 in 4',0.48,weight=700,fill='#1f6f8b')
     text(5.6,15.3,'parking '+ft(L['parking']-L['road']),0.3,weight=700,fill='#1f6f8b')
     text(1.55,52.0,'garden\n'+ft(L['garden']-L['road']),0.39,weight=700,fill='#1f6f8b')
     text(15.2,98.4,'back garden '+ft(L['garden']-L['road']),0.42,weight=700,fill='#1f6f8b')
@@ -254,12 +254,16 @@ def vehicles():
     rect(cx1,cx2,cy1,cy2,'#fafafa','#555',0.06,extra='rx="1.0"'); rect(cx1+0.5,cx2-0.5,cy1+8.6,cy1+10.1,'#a9bccd','#555',0.03); rect(cx1+0.5,cx2-0.5,cy1+2.6,cy1+3.8,'#a9bccd','#555',0.03)
     text((cx1+cx2)/2,cy1+5.6,'CAR\nVW Virtus\n14\'11" x 5\'9"',0.36,weight=600,fill='#666')
     car_path(cx1,cy1)
-    for b in getattr(_m,'BIKES',[]):
-        if isinstance(b,(int,float)): bike(2.0,b); continue
-        code,name,bx,by,bl,bw=b[:6]; fac=b[6] if len(b)>6 else 'N'; bike(bx,by,fac)
-        lab=code+'\n'+name.replace('Royal Enfield ','RE ')
-        if fac=='E': text(bx+0.4,by+2.0,lab,0.3,weight=600,fill='#555')
-        else: text(bx-2.4,by,lab,0.3,weight=600,fill='#555')
+    for cls,key,lx in (('L-bikeS','BIKES',-2.4),('L-bikeE','BIKES_EAST',0.0)):   # chosen layout, and the BW-01 option (shown with its tick box)
+        E(f'<g class="{cls}">')
+        for b in getattr(_m,key,None) or []:
+            code,name,bx,by,bl,bw=b[:6]; fac=b[6] if len(b)>6 else 'N'; bike(bx,by,fac)
+            lab=code+'\n'+name.replace('Royal Enfield ','RE ')
+            if fac=='E': text(bx+0.4,by+2.0,lab,0.3,weight=600,fill='#555')
+            elif lx: text(bx+lx,by,lab,0.3,weight=600,fill='#555')
+            else: text(bx,by-4.1,lab,0.3,weight=600,fill='#555')
+        if cls=='L-bikeE': text(3.1,29.4,'option: bikes along BW-01',0.28,weight=700,fill='#1f6f8b')
+        E('</g>')
 def car_path(cx1,cy1):
     # space the car needs going in (blue) and out (green): the swept outline of the body with mirrors, from the 3D animation route
     try:

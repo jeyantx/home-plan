@@ -66,6 +66,7 @@ canvas{display:block;width:100%;height:100%}
   <span class="lbl">Gate</span><div class="seg" id="gateSeg"><button data-g="GD-1">GD-1 Slats</button><button data-g="GD-2">GD-2 Bars</button><button data-g="GD-3">GD-3 Panels</button></div>
   <span class="lbl">Colour</span><div class="seg" id="extSeg"><button data-e="EX-4" title="Warm white walls, light sand first-floor block, wood-brown frames, charcoal plinth"><i style="background:#f1ece3"></i><i style="background:#d3c2a8"></i><i style="background:#8a5a3a"></i><i style="background:#4f4a45"></i>EX-4</button><button data-e="EX-5" title="Beige walls, white first-floor block, wood-brown frames, dark brown plinth"><i style="background:#d8c5a6"></i><i style="background:#f3efe7"></i><i style="background:#8a5a3a"></i><i style="background:#5a4234"></i>EX-5</button><button data-e="EX-6" title="Light grey walls, dark grey first-floor block, wood-brown frames, charcoal plinth"><i style="background:#c6c3bd"></i><i style="background:#6b6966"></i><i style="background:#8a5a3a"></i><i style="background:#3f4043"></i>EX-6</button><button data-e="EX-7" title="Light beige walls (lighter EX-5), white first-floor block, wood-brown frames, brown plinth"><i style="background:#e6d8c0"></i><i style="background:#f6f3ec"></i><i style="background:#8a5a3a"></i><i style="background:#6a5140"></i>EX-7</button></div>
   <span class="lbl">Finish</span><div class="seg" id="finishSeg"><button data-k="KT-1"><i style="background:#c9a77c"></i><i style="background:#efe9df"></i>KT-1</button><button data-k="KT-2"><i style="background:#efe9df"></i><i style="background:#c9a77c"></i>KT-2</button><button data-k="KT-3"><i style="background:#7d5a3e"></i><i style="background:#efe9df"></i>KT-3</button></div>
+  <span class="lbl">Bikes</span><div class="seg" id="bikeSeg"><button data-b="ST" title="TW-1 under the stair, TW-2 on the small-gate platform">Stair side</button><button data-b="BW" title="Both along the east wall BW-01, between C-01 and C-03">Along BW-01</button></div>
   <span class="lbl">Lens</span><div class="seg" id="lensSeg"><button data-f="60" title="Eye-like lens">60°</button><button data-f="75" title="Wide lens">75°</button></div>
   <span class="sub">↑↓ walk · ←→ turn · A/D slide · W/S tilt · Q/E lower/raise · Shift faster · Drag to look around · Scroll to walk · Right-drag to slide · Hover for names</span>
  </div>
@@ -96,7 +97,9 @@ const P=window.PLAN, F=0.3048, CEIL=10.0, EYE=5.25;
 // site levels (feet, relative to the house floor): road, gate crest, parking, neighbours' ground; the gardens stay at GRD (1' below the floor)
 const LV=P.levels||{road:2.5,hump:2.5,parking:2.5,garden:2.5,floor:3.5},RP=P.ramp||{y_hump:0,y_crest:0,y_top:0,drain:[0,0]};
 const GRD=LV.garden-LV.floor,RDZ=LV.road-LV.floor,HUZ=LV.hump-LV.floor,PKZ=LV.parking-LV.floor,NBZ=Math.min(RDZ+1.0,LV.garden-LV.floor);
-const zF=y=>y<=0?RDZ:y<RP.y_hump?RDZ+(HUZ-RDZ)*y/RP.y_hump:y<RP.y_crest?HUZ:y<RP.y_top?HUZ+(PKZ-HUZ)*(y-RP.y_crest)/(RP.y_top-RP.y_crest):PKZ;   // front drive profile
+const rampH=u=>{const L=RP.y_top-RP.y_crest,e=Math.min(RP.ease||0,L/2),H=PKZ-HUZ,s=H/(L-e);   // ramp rise at u feet up the ramp: eased ends at half the slope
+  return u<e?s/2*u:u<L-e?s/2*e+s*(u-e):H-s/2*(L-u)};
+const zF=y=>y<=0?RDZ:y<RP.y_hump?RDZ+(HUZ-RDZ)*y/RP.y_hump:y<RP.y_crest?HUZ:y<RP.y_top?HUZ+rampH(y-RP.y_crest):PKZ;   // front drive profile
 const m=v=>v*F, mx=v=>-v*F;   // plan X grows toward the west = three -x, so the world is not mirrored
 const view=document.getElementById('view'), statusEl=document.getElementById('status');
 const renderer=new THREE.WebGLRenderer({antialias:true});
@@ -1036,7 +1039,7 @@ if(SPL){const st=SPL.steps,L=[];
     solid(P1,HUZ+(PKZ-HUZ)*(k+1)/st.length,MAT.stepStone,`Small-gate steps · granite, 6" risers, ${Math.round((yb-ya)*12)}" treads · from the gate crest up to the platform (+2'0")`)}
   {const y0=st[st.length-1],ye=TWC[1]+Math.sqrt(Math.max(0,TWC[2]**2-(SPL.xe-TWC[0])**2)),a0=Math.atan2(y0-TWC[1],splCx(y0)-TWC[0]),a1=Math.atan2(ye-TWC[1],SPL.xe-TWC[0]),P2=[[SPL.x2,y0]];
     for(let i=0;i<=16;i++){const a=a0+(a1-a0)*i/16;P2.push([TWC[0]+TWC[2]*Math.cos(a),TWC[1]+TWC[2]*Math.sin(a)])}P2.push([SPL.xe,SPL.y_end],[SPL.x2,SPL.y_end]);
-    const pl=solid(P2,PKZ,[MAT.paver,MAT.extTrim],`Small-gate platform · grey pavers at parking level (+2'0") · its east edge is a retaining kerb along the car ramp (1'4" high at the steps, nothing at Y 12'3")`);
+    const pl=solid(P2,PKZ,[MAT.paver,MAT.extTrim],`Small-gate platform · grey pavers at parking level (+2'0") · its east edge is a retaining kerb along the car ramp (1'4" high at the steps, nothing at Y 10'9")`);
     {const uv=pl.geometry.attributes.uv,pa=pl.geometry.attributes.position;for(let i=0;i<uv.count;i++)uv.setXY(i,pa.getX(i),pa.getZ(i));uv.needsUpdate=true}}}
 {const tp=fuG['FU-76'],tx=(tp.x1+tp.x2)/2,ty=(tp.y1+tp.y2)/2,tr=(tp.x2-tp.x1)/2;   // drive: gate bevel, crest, ramp, level parking; tree well FU-76 left open
  const X0=0.375,X1=21,Y0=0,Y1=30.75,dx=0.25,dy=0.25,pos=[],nor=[];
@@ -1048,7 +1051,7 @@ if(SPL){const st=SPL.steps,L=[];
  const dg=new THREE.BufferGeometry();dg.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));dg.computeVertexNormals();
  const duv=[];for(let i=0;i<pos.length;i+=3)duv.push(pos[i],pos[i+2]);dg.setAttribute('uv',new THREE.Float32BufferAttribute(duv,2));
  {const dn=dg.attributes.normal;let up=0;for(let i=0;i<dn.count;i++)up+=dn.getY(i);if(up<0){const pa=dg.attributes.position;for(let i=0;i<pa.count;i+=3){for(const c of [0,1,2]){const t=pa.getComponent(i+1,c);pa.setComponent(i+1,c,pa.getComponent(i+2,c));pa.setComponent(i+2,c,t)}}dg.computeVertexNormals()}}   // faces point up
- const drive=new THREE.Mesh(dg,MAT.paver);drive.receiveShadow=true;scene.add(drive);named(drive,`G-01 · Parking and drive · grey interlocking pavers · gate crest +6" over the road, ramp 1 in 6, parking +2'0"`);
+ const drive=new THREE.Mesh(dg,MAT.paver);drive.receiveShadow=true;scene.add(drive);named(drive,`G-01 · Parking and drive · grey interlocking pavers · gate crest +6" over the road, ramp 1 in 4 (14 deg) with 1 in 8 ends, parking +2'0"`);
  // covered drain across the drive at the inner edge of the crest (to the rainwater pit and the road drain)
  const [d1,d2]=RP.drain,grate=std({color:'#3a3c3e',roughness:0.5,metalness:0.6});
  for(const [a,b] of [[X0,tx-tr-0.05]]) if(b-a>0.1){box(a,b,d1,d2,HUZ-0.03,HUZ+0.035,grate,{cast:false,tip:'Gate drain, 9" wide, steel grating · takes the drive water to the rainwater pit, overflow to the road drain'});
@@ -1068,7 +1071,7 @@ if(SPL){const st=SPL.steps,L=[];
 box(-40,70,-17,-0.02,RDZ-0.02,RDZ+0.02,MAT.paver,{cast:false,tip:'Road (north), 17\' wide · grey interlocking pavers · our gate crest is 6" above it, the parking 2\'0", the gardens 2\'6"'});
 // compound walls, gate pillars with lamps, planter pillar, gates
 for(const w of P.walls.G.filter(w=>w.kind==='comp')){   // stepped down along the drive (6' above the ground inside); the bottom holds back the fill
-  const cuts=[w.y1,...[3.25,5.5,7.75,10.0,12.25,30.75].filter(c=>c>w.y1+0.01&&c<w.y2-0.01),w.y2];
+  const cuts=[w.y1,...[3.25,5.0,6.75,8.5,10.75,30.75].filter(c=>c>w.y1+0.01&&c<w.y2-0.01),w.y2];
   for(let i=0;i<cuts.length-1;i++){const a=cuts[i],b=cuts[i+1],front=b<=30.76,gnd=front?zF(b):GRD,base=Math.min(NBZ,front?zF(a):GRD)-0.1;
     const me=box(w.x1,w.x2,a,b,base,gnd+w.h,MAT.ext,{tip:`${w.id} · ${w.desc} · ${w.h}' high inside; its foot holds back the filled ground`});wallMeshes.push(me);
     box(w.x1-0.04,w.x2+0.04,a,b,gnd+w.h,gnd+w.h+0.12,MAT.extTrim,{tip:`${w.id} · coping`})}}
@@ -1280,6 +1283,16 @@ function vfrMats(){const P=(c,o={})=>new THREE.MeshPhysicalMaterial({color:c,rou
     'glass.001':lens,'glass.002':lens,mirro:mirror,mirror,orange_plastic:amber,yellowplastic:amber,'yellowplastic.001':amber,yellow_plastic:amber,
     redplastic:redl,red:redl,green:P('#1f9e3a'),whiteplastic:white,Material:screen,'Material.006':white,'Material.007':white,'':blk};
   return new Proxy(m,{get:(t,k)=>k in t?t[k]:blk})}
+// two-wheeler layouts: 'ST' = stair side (TW-1 under ST-1A, TW-2 on the small-gate platform), 'BW' = both along BW-01 between C-01 and C-03
+const bikeObjs={};let bikeLayout='ST';
+function placeBike(code){const o=bikeObjs[code];if(!o)return;const L=(bikeLayout==='BW'&&P.bikesEast?P.bikesEast:P.bikes)||[],t=L.find(r=>r[0]===code);if(!t)return;
+  const [,name,bx,by,,,fac]=t,b=o.b,d=b.userData.dims,ft=v=>{const i=Math.round(v/F*12);return `${Math.floor(i/12)}'${i%12}"`};
+  b.position.set(mx(bx),m(PKZ),m(by));b.rotation.y=fac==='E'?Math.PI/2:fac==='S'?0:Math.PI;
+  const where=bikeLayout==='BW'?'along BW-01 (option)':code==='TW-1'?'under ST-1A':'on the small-gate platform';
+  b.traverse(x=>{if(x.isMesh)named(x,`${code} · ${o.moto?'Motorcycle · Honda VFR800 (model by danielfc10, CC BY 3.0, Blend Swap), real size':'Scooter (downloaded model, sized to an Ather 450X)'} · ${ft(d.length)} long, ${ft(d.height)} high · ${where} · ${fac==='E'?'front to the east':fac==='S'?'front to the house (ridden in forward)':'front to the gate'}`)})}
+function setBikes(k){bikeLayout=k==='BW'?'BW':'ST';for(const c in bikeObjs)placeBike(c);
+  document.querySelectorAll('#bikeSeg button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.b===bikeLayout));try{localStorage.setItem('lr3d-bikes',bikeLayout)}catch(e){};
+  renderer.shadowMap.needsUpdate=true;if(photo&&pt)pt.setScene(scene,camera);invalidate()}
 const SHOW_BIKES=false;   // the old code-made two-wheelers stay off; the downloaded models below are used
 const vehicleMeshes=[];
 {const [cx1,cx2,cy1,cy2]=P.car||[11.25,17.0,14.75,29.75];
@@ -1289,11 +1302,9 @@ const vehicleMeshes=[];
    car.traverse(o=>{if(o.isMesh){o.userData.keepUV=true;named(o,`Car · compact sedan (Free3D model, scaled to VW Virtus size, 4561 x 1752 mm body) · ${ft(d.length)} x ${ft(d.width)} with mirrors · reversed in, nose to the gate`);vehicleMeshes.push(o)}});
    renderer.shadowMap.needsUpdate=true;if(photo&&pt)pt.setScene(scene,camera);invalidate()}).catch(e=>console.warn('car model',e));
  // two-wheelers from the owner's downloaded models, sized to the real bikes they stand for, front to the gate
- for(const [code,name,bx,by,bl,bw,fac] of (P.bikes||[])){const moto=/VFR|Hunter/.test(name),east=fac==='E',south=fac==='S';
+ for(const [code,name] of (P.bikes||[])){const moto=/VFR|Hunter/.test(name);
    loadGLBVehicle(THREE,GLTFLoader,moto?'assets/vehicles/vfr800.glb?v=__BUILD__':'assets/vehicles/scooter.glb?v=__BUILD__',moto?{front:'+z',length:2.12,groundMaterial:'rubber',name:code,materials:vfrMats()}:{front:'+z',length:1.837,name:code}).then(b=>{
-     b.position.set(mx(bx),m(PKZ),m(by));b.rotation.y=east?Math.PI/2:south?0:Math.PI;scene.add(b);
-     const d=b.userData.dims,ft=v=>{const i=Math.round(v/F*12);return `${Math.floor(i/12)}'${i%12}"`};
-     b.traverse(o=>{if(o.isMesh){o.userData.keepUV=true;named(o,`${code} · ${moto?'Motorcycle · Honda VFR800 (model by danielfc10, CC BY 3.0, Blend Swap), real size':'Scooter (downloaded model, sized to an Ather 450X)'} · ${ft(d.length)} long, ${ft(d.height)} high · ${east?'front to the east':south?'front to the house (ridden in forward)':'front to the gate'}`)}});
+     scene.add(b);bikeObjs[code]={b,moto};b.traverse(o=>{if(o.isMesh)o.userData.keepUV=true});placeBike(code);
      renderer.shadowMap.needsUpdate=true;if(photo&&pt)pt.setScene(scene,camera);invalidate()}).catch(e=>console.warn('bike model',e))}
  if(SHOW_BIKES) for(const [code,name,bx,by,bl,bw] of (P.bikes||[])){const b=/Hunter/.test(name)?createHunter350(THREE,mergeGeometries,{}):createAther450(THREE,mergeGeometries,{});
    b.position.set(mx(bx),m(PKZ),m(by));b.rotation.y=Math.PI;scene.add(b);b.traverse(o=>{if(o.isMesh){o.userData.keepUV=true;named(o,`${code} · ${name} · front to the gate, on its side stand`)}})}}
@@ -1494,6 +1505,8 @@ applyOption(so);applyLight(sl);setLens(sf);setView(21);   // open at the gate, o
 document.querySelectorAll('#gateSeg button').forEach(x=>x.onclick=()=>setGate(x.dataset.g));document.querySelectorAll('#extSeg button').forEach(x=>x.onclick=()=>setExt(x.dataset.e));
 {let k='KT-1';try{k=localStorage.getItem('lr3d-finish')||k}catch(e){};setFinish(k)}
 document.querySelectorAll('#finishSeg button').forEach(x=>x.onclick=()=>setFinish(x.dataset.k));
+{let k='ST';try{k=localStorage.getItem('lr3d-bikes')||k}catch(e){};setBikes(k)}
+document.querySelectorAll('#bikeSeg button').forEach(x=>x.onclick=()=>setBikes(x.dataset.b));
 // ---------------- navigation: look in place, walk with collision ----------------
 // Keys: Up/Down walk · Left/Right turn · A/D slide · W/S tilt up/down · Q/E lower/raise · Shift faster
 // Mouse: drag = look around (camera stays put) · scroll = walk · right-drag = slide sideways / up-down
