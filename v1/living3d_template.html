@@ -1271,11 +1271,11 @@ const vehicleMeshes=[];
    car.traverse(o=>{if(o.isMesh){o.userData.keepUV=true;named(o,`Car · compact sedan (Free3D model, scaled to VW Virtus size, 4561 x 1752 mm body) · ${ft(d.length)} x ${ft(d.width)} with mirrors · reversed in, nose to the gate`);vehicleMeshes.push(o)}});
    renderer.shadowMap.needsUpdate=true;if(photo&&pt)pt.setScene(scene,camera);invalidate()}).catch(e=>console.warn('car model',e));
  // two-wheelers from the owner's downloaded models, sized to the real bikes they stand for, front to the gate
- for(const [code,name,bx,by,bl,bw] of (P.bikes||[])){const moto=/VFR|Hunter/.test(name);
+ for(const [code,name,bx,by,bl,bw,fac] of (P.bikes||[])){const moto=/VFR|Hunter/.test(name),east=fac==='E';
    loadGLBVehicle(THREE,GLTFLoader,moto?'assets/vehicles/vfr800.glb?v=__BUILD__':'assets/vehicles/scooter.glb?v=__BUILD__',moto?{front:'+z',length:2.12,groundMaterial:'rubber',name:code,materials:vfrMats()}:{front:'+z',length:1.837,name:code}).then(b=>{
-     b.position.set(mx(bx),m(PKZ),m(by));b.rotation.y=Math.PI;scene.add(b);
+     b.position.set(mx(bx),m(PKZ),m(by));b.rotation.y=east?Math.PI/2:Math.PI;scene.add(b);
      const d=b.userData.dims,ft=v=>{const i=Math.round(v/F*12);return `${Math.floor(i/12)}'${i%12}"`};
-     b.traverse(o=>{if(o.isMesh){o.userData.keepUV=true;named(o,`${code} · ${moto?'Motorcycle · Honda VFR800 (model by danielfc10, CC BY 3.0, Blend Swap), real size':'Scooter (downloaded model, sized to an Ather 450X)'} · ${ft(d.length)} long, ${ft(d.height)} high · front to the gate`)}});
+     b.traverse(o=>{if(o.isMesh){o.userData.keepUV=true;named(o,`${code} · ${moto?'Motorcycle · Honda VFR800 (model by danielfc10, CC BY 3.0, Blend Swap), real size':(/spare/.test(name)?'Spare two-wheeler spot, up to 7\' long (scooter shown)':'Scooter (downloaded model, sized to an Ather 450X)')} · ${ft(d.length)} long, ${ft(d.height)} high · ${east?'front to the east, by the neem':'front to the gate'}`)}});
      renderer.shadowMap.needsUpdate=true;if(photo&&pt)pt.setScene(scene,camera);invalidate()}).catch(e=>console.warn('bike model',e))}
  if(SHOW_BIKES) for(const [code,name,bx,by,bl,bw] of (P.bikes||[])){const b=/Hunter/.test(name)?createHunter350(THREE,mergeGeometries,{}):createAther450(THREE,mergeGeometries,{});
    b.position.set(mx(bx),m(PKZ),m(by));b.rotation.y=Math.PI;scene.add(b);b.traverse(o=>{if(o.isMesh){o.userData.keepUV=true;named(o,`${code} · ${name} · front to the gate, on its side stand`)}})}}

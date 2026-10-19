@@ -123,10 +123,10 @@ LEVELS=dict(road=0.0,hump=0.5,parking=2.0,garden=2.5,floor=3.5)
 RAMP=dict(y_hump=1.0,y_crest=3.25,y_top=12.25,drain=(2.5,3.25))   # gate bevel to Y 1', crest to 3'3" (drain at its inner edge), ramp 1 in 6 to Y 12'3"
 BRANCH_NOTES='''<section class="ask"><h2>Parking plan (branch exterior-v2, for review)</h2>
 <ol>
-<li><b>Car:</b> VW Virtus size (14'11" x 5'9"), <b>reversed in</b>: nose to the gate, back 1' from the front wall, on the level parking (Y 14'9" to 29'9"). With the neem tree well in front of the spot, a car cannot drive in nose-first (it would need several back-and-forth turns); reversing in from the road takes one stop, and it drives straight out. Checked with a route planner using the Virtus turning circle. The driver's door opens onto the walkway.</li>
+<li><b>Car:</b> VW Virtus size (14'11" x 5'9"), <b>reversed in</b>: nose to the gate, back 1' from the front wall, on the level parking (Y 14'9" to 29'9"). <b>Route along the east side</b> (owner's sketch): it drives out forward in one smooth curve, past the scooter by the neem, through GT-01 near its east leaf, and turns east along the road; coming in, it comes from the west, stops just past the gate and reverses back along the same curve (one stop). Gaps: 7" to the folded east gate leaf, 1' to the east pillar, 6½" to the scooter, 1'6" to the tree well. Checked with a route planner using the Virtus turning circle; the gate stays as it is.</li>
 <li><b>Tree well FU-76</b> reduced to 4' across, so the car passes the neem with room to spare. Keep at least 10" of open soil round the trunk; widen the ring later only if the trunk grows.</li>
-<li><b>Two-wheelers on the stair side:</b> TW-1 (motorcycle, Honda VFR800 size: 6'11" long, 4' high) under the high end of ST-1A and the landing, its windscreen where the underside is 5' or more, TW-2 (Ather 450X) along BW-07 beside the car, both front to the gate. FU-56 store shrinks to a low tool store under the lower middle of ST-1A.</li>
-<li><b>Car spot</b> moved 2' east (centre X 12'1½"), leaving a 2'4" aisle to the two-wheelers and an 8'11" walkway on the east side to the porch. Reverse in with one stop, drive straight out (checked with the Virtus turning circle).</li>
+<li><b>Two-wheelers (three spots):</b> TW-1 (motorcycle, Honda VFR800 size: 6'11" long, 4' high) under the high end of ST-1A and the landing, its windscreen where the underside is 5' or more; TW-2 (Ather 450X) across, by the neem, front to the east, between the tree well and ST-1A; TW-3, a spare spot along BW-07 beside the car (up to 7' long). A second bike behind TW-2 does not fit: the car would need 2 or more back-and-forth turns, and a 7' bike there blocks it. FU-56 store shrinks to a low tool store under the lower middle of ST-1A.</li>
+<li><b>Car spot</b> moved 2' east (centre X 12'1½"), leaving a 2'4" aisle to the two-wheelers and an 8'11" walkway on the east side to the porch. Reverse in with one stop, drive out in one curve along the east side (checked with the Virtus turning circle).</li>
 <li><b>ST-1 as cast:</b> both flights are steps on a 6" sloping waist slab and the landing ST-1L is a 6" slab, all cast as one RCC piece; the sloping underside of each flight runs into the flat underside of the landing (no step in the soffit). Landing level, risers and treads unchanged.</li>
 <li><b>Pillar C-01</b> moved 2'4½" east against the compound wall BW-01; beam B-01 extended to it (19'11" span, engineer to size, about 1'9" deep) and B-10 rests on B-01. The parking is now clear of pillars.</li>
 </ol></section>
@@ -354,9 +354,10 @@ for _o in OPENINGS:
     if _o[5]=='vent' and _o[0] not in SPEC: SPEC[_o[0]]='Louvred glass ventilator with exhaust fan opening'
 SPEC['V-03']='Louvred glass ventilator with exhaust fan opening'
 CAR=(9.25,15.0,14.75,29.75)   # VW Virtus size, 14'11" x 5'9" (4561 x 1752 mm), reversed in: nose to the gate, back 1' clear of GW-04; 2'4" aisle to the two-wheelers on its west side, driver (right) door onto the wide east walkway
-# two-wheelers: (code, model, centre X, centre Y, length, width), front to the gate, in one lane east of the car:
-# 2'7" walkway to the porch on their east side, 2'6" for the car's left doors on their west side, 2'7" clear of pillar C-01
-BIKES=[('TW-1','Honda VFR800',18.66,15.78,6.96,2.41),('TW-2','Ather 450X',18.61,22.62,6.03,2.42)]   # stair side: TW-1 under the high end of ST-1A and the landing (its 4' windscreen where the underside is 5' or more), TW-2 along BW-07; front to the gate
+# two-wheelers: (code, model, centre X, centre Y, length, width, facing); facing 'N' = front to the gate (length along Y), 'E' = front to the east (length along X)
+BIKES=[('TW-1','Honda VFR800',18.66,15.78,6.96,2.41,'N'),   # under the high end of ST-1A and the landing (its 4' windscreen where the underside is 5' or more)
+       ('TW-2','Ather 450X',13.985,7.71,6.03,2.42,'E'),     # across, by the neem: 3" from the tree-well ring, against the side of ST-1A; the car passes 6" from it
+       ('TW-3','Second two-wheeler (spare spot)',18.61,22.62,6.03,2.42,'N')]   # along BW-07 beside the car (fits up to 7' long), front to the gate
 CH_G_FRONT=[0,0.75,12.0,13.5,20.25,21.0]
 
 # ---------- structure (proposal): RCC frame with side pillars only, no pillar inside any room ----------

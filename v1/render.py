@@ -230,8 +230,10 @@ def vehicles():
     car_path(cx1,cy1)
     for b in getattr(_m,'BIKES',[]):
         if isinstance(b,(int,float)): bike(2.0,b); continue
-        code,name,bx,by,bl,bw=b; bike(bx,by)
-        text(bx-2.4,by,code+'\n'+name.replace('Royal Enfield ','RE '),0.3,weight=600,fill='#555')
+        code,name,bx,by,bl,bw=b[:6]; fac=b[6] if len(b)>6 else 'N'; bike(bx,by,fac)
+        lab=code+'\n'+name.replace('Royal Enfield ','RE ').replace(' (spare spot)','\n(spare spot)')
+        if fac=='E': text(bx+0.4,by+2.0,lab,0.3,weight=600,fill='#555')
+        else: text(bx-2.4,by,lab,0.3,weight=600,fill='#555')
 def car_path(cx1,cy1):
     # space the car needs going in (blue) and out (green): the swept outline of the body with mirrors, from the 3D animation route
     try:
@@ -252,8 +254,10 @@ def car_path(cx1,cy1):
         E(f'<polyline points="{pts(P)}" fill="none" stroke="{col}" stroke-width="0.06" stroke-dasharray="0.3 0.2"/>')
     text(cx1-0.6,cy1-1.3,'car path: space needed going in, reversing (blue), and out (green)\nshaded = body with mirrors, dashed = rear axle',0.28,fill='#1f6f8b')
     E('</g>')
-def bike(cx,cy):
-    # top view of a two-wheeler, 2'6" x 6', front toward the road
+def bike(cx,cy,fac='N'):
+    # top view of a two-wheeler, 2'6" x 6', front toward the road ('N') or to the east ('E', turned a quarter)
+    if fac=='E':
+        x,y=S(cx,cy); E(f'<g transform="rotate(90 {x:.3f} {y:.3f})">'); bike(cx,cy); E('</g>'); return
     for wy in (cy-2.35,cy+2.35):
         x,y=S(cx,wy); E(f'<ellipse cx="{x:.3f}" cy="{y:.3f}" rx="0.22" ry="0.75" fill="#2b2b2b"/>')
     x1,y1=S(cx-0.42,cy+1.9); E(f'<rect x="{x1:.3f}" y="{y1:.3f}" width="0.84" height="3.8" rx="0.35" fill="#6d7480" stroke="#333" stroke-width="0.03"/>')
@@ -264,7 +268,7 @@ def tree():
     E(f'<circle cx="{x}" cy="{y-2.5}" r="6" fill="#2f7d32" opacity="0.07" stroke="#2f7d32" stroke-width="0.05" stroke-dasharray="0.3 0.2"/>')
     E(f'<circle cx="{x}" cy="{y}" r="0.75" fill="#6b4423" stroke="#3b2412" stroke-width="0.05"/>')
     a=S(12.75,5.0); b=S(12.75,7.5); E(f'<line x1="{a[0]}" y1="{a[1]}" x2="{b[0]}" y2="{b[1]}" stroke="#5b3a1a" stroke-width="0.15" marker-end="url(#arrT)"/>')
-    text(12.75,9.0,'NEEM TREE (to confirm)\ntrunk 1\'6", 3\'6" from road, 7\'6" from west',0.34,weight=600,fill='#2b5d2e')
+    text(7.4,5.6,'NEEM TREE (to confirm)\ntrunk 1\'6", 3\'6" from road, 7\'6" from west',0.34,weight=600,fill='#2b5d2e')
 def porch_steps():
     import model as _m
     y0=getattr(_m,'PORCH_STEPS_Y',30.75)
