@@ -35,9 +35,6 @@ All CC0 (public domain) from Poly Haven, https://polyhaven.com
 - `models/tn-plants.js` also draws the garden-plan vegetables and herbs (GD-07, GD-09), the climbing jasmine GD-05 and the lemon GD-11.
 - `models/neem-tree.js`: the existing neem tree at the gate, rebuilt from the site photos (south lean, fork at about 3 m, south limb cut to a stub). Procedural, canvas textures.
 
-## Site photos (owner's, for reference only)
-- `assets/site-photos/site-01.jpg` to `site-16.jpg`: the plot, the neem tree and the neighbour houses, 2026-10-18.
-
 ## Downloaded models (`assets/vehicles/`)
 | File | What | Source | Licence |
 |---|---|---|---|
