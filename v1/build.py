@@ -122,6 +122,7 @@ td.c{font-weight:700;white-space:nowrap;color:var(--accent)}
 .mread{font-variant-numeric:tabular-nums;font-size:13px;color:var(--ink);background:var(--chip);border:1px solid var(--line);border-radius:8px;padding:5px 10px;min-height:30px;display:none;align-items:center}
 .mread.on{display:inline-flex}
 .measuring .sheet{cursor:crosshair}
+#stage,#stage *{-webkit-user-select:none;user-select:none}   /* dragging the plan must not select its labels */
 </style>''')
 script=script.replace('const FULL={x:121.5,y:44.8,w:32.0,h:115.4};','const FULL={x:-5.0,y:-1.0,w:30.0,h:112.0};')
 script=script.replace('const h=42, w=h*a;','const h=34, w=h*a;')
