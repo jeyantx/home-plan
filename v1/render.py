@@ -419,6 +419,8 @@ def draw_furniture(fl,_late=False):
             R_(x1,x2,y1,y2,'#f4f6f8','#777',0.04); a=S((x1+x2)/2,(y1+y2)/2); E(f'<ellipse cx="{a[0]:.3f}" cy="{a[1]:.3f}" rx="{w/2-0.2:.3f}" ry="{d/2-0.2:.3f}" fill="#dceaf3" stroke="#89a" stroke-width="0.03"/>')
         elif k=='plat':
             R_(x1,x2,y1,y2,'#e8edf0','#7f8b93',0.04)
+        elif k=='splash':
+            R_(x1,x2,y1,y2,'url(#hatchW)','#555',0.04)
         elif k=='shower':
             R_(x1,x2,y1,y2,'url(#hatchW)','#6c8fa8',0.04); a=S((x1+x2)/2,(y1+y2)/2); E(f'<circle cx="{a[0]:.3f}" cy="{a[1]:.3f}" r="0.15" fill="#6c8fa8"/>')
         elif k=='wm':
