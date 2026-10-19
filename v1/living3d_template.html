@@ -788,8 +788,16 @@ function cabRun(id,what,x1,x2,y1,y2,z1,z2,face,segs,mat,plinth){
  {const r=fuG['FU-80'];if(r){const rt=`FU-80 · ${r.name} · ${r.note}`;rackModel(r,KCH,(a,b,c,d,e,f,mt)=>box(a,b,c,d,e,f,mt,{tip:rt}),(x,y,z1,z2,rr,mt)=>cyl(x,y,z1,z2,rr,mt,{tip:rt}))}}
  const hz1=W06.sill+W06.h+0.1;   // hood bottom 5'4", about 2'6" above the counter
  {const c=fuG['FU-81'],o=fuG['FU-82'],cy=(c.y1+c.y2)/2,ct=`FU-81 · ${c.name} · ${c.note}`,ot=`FU-82 · ${o.name} · ${o.note}`,DZ=8.5;
-  box(X1+0.012,5.3,c.y1,c.y2,hz1,hz1+0.28,MAT.blackGlass,{tip:ct});
-  box(X1+0.012,4.25,cy-0.48,cy+0.48,hz1+0.28,TZ2,std({color:'#2b2c2e',roughness:0.35,metalness:0.5}),{tip:ct});   // body and duct cover up the gap between the east lofts
+  // like the owner's picture (60 cm): intake tray, sloping black glass hood, short upright body; about 41 cm high, 48 cm deep
+  const x0=X1+0.012,Dp=c.x2-x0,zb=hz1,chB=std({color:'#2b2c2e',roughness:0.35,metalness:0.5});
+  box(x0,c.x2,c.y1,c.y2,zb,zb+0.12,chB,{tip:ct});box(x0+0.15,c.x2-0.1,c.y1+0.1,c.y2-0.1,zb-0.01,zb,std({color:'#55585c',roughness:0.4,metalness:0.6}),{cast:false,tip:ct});
+  {const sh=new THREE.Shape([[x0,zb+0.12],[c.x2,zb+0.12],[c.x2,zb+0.2],[x0+0.95,zb+0.48],[x0,zb+0.48]].map(([X,Z])=>new THREE.Vector2(mx(X),m(Z+ZOFF))));
+   const me=new THREE.Mesh(new THREE.ExtrudeGeometry(sh,{depth:m(c.y2-c.y1),bevelEnabled:false}),MAT.blackGlass);me.position.z=m(c.y1);me.castShadow=true;scene.add(me);named(me,ct)}
+  box(x0,x0+0.9,cy-0.49,cy+0.49,zb+0.48,zb+1.35,MAT.blackGlass,{tip:ct});
+  // 6" duct up the gap between the east lofts, then out through GW-01 to the cowl
+  {const al=std({color:'#d3d6d9',roughness:0.35,metalness:0.3}),px=3.9,dt='Chimney duct, 6" round, aluminium · out through GW-01 to the cowl FU-82';cyl(px,cy,zb+1.35,DZ,0.25,al,{tip:dt,seg:20});
+   const d=new THREE.Mesh(new THREE.CylinderGeometry(m(0.25),m(0.25),m(px-o.x2),20),al);d.rotation.z=Math.PI/2;d.position.set(mx((px+o.x2)/2),m(DZ+ZOFF),m(cy));scene.add(d);named(d,dt);
+   const el=new THREE.Mesh(new THREE.SphereGeometry(m(0.25),20,14),al);el.position.set(mx(px),m(DZ+ZOFF),m(cy));scene.add(el);named(el,dt)}
   box(o.x1,o.x2,o.y1,o.y2,DZ-0.4,DZ+0.35,MAT.steel,{tip:ot});box(o.x2,2.95,cy-0.25,cy+0.25,DZ-0.25,DZ+0.25,MAT.steel,{tip:ot});box(o.x1-0.01,o.x1+0.1,o.y1+0.03,o.y2-0.03,DZ-0.42,DZ-0.36,MAT.blackMetal,{cast:false,tip:ot})}
  // sink FU-51 on the back counter, black gooseneck tap; mixer grinder FU-64; RO purifier FU-66
  const s=fuG['FU-51'];box(s.x1+0.1,s.x2-0.1,s.y1+0.08,s.y2-0.08,KCH,KCH+0.012,MAT.steel,{cast:false,tip:`FU-51 · Kitchen sink, single bowl, steel · ${s.note}`});

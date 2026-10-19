@@ -234,9 +234,16 @@ boxW(3.512,4.75,65.0,66.363,K.KUP1R,K.KUP2,M.cream);
 // ---------------- appliances on and above the counters ----------------
 {const h=fu['FU-52'];placeAppliance('assets/appliances/cooktop.glb',(h.x1+h.x2)/2,(h.y1+h.y2)/2,K.KCH,-Math.PI/2,cookMat,null,'E');label('FU-52 · Gas stove (free-standing)',W((h.x1+h.x2)/2,(h.y1+h.y2)/2,K.KCH+0.75));
  {const r=fu['FU-80'];if(r){rackModel(r,K.KCH,(a,b,c,d,e,f,mt)=>boxW(a,b,c,d,e,f,mt),(x,y,z1,z2,rr,mt)=>cylW(x,y,z1,z2,rr,mt));label('FU-80 · Utensil drying rack',W((r.x1+r.x2)/2,(r.y1+r.y2)/2,K.KCH+1.95))}}
- const w6=P.openings.find(o=>o.id==='W-06'),hz=w6.sill+w6.h+0.1,cy=(h.y1+h.y2)/2;boxW(3.512,5.3,cy-0.984,cy+0.984,hz,hz+0.28,M.blackGlass);   // FU-81 hood, 60 cm wide
- const chB=std({color:'#2b2c2e',roughness:0.35,metalness:0.5});boxW(3.512,4.25,cy-0.48,cy+0.48,hz+0.28,K.KLOFT2,chB);label('FU-81 · Chimney, 60 cm',W(5.0,cy,hz-0.25));   // body up the gap between K-17A and K-17B
- {const DZ=8.5,d=new THREE.Mesh(new THREE.CylinderGeometry(0.25*F,0.25*F,1.0*F,24),M.steel);d.rotation.z=Math.PI/2;d.position.copy(W(3.0,cy,DZ));scene.add(d);   // 6" duct through GW-01
+ const w6=P.openings.find(o=>o.id==='W-06'),hz=w6.sill+w6.h+0.1,cy=(h.y1+h.y2)/2;const chB=std({color:'#2b2c2e',roughness:0.35,metalness:0.5});
+ // FU-81 chimney like the owner's picture (60 cm): flat intake tray, sloping black glass hood, short upright body; about 41 cm high, 48 cm deep
+ {const x0=3.512,Wd=0.984,Dp=1.57,zb=hz,ext=(pts,y1,y2,mat)=>{const sh=new THREE.Shape(pts.map(([X,Z])=>new THREE.Vector2(-X*F,Z*F)));const me=new THREE.Mesh(new THREE.ExtrudeGeometry(sh,{depth:(y2-y1)*F,bevelEnabled:false}),mat);me.position.z=y1*F;me.castShadow=true;scene.add(me);return me};
+  boxW(x0,x0+Dp,cy-Wd,cy+Wd,zb,zb+0.12,chB);boxW(x0+0.15,x0+Dp-0.1,cy-Wd+0.1,cy+Wd-0.1,zb-0.01,zb,std({color:'#55585c',roughness:0.4,metalness:0.6}));   // intake tray with its steel filter
+  ext([[x0,zb+0.12],[x0+Dp,zb+0.12],[x0+Dp,zb+0.2],[x0+0.95,zb+0.48],[x0,zb+0.48]],cy-Wd,cy+Wd,M.blackGlass);   // sloping glass hood
+  boxW(x0,x0+0.9,cy-0.49,cy+0.49,zb+0.48,zb+1.35,M.blackGlass);label('FU-81 · Chimney, 60 cm',W(5.0,cy,zb-0.25));   // upright body, 30 cm wide
+ }
+ // 6" duct: up from the chimney in the gap between K-17A and K-17B, then out through GW-01 to the cowl FU-82
+ {const DZ=8.5,px=3.9,pz=hz+1.35,al=std({color:'#d3d6d9',roughness:0.35,metalness:0.3});cylW(px,cy,pz,DZ,0.25,al);const d=new THREE.Mesh(new THREE.CylinderGeometry(0.25*F,0.25*F,(px-2.6)*F,24),al);d.rotation.z=Math.PI/2;d.position.copy(W((px+2.6)/2,cy,DZ));scene.add(d);
+  const el=new THREE.Mesh(new THREE.SphereGeometry(0.25*F,20,14),al);el.position.copy(W(px,cy,DZ));scene.add(el);
   boxW(2.45,2.6,cy-0.32,cy+0.32,DZ-0.4,DZ+0.35,M.steel);boxW(2.6,2.75,cy-0.32,cy+0.32,DZ+0.2,DZ+0.35,M.steel);boxW(2.46,2.6,cy-0.3,cy+0.3,DZ-0.42,DZ-0.38,chB);label('FU-82 · Duct outlet (cowl outside GW-01)',W(2.5,cy,DZ+0.7))}
  const s=fu['FU-51'];boxW(s.x1+0.1,s.x2-0.1,s.y1+0.08,s.y2-0.08,K.KCH,K.KCH+0.012,M.steel);boxW(s.x1+0.22,s.x2-0.22,s.y1+0.2,s.y2-0.2,K.KCH-0.6,K.KCH+0.015,std({color:'#8c9094',metalness:0.85,roughness:0.3,side:THREE.BackSide}));
  const tx=(s.x1+s.x2)/2;cylW(tx,s.y2-0.05,K.KCH,K.KCH+1.15,0.05,M.handle);boxW(tx-0.04,tx+0.04,s.y2-0.7,s.y2-0.05,K.KCH+1.1,K.KCH+1.18,M.handle);
