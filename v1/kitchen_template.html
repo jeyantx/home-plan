@@ -96,7 +96,7 @@ const M={oak:std({map:oakTex,roughness:0.55}),oakIn:std({color:'#d8c29f',roughne
 function boxW(X1,X2,Y1,Y2,Z1,Z2,mat,parent=scene){const a=W(Math.min(X1,X2),Math.min(Y1,Y2),Math.min(Z1,Z2)),b=W(Math.max(X1,X2),Math.max(Y1,Y2),Math.max(Z1,Z2));
   const g=new THREE.BoxGeometry(Math.abs(b.x-a.x),Math.abs(b.y-a.y),Math.abs(b.z-a.z));const me=new THREE.Mesh(g,mat);me.position.set((a.x+b.x)/2,(a.y+b.y)/2,(a.z+b.z)/2);me.castShadow=me.receiveShadow=true;parent.add(me);return me}
 function cylW(X,Y,Z1,Z2,r,mat,parent=scene,rTop){const me=new THREE.Mesh(new THREE.CylinderGeometry((rTop??r)*F,r*F,(Z2-Z1)*F,28),mat);me.position.copy(W(X,Y,(Z1+Z2)/2));me.castShadow=me.receiveShadow=true;parent.add(me);return me}
-const LABS=[];function label(text,pos,cls='',parent=scene){const d=document.createElement('div');d.className='lab '+cls;d.textContent=text;LABS.push({d,full:text,short:text.split(' · ')[0],cur:text});const o=new CSS2DObject(d);o.position.copy(pos);parent.add(o);return o}
+const LABS=[];function label(text,pos,cls='',parent=scene){const d=document.createElement('div');d.className='lab '+cls;d.textContent=text;const o=new CSS2DObject(d);o.position.copy(pos);parent.add(o);LABS.push({d,o,full:text,short:text.split(' · ')[0],cur:text});return o}
 // a module's local frame: u along the run, v = depth into the unit from its front face, z = height (all plan feet)
 function frame(m){const f=m.face;
   const toPlan=(u,v)=>f==='x+'?[m.x2-v,u]:f==='y-'?[u,m.y1+v]:[u,m.y2-v];
@@ -132,6 +132,8 @@ const APM={glass:std({color:'#0b0c0d',roughness:0.05,metalness:0.3}),black:std({
   brass:std({color:'#b08d57',roughness:0.35,metalness:0.8}),steel:std({color:'#c9ccd0',roughness:0.25,metalness:0.9}),white:std({color:'#f3f3f1',roughness:0.32,metalness:0.08}),
   grey:std({color:'#cfd2d5',roughness:0.4,metalness:0.2}),win:std({color:'#2b3a44',roughness:0.05,metalness:0.1,transparent:true,opacity:0.55})};
 const cookMat=n=>{const nm=n.material?.name||'';return /gold/.test(nm)?APM.brass:/^Box002/.test(n.name)?APM.glass:/broun/.test(nm)?APM.enamel:APM.black};
+// FU-67 microwave (archibase.net 3DS, converted): restyle its parts: black body, dark glass door, steel trim, glass turntable
+const mwMat=n=>{const nm=n.material?.name||'';return /glassdark/.test(nm)?APM.win:/Croco/.test(nm)?APM.black:/03 - Default/.test(nm)?APM.steel:/04 - Default/.test(nm)?APM.glass:/1[01] - Default/.test(nm)?APM.grey:APM.enamel};
 const wmMat=n=>{const nm=n.material?.name||'';return /clear_window/.test(nm)?APM.win:/standart_metal/.test(nm)?APM.steel:/black_st|broun/.test(nm)?APM.black:/panel/.test(nm)?APM.grey:APM.white};
 // ---------------- the units ----------------
 const T=0.059,SH=0.06,G=0.01;   // 18 mm panels, 18 mm shutters, 3 mm gaps (feet)
@@ -253,7 +255,7 @@ boxW(3.512,4.75,65.0,66.363,K.KUP1R,K.KUP2,M.cream);
  cylW((ro.x1+ro.x2)/2,ro.y1-0.35,K.KLOW,K.KLOW+1.0,0.38,M.steel,scene,0.3);
  const wg=fu['FU-65'],wx=(wg.x1+wg.x2)/2,wy=(wg.y1+wg.y2)/2;cylW(wx,wy,K.KLOW,K.KLOW+0.38,0.6,M.appWhite,scene,0.55);cylW(wx,wy,K.KLOW+0.38,K.KLOW+1.0,0.44,M.steel);
  const mg=fu['FU-64'];boxW(mg.x1+0.05,mg.x2-0.05,mg.y1+0.1,mg.y2-0.1,K.KCH,K.KCH+0.42,M.appWhite);cylW((mg.x1+mg.x2)/2,(mg.y1+mg.y2)/2,K.KCH+0.42,K.KCH+1.15,0.22,std({color:'#d8dde0',roughness:0.15,metalness:0.4}),scene,0.26);
- const mw=fu['FU-67'];boxW(mw.x1,mw.x2,mw.y1+0.05,mw.y2-0.05,K.KBF+0.13,K.KBF+1.09,std({color:'#3a3c3f',roughness:0.4,metalness:0.4}));}
+ const mw=fu['FU-67'];placeAppliance('assets/appliances/microwave.glb',(mw.x1+mw.x2)/2,(mw.y1+mw.y2)/2,K.KBF+0.13,Math.PI/2,mwMat,null,'F');}   // front to the kitchen
 // ---------------- interaction ----------------
 const ray=new THREE.Raycaster(),mouse=new THREE.Vector2(),tip=document.getElementById('tip');
 const pickables=()=>fronts.flatMap(f=>f.leafMeshes?[...f.meshes,...f.leafMeshes]:f.meshes);
@@ -364,12 +366,19 @@ function walkKeys(dt){if(![...keys].some(k=>!k.startsWith('Shift')))return;fly=n
   if(keys.has('ArrowLeft')||keys.has('ArrowRight')){off.applyAxisAngle(up,keys.has('ArrowLeft')?tr:-tr);controls.target.copy(camera.position).add(off)}
   if(keys.has('KeyW')||keys.has('KeyS')){const o2=controls.target.clone().sub(camera.position),ax=new THREE.Vector3().crossVectors(o2,up).normalize(),pitched=o2.clone().applyAxisAngle(ax,keys.has('KeyW')?tr*0.8:-tr*0.8);
     if(Math.abs(pitched.clone().normalize().y)<0.97)controls.target.copy(camera.position).add(pitched)}}
+// names that would run into each other on screen show just their code (nearest labels keep their full name), checked a few times a second
+const lctx=document.createElement('canvas').getContext('2d');lctx.font='600 10px -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif';
+for(const L of LABS){L.wf=lctx.measureText(L.full).width+14;L.ws=lctx.measureText(L.short).width+14}
+let fitAt=0;const lv=new THREE.Vector3();
+function fitLabels(now){if(now-fitAt<160)return;fitAt=now;const W2=renderer.domElement.clientWidth/2,H2=renderer.domElement.clientHeight/2,H=17,placed=[],hit=r=>placed.some(q=>r[0]<q[2]&&q[0]<r[2]&&r[1]<q[3]&&q[1]<r[3]);
+  const list=LABS.map(L=>{L.o.getWorldPosition(lv);const dist=lv.distanceTo(camera.position);lv.project(camera);return {L,x:(lv.x+1)*W2,y:(1-lv.y)*H2,z:lv.z,dist}}).filter(e=>e.z<1).sort((a,b)=>a.dist-b.dist);
+  for(const e of list){const rf=[e.x-e.L.wf/2,e.y-H/2,e.x+e.L.wf/2,e.y+H/2];let t=e.L.full,r=rf;if(hit(rf)){t=e.L.short;r=[e.x-e.L.ws/2,e.y-H/2,e.x+e.L.ws/2,e.y+H/2]}placed.push(r);if(e.L.cur!==t){e.L.d.textContent=t;e.L.cur=t}}}
 let last=performance.now();
 renderer.setAnimationLoop(()=>{const now=performance.now(),dt=Math.min(0.05,(now-last)/1000);last=now;
   if(fly){fly.s=Math.min(1,fly.s+dt/0.9);const e=fly.s*fly.s*(3-2*fly.s);camera.position.lerpVectors(fly.p0,fly.p1,e);controls.target.lerpVectors(fly.t0,fly.t1,e);if(fly.s>=1)fly=null}
   walkKeys(dt);animate(dt);controls.update();
   // zoomed out: just the code, so the names do not run into each other
-  {const far=camera.position.distanceTo(controls.target)>3.7;for(const L of LABS){const t=far?L.short:L.full;if(L.cur!==t){L.d.textContent=t;L.cur=t}}}
+  fitLabels(now);
   renderer.render(scene,camera);labels.render(scene,camera)});
 window.__k={fronts,modules,toggle,goView,scene,camera,RUN,openAll,CL,hits,unfold:()=>unfoldBtn.click()};
 </script></body></html>

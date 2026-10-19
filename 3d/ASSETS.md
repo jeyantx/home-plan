@@ -51,6 +51,7 @@ All CC0 (public domain) from Poly Haven, https://polyhaven.com
 |---|---|---|---|
 | `cooktop.glb` | Free-standing 3-burner glass-top gas stove FU-52, scaled to 70 x 41 x 13 cm; converted from `Cook top Faber N141117.3DS` (turned Y-up, simplified to about 30,000 triangles); materials restyled in the 3D pages (`cookMat`) | archibase.net, provided by the owner | Free download from archibase.net (licence as on the site) |
 | `washing-machine.glb` | Front-load washing machine FU-29, scaled to 85 cm high; converted from `Washing machine Zanussi N280220.obj` with Blender; materials restyled (`wmMat`) | archibase.net, provided by the owner | Free download from archibase.net (licence as on the site) |
+| `microwave.glb` | Microwave oven FU-67, scaled to 42 x 28 x 37 cm; converted from `Microwave.3DS` (turned Y-up); materials restyled in the 3D pages (`mwMat`) | archibase.net, provided by the owner | Free download from archibase.net (licence as on the site) |
 
 ## Garden plant models (`assets/plants/`)
 All CC0 (public domain) from Poly Haven, https://polyhaven.com, downloaded as 1k glTF and converted with Blender 5.2 (simplified, textures reduced to 512 px, base on the ground, metres).

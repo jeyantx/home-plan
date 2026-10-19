@@ -725,6 +725,8 @@ const APM={glass:std({color:'#0b0c0d',roughness:0.05,metalness:0.3}),black:std({
   brass:std({color:'#b08d57',roughness:0.35,metalness:0.8}),steel:std({color:'#c9ccd0',roughness:0.25,metalness:0.9}),white:std({color:'#f3f3f1',roughness:0.32,metalness:0.08}),
   grey:std({color:'#cfd2d5',roughness:0.4,metalness:0.2}),win:std({color:'#2b3a44',roughness:0.05,metalness:0.1,transparent:true,opacity:0.55})};
 const cookMat=n=>{const nm=n.material?.name||'';return /gold/.test(nm)?APM.brass:/^Box002/.test(n.name)?APM.glass:/broun/.test(nm)?APM.enamel:APM.black};
+// FU-67 microwave (archibase.net 3DS, converted): restyle its parts: black body, dark glass door, steel trim, glass turntable
+const mwMat=n=>{const nm=n.material?.name||'';return /glassdark/.test(nm)?APM.win:/Croco/.test(nm)?APM.black:/03 - Default/.test(nm)?APM.steel:/04 - Default/.test(nm)?APM.glass:/1[01] - Default/.test(nm)?APM.grey:APM.enamel};
 const wmMat=n=>{const nm=n.material?.name||'';return /clear_window/.test(nm)?APM.win:/standart_metal/.test(nm)?APM.steel:/black_st|broun/.test(nm)?APM.black:/panel/.test(nm)?APM.grey:APM.white};
 function cabRun(id,what,x1,x2,y1,y2,z1,z2,face,segs,mat,plinth){
   const t=kTip(id,what),g=0.012,alongX=face[0]==='y';
@@ -819,7 +821,7 @@ function cabRun(id,what,x1,x2,y1,y2,z1,z2,face,segs,mat,plinth){
  // breakfast counter FU-17 on GW-13 under W-12 (front faces +y), microwave FU-67 on its west end
  const b=fuG['FU-17'];cabRun('FU-17','Breakfast counter',b.x1,b.x2,b.y1+0.012,b.y2,0,P.kitchen.KBF,'y+',[[5.5,7.1,'door'],[7.1,8.7,'drawers'],[8.7,10.3,'door'],[10.3,11.9,'drawers'],[11.9,13.5,'open']],MAT.kLow,true);
  box(b.x1+0.06,b.x2,b.y1+0.012,b.y2+0.06,KCH-KTOP,KCH,MAT.kTop,{tip:'Breakfast counter top, 40 mm, level with the east run'});
- const mw=fuG['FU-67'];box(mw.x1,mw.x2,mw.y1+0.05,mw.y2-0.05,KCH,KCH+0.96,std({color:'#3a3c3f',roughness:0.4,metalness:0.4}),{round:0.04,tip:`FU-67 · Microwave oven · ${mw.note}`});
+ const mw=fuG['FU-67'];placeAppliance('assets/appliances/microwave.glb',(mw.x1+mw.x2)/2,(mw.y1+mw.y2)/2,KCH,Math.PI/2,mwMat,`FU-67 · Microwave oven · ${mw.note}`);   // front to the kitchen
  box(mw.x1+0.08,mw.x2-0.45,mw.y2-0.05,mw.y2-0.03,3.1,3.85,MAT.blackGlass,{cast:false,tip:'Microwave door, black glass'});
  // fridge FU-18 on GW-05, loft cabinets above it; tall store cupboard FU-25 south of it, floor to ceiling, oak with lofts
  const fr=fuG['FU-18'];box(fr.x1+0.12,fr.x2-0.05,fr.y1+0.06,fr.y2-0.06,0,5.75,std({color:'#c9ccce',roughness:0.3,metalness:0.6}),{round:0.05,tip:`FU-18 · Fridge, single door, 230 L · ${fr.note}`});
