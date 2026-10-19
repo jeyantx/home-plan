@@ -133,6 +133,15 @@ const T={
 function rng(seed){let s=seed>>>0;return()=>{s=(s*1664525+1013904223)>>>0;return s/4294967296}}
 function canvasTex(w,h,draw,sizeM){const c=document.createElement('canvas');c.width=w;c.height=h;draw(c.getContext('2d'),w,h);
   const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(1/sizeM,1/sizeM);t.anisotropy=8;t.colorSpace=THREE.SRGBColorSpace;return t}
+// vitrified grey parking tile, 400 x 400 mm, matt: speckled grey 200 x 100 mm bricks in a 90-degree herringbone, dark joints (one tile = one repeat)
+function parkingTile(){return canvasTex(1024,1024,(g,w,h)=>{const u=w/4,r=rng(36603),bricks=[];
+  for(let mm=-3;mm<=3;mm++)for(let k=-8;k<=8;k++){bricks.push([k+2*mm,k-2*mm,2,1],[k+2*mm,k+1-2*mm,1,2])}
+  const draw=(fn)=>{for(const [x,y,bw,bh] of bricks)for(const ox of [-4,0,4])for(const oy of [-4,0,4]){const X=(x+ox)*u,Y=(y+oy)*u;if(X>w||Y>h||X+bw*u<0||Y+bh*u<0)continue;fn(X,Y,bw*u,bh*u)}};
+  g.fillStyle='#262626';g.fillRect(0,0,w,h);
+  draw((X,Y,W,H)=>{const v=Math.round((r()-0.5)*10);g.fillStyle=`rgb(${143+v},${143+v},${140+v})`;g.fillRect(X+5,Y+5,W-10,H-10)});
+  g.save();g.beginPath();draw((X,Y,W,H)=>g.rect(X+5,Y+5,W-10,H-10));g.clip();
+  for(let i=0;i<60000;i++){const t=r(),c=t<0.38?'rgba(70,70,68,0.75)':t<0.7?'rgba(205,205,200,0.8)':t<0.85?'rgba(110,110,106,0.7)':'rgba(170,166,158,0.7)',s=1+r()*2.6;g.fillStyle=c;g.fillRect(r()*w,r()*h,s,s)}
+  g.restore()},0.4)}
 function stoneTiles(base,seed,tx,ty,tileFt){return canvasTex(1024,1024*ty/tx,(g,w,h)=>{const r=rng(seed);g.fillStyle=base;g.fillRect(0,0,w,h);
   for(let i=0;i<9000;i++){const v=(r()-.5)*0.05;g.fillStyle=v>0?`rgba(255,255,255,${v})`:`rgba(0,0,0,${-v})`;g.fillRect(r()*w,r()*h,3,3)}
   for(let i=0;i<220;i++){g.fillStyle=`rgba(${r()<.5?'255,255,255':'120,110,95'},0.05)`;g.beginPath();g.ellipse(r()*w,r()*h,8+r()*40,4+r()*20,r()*3,0,7);g.fill()}
@@ -187,6 +196,7 @@ const MAT={
   extWood:std({map:T.oakPanel.map,normalMap:T.oakPanel.normalMap,normalScale:new THREE.Vector2(0.3,0.3),roughness:0.6}),
   terrTile:std({map:clayTiles(),roughness:0.85}),
   paver:std({map:stoneTiles('#9d978d',62,4,4,0.75),roughness:0.9}),
+  parkTile:std({map:parkingTile(),roughness:0.78}),
   asphalt:std({color:'#4a4d50',roughness:0.95}),
   stepStone:std({color:'#8e8a84',roughness:0.5}),
   bark:std({color:'#5d4a3a',roughness:1}),
@@ -1032,7 +1042,7 @@ for(const c of P.columns) if(!inWallG(c)){const me=box(c.x1,c.x2,c.y1,c.y2,c.y1<
 const PSY=P.porchY||30.75,PFY=PSY+2.5;   // porch steps start, porch floor start
 for(const [a,b,c,d] of [[8.25,21,30.75,33.25],[8.25,21,33.25,67.125],[2.75,8.25,PFY,67.125],[6.0,21,67.125,73.875],[9.5,21,73.875,95.125],[2.75,3.5,31.762,PFY]].filter(r=>r[3]>r[2]+0.01)) box(a,b,c,d,c<31.8?PKZ:GRD,-0.03,MAT.extBase,{cast:false,tip:'Plinth band · textured paint (or stone cladding) in the base colour'});
 slab([[2.75,PFY],[8.5,PFY],[8.5,40.5],[2.75,40.5]],MAT.otherFloor,0,'G-02 · Porch floor');
-if(PSY>30.76) box(3.5,8.25,30.75,PSY,PKZ-0.2,PKZ+0.03,MAT.paver,{cast:false,tip:`G-01 · Parking bay in front of the porch steps, ${Math.round((PSY-30.75)*12)}" deep · grey pavers`});
+if(PSY>30.76) box(3.5,8.25,30.75,PSY,PKZ-0.2,PKZ+0.03,MAT.parkTile,{cast:false,tip:`G-01 · Parking bay in front of the porch steps, ${Math.round((PSY-30.75)*12)}" deep · grey pavers`});
 for(let i=0;i<3;i++) box(3.5,8.25,PSY+i*0.833,PFY,PKZ,PKZ+(i+1)*(-PKZ/3),MAT.stepStone,{tip:`Porch steps, granite, ${Math.round(-PKZ/3*12)}" risers, from the parking`});
 box(0.375,2.75,30.75,30.79,PKZ,GRD,MAT.extTrim,{tip:'Step up from the parking to the side passage, 6"'});
 // small gate GT-02: three steps up from the crest to a level platform at parking height (the ramp serves the car gate only)
@@ -1049,19 +1059,20 @@ if(SPL){const st=SPL.steps,L=[];
     solid(P1,HUZ+(PKZ-HUZ)*(k+1)/st.length,MAT.stepStone,`Small-gate steps · granite, 6" risers, ${Math.round((yb-ya)*12)}" treads · from the gate crest up to the platform (+2'0")`)}
   {const y0=st[st.length-1],ye=TWC[1]+Math.sqrt(Math.max(0,TWC[2]**2-(SPL.xe-TWC[0])**2)),a0=Math.atan2(y0-TWC[1],splCx(y0)-TWC[0]),a1=Math.atan2(ye-TWC[1],SPL.xe-TWC[0]),P2=[[SPL.x2,y0]];
     for(let i=0;i<=16;i++){const a=a0+(a1-a0)*i/16;P2.push([TWC[0]+TWC[2]*Math.cos(a),TWC[1]+TWC[2]*Math.sin(a)])}P2.push([SPL.xe,SPL.y_end],[SPL.x2,SPL.y_end]);
-    const pl=solid(P2,PKZ,[MAT.paver,MAT.extTrim],`Small-gate platform · grey pavers at parking level (+2'0") · its east edge is a retaining kerb along the car ramp (1'4" high at the steps, nothing at Y 10'9")`);
+    const pl=solid(P2,PKZ,[MAT.parkTile,MAT.extTrim],`Small-gate platform · grey parking tile at parking level (+2'0") · its east edge is a retaining kerb along the car ramp (1'4" high at the steps, nothing at Y 10'9")`);
     {const uv=pl.geometry.attributes.uv,pa=pl.geometry.attributes.position;for(let i=0;i<uv.count;i++)uv.setXY(i,pa.getX(i),pa.getZ(i));uv.needsUpdate=true}}}
 {const tp=fuG['FU-76'],tx=(tp.x1+tp.x2)/2,ty=(tp.y1+tp.y2)/2,tr=(tp.x2-tp.x1)/2;   // drive: gate bevel, crest, ramp, level parking; tree well FU-76 left open
- const X0=0.375,X1=21,Y0=0,Y1=30.75,dx=0.25,dy=0.25,pos=[],nor=[];
+ const X0=0.375,X1=21,Y0=0,Y1=30.75,dx=0.25,dy=0.25,pos=[],posP=[],nor=[];
  for(let x=X0;x<X1-1e-6;x+=dx)for(let y=Y0;y<Y1-1e-6;y+=dy){const xa=x,xb=Math.min(x+dx,X1),ya=y,yb=Math.min(y+dy,Y1);
    if(Math.hypot((xa+xb)/2-tx,(ya+yb)/2-ty)<tr-0.2)continue;
    if([[xa,ya],[xb,ya],[xb,yb],[xa,yb]].every(([u,v])=>splAt(u,v)!==null))continue;   // under the small-gate steps and platform
    const P4=[[xa,ya],[xb,ya],[xb,yb],[xa,yb]].map(([u,v])=>[mx(u),m(zF(v)+0.03),m(v)]);
-   for(const k of [0,1,2,0,2,3])pos.push(...P4[k])}
+   const arr=ya>=RP.y_top-1e-6?posP:pos;for(const k of [0,1,2,0,2,3])arr.push(...P4[k])}
+for(const [P_,mat,nm] of [[pos,MAT.paver,`G-01 · Gate crest and ramp · grey anti-skid interlocking pavers · crest +6" over the road, ramp 1 in 4 (14 deg) with 1 in 8 ends`],[posP,MAT.parkTile,`G-01 · Parking · vitrified grey parking tile, 400 x 400 mm, matt, herringbone design (Code36603 type) · level at +2'0"`]]){const pos=P_;
  const dg=new THREE.BufferGeometry();dg.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));dg.computeVertexNormals();
  const duv=[];for(let i=0;i<pos.length;i+=3)duv.push(pos[i],pos[i+2]);dg.setAttribute('uv',new THREE.Float32BufferAttribute(duv,2));
  {const dn=dg.attributes.normal;let up=0;for(let i=0;i<dn.count;i++)up+=dn.getY(i);if(up<0){const pa=dg.attributes.position;for(let i=0;i<pa.count;i+=3){for(const c of [0,1,2]){const t=pa.getComponent(i+1,c);pa.setComponent(i+1,c,pa.getComponent(i+2,c));pa.setComponent(i+2,c,t)}}dg.computeVertexNormals()}}   // faces point up
- const drive=new THREE.Mesh(dg,MAT.paver);drive.receiveShadow=true;scene.add(drive);named(drive,`G-01 · Parking and drive · grey interlocking pavers · gate crest +6" over the road, ramp 1 in 4 (14 deg) with 1 in 8 ends, parking +2'0"`);
+ const drive=new THREE.Mesh(dg,mat);drive.receiveShadow=true;scene.add(drive);named(drive,nm);}
  // covered drain across the drive at the inner edge of the crest (to the rainwater pit and the road drain)
  const [d1,d2]=RP.drain,grate=std({color:'#3a3c3e',roughness:0.5,metalness:0.6});
  for(const [a,b] of [[X0,tx-tr-0.05]]) if(b-a>0.1){box(a,b,d1,d2,HUZ-0.03,HUZ+0.035,grate,{cast:false,tip:'Gate drain, 9" wide, steel grating · takes the drive water to the rainwater pit, overflow to the road drain'});
@@ -1077,6 +1088,8 @@ if(SPL){const st=SPL.steps,L=[];
  const cp=new THREE.Mesh(cg,MAT.stepStone);scene.add(cp);named(cp,'FU-76 · Tree well coping, grey granite');
  const mulch=std({map:canvasTex(512,512,(g,w,h)=>{const r=rng(61);g.fillStyle='#5b3b25';g.fillRect(0,0,w,h);for(let i=0;i<5000;i++){const c=['#3f2818','#6e4a2e','#7d6a3e','#4a5a2a','#8a6a48'][Math.floor(r()*5)];g.fillStyle=c;g.globalAlpha=0.6;g.save();g.translate(r()*w,r()*h);g.rotate(r()*7);g.fillRect(-4,-1.5,8+r()*8,3);g.restore()}g.globalAlpha=1},0.6),roughness:1});
  cyl(tx,ty,RDZ-0.05,RDZ+0.04,tr-0.375,mulch,{tip:`FU-76 · Tree well · open soil with leaf mulch at today's ground · ${tp.note}`,seg:48}).castShadow=false;}
+// compound walls, gate pillars and the planter pillar: a darker warm grey-beige than the house walls, white coping on top
+MAT.comp=std({color:'#b9b0a2',roughness:0.95,normalMap:T.paint.normalMap,normalScale:new THREE.Vector2(0.15,0.15)});
 // underground tanks and pits (UG-): only their covers show; hover a cover for the tank behind it
 if(P.underground){const iron=std({color:'#3d4043',roughness:0.55,metalness:0.6});
   for(const [code,name,shape,g,inside,covers,note] of P.underground){const tip=`${code} · ${name} · ${inside} · ${note}`,front=(shape==='rect'?g[2]:g[1])<30.75;
@@ -1087,11 +1100,10 @@ if(P.underground){const iron=std({color:'#3d4043',roughness:0.55,metalness:0.6})
       else{const [cx,cy,r]=c,z=gAt(cx,cy),sl=(gAt(cx,cy+0.2)-gAt(cx,cy-0.2))/0.4,rain=/rain/i.test(name);
         const me=new THREE.Mesh(new THREE.CylinderGeometry(m(r),m(r),m(0.06),40),rain?MAT.blackMetal:iron);me.position.set(mx(cx),m(z+0.01),m(cy));me.rotation.x=-Math.atan(sl);me.receiveShadow=true;scene.add(me);named(me,tip);
         if(rain)for(let k=-r+0.15;k<r-0.1;k+=0.18){const w=Math.sqrt(Math.max(0,r*r-k*k));box(cx-w+0.05,cx+w-0.05,cy+k,cy+k+0.04,z+0.04,z+0.06,MAT.paver,{cast:false,tip})}}}
-    if(code==='UG-01')cyl(0.62,15.5,PKZ,PKZ+7.0,0.17,std({color:'#e9e6e0',roughness:0.6}),{tip:`${code} · septic tank vent pipe, 4" PVC, up the compound wall BW-01`});}}
+    if(code==='UG-01'){const c1=P.columns.find(c=>c.id==='C-01'),vx=c1?c1.x1+0.19:0.56,vy=c1?c1.y2+0.18:20.93;   // tucked into the corner behind pillar C-01 (house side), in the wall colour
+      cyl(vx,vy,PKZ,SLB-0.02,0.17,MAT.comp,{tip:`${code} · septic tank vent pipe, 4" PVC painted in the wall colour, in the corner behind pillar C-01, up to the roof`});}}}
 box(-40,70,-17,-0.02,RDZ-0.02,RDZ+0.02,MAT.paver,{cast:false,tip:'Road (north), 17\' wide · grey interlocking pavers · our gate crest is 6" above it, the parking 2\'0", the gardens 2\'6"'});
 // compound walls, gate pillars with lamps, planter pillar, gates
-// compound walls, gate pillars and the planter pillar: a darker warm grey-beige than the house walls, white coping on top
-MAT.comp=std({color:'#b9b0a2',roughness:0.95,normalMap:T.paint.normalMap,normalScale:new THREE.Vector2(0.15,0.15)});
 for(const w of P.walls.G.filter(w=>w.kind==='comp')){   // stepped down along the drive (6' above the ground inside); the bottom holds back the fill
   const cuts=[w.y1,...[3.25,5.0,6.75,8.5,10.75,30.75].filter(c=>c>w.y1+0.01&&c<w.y2-0.01),w.y2];
   for(let i=0;i<cuts.length-1;i++){const a=cuts[i],b=cuts[i+1],front=b<=30.76,gnd=front?zF(b):GRD,base=Math.min(NBZ,front?zF(a):GRD)-0.1;
