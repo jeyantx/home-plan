@@ -292,6 +292,7 @@ function show(k){{if(!document.getElementById('p-'+k))k='3d';
   tabs.forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===k));
   document.querySelectorAll('.pane').forEach(p=>p.classList.toggle('on',p.id==='p-'+k));
   const f=document.querySelector('#p-'+k+' iframe');if(f&&!f.src)f.src=f.dataset.src;
+  if(f){{const fo=()=>{{try{{f.contentWindow.focus()}}catch(e){{}}}};fo();f.addEventListener('load',fo,{{once:true}})}}   // give the keyboard to the page shown, so the arrow keys work without a click first
   document.getElementById('keys-3d').hidden=k!=='3d';document.getElementById('keys-kitchen').hidden=k!=='kitchen';   // key help for the 3D tabs, top right   // load the 2D and 3D pages the first time they are opened
   if(location.hash!=='#'+k)history.replaceState(null,'','#'+k);try{{localStorage.setItem('hp-tab',k)}}catch(e){{}}}}
 tabs.forEach(b=>b.onclick=()=>show(b.dataset.tab));

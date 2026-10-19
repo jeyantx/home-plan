@@ -1421,15 +1421,14 @@ function vfrMats(){const P=(c,o={})=>new THREE.MeshPhysicalMaterial({color:c,rou
 {const T=id=>{const f=fuG[id];return `${id} · ${f.name} · ${f.note}`},CZ=-0.97,SZ=CEIL+0.02,pg=std({color:'#c9ccd0',roughness:0.45,metalness:0.3});
  {const f=fuG['FU-83'];if(f){box(f.x1+0.05,f.x2,f.y1,f.y2,CZ+4.75,CZ+4.92,MAT.white,{tip:T('FU-83')});box(f.x1+0.05,f.x2,f.y2-0.05,f.y2,CZ+4.66,CZ+4.75,MAT.white,{tip:T('FU-83')+' · drip edge'});
    box(f.x1,f.x1+0.375,f.y1,f.y2,CZ,CZ+4.92,MAT.extUp,{tip:T('FU-83')+' · side wall on the side-passage side, 4½" brick, plastered'})}}
- // wall panels: FU-86 on GW-18 (wall along y, face toward -x), FU-85 and the EB meter FU-87 on GW-04 (wall along x, face toward the parking, -y)
+ // wall boxes, 6" deep: FU-86 on GW-18 (wall along y, face toward -x), FU-85 and the EB meter FU-87 on GW-04 (wall along x, face toward the parking, -y)
  for(const [id,z0,z1,z2] of [['FU-86',CZ,4.5,5.75],['FU-85',PKZ,4.5,5.75],['FU-87',PKZ,4.5,6.0]]){const f=fuG[id];if(!f)continue;const alongY=(f.x2-f.x1)<(f.y2-f.y1),meter=id==='FU-87';
    box(f.x1,f.x2,f.y1,f.y2,z0+z1,z0+z2,pg,{tip:T(id)});
    const win=meter?[z0+z1+0.55,z0+z2-0.25]:[z0+z2-0.45,z0+z2-0.15];
    if(alongY)box(f.x1-0.012,f.x1,f.y1+0.1,f.y2-0.1,win[0],win[1],MAT.blackMetal,{cast:false,tip:T(id)+' · display and switches'});
    else box(f.x1+0.12,f.x2-0.12,f.y1-0.012,f.y1,win[0],win[1],meter?std({color:'#9fb4bf',roughness:0.05,metalness:0.2,transparent:true,opacity:0.6}):MAT.blackMetal,{cast:false,tip:T(id)+(meter?' · glass window to read the meter':' · display and switches')});
    if(meter)box(f.x1+0.35,f.x2-0.35,f.y1-0.008,f.y1-0.002,win[0]+0.2,win[0]+0.42,MAT.blackMetal,{cast:false,tip:'EB meter display'});
-   if(alongY){const cy=(f.y1+f.y2)/2;box(f.x1+0.02,f.x2,cy-0.05,cy+0.05,z0,z0+z1,pg,{cast:false,tip:T(id)+' · cable conduit'})}
-   else{const cx=(f.x1+f.x2)/2;box(cx-0.05,cx+0.05,f.y1+0.02,f.y2,z0+z2,CEIL,pg,{cast:false,tip:T(id)+' · cable conduit'})}}}
+}}   // 6" deep boxes on the wall; the wiring runs inside the wall
 // side garden, south-east: garden tap point FU-54 on the east compound wall BW-03 (face toward +x) and its wash platform FU-55
 {const f=fuG['FU-54'],p=fuG['FU-55'],T=g=>`${g.id} · ${g.name} · ${g.note}`,brass=std({color:'#b08d57',roughness:0.35,metalness:0.8}),grey=std({color:'#8f9294',roughness:0.85});
  if(f){const cy=f.y1+0.3,W0=f.x1;box(f.x1,f.x2,f.y1,f.y2,GRD,GRD+0.33,grey,{tip:T(f)+' · 4" tiled step'});box(W0,W0+0.025,f.y1,f.y2,GRD+0.33,GRD+3.4,std({color:'#f4f4f1',roughness:0.2}),{tip:T(f)+' · white wall tiles'});
@@ -1856,7 +1855,7 @@ const tick=()=>new Promise(r=>setTimeout(r,30));
   const mode=curLight,vis=l=>{const d=l==='day';sun.visible=d&&!photo;for(const p of poolAll())p.visible=!d&&!photo};
   ldShow('Preparing day lighting…',0.75);await tick();vis('day');try{await renderer.compileAsync(scene,camera)}catch(e){}
   ldShow('Preparing evening lighting…',0.9);await tick();vis('eve');syncPool(true);try{await renderer.compileAsync(scene,camera)}catch(e){}
-  applyLight(mode);ldShow('Ready',1);await tick();preparing=false;ldHide();renderer.shadowMap.needsUpdate=true;invalidate()})();
+  applyLight(mode);ldShow('Ready',1);await tick();preparing=false;ldHide();try{window.focus()}catch(e){}renderer.shadowMap.needsUpdate=true;invalidate()})();
 renderer.setAnimationLoop(()=>{
   if(preparing)return;
   walk();
