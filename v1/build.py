@@ -138,6 +138,22 @@ for(const cb of document.querySelectorAll('.layers input')){
   const ap=()=>{document.body.classList.toggle('hide-'+cb.dataset.layer,!cb.checked); try{localStorage.setItem(k,cb.checked?'1':'0')}catch(e){}};
   cb.addEventListener('change',ap); ap();
 }
+// share: the floor, the Show layers and the zoom go into the link (?floor=f0&hide=dims,furn&show=carpath&v=x,y,w), so the same plan opens for someone else
+(function(){
+  const Q=new URLSearchParams(location.search),cbs=[...document.querySelectorAll('.layers input')],nm=cb=>cb.dataset.layer.slice(2).toLowerCase();
+  const hide=(Q.get('hide')||'').split(',').filter(Boolean),show=(Q.get('show')||'').split(',').filter(Boolean);
+  if(Q.has('hide')||Q.has('show'))for(const cb of cbs){const n=nm(cb);cb.checked=hide.includes(n)?false:show.includes(n)?true:cb.defaultChecked;cb.dispatchEvent(new Event('change'))}
+  const fl=Q.get('floor');if(['f0','f1','both'].includes(fl))setMode(fl);
+  const v=(Q.get('v')||'').split(',').map(Number);
+  if(v.length===3&&v.every(Number.isFinite))requestAnimationFrame(()=>requestAnimationFrame(()=>{const r=sheets[visible()[0]].getBoundingClientRect();view={x:v[0],y:v[1],w:v[2],h:v[2]*r.height/r.width};apply()}));
+  let t=0;
+  function write(){clearTimeout(t);t=setTimeout(()=>{const P=new URLSearchParams(),H=cbs.filter(cb=>cb.defaultChecked&&!cb.checked).map(nm),S=cbs.filter(cb=>!cb.defaultChecked&&cb.checked).map(nm);
+    if(mode!=='both')P.set('floor',mode);if(H.length)P.set('hide',H.join(','));if(S.length)P.set('show',S.join(','));P.set('v',[view.x,view.y,view.w].map(n=>+n.toFixed(1)).join(','));
+    const qs='?'+P.toString().replace(/%2C/g,',');history.replaceState(null,'',qs+location.hash);
+    try{if(parent!==window){const pl=parent.location;parent.history.replaceState(null,'',pl.pathname+qs+pl.hash)}}catch(e){}},300)}   // the app page shows the same link
+  cbs.forEach(cb=>cb.addEventListener('change',write));
+  const _ap=apply;apply=function(){_ap();write()};const _sm=setMode;setMode=function(m){_sm(m);write()};
+})();
 </script>''')
 import subprocess as _sp
 BRANCH=_sp.run(['git','rev-parse','--abbrev-ref','HEAD'],capture_output=True,text=True).stdout.strip() or 'main'
@@ -291,7 +307,7 @@ const tabs=[...document.querySelectorAll('nav button')];
 function show(k){{if(!document.getElementById('p-'+k))k='3d';
   tabs.forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===k));
   document.querySelectorAll('.pane').forEach(p=>p.classList.toggle('on',p.id==='p-'+k));
-  const f=document.querySelector('#p-'+k+' iframe');if(f&&!f.src)f.src=f.dataset.src;
+  const f=document.querySelector('#p-'+k+' iframe');if(f&&!f.src)f.src=f.dataset.src+(k==='2d'?location.search:'');   // the 2D plan reads its floor, layers and zoom from the link
   if(f){{const fo=()=>{{try{{f.contentWindow.focus()}}catch(e){{}}}};fo();f.addEventListener('load',fo,{{once:true}})}}   // give the keyboard to the page shown, so the arrow keys work without a click first
   document.getElementById('keys-3d').hidden=k!=='3d';document.getElementById('keys-kitchen').hidden=k!=='kitchen';   // key help for the 3D tabs, top right   // load the 2D and 3D pages the first time they are opened
   if(location.hash!=='#'+k)history.replaceState(null,'','#'+k);try{{localStorage.setItem('hp-tab',k)}}catch(e){{}}}}

@@ -17,16 +17,16 @@ grp.updateMatrixWorld(true);const b1=new THREE.Box3().setFromObject(grp),c=b1.ge
 // black frame, dark glass window and a vertical handle, over the oven opening; the control panel (microwave3, microwave6 and the knobs) stays on its side
 {const all=new THREE.Box3().setFromObject(grp),ctl=new THREE.Box3(),body=new THREE.Box3();grp.traverse(o=>{if(o.isMesh&&['microwave3','microwave6'].includes(o.name))ctl.expandByObject(o);if(o.isMesh&&o.name==='microwave_')body.expandByObject(o)});
  console.log('body x',body.min.x.toFixed(3),body.max.x.toFixed(3),'ctl x',ctl.min.x.toFixed(3),ctl.max.x.toFixed(3),'ctl z',ctl.min.z.toFixed(3),ctl.max.z.toFixed(3));
- const fx=ctl.isEmpty()?body.min.x:ctl.max.x+0.003,H=all.max.y,z1=all.min.z+0.006,z2=(ctl.isEmpty()?all.min.z+0.33:ctl.min.z)-0.012,T=0.022,M=(n,c)=>new THREE.MeshStandardMaterial({name:n,color:c});
+ const fx=ctl.isEmpty()?body.min.x:ctl.max.x+0.003,H=all.max.y,z1=all.min.z,z2=(ctl.isEmpty()?all.min.z+0.33:ctl.min.z)-0.012,T=0.022,M=(n,c)=>new THREE.MeshStandardMaterial({name:n,color:c});
  const door=new THREE.Group();door.name='door';
- const fr=new THREE.Shape([[z1,0.012],[z2,0.012],[z2,H-0.012],[z1,H-0.012]].map(([a,b])=>new THREE.Vector2(a,b)));fr.holes.push(new THREE.Path([[z1+0.04,0.045],[z1+0.04,H-0.045],[z2-0.05,H-0.045],[z2-0.05,0.045]].map(([a,b])=>new THREE.Vector2(a,b))));
+ const fr=new THREE.Shape([[z1,0],[z2,0],[z2,H],[z1,H]].map(([a,b])=>new THREE.Vector2(a,b)));   // full height and to the side, flush with the body (no step showing on top)fr.holes.push(new THREE.Path([[z1+0.04,0.045],[z1+0.04,H-0.045],[z2-0.05,H-0.045],[z2-0.05,0.045]].map(([a,b])=>new THREE.Vector2(a,b))));
  const fm=new THREE.Mesh(new THREE.ExtrudeGeometry(fr,{depth:T,bevelEnabled:false}),M('door_frame','#161718'));fm.name='door_frame';fm.rotation.y=-Math.PI/2;fm.position.x=fx;door.add(fm);   // shape in the z-y plane, extruded toward -x
  const gl=new THREE.Mesh(new THREE.BoxGeometry(0.006,H-0.09,(z2-0.05)-(z1+0.04)),M('door_glass','#2b3a44'));gl.name='door_glass';gl.position.set(fx-T/2,H/2,(z1+0.04+z2-0.05)/2);door.add(gl);
  const hd=new THREE.Mesh(new THREE.CylinderGeometry(0.008,0.008,H-0.1,16),M('door_handle','#c9ccd0'));hd.name='door_handle';hd.position.set(fx-T-0.022,H/2,z2-0.025);door.add(hd);
  for(const y of [0.06,H-0.06]){const st=new THREE.Mesh(new THREE.BoxGeometry(0.024,0.014,0.014),M('door_handle','#c9ccd0'));st.name='door_handle';st.position.set(fx-T-0.011,y,z2-0.025);door.add(st)}
  // a full body behind the door and the controls (the downloaded shell is only the back half), a control panel with a display and two knobs; the shell, turntable and rack inside are hidden by it
  const bx=new THREE.Mesh(new THREE.BoxGeometry(all.max.x-fx,H,all.max.z-all.min.z),M('mw_body','#2b2c2e'));bx.name='mw_body';bx.position.set((fx+all.max.x)/2,H/2,(all.min.z+all.max.z)/2);door.add(bx);
- const pz1=z2+0.006,pz2=all.max.z-0.004,pn=new THREE.Mesh(new THREE.BoxGeometry(0.004,H-0.024,pz2-pz1),M('mw_panel','#161718'));pn.name='mw_panel';pn.position.set(fx-0.002,H/2,(pz1+pz2)/2);door.add(pn);
+ const pz1=z2+0.004,pz2=all.max.z,pn=new THREE.Mesh(new THREE.BoxGeometry(0.004,H,pz2-pz1),M('mw_panel','#161718'));pn.name='mw_panel';pn.position.set(fx-0.002,H/2,(pz1+pz2)/2);door.add(pn);
  const dp=new THREE.Mesh(new THREE.BoxGeometry(0.003,0.026,(pz2-pz1)*0.7),M('mw_display','#0b0c0d'));dp.name='mw_display';dp.position.set(fx-0.0045,H-0.05,(pz1+pz2)/2);door.add(dp);
  for(const y of [0.13,0.06]){const kn=new THREE.Mesh(new THREE.CylinderGeometry(0.017,0.019,0.014,24),M('mw_knob','#c9ccd0'));kn.name='mw_knob';kn.rotation.z=Math.PI/2;kn.position.set(fx-0.011,y,(pz1+pz2)/2);door.add(kn)}
  const hide=[];grp.traverse(o=>{if(o.isMesh&&['microwave_','microwave4','microwave5'].includes(o.name))hide.push(o)});hide.forEach(o=>o.parent.remove(o));
