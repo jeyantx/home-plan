@@ -1102,19 +1102,18 @@ MAT.comp=std({color:'#b9b0a2',roughness:0.95,normalMap:T.paint.normalMap,normalS
 if(P.underground){const iron=std({color:'#3d4043',roughness:0.55,metalness:0.6});
   for(const [code,name,shape,g,inside,covers,note] of P.underground){const tip=`${code} · ${name} · ${inside} · ${note}`,front=(shape==='rect'?g[2]:g[1])<30.75;
     const gAt=(x,y)=>front?hFront(x,y):GRD;
-    if(/sump/i.test(name)){const [x1,x2,y1,y2]=g;box(x1,x2,y1,y2,GRD-0.3,GRD+0.5,MAT.ext,{tip:`${code} · top of the sump, 6" above the garden · ${inside}`});}
+    if(/sump/i.test(name)&&!front){const [x1,x2,y1,y2]=g;box(x1,x2,y1,y2,GRD-0.3,GRD+0.5,MAT.ext,{tip:`${code} · top of the sump, 6" above the garden · ${inside}`});}
     for(const c of covers){
-      if(c.length===4&&/septic/i.test(name)){const z=gAt((c[0]+c[1])/2,(c[2]+c[3])/2)+0.03,[a,b,e,f]=c,rim=0.06,steel=std({color:'#5f6367',roughness:0.55,metalness:0.4}),
-          tt=`${code} · recessed (tile-in) cover, 2' x 2': a steel tray filled with the same parking tile, so it blends into the floor; lift it with the two keys to clean the tank · ${tip}`;
-        box(a+rim,b-rim,e+rim,f-rim,z-0.06,z+0.01,MAT.parkTile,{cast:false,tip:tt});                       // tile infill, flush with the floor
+      if(c.length===4&&front){const cx_=(c[0]+c[1])/2,cy_=(c[2]+c[3])/2,z=gAt(cx_,cy_)+(splAt(cx_,cy_)!==null?0:0.03),infill=cy_<RP.y_crest?MAT.cement:MAT.parkTile,[a,b,e,f]=c,rim=0.06,steel=std({color:'#5f6367',roughness:0.55,metalness:0.4}),
+          tt=`${code} · recessed (tile-in) cover: a steel tray filled with the same floor finish, so it blends in; lift it with the two keys${/sump/i.test(name)?' (lockable)':' to clean the tank'} · ${tip}`;
+        box(a+rim,b-rim,e+rim,f-rim,z-0.06,z+0.01,infill,{cast:false,tip:tt});                       // tile infill, flush with the floor
         for(const [x1,x2,y1,y2] of [[a,b,e,e+rim],[a,b,f-rim,f],[a,a+rim,e+rim,f-rim],[b-rim,b,e+rim,f-rim]])box(x1,x2,y1,y2,z-0.06,z+0.022,steel,{cast:false,tip:tt});   // thin steel rim
         for(const kx of [a+0.35,b-0.35])box(kx-0.04,kx+0.04,(e+f)/2-0.015,(e+f)/2+0.015,z+0.01,z+0.013,MAT.blackMetal,{cast:false,tip:tt+' · key hole'});}
       else if(c.length===4){const z=/sump/i.test(name)?GRD+0.5:gAt((c[0]+c[1])/2,(c[2]+c[3])/2);box(c[0],c[1],c[2],c[3],z-0.02,z+0.04,iron,{cast:false,tip});}
       else{const [cx,cy,r]=c,z=gAt(cx,cy),sl=(gAt(cx,cy+0.2)-gAt(cx,cy-0.2))/0.4,rain=/rain/i.test(name);
         const me=new THREE.Mesh(new THREE.CylinderGeometry(m(r),m(r),m(0.06),40),rain?MAT.blackMetal:iron);me.position.set(mx(cx),m(z+0.01),m(cy));me.rotation.x=-Math.atan(sl);me.receiveShadow=true;scene.add(me);named(me,tip);
         if(rain)for(let k=-r+0.15;k<r-0.1;k+=0.18){const w=Math.sqrt(Math.max(0,r*r-k*k));box(cx-w+0.05,cx+w-0.05,cy+k,cy+k+0.04,z+0.04,z+0.06,MAT.paver,{cast:false,tip})}}}
-    if(code==='UG-01'){const c1=P.columns.find(c=>c.id==='C-01'),vx=c1?c1.x1+0.19:0.56,vy=c1?c1.y2+0.18:20.93;   // tucked into the corner behind pillar C-01 (house side), in the wall colour
-      cyl(vx,vy,PKZ,SLB-0.02,0.17,MAT.comp,{tip:`${code} · septic tank vent pipe, 4" PVC painted in the wall colour, in the corner behind pillar C-01, up to the roof`});}}}
+    if(code==='UG-01')cyl(20.44,0.98,HUZ,FFZ+1.0,0.17,MAT.comp,{tip:`${code} · septic tank vent pipe, 4" PVC painted in the wall colour, up the west compound wall beside the small gate, above the first-floor level`});}}
 box(-40,70,-17,-0.02,RDZ-0.02,RDZ+0.02,MAT.cement,{cast:false,tip:'Road (north), 17\' wide · light cement concrete · our gate crest is 6" above it, the parking 2\'0", the gardens 2\'6"'});
 // compound walls, gate pillars with lamps, planter pillar, gates
 for(const w of P.walls.G.filter(w=>w.kind==='comp')){   // stepped down along the drive (6' above the ground inside); the bottom holds back the fill

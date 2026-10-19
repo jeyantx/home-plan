@@ -268,7 +268,9 @@ def underground():
         short=name.split(',')[0].replace('Underground water tank (sump)','Sump').replace(' for the septic tank','').replace('Rainwater recharge pit','Recharge pit')
         cap=name.split(', ')[1] if ', ' in name else ''
         ly=cy+(0.9 if shape=='rect' else 0.35)
-        if shape=='rect' and any(len(c)==4 and c[2]-1.2<ly<c[3]+1.2 for c in covers): ly=g[3]-1.4   # keep the label off the cover
+        if shape=='rect':   # keep the label off the covers
+            for cand in (cy+0.9,cy-0.6,g[3]-1.4,g[2]+1.6):
+                if not any(len(c)==4 and c[2]-1.2<cand<c[3]+1.2 for c in covers): ly=cand; break
         text(cx,ly,f'{code}\n{short}'+(f'\n{cap}' if cap else ''),0.3,weight=700,fill=st)
     # distances to borewell BR-02 (guideline: tank 15 m, soak pit 18 m)
     bx,by=[(b[1],b[2]) for b in _m.BORES if b[0]=='BR-02'][0]
@@ -279,7 +281,20 @@ def underground():
             d=_mm.hypot(bx-g[0],by-g[1]); px,py=g[0]+(bx-g[0])*g[2]/d,g[1]+(by-g[1])*g[2]/d
         L=_mm.hypot(bx-px,by-py)*0.3048
         line(px,py,bx,by,'#b02a2a',0.05,extra='stroke-dasharray="0.6 0.3"')
-        text(px-0.5 if code=='UG-01' else px+1.6,py+(6.0 if code=='UG-01' else 22.0),f'{L:.1f} m to BR-02',0.3,weight=700,fill='#b02a2a')
+        text(px+(bx-px)*0.35+1.2,py+(by-py)*0.35,f'{L:.1f} m to BR-02',0.3,weight=700,fill='#b02a2a')
+    # the sump's distance to the septic tank and the soak pit (keep at least 10')
+    U={u[0]:u for u in UG}
+    if 'UG-03' in U:
+        sx1,sx2,sy1,sy2=U['UG-03'][3]
+        for code in ('UG-01','UG-02'):
+            if code not in U: continue
+            sh,g=U[code][2],U[code][3]
+            if sh=='rect':
+                qx,qy=min(max(sx2,g[0]),g[1]),min(max(sy1,g[2]),g[3]); px,py=min(max(qx,sx1),sx2),min(max(qy,sy1),sy2)
+            else:
+                cx,cy,r=g; px,py=min(max(cx,sx1),sx2),min(max(cy,sy1),sy2); d=_mm.hypot(px-cx,py-cy); qx,qy=cx+(px-cx)*r/d,cy+(py-cy)*r/d
+            D=_mm.hypot(px-qx,py-qy); line(px,py,qx,qy,'#2a6f9e',0.05,extra='stroke-dasharray="0.4 0.25"')
+            text((px+qx)/2+0.9,(py+qy)/2,fmt(D),0.3,weight=700,fill='#2a6f9e')
     E('</g>')
 def vehicles():
     import model as _m
