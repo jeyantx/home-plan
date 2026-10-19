@@ -779,7 +779,6 @@ function cabRun(id,what,x1,x2,y1,y2,z1,z2,face,segs,mat,plinth){
  // hob FU-52 under W-06; chimney hood at the standard 2'6" above the counter, just above the lowered window head, ducted straight out through GW-01
  const h=fuG['FU-52'],ht=`FU-52 · ${h.name} · ${h.note}`;placeAppliance('assets/appliances/cooktop.glb',(h.x1+h.x2)/2,(h.y1+h.y2)/2,KCH,-Math.PI/2,cookMat,ht);   // front to the west, length along the east run
  {const r=fuG['FU-80'];if(r){const rt=`FU-80 · ${r.name} · ${r.note}`;rackModel(r,KCH,(a,b,c,d,e,f,mt)=>box(a,b,c,d,e,f,mt,{tip:rt}),(x,y,z1,z2,rr,mt)=>cyl(x,y,z1,z2,rr,mt,{tip:rt}))}}
- for(const [bx,by,r] of [[4.15,62.55,0.27],[4.15,63.45,0.22],[4.95,63.0,0.3]]) cyl(bx,by,KCH+0.03,KCH+0.09,r,std({color:'#3a3b3d',roughness:0.4,metalness:0.6}),{tip:'Burner',rTop:r*0.85});
  const hz1=W06.sill+W06.h+0.1;   // hood bottom 5'4", about 2'6" above the counter
  {const c=fuG['FU-81'],o=fuG['FU-82'],cy=(c.y1+c.y2)/2,ct=`FU-81 · ${c.name} · ${c.note}`,ot=`FU-82 · ${o.name} · ${o.note}`,DZ=8.5;
   box(X1+0.012,5.3,c.y1,c.y2,hz1,hz1+0.28,MAT.blackGlass,{tip:ct});
