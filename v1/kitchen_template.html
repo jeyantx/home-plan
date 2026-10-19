@@ -132,8 +132,8 @@ const APM={glass:std({color:'#0b0c0d',roughness:0.05,metalness:0.3}),black:std({
   brass:std({color:'#b08d57',roughness:0.35,metalness:0.8}),steel:std({color:'#c9ccd0',roughness:0.25,metalness:0.9}),white:std({color:'#f3f3f1',roughness:0.32,metalness:0.08}),
   grey:std({color:'#cfd2d5',roughness:0.4,metalness:0.2}),win:std({color:'#2b3a44',roughness:0.05,metalness:0.1,transparent:true,opacity:0.55})};
 const cookMat=n=>{const nm=n.material?.name||'';return /gold/.test(nm)?APM.brass:/^Box002/.test(n.name)?APM.glass:/broun/.test(nm)?APM.enamel:APM.black};
-// FU-67 microwave (archibase.net 3DS, converted): restyle its parts: black body, dark glass door, steel trim, glass turntable
-const mwMat=n=>{const nm=n.material?.name||'';return /glassdark/.test(nm)?APM.win:/Croco/.test(nm)?APM.black:/03 - Default/.test(nm)?APM.steel:/04 - Default/.test(nm)?APM.glass:/1[01] - Default/.test(nm)?APM.grey:APM.enamel};
+// FU-67 microwave (archibase.net 3DS, rebuilt round its control panel): black body, door frame and panel, dark glass window, steel handle and knobs
+const mwMat=n=>{const nm=n.material?.name||'';return /door_glass/.test(nm)?APM.win:/door_frame|mw_panel/.test(nm)?APM.black:/door_handle|mw_knob/.test(nm)?APM.steel:/mw_display/.test(nm)?APM.glass:/mw_body/.test(nm)?APM.enamel:/glassdark/.test(nm)?APM.win:/Croco/.test(nm)?APM.black:/03 - Default/.test(nm)?APM.steel:/04 - Default/.test(nm)?APM.glass:/1[01] - Default/.test(nm)?APM.grey:APM.enamel};
 const wmMat=n=>{const nm=n.material?.name||'';return /clear_window/.test(nm)?APM.win:/standart_metal/.test(nm)?APM.steel:/black_st|broun/.test(nm)?APM.black:/panel/.test(nm)?APM.grey:APM.white};
 // ---------------- the units ----------------
 const T=0.059,SH=0.06,G=0.01;   // 18 mm panels, 18 mm shutters, 3 mm gaps (feet)

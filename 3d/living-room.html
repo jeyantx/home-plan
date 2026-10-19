@@ -90,13 +90,13 @@ import {EffectComposer} from 'three/addons/postprocessing/EffectComposer.js';
 import {RenderPass} from 'three/addons/postprocessing/RenderPass.js';
 import {GTAOPass} from 'three/addons/postprocessing/GTAOPass.js';
 import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';
-import {createBambooPlant} from './models/bamboo-plant.js?v=1792430987';
-import {createNeemTree} from './models/neem-tree.js?v=1792430987';
-import {createTNPlant,TN_PLANTS} from './models/tn-plants.js?v=1792430987';
-import {createBanana,createArecaPalm,createMoringa} from './models/garden-plants.js?v=1792430987';
-import {createVirtus,createHunter350,createAther450,loadCarGLB,loadGLBVehicle} from './models/vehicles.js?v=1792430987';
+import {createBambooPlant} from './models/bamboo-plant.js?v=1792431482';
+import {createNeemTree} from './models/neem-tree.js?v=1792431482';
+import {createTNPlant,TN_PLANTS} from './models/tn-plants.js?v=1792431482';
+import {createBanana,createArecaPalm,createMoringa} from './models/garden-plants.js?v=1792431482';
+import {createVirtus,createHunter350,createAther450,loadCarGLB,loadGLBVehicle} from './models/vehicles.js?v=1792431482';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
-import {CAR_ROUTE} from './models/car-route.js?v=1792430987';
+import {CAR_ROUTE} from './models/car-route.js?v=1792431482';
 import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
 
 const P=window.PLAN, F=0.3048, CEIL=10.0, EYE=5.25;
@@ -719,14 +719,14 @@ function rackModel(r,Z,B,C){const st=std({color:'#c9ccd0',roughness:0.3,metalnes
   const pot=std({color:'#bfc3c7',roughness:0.25,metalness:0.85});C(r.x1+0.45,cy,Z+s1+0.02,Z+s1+0.9,0.32,pot);C(r.x2-0.45,cy,Z+s1+0.02,Z+s1+0.55,0.36,pot);C(r.x2-0.5,cy,Z+s1+0.6,Z+s1+1.3,0.28,pot);
   for(let k=0;k<5;k++)B(r.x1+0.4+k*0.28,r.x1+0.42+k*0.28,r.y1+0.3,r.y2-0.3,Z+s2+0.03,Z+s2+0.6,std({color:'#f2efe9',roughness:0.3}))}
 // downloaded appliance models (archibase.net, see 3d/ASSETS.md): front faces +z in the file, real size in metres, sitting on y = 0
-function placeAppliance(url,cx,cy,z,rotY,matFn,tip){new GLTFLoader().load(url+'?v=1792430987',g=>{const o=g.scene;o.traverse(n=>{if(n.isMesh){n.castShadow=n.receiveShadow=true;const mt=matFn(n);if(mt)n.material=mt;if(tip)named(n,tip);n.userData.keepUV=true}});
+function placeAppliance(url,cx,cy,z,rotY,matFn,tip){new GLTFLoader().load(url+'?v=1792431482',g=>{const o=g.scene;o.traverse(n=>{if(n.isMesh){n.castShadow=n.receiveShadow=true;const mt=matFn(n);if(mt)n.material=mt;if(tip)named(n,tip);n.userData.keepUV=true}});
   o.rotation.y=rotY;o.position.set(mx(cx),m(z),m(cy));scene.add(o);if(typeof renderer!=='undefined'&&renderer.shadowMap)renderer.shadowMap.needsUpdate=true;if(typeof invalidate==='function')invalidate()},undefined,e=>console.warn('appliance',url,e))}
 const APM={glass:std({color:'#0b0c0d',roughness:0.05,metalness:0.3}),black:std({color:'#161718',roughness:0.45,metalness:0.3}),enamel:std({color:'#2b2c2e',roughness:0.4,metalness:0.4}),
   brass:std({color:'#b08d57',roughness:0.35,metalness:0.8}),steel:std({color:'#c9ccd0',roughness:0.25,metalness:0.9}),white:std({color:'#f3f3f1',roughness:0.32,metalness:0.08}),
   grey:std({color:'#cfd2d5',roughness:0.4,metalness:0.2}),win:std({color:'#2b3a44',roughness:0.05,metalness:0.1,transparent:true,opacity:0.55})};
 const cookMat=n=>{const nm=n.material?.name||'';return /gold/.test(nm)?APM.brass:/^Box002/.test(n.name)?APM.glass:/broun/.test(nm)?APM.enamel:APM.black};
-// FU-67 microwave (archibase.net 3DS, converted): restyle its parts: black body, dark glass door, steel trim, glass turntable
-const mwMat=n=>{const nm=n.material?.name||'';return /glassdark/.test(nm)?APM.win:/Croco/.test(nm)?APM.black:/03 - Default/.test(nm)?APM.steel:/04 - Default/.test(nm)?APM.glass:/1[01] - Default/.test(nm)?APM.grey:APM.enamel};
+// FU-67 microwave (archibase.net 3DS, rebuilt round its control panel): black body, door frame and panel, dark glass window, steel handle and knobs
+const mwMat=n=>{const nm=n.material?.name||'';return /door_glass/.test(nm)?APM.win:/door_frame|mw_panel/.test(nm)?APM.black:/door_handle|mw_knob/.test(nm)?APM.steel:/mw_display/.test(nm)?APM.glass:/mw_body/.test(nm)?APM.enamel:/glassdark/.test(nm)?APM.win:/Croco/.test(nm)?APM.black:/03 - Default/.test(nm)?APM.steel:/04 - Default/.test(nm)?APM.glass:/1[01] - Default/.test(nm)?APM.grey:APM.enamel};
 // FU-18 fridge (archibase.net 3DS): silver doors, body and door trims, black handle and logo
 const FRB=std({color:'#d3d6d9',roughness:0.3,metalness:0.5}),fridgeMat=n=>/^Ö/.test(n.name||'')?APM.black:FRB;
 const wmMat=n=>{const nm=n.material?.name||'';return /clear_window/.test(nm)?APM.win:/standart_metal/.test(nm)?APM.steel:/black_st|broun/.test(nm)?APM.black:/panel/.test(nm)?APM.grey:APM.white};
@@ -1330,7 +1330,7 @@ if(P.backwall){const bw=P.backwall,[a,b]=bw.pts,t=bw.t,old=std({color:'#cdc4b3',
  const T=(g,extra)=>`${g.id} · ${g.name}${extra?' · '+extra:''} · ${g.where}`;
  const tipAll=(o,t)=>o.traverse(n=>{if(n.isMesh){n.userData.keepUV=true;n.castShadow=true;n.receiveShadow=true;named(n,t)}});
  const refresh=()=>{renderer.shadowMap.needsUpdate=true;if(photo&&pt)pt.setScene(scene,camera);invalidate()};
- const glbCache={},loadGLB=url=>glbCache[url]||(glbCache[url]=new Promise((res,rej)=>new GLTFLoader().load(url+'?v=1792430987',g=>res(g.scene),undefined,rej)));
+ const glbCache={},loadGLB=url=>glbCache[url]||(glbCache[url]=new Promise((res,rej)=>new GLTFLoader().load(url+'?v=1792431482',g=>res(g.scene),undefined,rej)));
  // a downloaded plant, scaled so its height (h, feet) or width (w, feet) fits, standing at plan x, y on height z (feet)
  const placeGLB=(url,x,y,z,size,rot,t)=>loadGLB(url).then(src=>{const o=src.clone(true),sz=new THREE.Box3().setFromObject(o).getSize(new THREE.Vector3());
    o.scale.setScalar(size.h?m(size.h)/sz.y:m(size.w)/Math.max(sz.x,sz.z));o.rotation.y=rot||0;o.position.set(mx(x),m(z),m(y));scene.add(o);tipAll(o,t);refresh();return o}).catch(e=>console.warn('plant model',url,e));
@@ -1479,14 +1479,14 @@ function placeBike(code){const o=bikeObjs[code];if(!o)return;const t=(P.bikes||[
 const SHOW_BIKES=false;   // the old code-made two-wheelers stay off; the downloaded models below are used
 const vehicleMeshes=[];
 {const [cx1,cx2,cy1,cy2]=P.car||[11.25,17.0,14.75,29.75];
- loadCarGLB(THREE,GLTFLoader,'assets/vehicles/compact-car.glb?v=1792430987',{color:'#2f5d8c',length:4.561,bodyWidth:1.752,name:'Car'}).then(car=>{
+ loadCarGLB(THREE,GLTFLoader,'assets/vehicles/compact-car.glb?v=1792431482',{color:'#2f5d8c',length:4.561,bodyWidth:1.752,name:'Car'}).then(car=>{
    scene.add(car);window.__car=car;carAnim.car=car;setCarPose(...CAR_ROUTE.park,0,0);
    const d=car.userData.dims,ft=v=>{const i=Math.round(v/F*12);return `${Math.floor(i/12)}'${i%12}"`};
    car.traverse(o=>{if(o.isMesh){o.userData.keepUV=true;named(o,`Car · compact sedan (Free3D model, scaled to VW Virtus size, 4561 x 1752 mm body) · ${ft(d.length)} x ${ft(d.width)} with mirrors · reversed in, nose to the gate`);vehicleMeshes.push(o)}});
    renderer.shadowMap.needsUpdate=true;if(photo&&pt)pt.setScene(scene,camera);invalidate()}).catch(e=>console.warn('car model',e));
  // two-wheelers from the owner's downloaded models, sized to the real bikes they stand for, front to the gate
  for(const [code,name] of (P.bikes||[])){const moto=/VFR|Hunter/.test(name);
-   loadGLBVehicle(THREE,GLTFLoader,moto?'assets/vehicles/vfr800.glb?v=1792430987':'assets/vehicles/scooter.glb?v=1792430987',moto?{front:'+z',length:2.12,groundMaterial:'rubber',name:code,materials:vfrMats()}:{front:'+z',length:1.837,name:code}).then(b=>{
+   loadGLBVehicle(THREE,GLTFLoader,moto?'assets/vehicles/vfr800.glb?v=1792431482':'assets/vehicles/scooter.glb?v=1792431482',moto?{front:'+z',length:2.12,groundMaterial:'rubber',name:code,materials:vfrMats()}:{front:'+z',length:1.837,name:code}).then(b=>{
      scene.add(b);bikeObjs[code]={b,moto};b.traverse(o=>{if(o.isMesh)o.userData.keepUV=true});placeBike(code);
      renderer.shadowMap.needsUpdate=true;if(photo&&pt)pt.setScene(scene,camera);invalidate()}).catch(e=>console.warn('bike model',e))}
  if(SHOW_BIKES) for(const [code,name,bx,by,bl,bw] of (P.bikes||[])){const b=/Hunter/.test(name)?createHunter350(THREE,mergeGeometries,{}):createAther450(THREE,mergeGeometries,{});
