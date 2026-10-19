@@ -96,7 +96,7 @@ const M={oak:std({map:oakTex,roughness:0.55}),oakIn:std({color:'#d8c29f',roughne
 function boxW(X1,X2,Y1,Y2,Z1,Z2,mat,parent=scene){const a=W(Math.min(X1,X2),Math.min(Y1,Y2),Math.min(Z1,Z2)),b=W(Math.max(X1,X2),Math.max(Y1,Y2),Math.max(Z1,Z2));
   const g=new THREE.BoxGeometry(Math.abs(b.x-a.x),Math.abs(b.y-a.y),Math.abs(b.z-a.z));const me=new THREE.Mesh(g,mat);me.position.set((a.x+b.x)/2,(a.y+b.y)/2,(a.z+b.z)/2);me.castShadow=me.receiveShadow=true;parent.add(me);return me}
 function cylW(X,Y,Z1,Z2,r,mat,parent=scene,rTop){const me=new THREE.Mesh(new THREE.CylinderGeometry((rTop??r)*F,r*F,(Z2-Z1)*F,28),mat);me.position.copy(W(X,Y,(Z1+Z2)/2));me.castShadow=me.receiveShadow=true;parent.add(me);return me}
-function label(text,pos,cls='',parent=scene){const d=document.createElement('div');d.className='lab '+cls;d.textContent=text;const o=new CSS2DObject(d);o.position.copy(pos);parent.add(o);return o}
+const LABS=[];function label(text,pos,cls='',parent=scene){const d=document.createElement('div');d.className='lab '+cls;d.textContent=text;LABS.push({d,full:text,short:text.split(' · ')[0],cur:text});const o=new CSS2DObject(d);o.position.copy(pos);parent.add(o);return o}
 // a module's local frame: u along the run, v = depth into the unit from its front face, z = height (all plan feet)
 function frame(m){const f=m.face;
   const toPlan=(u,v)=>f==='x+'?[m.x2-v,u]:f==='y-'?[u,m.y1+v]:[u,m.y2-v];
@@ -254,7 +254,7 @@ function placeRuns(){const e=unfoldT*unfoldT*(3-2*unfoldT);for(const k of ['E','
   RUN[k].quaternion.copy(q);RUN[k].position.copy(u.c).add(u.c.clone().negate().applyQuaternion(q)).add(u.off.clone().multiplyScalar(e))}}
 const unfoldBtn=document.getElementById('unfold');
 unfoldBtn.onclick=()=>{unfoldTarget=unfoldTarget?0:1;unfoldBtn.setAttribute('aria-pressed',!!unfoldTarget);unfoldBtn.textContent=unfoldTarget?'Fold':'Unfold';
-  if(unfoldTarget){fly={p0:camera.position.clone(),t0:controls.target.clone(),p1:W(8.1,28.5,8.0),t1:W(8.1,65.6,4.0),s:0};document.querySelectorAll('#views button').forEach(b=>b.setAttribute('aria-pressed',false))}else goView('all')};
+  goView('all')};
 function poseFront(f,o){if(f.origin){f.g.quaternion.setFromAxisAngle(f.axis,f.sign*f.maxA*o);if(f.leaf)f.leaf.g.quaternion.setFromAxisAngle(f.axis,f.leaf.sign*f.leaf.max*o)}else f.g.position.copy(f.dir).multiplyScalar(f.maxT*o)}
 // what is in the way of what: plan footprints of every box of a door or drawer (with its folding part and what rides in it), separating-axis test, plus height overlap
 const foot=f=>[...f.meshes,...(f.leafMeshes||[])].map(me=>{me.updateWorldMatrix(true,false);const g=me.geometry;if(!g.boundingBox)g.computeBoundingBox();const a=g.boundingBox.min,b=g.boundingBox.max,e=0.001;
@@ -290,7 +290,12 @@ const sizesBtn=document.getElementById('sizes');sizesBtn.onclick=()=>{const on=s
 
 // views
 const VIEWS={all:{p:[17.2,61.2,7.6],t:[7.0,63.0,3.2]},east:{p:[12.6,62.6,5.6],t:[4.2,62.8,3.2]},back:{p:[8.6,59.6,5.6],t:[8.0,66.0,2.6]},bf:{p:[9.0,66.0,6.2],t:[9.0,59.6,2.0]},up:{p:[11.0,61.0,4.6],t:[6.0,65.4,7.0]}};
-let fly=null;function goView(k){const v=VIEWS[k];fly={p0:camera.position.clone(),t0:controls.target.clone(),p1:W(...v.p),t1:W(...v.t),s:0};document.querySelectorAll('#views button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===k))}
+// unfolded: each view looks at its run where the run now stands (the final unfolded place of the east run or the breakfast counter)
+const UVIEW={east:'E',bf:'F'};
+function unfoldedAt(k,v){if(!unfoldTarget||!UNF[k])return v;const u=UNF[k],q=new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0),u.a);return v.clone().sub(u.c).applyQuaternion(q).add(u.c).add(u.off)}
+let fly=null;function goView(k){const v=VIEWS[k];if(unfoldTarget&&k==='all'){fly={p0:camera.position.clone(),t0:controls.target.clone(),p1:W(8.1,28.5,8.0),t1:W(8.1,65.6,4.0),s:0}}
+  else if(unfoldTarget&&k==='up'){fly={p0:camera.position.clone(),t0:controls.target.clone(),p1:W(8.1,40.0,6.5),t1:W(8.1,65.6,7.5),s:0}}
+  else{const r=UVIEW[k];fly={p0:camera.position.clone(),t0:controls.target.clone(),p1:unfoldedAt(r,W(...v.p)),t1:unfoldedAt(r,W(...v.t)),s:0}}document.querySelectorAll('#views button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===k))}
 document.querySelectorAll('#views button').forEach(b=>b.onclick=()=>goView(b.dataset.v));
 camera.position.copy(W(...VIEWS.all.p));controls.target.copy(W(...VIEWS.all.t));
 // ---------------- panel: unit list with sizes, needs and notes ----------------
@@ -304,7 +309,7 @@ const panel=document.getElementById('panel');
  panel.querySelectorAll('tr.mod').forEach(tr=>tr.onclick=()=>select(tr.dataset.id,true))}
 function select(id,openIt){panel.querySelectorAll('tr.mod').forEach(tr=>tr.classList.toggle('sel',tr.dataset.id===id));const rec=modules.find(r=>r.m.id===id);if(!rec)return;
   if(openIt){const T=rec.fronts.map(f=>f.partner||f).filter(f=>f.kind!=='blind'),any=T.some(f=>f.target);T.forEach(f=>toggle(f,any?0:1));
-    const c=rec.fr.toPlan((rec.fr.U0+rec.fr.U1)/2,rec.fr.D/2),zc=(rec.zb0+rec.zt)/2,o=rec.fr.toPlan((rec.fr.U0+rec.fr.U1)/2,-7.5);fly={p0:camera.position.clone(),t0:controls.target.clone(),p1:W(o[0],o[1],zc+2.6),t1:W(c[0],c[1],zc),s:0}}
+    const c=rec.fr.toPlan((rec.fr.U0+rec.fr.U1)/2,rec.fr.D/2),zc=(rec.zb0+rec.zt)/2,o=rec.fr.toPlan((rec.fr.U0+rec.fr.U1)/2,-7.5);const rk=runKey(rec.m);fly={p0:camera.position.clone(),t0:controls.target.clone(),p1:unfoldedAt(rk,W(o[0],o[1],zc+2.6)),t1:unfoldedAt(rk,W(c[0],c[1],zc)),s:0}}
   const row=panel.querySelector(`tr[data-id="${id}"]`);if(row&&!openIt)row.scrollIntoView({block:'nearest',behavior:'smooth'})}
 const panelBtn=document.getElementById('panelBtn');panelBtn.onclick=()=>{const on=panelBtn.getAttribute('aria-pressed')!=='true';panelBtn.setAttribute('aria-pressed',on);panel.classList.toggle('off',!on);resize()};
 // ---------------- loop ----------------
@@ -334,6 +339,9 @@ function walkKeys(dt){if(![...keys].some(k=>!k.startsWith('Shift')))return;fly=n
 let last=performance.now();
 renderer.setAnimationLoop(()=>{const now=performance.now(),dt=Math.min(0.05,(now-last)/1000);last=now;
   if(fly){fly.s=Math.min(1,fly.s+dt/0.9);const e=fly.s*fly.s*(3-2*fly.s);camera.position.lerpVectors(fly.p0,fly.p1,e);controls.target.lerpVectors(fly.t0,fly.t1,e);if(fly.s>=1)fly=null}
-  walkKeys(dt);animate(dt);controls.update();renderer.render(scene,camera);labels.render(scene,camera)});
+  walkKeys(dt);animate(dt);controls.update();
+  // zoomed out: just the code, so the names do not run into each other
+  {const far=camera.position.distanceTo(controls.target)>3.7;for(const L of LABS){const t=far?L.short:L.full;if(L.cur!==t){L.d.textContent=t;L.cur=t}}}
+  renderer.render(scene,camera);labels.render(scene,camera)});
 window.__k={fronts,modules,toggle,goView,scene,camera,RUN,openAll,CL,hits,unfold:()=>unfoldBtn.click()};
 </script></body></html>
