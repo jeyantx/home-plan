@@ -124,8 +124,10 @@ RAMP=dict(y_hump=1.0,y_crest=3.25,y_top=12.25,drain=(2.5,3.25))   # gate bevel t
 BRANCH_NOTES='''<section class="ask"><h2>Parking plan (branch exterior-v2, for review)</h2>
 <ol>
 <li><b>Car:</b> VW Virtus size (14'11" x 5'9"), <b>reversed in</b>: nose to the gate, back 1' from the front wall, on the level parking (Y 14'9" to 29'9"). With the neem tree well in front of the spot, a car cannot drive in nose-first (it would need several back-and-forth turns); reversing in from the road takes one stop, and it drives straight out. Checked with a route planner using the Virtus turning circle. The driver's door opens onto the walkway.</li>
+<li><b>Tree well FU-76</b> reduced to 4' across, so the car passes the neem with room to spare. Keep at least 10" of open soil round the trunk; widen the ring later only if the trunk grows.</li>
+<li><b>Two-wheelers on the stair side:</b> TW-1 (Royal Enfield Hunter 350) under the high end of ST-1A and the landing, TW-2 (Ather 450X) along BW-07 beside the car, both front to the gate. FU-56 store shrinks to a low tool store under the lower middle of ST-1A.</li>
+<li><b>Car spot</b> moved 2' east (centre X 12'1½"), leaving a 2'4" aisle to the two-wheelers and an 8'11" walkway on the east side to the porch. Reverse in with one stop, drive straight out (checked with the Virtus turning circle).</li>
 <li><b>Pillar C-01</b> moved 2'4½" east against the compound wall BW-01; beam B-01 extended to it (19'11" span, engineer to size, about 1'9" deep) and B-10 rests on B-01. The parking is now clear of pillars.</li>
-<li><b>Two-wheelers</b>: TW-1 Royal Enfield Hunter 350 and TW-2 Ather 450X in a lane along the east wall, either side of C-01, front to the gate. A walkway stays open between them and the car.</li>
 </ol></section>
 <section class="ask"><h2>Outside windows and colours (branch exterior-v2, for review)</h2>
 <ol>
@@ -327,11 +329,11 @@ FURNITURE = [
  ('FU-53','G','Tap and wash platform',1.375,4.875,89.375,91.875,'washpad',None,'Side garden, paved with drain, in the corner of BW-02 and BW-03'),
  ('FU-54','G','Wash basin with tap',19.125,20.625,95.25,96.5,'basin',None,'Back garden, against GW-08 beside window W-08'),
  ('FU-55','G','Tap and wash platform',17.625,20.625,96.75,99.25,'washpad',None,'Back garden, paved, with floor drain'),
- ('FU-76','G','Tree well round the neem',10.0,15.5,1.5,7.0,'treepit',None,'Parking, 5\'6" across: the trunk stays at today\'s ground (road level); a low retaining ring, 4½" brick in granite coping, holds back the raised drive (about 6" here); open soil with leaf mulch inside, so water reaches the roots and no fill touches the trunk'),
+ ('FU-76','G','Tree well round the neem',10.75,14.75,2.25,6.25,'treepit',None,'Parking, 4\' across (was 5\'6"): the trunk stays at today\'s ground; a low retaining ring, 4½" brick with a granite coping; about 10" of open soil with leaf mulch all round the 1\'6" trunk; small so the car can pass'),
  ('FU-73','G','Flower bed along the back wall',1.375,20.625,103.14,105.6,'fbed',None,'Back and side garden, 1\'6" deep all along the back wall BW-09, 9" brick kerb, red soil; a row of Tamil Nadu flowering plants PL-01 to PL-12'),
  ('FU-74','G','Tulsi maadam',4.5,6.0,96.75,98.25,'tulsi',None,'Side garden, 1\'6" square, 3\' high plastered pedestal with a lamp niche facing east, Tulsi PL-13 on top'),
  ('FU-75','G','Clothes drying line',10.25,17.25,101.0,101.5,'cline',None,'Back garden, two black MS posts 6\' high with T-arms, 3 steel wires, 7\' long; clear of the back door D-10 and the wash platform'),
- ('FU-56','G','Store under staircase 1',17.125,20.625,10.997,16.0,'store',None,'Parking, 3\'6" x 5\', under the high end of ST-1A (about 4\'6" high at the front, 7\' at the back); floor at the parking level; door 2\'6" x 3\'10" facing east; the low end of the stair is solid'),
+ ('FU-56','G','Low store under staircase 1',17.125,20.625,8.6,12.2,'store',None,'Parking, 3\'6" x 3\'7", under the lower middle of ST-1A (about 1\'10" to 3\'8" high inside), small door facing east, for tools and the hose; the high end of ST-1A is now open for two-wheeler TW-1'),
 ]
 # door and window types (proposal)
 SPEC = {
@@ -350,10 +352,10 @@ for _o in OPENINGS:
     if _o[5]=='window' and _o[0] not in SPEC: SPEC[_o[0]]='UPVC 3-track sliding: 2 glass + 1 mosquito mesh, MS safety grill, 1\'6" sunshade outside'
     if _o[5]=='vent' and _o[0] not in SPEC: SPEC[_o[0]]='Louvred glass ventilator with exhaust fan opening'
 SPEC['V-03']='Louvred glass ventilator with exhaust fan opening'
-CAR=(11.25,17.0,14.75,29.75)   # VW Virtus size, 14'11" x 5'9" (4561 x 1752 mm), reversed in: nose to the gate, back 1' clear of GW-04; driver (right) door opens onto the walkway
+CAR=(9.25,15.0,14.75,29.75)   # VW Virtus size, 14'11" x 5'9" (4561 x 1752 mm), reversed in: nose to the gate, back 1' clear of GW-04; 2'4" aisle to the two-wheelers on its west side, driver (right) door onto the wide east walkway
 # two-wheelers: (code, model, centre X, centre Y, length, width), front to the gate, in one lane east of the car:
 # 2'7" walkway to the porch on their east side, 2'6" for the car's left doors on their west side, 2'7" clear of pillar C-01
-BIKES=[('TW-1','Royal Enfield Hunter 350',2.6,16.12,6.74,2.62),('TW-2','Ather 450X',2.6,23.27,6.03,2.42)]   # lane along the east wall, either side of C-01
+BIKES=[('TW-1','Royal Enfield Hunter 350',18.66,15.67,6.74,2.62),('TW-2','Ather 450X',18.61,22.62,6.03,2.42)]   # stair side: TW-1 under the high end of ST-1A and the landing (4'3" to 7' clear), TW-2 along BW-07; front to the gate
 CH_G_FRONT=[0,0.75,12.0,13.5,20.25,21.0]
 
 # ---------- structure (proposal): RCC frame with side pillars only, no pillar inside any room ----------
