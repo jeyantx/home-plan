@@ -87,12 +87,12 @@ import {EffectComposer} from 'three/addons/postprocessing/EffectComposer.js';
 import {RenderPass} from 'three/addons/postprocessing/RenderPass.js';
 import {GTAOPass} from 'three/addons/postprocessing/GTAOPass.js';
 import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';
-import {createBambooPlant} from './models/bamboo-plant.js?v=1792412445';
-import {createNeemTree} from './models/neem-tree.js?v=1792412445';
-import {createTNPlant,TN_PLANTS} from './models/tn-plants.js?v=1792412445';
-import {createVirtus,createHunter350,createAther450,loadCarGLB,loadGLBVehicle} from './models/vehicles.js?v=1792412445';
+import {createBambooPlant} from './models/bamboo-plant.js?v=1792415618';
+import {createNeemTree} from './models/neem-tree.js?v=1792415618';
+import {createTNPlant,TN_PLANTS} from './models/tn-plants.js?v=1792415618';
+import {createVirtus,createHunter350,createAther450,loadCarGLB,loadGLBVehicle} from './models/vehicles.js?v=1792415618';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
-import {CAR_ROUTE} from './models/car-route.js?v=1792412445';
+import {CAR_ROUTE} from './models/car-route.js?v=1792415618';
 import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
 
 const P=window.PLAN, F=0.3048, CEIL=10.0, EYE=5.25;
@@ -1384,14 +1384,14 @@ function placeBike(code){const o=bikeObjs[code];if(!o)return;const t=(P.bikes||[
 const SHOW_BIKES=false;   // the old code-made two-wheelers stay off; the downloaded models below are used
 const vehicleMeshes=[];
 {const [cx1,cx2,cy1,cy2]=P.car||[11.25,17.0,14.75,29.75];
- loadCarGLB(THREE,GLTFLoader,'assets/vehicles/compact-car.glb?v=1792412445',{color:'#2f5d8c',length:4.561,bodyWidth:1.752,name:'Car'}).then(car=>{
+ loadCarGLB(THREE,GLTFLoader,'assets/vehicles/compact-car.glb?v=1792415618',{color:'#2f5d8c',length:4.561,bodyWidth:1.752,name:'Car'}).then(car=>{
    scene.add(car);window.__car=car;carAnim.car=car;setCarPose(...CAR_ROUTE.park,0,0);
    const d=car.userData.dims,ft=v=>{const i=Math.round(v/F*12);return `${Math.floor(i/12)}'${i%12}"`};
    car.traverse(o=>{if(o.isMesh){o.userData.keepUV=true;named(o,`Car · compact sedan (Free3D model, scaled to VW Virtus size, 4561 x 1752 mm body) · ${ft(d.length)} x ${ft(d.width)} with mirrors · reversed in, nose to the gate`);vehicleMeshes.push(o)}});
    renderer.shadowMap.needsUpdate=true;if(photo&&pt)pt.setScene(scene,camera);invalidate()}).catch(e=>console.warn('car model',e));
  // two-wheelers from the owner's downloaded models, sized to the real bikes they stand for, front to the gate
  for(const [code,name] of (P.bikes||[])){const moto=/VFR|Hunter/.test(name);
-   loadGLBVehicle(THREE,GLTFLoader,moto?'assets/vehicles/vfr800.glb?v=1792412445':'assets/vehicles/scooter.glb?v=1792412445',moto?{front:'+z',length:2.12,groundMaterial:'rubber',name:code,materials:vfrMats()}:{front:'+z',length:1.837,name:code}).then(b=>{
+   loadGLBVehicle(THREE,GLTFLoader,moto?'assets/vehicles/vfr800.glb?v=1792415618':'assets/vehicles/scooter.glb?v=1792415618',moto?{front:'+z',length:2.12,groundMaterial:'rubber',name:code,materials:vfrMats()}:{front:'+z',length:1.837,name:code}).then(b=>{
      scene.add(b);bikeObjs[code]={b,moto};b.traverse(o=>{if(o.isMesh)o.userData.keepUV=true});placeBike(code);
      renderer.shadowMap.needsUpdate=true;if(photo&&pt)pt.setScene(scene,camera);invalidate()}).catch(e=>console.warn('bike model',e))}
  if(SHOW_BIKES) for(const [code,name,bx,by,bl,bw] of (P.bikes||[])){const b=/Hunter/.test(name)?createHunter350(THREE,mergeGeometries,{}):createAther450(THREE,mergeGeometries,{});
@@ -1611,7 +1611,11 @@ const UP=new THREE.Vector3(0,1,0), colRay=new THREE.Raycaster();
 function fwdVec(){return new THREE.Vector3(-Math.sin(yaw),0,-Math.cos(yaw))}
 function rightVec(){return new THREE.Vector3(Math.cos(yaw),0,-Math.sin(yaw))}
 // move by a horizontal step unless a wall is within 0.3 m; rays at knee and eye height, so windows block too
+// where you can walk at eye level: our plot, and the road with the footpath across it; not into the neighbours' plots or the houses across the road
+const walkable=(x,y)=>(x>0.2&&x<20.8&&y>-0.1&&y<106.2)||(y>-21.8&&y<=0&&x>-38&&x<58);
 function tryMove(step){const len=step.length();if(!len)return;const dir=step.clone().normalize();
+  {const ox=-camera.position.x/F,oy=camera.position.z/F,nx=-(camera.position.x+step.x)/F,ny=(camera.position.z+step.z)/F;
+   if(camera.position.y<m(FFZ+CEIL+3)&&walkable(ox,oy)&&!walkable(nx,ny))return}
   const y=camera.position.y,knee=y<=m(CEIL+0.5)?0.35:y<=m(FFZ+CEIL)?m(FFZ)+0.35:y;   // knee-height check on the floor you are on, not the ground floor below
   for(const h of [knee,y]){colRay.set(new THREE.Vector3(camera.position.x,h,camera.position.z),dir);colRay.far=len+0.3;if(colRay.intersectObjects(wallMeshes,false).length)return}
   { const nx=-(camera.position.x+step.x)/F,ny=(camera.position.z+step.z)/F,ox=-camera.position.x/F,oy=camera.position.z/F;   // neem trunk: never walk into it

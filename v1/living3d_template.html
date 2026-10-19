@@ -1611,7 +1611,11 @@ const UP=new THREE.Vector3(0,1,0), colRay=new THREE.Raycaster();
 function fwdVec(){return new THREE.Vector3(-Math.sin(yaw),0,-Math.cos(yaw))}
 function rightVec(){return new THREE.Vector3(Math.cos(yaw),0,-Math.sin(yaw))}
 // move by a horizontal step unless a wall is within 0.3 m; rays at knee and eye height, so windows block too
+// where you can walk at eye level: our plot, and the road with the footpath across it; not into the neighbours' plots or the houses across the road
+const walkable=(x,y)=>(x>0.2&&x<20.8&&y>-0.1&&y<106.2)||(y>-21.8&&y<=0&&x>-38&&x<58);
 function tryMove(step){const len=step.length();if(!len)return;const dir=step.clone().normalize();
+  {const ox=-camera.position.x/F,oy=camera.position.z/F,nx=-(camera.position.x+step.x)/F,ny=(camera.position.z+step.z)/F;
+   if(camera.position.y<m(FFZ+CEIL+3)&&walkable(ox,oy)&&!walkable(nx,ny))return}
   const y=camera.position.y,knee=y<=m(CEIL+0.5)?0.35:y<=m(FFZ+CEIL)?m(FFZ)+0.35:y;   // knee-height check on the floor you are on, not the ground floor below
   for(const h of [knee,y]){colRay.set(new THREE.Vector3(camera.position.x,h,camera.position.z),dir);colRay.far=len+0.3;if(colRay.intersectObjects(wallMeshes,false).length)return}
   { const nx=-(camera.position.x+step.x)/F,ny=(camera.position.z+step.z)/F,ox=-camera.position.x/F,oy=camera.position.z/F;   // neem trunk: never walk into it
