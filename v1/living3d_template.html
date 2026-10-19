@@ -1027,7 +1027,7 @@ box(0.375,2.75,30.75,30.79,PKZ,GRD,MAT.extTrim,{tip:'Step up from the parking to
  const dg=new THREE.BufferGeometry();dg.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));dg.computeVertexNormals();
  const duv=[];for(let i=0;i<pos.length;i+=3)duv.push(pos[i],pos[i+2]);dg.setAttribute('uv',new THREE.Float32BufferAttribute(duv,2));
  {const dn=dg.attributes.normal;let up=0;for(let i=0;i<dn.count;i++)up+=dn.getY(i);if(up<0){const pa=dg.attributes.position;for(let i=0;i<pa.count;i+=3){for(const c of [0,1,2]){const t=pa.getComponent(i+1,c);pa.setComponent(i+1,c,pa.getComponent(i+2,c));pa.setComponent(i+2,c,t)}}dg.computeVertexNormals()}}   // faces point up
- const drive=new THREE.Mesh(dg,MAT.paver);drive.receiveShadow=true;scene.add(drive);named(drive,`G-01 · Parking and drive · grey interlocking pavers · gate crest +6" over the road, ramp 1 in 7.5, parking +2'0"`);
+ const drive=new THREE.Mesh(dg,MAT.paver);drive.receiveShadow=true;scene.add(drive);named(drive,`G-01 · Parking and drive · grey interlocking pavers · gate crest +6" over the road, ramp 1 in 6, parking +2'0"`);
  // covered drain across the drive at the inner edge of the crest (to the rainwater pit and the road drain)
  const [d1,d2]=RP.drain,grate=std({color:'#3a3c3e',roughness:0.5,metalness:0.6});
  for(const [a,b] of [[X0,tx-tr-0.05],[tx+tr+0.05,17.1]]) if(b-a>0.1){box(a,b,d1,d2,HUZ-0.03,HUZ+0.035,grate,{cast:false,tip:'Gate drain, 9" wide, steel grating · takes the drive water to the rainwater pit, overflow to the road drain'});
@@ -1046,7 +1046,7 @@ box(0.375,2.75,30.75,30.79,PKZ,GRD,MAT.extTrim,{tip:'Step up from the parking to
 box(-40,70,-17,-0.02,RDZ-0.02,RDZ+0.02,MAT.paver,{cast:false,tip:'Road (north), 17\' wide · grey interlocking pavers · our gate crest is 6" above it, the parking 2\'0", the gardens 2\'6"'});
 // compound walls, gate pillars with lamps, planter pillar, gates
 for(const w of P.walls.G.filter(w=>w.kind==='comp')){   // stepped down along the drive (6' above the ground inside); the bottom holds back the fill
-  const cuts=[w.y1,...[3.25,6.0,9.0,12.0,14.5,30.75].filter(c=>c>w.y1+0.01&&c<w.y2-0.01),w.y2];
+  const cuts=[w.y1,...[3.25,5.5,7.75,10.0,12.25,30.75].filter(c=>c>w.y1+0.01&&c<w.y2-0.01),w.y2];
   for(let i=0;i<cuts.length-1;i++){const a=cuts[i],b=cuts[i+1],front=b<=30.76,gnd=front?zF(b):GRD,base=Math.min(NBZ,front?zF(a):GRD)-0.1;
     const me=box(w.x1,w.x2,a,b,base,gnd+w.h,MAT.ext,{tip:`${w.id} · ${w.desc} · ${w.h}' high inside; its foot holds back the filled ground`});wallMeshes.push(me);
     box(w.x1-0.04,w.x2+0.04,a,b,gnd+w.h,gnd+w.h+0.12,MAT.extTrim,{tip:`${w.id} · coping`})}}

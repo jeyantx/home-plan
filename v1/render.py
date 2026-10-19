@@ -216,7 +216,7 @@ def levels():
     E(f'<line x1="{a[0]:.3f}" y1="{a[1]:.3f}" x2="{b[0]:.3f}" y2="{b[1]:.3f}" stroke="#1f6f8b" stroke-width="0.09" marker-end="url(#arrT)"/>')
     text(4.4,-0.45,'ROAD '+ft(L['road']),0.3,weight=700,fill='#1f6f8b')
     text(5.4,1.95,'gate crest '+ft(L['hump']-L['road'])+', drain',0.42,weight=600,fill='#1f6f8b')
-    text(4.6,9.0,'RAMP up\n1 in 7.5',0.48,weight=700,fill='#1f6f8b')
+    text(4.6,9.0,'RAMP up\n1 in 6',0.48,weight=700,fill='#1f6f8b')
     text(5.6,15.3,'parking '+ft(L['parking']-L['road']),0.3,weight=700,fill='#1f6f8b')
     text(1.55,52.0,'garden\n'+ft(L['garden']-L['road']),0.39,weight=700,fill='#1f6f8b')
     text(15.2,98.4,'back garden '+ft(L['garden']-L['road']),0.42,weight=700,fill='#1f6f8b')

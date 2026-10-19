@@ -120,7 +120,7 @@ GF_OUTLINE=[(8.5,30.75),(21,30.75),(21,95.125),(9.5,95.125),(9.5,73.875),(6.0,73
 FF_OUTLINE=R(9.5,21.0,73.125,97.375)
 # site levels, in feet above the road crown in front of the gate (house floor = +3.5)
 LEVELS=dict(road=0.0,hump=0.5,parking=2.0,garden=2.5,floor=3.5)
-RAMP=dict(y_hump=1.0,y_crest=3.25,y_top=14.5,drain=(2.5,3.25))   # gate bevel to Y 1', crest to 3'3" (drain at its inner edge), ramp 1 in 7.5 to Y 14'6"
+RAMP=dict(y_hump=1.0,y_crest=3.25,y_top=12.25,drain=(2.5,3.25))   # gate bevel to Y 1', crest to 3'3" (drain at its inner edge), ramp 1 in 6 to Y 12'3"
 BRANCH_NOTES='''<section class="ask"><h2>Outside windows and colours (branch exterior-v2, for review)</h2>
 <ol>
 <li><b>Window frame WF-1</b> on every outside window: a box frame round the window, 6" wide and 4" out from the wall, with a deeper 1'3" hood on top that works as the sunshade, and a thin black drip edge. Ventilators get a slimmer 4" frame, except V-01 (plain, no frame). RCC fins and hood, clad in the same wood-look brown as the balcony louvers and the gate slats (HPL or aluminium wood finish).</li>
@@ -132,7 +132,7 @@ BRANCH_NOTES='''<section class="ask"><h2>Outside windows and colours (branch ext
 <ol>
 <li><b>Levels above the road:</b> gate hump +6", parking +2'0", gardens, side passage and back yard +2'6", house floor +3'6" (1' plinth above the gardens).</li>
 <li><b>Gate:</b> a 1' bevel from the road to a 6" crest, a 2'3" level strip at the crest, then a covered drain across the drive (to the rainwater pit and the road drain).</li>
-<li><b>Drive ramp:</b> 1 in 7.5, from Y 3'3" to 14'6", rising 1'6" to the parking. The car parks on the level part (Y 15'3" to 30'3").</li>
+<li><b>Drive ramp:</b> 1 in 6 (steeper, shorter), from Y 3'3" to 12'3", rising 1'6" to the parking; level from 12'3" inside the gate. Round off the top and bottom of the ramp by about 1' so low cars do not scrape. The car parks on the level part (Y 15'3" to 30'3").</li>
 <li><b>Gates GT-01 and GT-02</b> become inward folding (bi-fold) gates, so their leaves stay over the level crest and never hit the ramp. Shown folded open in 3D, so you can walk out to the road (the view follows the ramp).</li>
 <li><b>Outside stair ST-1</b> now starts at the crest by the small gate: 27 risers of about 6½" (17 in ST-1A from Y 2'8", landing, 10 in ST-1B); balcony 2 unchanged.</li>
 <li><b>Neem tree:</b> trunk kept at today's ground in a 5'6" tree well FU-76 with a low retaining ring; no fill against the trunk.</li>
@@ -345,7 +345,7 @@ for _o in OPENINGS:
     if _o[5]=='vent' and _o[0] not in SPEC: SPEC[_o[0]]='Louvred glass ventilator with exhaust fan opening'
 SPEC['V-03']='Louvred glass ventilator with exhaust fan opening'
 CAR=(11.25,17.0,15.25,30.25)
-BIKES=(11.0,17.5,24.0)
+BIKES=(15.5,21.75,28.0)
 CH_G_FRONT=[0,0.75,12.0,13.5,20.25,21.0]
 
 # ---------- structure (proposal): RCC frame with side pillars only, no pillar inside any room ----------
