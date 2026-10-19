@@ -261,6 +261,15 @@ function grillMesh(o,w,horiz,U1,U2,Z1,Z2,vc){
   if(horiz)M.set(-F,0,0,-w.x1*F, 0,F,0,ZOFF*F, 0,0,F,w.y1*F, 0,0,0,1);else M.set(0,0,-F,-w.x1*F, 0,F,0,ZOFF*F, F,0,0,w.y1*F, 0,0,0,1);
   g.applyMatrix4(M);const me=new THREE.Mesh(g,MAT.grill);me.castShadow=true;me.receiveShadow=true;me.userData.keepUV=true;
   scene.add(me);named(me,`${o.id} grill GR-1 · MS, black powder-coat · plain vertical round bars, 12 mm @ 5", one middle flat`);return me}
+// invisible grill: 2 mm stainless-steel wire ropes, horizontal at 2", in a slim frame; keeps the view open
+function invisibleGrill(o,w,horiz,U1,U2,Z1,Z2,vc){const fr=0.06,parts=[],n=Math.floor((Z2-Z1-2*fr)/0.167);
+  const bar=(u1,z1,u2,z2,wd)=>new THREE.BoxGeometry(Math.max(u2-u1,wd),Math.max(z2-z1,wd),wd).translate((u1+u2)/2,(z1+z2)/2,vc);
+  parts.push(bar(U1,Z1,U1+fr,Z2,fr),bar(U2-fr,Z1,U2,Z2,fr));
+  for(let i=1;i<=n;i++){const z=Z1+fr+i*(Z2-Z1-2*fr)/(n+1);parts.push(new THREE.CylinderGeometry(0.004,0.004,U2-U1-2*fr,6).rotateZ(Math.PI/2).translate((U1+U2)/2,z,vc))}
+  const g=mergeGeometries(parts),M=new THREE.Matrix4();
+  if(horiz)M.set(-F,0,0,-w.x1*F, 0,F,0,ZOFF*F, 0,0,F,w.y1*F, 0,0,0,1);else M.set(0,0,-F,-w.x1*F, 0,F,0,ZOFF*F, F,0,0,w.y1*F, 0,0,0,1);
+  g.applyMatrix4(M);const me=new THREE.Mesh(g,std({color:'#c9cdd1',roughness:0.3,metalness:0.9}));me.userData.keepUV=true;scene.add(me);
+  named(me,`${o.id} invisible grill · 2 mm stainless-steel (SS 316) wire ropes at 2", side channels; nearly invisible, child-safe`);return me}
 function buildOpening(o,w,horiz,s0,out=0){
   const T=horiz?w.y2-w.y1:w.x2-w.x1, u1=o.a-s0,u2=o.b-s0, tip=`${o.id} · ${o.note}${P.spec[o.id]?' · '+P.spec[o.id]:''}`;
   if(o.type==='window'||o.type==='vent'){
@@ -268,10 +277,10 @@ function buildOpening(o,w,horiz,s0,out=0){
     const e=0.012;
     boxAlong(horiz,w,u1+e,u2-e,v0,v1,z1+e,z1+fw,MAT.upvc,{tip});boxAlong(horiz,w,u1+e,u2-e,v0,v1,z2-fw,z2-e,MAT.upvc,{tip});
     boxAlong(horiz,w,u1+e,u1+fw,v0,v1,z1+fw,z2-fw,MAT.upvc,{tip});boxAlong(horiz,w,u2-fw,u2-e,v0,v1,z1+fw,z2-fw,MAT.upvc,{tip});
-    if(o.type==='window'){const mid=(u1+u2)/2;boxAlong(horiz,w,mid-0.07,mid+0.07,v0+0.02,v1-0.02,z1+fw,z2-fw,MAT.upvc,{tip});}
+    if(o.type==='window'){const mids=(u2-u1)>6?[u1+2.25,u2-2.25]:[(u1+u2)/2];for(const mid of mids)boxAlong(horiz,w,mid-0.07,mid+0.07,v0+0.02,v1-0.02,z1+fw,z2-fw,MAT.upvc,{tip});}   // wide picture windows: fixed centre, sliding pane each side
     const gl=boxAlong(horiz,w,u1+fw,u2-fw,v0+0.13,v0+0.16,z1+fw,z2-fw,MAT.glass,{tip,cast:false});glassMeshes.push(gl);
     const vo=T-0.04;
-    grillMesh(o,w,horiz,u1,u2,z1,z2,vo-0.08);
+    if(/invisible grill/.test(P.spec[o.id]||''))invisibleGrill(o,w,horiz,u1,u2,z1,z2,vo-0.08);else grillMesh(o,w,horiz,u1,u2,z1,z2,vo-0.08);
     boxAlong(horiz,w,u1-0.12,u2+0.12,-0.1,T*0.35-0.012,z1-0.06,z1+0.012,MAT.granite,{tip:'Granite window sill'});
     if(out&&!['W-01','V-01'].includes(o.id)){   // outside box frame WF-1 (none on V-01; W-01 has its own gable frame): wood-look brown cladding (same as the balcony louvers and the gate slats) round the window, deeper hood on top as the sunshade
       const vr=(a,b)=>out<0?[-b,-a]:[T+a,T+b],big=o.type==='window',fw2=big?0.5:0.33,d=big?0.33:0.25,hood=big&&w.id!=='GW-03'?1.25:d,ft=`${o.id} · window box frame WF-1 · RCC fins and sunshade clad in wood-look brown (HPL or aluminium), ${big?'6" frame, 1\'3" hood':'4" frame'}`;
@@ -806,12 +815,12 @@ function setFinish(k){if(!KT[k])k='KT-1';const o=KT[k];finishMat(MAT.kLow,o.low)
  ceilingFan(15.6,87.5,0.7);
  {const hS=0.33,d=0.04,t='Tile skirting, 4"';
   box(X1,X1+d,Y1,Y2,0,hS,MAT.skirt,{tip:t});box(X1+d,10.5,Y1,Y1+d,0,hS,MAT.skirt,{tip:t});box(13.5,14.0,Y1,Y1+d,0,hS,MAT.skirt,{tip:t});
-  box(X1+d,10.75,Y2-d,Y2,0,hS,MAT.skirt,{tip:t});box(13.5,X2,Y2-d,Y2,0,hS,MAT.skirt,{tip:t});box(X2-d,X2,81.96,83.0,0,hS,MAT.skirt,{tip:t});}
+  box(X1+d,X2,Y2-d,Y2,0,hS,MAT.skirt,{tip:t});box(X2-d,X2,81.96,83.0,0,hS,MAT.skirt,{tip:t});}
  // AC FU-46 on GW-07; W-07 curtains on a wall track below it; W-08 curtains from the band
  {const ac=fuG['FU-46'];box(10.262,ac.x2,ac.y1,ac.y2,7.55,8.5,std({color:'#f4f4f2',roughness:0.35}),{round:0.08,tip:`FU-46 · AC indoor unit, 1.5 ton split · ${ac.note}`});
   box(ac.x2,ac.x2+0.02,ac.y1+0.15,ac.y2-0.15,7.62,7.7,MAT.blackMetal,{cast:false,tip:'FU-46 · AC air outlet'});}
  for(const [a,b] of [[83.8,85.2],[88.8,90.2]]) curtain(a,b,10.6,7.4,'Curtain track, wall-mounted at 7\'4" below the AC');
- for(const [a,b] of [[14.0,15.1],[18.9,19.45]]) curtain(a,b,Y2-0.42,BZ,'Curtain track','x');   // west stack kept short, clear of the dressing table
+ for(const [a,b] of [[10.3,11.3],[18.9,19.45]]) curtain(a,b,Y2-0.42,BZ,'Curtain track','x');   // picture window W-08: curtains stack at its ends; west stack kept short, clear of the dressing table
  // queen bed FU-31, headboard wall panel across both side tables, linen pad, ledge over the bed, art above
  const f=fuG['FU-31'],tip=`FU-31 · Queen bed · oak platform, 6'6" x 5' · ${f.note}`;
  box(f.x1+0.35,f.x2-0.2,f.y1+0.3,f.y2-0.3,0,0.32,MAT.plinth,{tip});
@@ -1424,7 +1433,7 @@ function applyOption(i){const o=OPTIONS[i];curOpt=i;
   <li>Same design as bedroom 1: oak-look floor, peach walls, ceiling band with LED cove, 4 downlights, ceiling fan.</li>
   <li><b>Bed FU-31:</b> oak platform; headboard wall panel in grooved oak veneer runs across both floating side tables FU-32 and FU-33 (each with a drawer and a linen-shade lamp); linen pad, LED ledge, framed canvas.</li>
   <li><b>Wardrobe FU-34</b> on GW-15 with loft, oak veneer, black handles. <b>FU-33</b> is one long floating oak shelf: side table with a lamp at the bed end, dressing table with a framed mirror and a linen stool at the other end (FU-35 merged into it).</li>
-  <li><b>Windows:</b> AC FU-46 centred above W-07, blowing across the bed; W-07 curtains on a wall track below it; W-08 curtains from the band. Back door D-10: white UPVC with a glass upper half.</li>
+  <li><b>Windows:</b> AC FU-46 centred above W-07, blowing across the bed; W-07 curtains on a wall track below it; W-08 is a big picture window (8'6" x 5', low sill) with an invisible grill and curtains that stack at its ends.</li>
   </ul><h2>Toilet 2 (G-11)</h2><ul>
   <li>Same tiles as toilet 1: greige walls to 7' (shower walls too), anti-skid floor.</li>
   <li><b>Layout:</b> 5' x 6'4½". Door D-04 opens inward, hinged at its north end. Open shower FU-28 across the north end (5' x 2'10½") with rose, geyser FU-58 on GW-14 and bath rack FU-70 on GW-16. Indian WC FU-26 on a tiled platform FU-26.1 (4" high) in the south-east corner, 3'6" front to back x 2'6" side to side, user faces west, V-02 above; bucket, bib tap and health faucet FU-57 on the front of the platform by GW-06. Wall-hung basin FU-27 with backlit mirror on GW-06 in the corner by the door.</li>

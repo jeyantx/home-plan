@@ -103,8 +103,7 @@ OPENINGS = [
  ('W-06','G','GW-01', 61.0,65.0,'window',None,None, 2.0,3.25,'Kitchen window over the hob, 4\' x 2\', sill 3\'3", head 5\'3", so the chimney hood sits at the standard 2\'6" above the counter'),
  ('V-02','G','GW-18', 70.875,72.875,'vent',None,None, 1.5,6.0,'Toilet 2 ventilator over the WC platform, opens onto the bore court'),
  ('W-07','G','GW-07', 85.0,89.0,'window',None,None, 4.0,3.0,'Bedroom 2 side window to side garden'),
- ('W-08','G','GW-08', 14.75,19.25,'window',None,None, 4.0,3.0,'Bedroom 2 back window to back garden'),
- ('D-10','G','GW-08', 10.75,13.5,'door','a','-', 7.0,0,'Bedroom 2 back door to back garden'),
+ ('W-08','G','GW-08', 10.75,19.25,'window',None,None, 5.0,2.0,'Bedroom 2 back picture window to the back garden, 8\'6" x 5\', low 2\' sill; replaces the back door D-10'),
  ('GT-01','G','FRONT', 0.75,12.0,'gate',None,'+', 6.0,0,'Large gate, 11\'3", bi-fold double leaf (4 panels), folds inward over the level crest, east of the planter pillar'),
  ('GT-02','G','FRONT', 13.5,20.25,'gate',None,'+', 6.0,0,'Small gate, 6\'9", bi-fold double leaf (4 panels), folds inward over the level crest, west of the planter pillar'),
  ('D-07','F','FW-05', 10.5,13.5,'door','a','+', 7.0,0,'Bedroom 3 door, from landing'),
@@ -124,7 +123,13 @@ RAMP=dict(y_hump=1.0,y_crest=3.25,y_top=10.75,ease=1.5,drain=(2.5,3.25))   # gat
 # small gate GT-02: three 6" steps up from the crest (risers in line with ST-1's treads), then a level platform at parking height between the tree well and ST-1A;
 # its east edge is a retaining kerb along the car's ramp (16" high at the north end, nothing where the ramp reaches the parking at Y 10'9")
 SIDE_PLATFORM=dict(well=(12.75,4.75,2.25),x1=13.5,x2=17.125,steps=(2.667,3.5,4.333),xe=12.5,y_end=10.75)
-BRANCH_NOTES='''<section class="ask"><h2>Water and drainage (branch services-v1, for review)</h2>
+BRANCH_NOTES='''<section class="ask"><h2>Side garden utility and bedroom 2 window (branch utility-v1, for review)</h2>
+<ol>
+<li><b>Utility corner</b> under the terrace slab: washing machine FU-29 (front-load, 8 kg) and utility basin FU-30 (granite counter, deep steel sink, tall tap and a low bucket tap) on a 4" tiled platform FU-77 with a floor drain, against a new 4' tiled splash wall FU-78 (its granite top is a detergent shelf). Tap, hose and a weatherproof socket for the machine on the wall.</li>
+<li><b>D-05</b> opens out to the side garden; a granite step FU-79 outside it, since its sill is 1' above the garden.</li>
+<li><b>Bedroom 2 back door D-10 removed.</b> The back wall gets one big picture window W-08 instead: 8'6" wide and 5' high with a low 2' sill, fixed glass in the middle and a sliding pane each side. In place of bars, an <b>invisible grill</b> of thin stainless-steel wires 2" apart, so the view of the back garden stays open. The back garden is reached through D-05 and the side garden.</li>
+</ol></section>
+<section class="ask"><h2>Water and drainage (branch services-v1, for review)</h2>
 <ol>
 <li><b>Septic tank UG-01, 8,000 L</b>, at the front under the east walkway (inside 12' x 4', 7' deep, two chambers). The borewells are at the back, so the front is the only place far enough from them: 15.2 m from BR-02 (guideline at least 15 m). Heavy-duty RCC top, since the car drives over it; covers clear of the parked car and bikes; a desludging truck reaches it from the road.</li>
 <li><b>Soak pit UG-02</b> just north of it, under the drive, 19.4 m from BR-02 (guideline at least 18 m). If the town has an underground sewer on this road, connect to it instead and drop the soak pit.</li>
@@ -359,7 +364,6 @@ SPEC = {
  'D-05':'Steel or UPVC door, glass upper half, plus MS grill shutter',
  'W-01':'UPVC sliding window; grill with brown scroll ornaments; outside small gable frame WF-2 (wood-look brown frame and gable, red clay-tile roof)',
  'D-09':'Steel or UPVC door, glass upper half, plus MS grill shutter',
- 'D-10':'Steel or UPVC door, glass upper half, plus MS grill shutter',
  'O-01':'Plastered arch opening, no shutter',
  'W-12':'Bi-fold glass window, aluminium or UPVC frame, curtain on the living side',
  'GT-01':'MS swing gate, double leaf (no room on the wall for a sliding gate)', 'GT-02':'MS double-leaf hinged gate, opens inward',
@@ -367,6 +371,7 @@ SPEC = {
 for _o in OPENINGS:
     if _o[5]=='window' and _o[0] not in SPEC: SPEC[_o[0]]='UPVC 3-track sliding: 2 glass + 1 mosquito mesh, MS safety grill, 1\'6" sunshade outside'
     if _o[5]=='vent' and _o[0] not in SPEC: SPEC[_o[0]]='Louvred glass ventilator with exhaust fan opening'
+SPEC['W-08']='Picture window: fixed glass centre (4\') with a UPVC sliding pane each side (2\'3") with mosquito mesh; invisible grill of 2 mm stainless-steel wire ropes at 2" (no bars, nearly invisible, child-safe); 1\'6" sunshade outside'
 SPEC['V-03']='Louvred glass ventilator with exhaust fan opening'
 # underground tanks and pits: (code, name, shape, geometry, inside size note, covers, note)
 #   rect geometry = outer (x1,x2,y1,y2); circle geometry = (cx,cy,outer r); covers = list of (x1,x2,y1,y2) or (cx,cy,r)
