@@ -66,7 +66,6 @@ canvas{display:block;width:100%;height:100%}
   <button class="btn" id="optBtn" aria-pressed="false" title="Show or hide the gate, colour, finish and lens options">Options ▾</button>
  </div>
  <div class="row hidden" id="optRow">
-  <span class="lbl">Parking tile</span><div class="seg" id="ptileSeg"><button data-pt="PT-1" title="Grey herringbone (current), 400 x 400 mm"><i style="background:#8f8f8d"></i>PT-1</button><button data-pt="PT-2" title="Grey clover interlock, 400 x 400 mm"><i style="background:#7e807f"></i>PT-2</button><button data-pt="PT-3" title="Wood-look parquet, 400 x 400 mm"><i style="background:#a08466"></i>PT-3</button><button data-pt="PT-4" title="Charcoal, textured, 400 x 400 mm"><i style="background:#56595c"></i>PT-4</button><button data-pt="PT-5" title="Light grey, textured, 400 x 400 mm"><i style="background:#adafb1"></i>PT-5</button><button data-pt="PT-6" title="Blue-grey, textured, 400 x 400 mm"><i style="background:#7f8993"></i>PT-6</button><button data-pt="PT-7" title="Pale silver-grey, textured, 400 x 400 mm"><i style="background:#c4c5ca"></i>PT-7</button><button data-pt="PT-8" title="Light beige (sand), textured, 400 x 400 mm"><i style="background:#cdc3b4"></i>PT-8</button></div>
   <span class="lbl">Lens</span><div class="seg" id="lensSeg"><button data-f="60" title="Eye-like lens">60°</button><button data-f="75" title="Wide lens">75°</button></div>
   <span class="sub">↑↓ walk · ←→ turn · A/D slide · W/S tilt · Q/E lower/raise · Shift faster · Drag to look around · Scroll to walk · Right-drag to slide · Hover for names</span>
  </div>
@@ -143,37 +142,6 @@ function parkingTile(){return canvasTex(1024,1024,(g,w,h)=>{const u=w/4,r=rng(36
   g.save();g.beginPath();draw((X,Y,W,H)=>g.rect(X+5,Y+5,W-10,H-10));g.clip();
   for(let i=0;i<60000;i++){const t=r(),c=t<0.38?'rgba(70,70,68,0.75)':t<0.7?'rgba(205,205,200,0.8)':t<0.85?'rgba(110,110,106,0.7)':'rgba(170,166,158,0.7)',s=1+r()*2.6;g.fillStyle=c;g.fillRect(r()*w,r()*h,s,s)}
   g.restore()},0.4)}
-// more parking-tile choices (redrawn from the owner's catalogue photos), each one 400 x 400 mm tile per canvas
-function speckle(g,w,h,r,n,a=0.6){for(let i=0;i<n;i++){const t=r(),c=t<0.4?`rgba(60,60,58,${a})`:t<0.75?`rgba(210,210,205,${a})`:`rgba(120,120,116,${a})`,s=1+r()*2.4;g.fillStyle=c;g.fillRect(r()*w,r()*h,s,s)}}
-function cloverTile(){return canvasTex(1024,1024,(g,w,h)=>{const c=256,r=rng(4411),grey=()=>{const v=Math.round((r()-0.5)*16);return `rgb(${124+v},${127+v},${125+v})`};
-  g.fillStyle='#2c2d2c';g.fillRect(0,0,w,h);
-  for(let i=-1;i<=4;i++)for(let j=-1;j<=4;j++)if((i+j)&1){g.fillStyle=grey();g.fillRect(i*c+6,j*c+6,c-12,c-12)}   // the in-between pieces (their sides are cut by the clover lobes)
-  for(let i=-1;i<=4;i++)for(let j=-1;j<=4;j++)if(!((i+j)&1)){const x=i*c+c/2,y=j*c+c/2,L=0.5*c,rr=0.31*c,parts=[[x-L,y],[x+L,y],[x,y-L],[x,y+L]];
-    g.strokeStyle='#2c2d2c';g.lineWidth=12;for(const [px,py] of parts){g.beginPath();g.arc(px,py,rr,0,7);g.stroke()}g.strokeRect(x-0.36*c,y-0.36*c,0.72*c,0.72*c);
-    g.fillStyle=grey();for(const [px,py] of parts){g.beginPath();g.arc(px,py,rr-6,0,7);g.fill()}g.fillRect(x-0.36*c+6,y-0.36*c+6,0.72*c-12,0.72*c-12)}
-  speckle(g,w,h,r,50000,0.45)},0.4)}
-function parquetTile(){return canvasTex(1024,1024,(g,w,h)=>{const r=rng(5150),cols=['#b4a084','#8d765a','#a9a499','#7b6751','#c3b39b','#9b8b77','#a58d70'],pw=96,cx=w/2,cy=h/2;
-  const grain=(x,y,len,wd)=>{for(let k=0;k<14;k++){g.strokeStyle=`rgba(${r()<0.5?'60,45,30':'235,225,210'},${0.08+r()*0.1})`;g.lineWidth=1+r()*1.5;const yy=y+r()*wd;g.beginPath();g.moveTo(x,yy);for(let t=0;t<=len;t+=40)g.lineTo(x+t,yy+Math.sin(t*0.02+k)*2);g.stroke()}};
-  for(const [qx,qy,ang] of [[0,0,Math.PI/4],[cx,0,-Math.PI/4],[0,cy,-Math.PI/4],[cx,cy,Math.PI/4]]){g.save();g.beginPath();g.rect(qx,qy,cx,cy);g.clip();g.translate(cx,cy);g.rotate(ang);
-    for(let k=-12;k<=12;k++){g.fillStyle=cols[Math.floor(r()*cols.length)];g.fillRect(-800,k*pw,1600,pw);grain(-800,k*pw,1600,pw);g.fillStyle='rgba(70,52,35,0.85)';g.fillRect(-800,k*pw-1.5,1600,3)}
-    for(let k=-12;k<=12;k++)for(let x=-800+((k*331)%400);x<800;x+=420){g.fillStyle='rgba(70,52,35,0.85)';g.fillRect(x,k*pw,3,pw)}   // plank ends
-    g.restore()}
-  const hd=0.2*w,hs=0.055*w,tri=(pts,col)=>{g.fillStyle=col;g.beginPath();g.moveTo(...pts[0]);for(const q of pts.slice(1))g.lineTo(...q);g.closePath();g.fill();g.strokeStyle='rgba(70,52,35,0.9)';g.lineWidth=3;g.stroke()};
-  const N=[cx,cy-hd],E=[cx+hd,cy],S=[cx,cy+hd],W=[cx-hd,cy],C=[cx,cy];
-  tri([N,E,C],'#c9b89c');tri([E,S,C],'#a2896b');tri([S,W,C],'#c2b399');tri([W,N,C],'#957c5f');
-  tri([[cx,cy-hs],[cx+hs,cy],[cx,cy+hs],[cx-hs,cy]],'#5d564e');speckle(g,w,h,r,6000,0.12)},0.4)}
-function plainTile(base,seed,light){return canvasTex(1024,1024,(g,w,h)=>{const r=rng(seed);g.fillStyle=base;g.fillRect(0,0,w,h);
-  for(let i=0;i<260;i++){g.fillStyle=`rgba(${r()<0.5?'255,255,255':'0,0,0'},0.035)`;g.beginPath();g.ellipse(r()*w,r()*h,20+r()*90,10+r()*50,r()*3,0,7);g.fill()}
-  for(let i=0;i<70000;i++){const v=r();g.fillStyle=v<0.5?`rgba(0,0,0,${light?0.07:0.12})`:`rgba(255,255,255,${light?0.08:0.07})`;const s=1+r()*3;g.fillRect(r()*w,r()*h,s,s*(0.5+r()))}
-  g.fillStyle='rgba(30,30,30,0.45)';g.fillRect(0,0,w,3);g.fillRect(0,0,3,h)},0.4)}
-const PTILES={'PT-1':{name:'Grey herringbone (Code36603 type)',sw:'#8f8f8d',tex:()=>parkingTile(),rough:0.78},
-  'PT-2':{name:'Grey clover interlock',sw:'#7e807f',tex:cloverTile,rough:0.8},
-  'PT-3':{name:'Wood-look parquet with a centre diamond',sw:'#a08466',tex:parquetTile,rough:0.62},
-  'PT-4':{name:'Charcoal, textured',sw:'#56595c',tex:()=>plainTile('#56595c',451,false),rough:0.86},
-  'PT-5':{name:'Light grey, textured',sw:'#adafb1',tex:()=>plainTile('#adafb1',452,true),rough:0.86},
-  'PT-6':{name:'Blue-grey, textured',sw:'#7f8993',tex:()=>plainTile('#7f8993',453,true),rough:0.86},
-  'PT-7':{name:'Pale silver-grey, textured',sw:'#c4c5ca',tex:()=>plainTile('#c4c5ca',454,true),rough:0.86},
-  'PT-8':{name:'Light beige (sand), textured',sw:'#cdc3b4',tex:()=>plainTile('#cdc3b4',455,true),rough:0.86}};
 function stoneTiles(base,seed,tx,ty,tileFt){return canvasTex(1024,1024*ty/tx,(g,w,h)=>{const r=rng(seed);g.fillStyle=base;g.fillRect(0,0,w,h);
   for(let i=0;i<9000;i++){const v=(r()-.5)*0.05;g.fillStyle=v>0?`rgba(255,255,255,${v})`:`rgba(0,0,0,${-v})`;g.fillRect(r()*w,r()*h,3,3)}
   for(let i=0;i<220;i++){g.fillStyle=`rgba(${r()<.5?'255,255,255':'120,110,95'},0.05)`;g.beginPath();g.ellipse(r()*w,r()*h,8+r()*40,4+r()*20,r()*3,0,7);g.fill()}
@@ -1100,7 +1068,7 @@ if(SPL){const st=SPL.steps,L=[];
    if([[xa,ya],[xb,ya],[xb,yb],[xa,yb]].every(([u,v])=>splAt(u,v)!==null))continue;   // under the small-gate steps and platform
    const P4=[[xa,ya],[xb,ya],[xb,yb],[xa,yb]].map(([u,v])=>[mx(u),m(zF(v)+0.03),m(v)]);
    const arr=ya>=RP.y_top-1e-6?posP:pos;for(const k of [0,1,2,0,2,3])arr.push(...P4[k])}
-for(const [P_,mat,nm] of [[pos,MAT.paver,`G-01 · Gate crest and ramp · grey anti-skid interlocking pavers · crest +6" over the road, ramp 1 in 4 (14 deg) with 1 in 8 ends`],[posP,MAT.parkTile,`G-01 · Parking · level at +2'0"`]]){const pos=P_;
+for(const [P_,mat,nm] of [[pos,MAT.parkTile,`G-01 · Gate crest and ramp · grey herringbone parking tile PT-1 (anti-skid grade on the ramp) · crest +6" over the road, ramp 1 in 4 (14 deg) with 1 in 8 ends`],[posP,MAT.parkTile,`G-01 · Parking · grey herringbone parking tile PT-1, 400 x 400 mm, matt · level at +2'0"`]]){const pos=P_;
  const dg=new THREE.BufferGeometry();dg.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));dg.computeVertexNormals();
  const duv=[];for(let i=0;i<pos.length;i+=3)duv.push(pos[i],pos[i+2]);dg.setAttribute('uv',new THREE.Float32BufferAttribute(duv,2));
  {const dn=dg.attributes.normal;let up=0;for(let i=0;i<dn.count;i++)up+=dn.getY(i);if(up<0){const pa=dg.attributes.position;for(let i=0;i<pa.count;i+=3){for(const c of [0,1,2]){const t=pa.getComponent(i+1,c);pa.setComponent(i+1,c,pa.getComponent(i+2,c));pa.setComponent(i+2,c,t)}}dg.computeVertexNormals()}}   // faces point up
@@ -1128,11 +1096,11 @@ if(P.underground){const iron=std({color:'#3d4043',roughness:0.55,metalness:0.6})
     const gAt=(x,y)=>front?hFront(x,y):GRD;
     if(/sump/i.test(name)){const [x1,x2,y1,y2]=g;box(x1,x2,y1,y2,GRD-0.3,GRD+0.5,MAT.ext,{tip:`${code} · top of the sump, 6" above the garden · ${inside}`});}
     for(const c of covers){
-      if(c.length===4&&/septic/i.test(name)){const z=gAt((c[0]+c[1])/2,(c[2]+c[3])/2)+0.03,[a,b,e,f]=c,rim=0.06,steel=std({color:'#9ea3a7',roughness:0.35,metalness:0.85}),
+      if(c.length===4&&/septic/i.test(name)){const z=gAt((c[0]+c[1])/2,(c[2]+c[3])/2)+0.03,[a,b,e,f]=c,rim=0.06,steel=std({color:'#5f6367',roughness:0.55,metalness:0.4}),
           tt=`${code} · recessed (tile-in) cover, 2' x 2': a steel tray filled with the same parking tile, so it blends into the floor; lift it with the two keys to clean the tank · ${tip}`;
-        box(a+rim,b-rim,e+rim,f-rim,z-0.06,z+0.004,MAT.parkTile,{cast:false,tip:tt});                       // tile infill, flush with the floor
-        for(const [x1,x2,y1,y2] of [[a,b,e,e+rim],[a,b,f-rim,f],[a,a+rim,e+rim,f-rim],[b-rim,b,e+rim,f-rim]])box(x1,x2,y1,y2,z-0.06,z+0.008,steel,{cast:false,tip:tt});   // thin steel rim
-        for(const kx of [a+0.35,b-0.35])box(kx-0.04,kx+0.04,(e+f)/2-0.015,(e+f)/2+0.015,z+0.004,z+0.006,MAT.blackMetal,{cast:false,tip:tt+' · key hole'});}
+        box(a+rim,b-rim,e+rim,f-rim,z-0.06,z+0.01,MAT.parkTile,{cast:false,tip:tt});                       // tile infill, flush with the floor
+        for(const [x1,x2,y1,y2] of [[a,b,e,e+rim],[a,b,f-rim,f],[a,a+rim,e+rim,f-rim],[b-rim,b,e+rim,f-rim]])box(x1,x2,y1,y2,z-0.06,z+0.022,steel,{cast:false,tip:tt});   // thin steel rim
+        for(const kx of [a+0.35,b-0.35])box(kx-0.04,kx+0.04,(e+f)/2-0.015,(e+f)/2+0.015,z+0.01,z+0.013,MAT.blackMetal,{cast:false,tip:tt+' · key hole'});}
       else if(c.length===4){const z=/sump/i.test(name)?GRD+0.5:gAt((c[0]+c[1])/2,(c[2]+c[3])/2);box(c[0],c[1],c[2],c[3],z-0.02,z+0.04,iron,{cast:false,tip});}
       else{const [cx,cy,r]=c,z=gAt(cx,cy),sl=(gAt(cx,cy+0.2)-gAt(cx,cy-0.2))/0.4,rain=/rain/i.test(name);
         const me=new THREE.Mesh(new THREE.CylinderGeometry(m(r),m(r),m(0.06),40),rain?MAT.blackMetal:iron);me.position.set(mx(cx),m(z+0.01),m(cy));me.rotation.x=-Math.atan(sl);me.receiveShadow=true;scene.add(me);named(me,tip);
@@ -1612,13 +1580,7 @@ addEventListener('resize',resize);resize();
 {let o=false;try{o=localStorage.getItem('lr3d-opts')==='1'}catch(e){};setOpt(o)}   // options row starts closed unless left open
 let so=0,sl='day',sf=75;try{so=0;sl=localStorage.getItem('lr3d-light')||'day';sf=+(localStorage.getItem('lr3d-lens')||75)}catch(e){}
 applyOption(so);applyLight(sl);setLens(sf);setView(21);   // open at the gate, outside
-setGate('GD-1');setExt('EX-4');setFinish('KT-1');
-function setParkTile(k){if(!PTILES[k])k='PT-1';const o=PTILES[k];o.t=o.t||o.tex();MAT.parkTile.map=o.t;MAT.parkTile.roughness=o.rough;MAT.parkTile.needsUpdate=true;
-  scene.traverse(n=>{if(n.isMesh&&(n.material===MAT.parkTile||(Array.isArray(n.material)&&n.material.includes(MAT.parkTile)))){n.userData.tipBase=n.userData.tipBase||n.userData.tip;n.userData.tip=`${n.userData.tipBase} · parking tile ${k}: ${o.name}, 400 x 400 mm`}});
-  document.querySelectorAll('#ptileSeg button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.pt===k));try{localStorage.setItem('lr3d-ptile',k)}catch(e){}
-  renderer.shadowMap.needsUpdate=true;if(photo&&pt)pt.setScene(scene,camera);invalidate()}
-{let k='PT-1';try{k=localStorage.getItem('lr3d-ptile')||k}catch(e){};setParkTile(k)}
-document.querySelectorAll('#ptileSeg button').forEach(x=>x.onclick=()=>setParkTile(x.dataset.pt));   // fixed choices: GD-1 slatted gates, EX-4 colours, KT-1 kitchen finish
+setGate('GD-1');setExt('EX-4');setFinish('KT-1');   // fixed choices: GD-1 slatted gates, EX-4 colours, KT-1 kitchen finish
 document.querySelectorAll('#gateSeg button').forEach(x=>x.onclick=()=>setGate(x.dataset.g));document.querySelectorAll('#extSeg button').forEach(x=>x.onclick=()=>setExt(x.dataset.e));
 
 document.querySelectorAll('#finishSeg button').forEach(x=>x.onclick=()=>setFinish(x.dataset.k));
