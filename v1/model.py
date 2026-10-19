@@ -353,7 +353,7 @@ FURNITURE = [
  ('FU-66','G','RO water purifier, wall-mounted',8.488,9.637,65.456,66.375,'over',None,'Kitchen, on GW-14 in the place of wall unit K-14 (removed), 558 x 350 x 280 mm (H x W x D), bottom at 5\' from the floor; water pots fill standing on the 2\' low counter below'),
  ('FU-67','G','Microwave oven',11.75,13.4,59.15,60.35,'appl',None,'Kitchen, on the west end of the breakfast counter FU-17'),
  ('FU-52','G','Gas stove, 3 burner, glass top (free-standing)',4.015,5.360,61.500,63.797,'hob',None,'Kitchen, stands on the counter over K-01 and K-02, 1\' north of the drying rack (not built in, lift it off to clean), 70 x 41 x 13 cm; gas hose down through a grommet to the cylinder in K-02 below; chimney hood above, just over the window head'),
- ('FU-80','G','Utensil drying rack, steel, 2 tier',3.7,6.3,64.85,66.25,'appl',None,'Kitchen, on the corner counter right beside the sink (over K-03 and the sealed corner), with a drip tray; washed vessels, cookers and plates dry here'),
+ ('FU-80','G','Utensil drying rack, steel, 2 tier',4.25,6.25,64.85,66.25,'appl',None,'Kitchen, on the counter right beside the sink: 2\' wide, 2\'4" high, two compartments (1\'6" for vessels and cookers, 8" for plates on top) and a drip tray; the wall units above it start higher, at 5\'3"'),
  ('FU-53','G','Tap and wash platform',1.375,4.875,92.5,95.0,'washpad',None,'Side garden, paved with drain, in the corner of BW-02 and BW-03'),
  ('FU-54','G','Wash basin with tap',19.125,20.625,95.25,96.5,'basin',None,'Back garden, against GW-08 beside window W-08'),
  ('FU-55','G','Tap and wash platform',17.625,20.625,96.75,99.25,'washpad',None,'Back garden, paved, with floor drain'),
@@ -399,6 +399,7 @@ UNDERGROUND=[
 # Fronts: k = drawer / door / lift (flap opens upward) / pullout / blind (fixed); a,b along the run; za,zb heights; hinge 'a' or 'b' end; what = contents.
 KCH,KTOP,KPL,KLOW,KBF=2.83,0.13,0.33,2.0,2.87      # counter top 2'10", top 40 mm, plinth 4", low counter 2', breakfast counter 2'10½" (+40 mm top)
 KUP1,KUP2,KLOFT2=4.9,7.0,9.988                      # wall units 4'11" to 7', loft to the ceiling
+KUP1R=5.25                                            # wall units over the drying rack start higher, 5'3"
 RO_Z1,RO_H=5.0,558/304.8                              # RO purifier FU-66: bottom 5' from the floor, 558 mm high
 def _drawers(a,b,z1,z2,mm,what):
     # drawer stack from the bottom up; mm = front heights in mm (bottom first), 3 mm gaps
@@ -439,8 +440,8 @@ KITCHEN_MODULES=[
       fronts=_drawers(10.3,11.9,_F1,_F2,[312,300,150],['snacks and biscuit tins','pulses and dals in jars','tea, coffee, sugar']),inside='shallow drawers (300 mm deep)',need='dry stores in jars'),
  dict(id='K-11',name='Breakfast counter unit, under the microwave',run='Breakfast counter',face='y+',x1=11.9,x2=13.5,y1=59.137,y2=60.375,z1=0,z2=KBF,
       fronts=[dict(k='door',a=11.9,b=13.5,za=_F1,zb=_F2,hinge='b',what='microwave dishes, baking trays (1 shelf)')],inside='one shelf; socket for the microwave FU-67 above',need='microwave things below the microwave'),
- dict(id='K-12',name='Wall unit',run='Wall units, back',face='y-',x1=4.75,x2=6.5,y1=65.125,y2=66.363,z1=KUP1,z2=KUP2,
-      fronts=[dict(k='door',a=4.75,b=6.5,za=KUP1+0.012,zb=KUP2-0.012,hinge='a',what='masala dabba and spices (2 shelves)')],inside='2 shelves',need='spices at eye level near the hob'),
+ dict(id='K-12',name='Wall unit',run='Wall units, back',face='y-',x1=4.75,x2=6.5,y1=65.125,y2=66.363,z1=KUP1R,z2=KUP2,
+      fronts=[dict(k='door',a=4.75,b=6.5,za=KUP1R+0.012,zb=KUP2-0.012,hinge='a',what='masala dabba and spices (2 shelves)')],inside='2 shelves; starts at 5\'3" to clear the drying rack below',need='spices at eye level near the stove'),
  dict(id='K-13',name='Dish drainer over the sink',run='Wall units, back',face='y-',x1=6.5,x2=8.25,y1=65.125,y2=66.363,z1=KUP1,z2=KUP2,
       fronts=[dict(k='lift',a=6.5,b=8.25,za=KUP1+0.012,zb=KUP2-0.012,what='steel plate and glass rack, drips straight into the sink')],inside='stainless-steel plate rack and glass rack, open bottom with a drip tray',need='dry washed plates and glasses right over the sink'),
  dict(id='K-15',name='Wall unit, glass door',run='Wall units, east',face='x+',x1=3.512,x2=4.75,y1=59.137,y2=61.0,z1=KUP1,z2=KUP2,
