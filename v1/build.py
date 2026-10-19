@@ -178,3 +178,78 @@ import subprocess
 br=subprocess.run(['git','rev-parse','--abbrev-ref','HEAD'],capture_output=True,text=True).stdout.strip() or 'main'
 open(f'/Users/jeyant-10189/Work/Personal/own/home-plan/home-plan-{br}.html','w').write(out)
 print(len(out)//1024,'KB', 'land',round(land),'gf',round(gf),'ffb',ffb,'terr',round(terr),'garden',round(garden))
+
+# ---------------- app: one page with tabs (3D, 2D, and the details), index.html at the repo root ----------------
+import re as _re
+ROOT='/Users/jeyant-10189/Work/Personal/own/home-plan/'
+_secs=_re.findall(r'<section.*?</section>',panel,_re.S)
+_title=lambda s:(_re.search(r'<h2>(.*?)</h2>',s) or [None,''])[1]
+_how=next(s for s in _secs if _title(s).startswith('How to read'))
+# 2D tab: the plan with only the room list and the reading guide beside it
+open(ROOT+'plan-2d.html','w').write(out.replace(panel,_how).replace(f'<h1>Home plan · {BRANCH}</h1>','<h1>2D plan</h1>'))
+GROUPS=[('overview','Overview',lambda t:t.startswith(('Areas','Staircases','Existing on site','Still open','How to read'))),
+        ('outside','Parking and outside',lambda t:t.startswith(('Parking plan','Outside windows','Raised site levels','Tree pit'))),
+        ('rooms','Rooms and walls',lambda t:t.startswith(('Rooms and areas','Walls'))),
+        ('openings','Doors and windows',lambda t:t.startswith('Doors, windows')),
+        ('structure','Structure',lambda t:t.startswith(('Structure','Pillars','Beams'))),
+        ('furniture','Furniture',lambda t:t.startswith('Furniture')),
+        ('decisions','Decisions log',lambda t:True)]
+_used=set();_tabs=[]
+for key,name,test in GROUPS:
+    body=''
+    for i,s in enumerate(_secs):
+        if i in _used or not test(_title(s)): continue
+        _used.add(i); body+=_re.sub(r' \((branch [\w-]+|approved), ?(from [\w-]+)?[^)]*\)','',s)
+    _tabs.append((key,name,body))
+def _btn(k,n): return f'<button role="tab" data-tab="{k}" aria-selected="false">{n}</button>'
+app=f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Home Plan</title>
+<style>
+:root{{--bg:#f4f2ee;--panel:#ffffff;--ink:#1f2328;--muted:#5d646d;--line:#dcd8d0;--accent:#2f6f4f;--accent-ink:#fff;--chip:#eef3ef}}
+@media (prefers-color-scheme:dark){{:root:not([data-theme="light"]){{--bg:#16181b;--panel:#1f2226;--ink:#e8e6e1;--muted:#a3a8ae;--line:#33373c;--accent:#5fb08a;--accent-ink:#0d1a13;--chip:#23302a}}}}
+:root[data-theme="dark"]{{--bg:#16181b;--panel:#1f2226;--ink:#e8e6e1;--muted:#a3a8ae;--line:#33373c;--accent:#5fb08a;--accent-ink:#0d1a13;--chip:#23302a}}
+*{{box-sizing:border-box}}html,body{{height:100%;margin:0}}
+body{{background:var(--bg);color:var(--ink);font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;display:flex;flex-direction:column}}
+header{{display:flex;align-items:center;gap:14px;padding:8px 16px 0;background:var(--panel);border-bottom:1px solid var(--line)}}
+h1{{font-size:16px;margin:0 6px 8px 0;font-weight:650;white-space:nowrap}}
+nav{{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}}nav::-webkit-scrollbar{{display:none}}
+nav button{{border:0;background:transparent;color:var(--muted);font:inherit;font-weight:550;padding:8px 12px 10px;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent}}
+nav button:hover{{color:var(--ink)}}
+nav button[aria-selected="true"]{{color:var(--accent);border-bottom-color:var(--accent)}}
+main{{flex:1;min-height:0;position:relative}}
+.pane{{position:absolute;inset:0;display:none;overflow:auto}}
+.pane.on{{display:block}}
+.pane iframe{{border:0;width:100%;height:100%;display:block;background:var(--bg)}}
+.doc{{max-width:980px;margin:0 auto;padding:20px 16px 48px}}
+.doc section{{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin:0 0 14px}}
+.doc section.ask{{background:var(--chip)}}
+.doc h2{{font-size:15px;margin:0 0 8px}}
+.doc ul,.doc ol{{margin:0;padding-left:20px}}.doc li{{margin:4px 0}}
+.t{{width:100%;border-collapse:collapse;font-size:13px}}
+.t th{{text-align:left;font-weight:600;color:var(--muted);border-bottom:1px solid var(--line);padding:5px 6px}}
+.t td{{border-bottom:1px solid var(--line);padding:5px 6px;vertical-align:top}}
+.t .n{{text-align:right;font-variant-numeric:tabular-nums}}.t .lbl{{color:var(--muted)}}.t tr.tot td{{font-weight:650}}
+td.c{{font-weight:700;white-space:nowrap;color:var(--accent)}}
+.note{{color:var(--muted);font-size:12.5px;margin:6px 0 0}}
+.wide{{overflow-x:auto}}
+@media (max-width:640px){{header{{flex-direction:column;align-items:stretch;gap:0}}h1{{margin:0 0 4px}}.doc{{padding:12px 10px 40px}}}}
+</style></head><body>
+<header><h1>Home Plan</h1><nav role="tablist">{_btn('3d','3D view')}{_btn('2d','2D plan')}{''.join(_btn(k,n) for k,n,b in _tabs if b)}</nav></header>
+<main>
+<div class="pane" id="p-3d"><iframe data-src="3d/living-room.html" title="3D view" allow="fullscreen"></iframe></div>
+<div class="pane" id="p-2d"><iframe data-src="plan-2d.html" title="2D plan"></iframe></div>
+{''.join(f'<div class="pane" id="p-{k}"><div class="doc wide">{b}</div></div>' for k,n,b in _tabs if b)}
+</main>
+<script>
+const tabs=[...document.querySelectorAll('nav button')];
+function show(k){{if(!document.getElementById('p-'+k))k='3d';
+  tabs.forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===k));
+  document.querySelectorAll('.pane').forEach(p=>p.classList.toggle('on',p.id==='p-'+k));
+  const f=document.querySelector('#p-'+k+' iframe');if(f&&!f.src)f.src=f.dataset.src;   // load the 2D and 3D pages the first time they are opened
+  if(location.hash!=='#'+k)history.replaceState(null,'','#'+k);try{{localStorage.setItem('hp-tab',k)}}catch(e){{}}}}
+tabs.forEach(b=>b.onclick=()=>show(b.dataset.tab));
+window.addEventListener('hashchange',()=>show(location.hash.slice(1)));
+let first=location.hash.slice(1);if(!first){{try{{first=localStorage.getItem('hp-tab')||''}}catch(e){{}}}}show(first||'3d');
+</script></body></html>'''
+open(ROOT+'index.html','w').write(app)
+print('app tabs:',[(k,len(b)) for k,n,b in _tabs])

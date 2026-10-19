@@ -63,9 +63,6 @@ canvas{display:block;width:100%;height:100%}
   <button class="btn" id="optBtn" aria-pressed="false" title="Show or hide the gate, colour, finish and lens options">Options ▾</button>
  </div>
  <div class="row hidden" id="optRow">
-  <span class="lbl">Gate</span><div class="seg" id="gateSeg"><button data-g="GD-1">GD-1 Slats</button><button data-g="GD-2">GD-2 Bars</button><button data-g="GD-3">GD-3 Panels</button></div>
-  <span class="lbl">Colour</span><div class="seg" id="extSeg"><button data-e="EX-4" title="Warm white walls, light sand first-floor block, wood-brown frames, charcoal plinth"><i style="background:#f1ece3"></i><i style="background:#d3c2a8"></i><i style="background:#8a5a3a"></i><i style="background:#4f4a45"></i>EX-4</button><button data-e="EX-5" title="Beige walls, white first-floor block, wood-brown frames, dark brown plinth"><i style="background:#d8c5a6"></i><i style="background:#f3efe7"></i><i style="background:#8a5a3a"></i><i style="background:#5a4234"></i>EX-5</button><button data-e="EX-6" title="Light grey walls, dark grey first-floor block, wood-brown frames, charcoal plinth"><i style="background:#c6c3bd"></i><i style="background:#6b6966"></i><i style="background:#8a5a3a"></i><i style="background:#3f4043"></i>EX-6</button><button data-e="EX-7" title="Light beige walls (lighter EX-5), white first-floor block, wood-brown frames, brown plinth"><i style="background:#e6d8c0"></i><i style="background:#f6f3ec"></i><i style="background:#8a5a3a"></i><i style="background:#6a5140"></i>EX-7</button></div>
-  <span class="lbl">Finish</span><div class="seg" id="finishSeg"><button data-k="KT-1"><i style="background:#c9a77c"></i><i style="background:#efe9df"></i>KT-1</button><button data-k="KT-2"><i style="background:#efe9df"></i><i style="background:#c9a77c"></i>KT-2</button><button data-k="KT-3"><i style="background:#7d5a3e"></i><i style="background:#efe9df"></i>KT-3</button></div>
   <span class="lbl">Lens</span><div class="seg" id="lensSeg"><button data-f="60" title="Eye-like lens">60°</button><button data-f="75" title="Wide lens">75°</button></div>
   <span class="sub">↑↓ walk · ←→ turn · A/D slide · W/S tilt · Q/E lower/raise · Shift faster · Drag to look around · Scroll to walk · Right-drag to slide · Hover for names</span>
  </div>
@@ -1142,9 +1139,9 @@ const trunkAxis=[];const trunkAxisAt=hf=>{if(hf<0||hf>12)return null;const k=Mat
  for(let i=0;i<NA-1;i++){const y1=A0+i*TD,top=Z0+(i+1)*R;box(AX1-0.03,AX2,y1-0.03,y1+TD,top-0.04,top,MAT.stepStone,{tip:gr})}
  box(AX1-0.03,AX2,A0+(NA-1)*TD-0.03,LY2+0.03,LZ-0.04,LZ,MAT.stepStone,{tip:'Landing ST-1L, grey flamed granite'});
  for(let j=0;j<NB-1;j++){const x2=BX2-j*TD,top=LZ+(j+1)*R;box(x2-TD,x2+0.03,LY1-0.03,LY2+0.03,top-0.04,top,MAT.stepStone,{tip:gr})}
- // store FU-56 under the foot of ST-1A, with a door to the east
- // store FU-56 fills the space under the high end of ST-1A: one slice per tread, each just under the stair, so its top follows the slope
- const sf=fuG['FU-56'];for(let i=0;i<NA-1;i++){const y1=A0+i*TD,y2=y1+TD,top=Z0+(i+1)*R;if(y1<sf.y1-0.01||y2>sf.y2+0.01)continue;box(sf.x1+0.012,sf.x2-0.012,y1,y2,PKZ-0.3,sofA(y1)-0.02,MAT.ext,{tip:`FU-56 · Store under ST-1A · ${sf.note}`})}
+ // store FU-56 fills the space under the high end of ST-1A; its top runs flush along the sloping underside of the waist slab
+ const sf=fuG['FU-56'];
+ prof([[sf.y1,PKZ-0.3],[sf.y2,PKZ-0.3],[sf.y2,Math.min(sofA(sf.y2),LZ-LT)-0.02],[sf.y1,sofA(sf.y1)-0.02]],([y,z])=>new THREE.Vector2(m(y),m(z)),m(sf.x2-sf.x1-0.024),new THREE.Vector3(mx(sf.x1+0.012),0,0),true,`FU-56 · Store under ST-1A · ${sf.note}`);
  {const d1=12.0,d2=14.5,zb=sofA(d1);box(sf.x1-0.04,sf.x1+0.012,d1,d2,PKZ+0.15,zb-0.2,MAT.extWood,{tip:`FU-56 · store door, wood-look, 2'6" x ${Math.round((zb-0.35-PKZ)*12)}", facing east, clear of the parked car`})}
  // railing: black MS posts and 4"-gap balusters, wood-look handrail 3' above the nosing line; merged into two meshes
  const blk=[],wd=[],H=3.0,P3=(x,y,z)=>new THREE.Vector3(mx(x),m(z),m(y));
@@ -1497,9 +1494,9 @@ addEventListener('resize',resize);resize();
 {let o=false;try{o=localStorage.getItem('lr3d-opts')==='1'}catch(e){};setOpt(o)}   // options row starts closed unless left open
 let so=0,sl='day',sf=75;try{so=0;sl=localStorage.getItem('lr3d-light')||'day';sf=+(localStorage.getItem('lr3d-lens')||75)}catch(e){}
 applyOption(so);applyLight(sl);setLens(sf);setView(21);   // open at the gate, outside
-{let g='GD-1',e='EX-4';try{g=localStorage.getItem('lr3d-gate')||g;e=localStorage.getItem('lr3d-ext')||e}catch(x){};setGate(g);setExt(e)}
+setGate('GD-1');setExt('EX-4');setFinish('KT-1');   // fixed choices: GD-1 slatted gates, EX-4 colours, KT-1 kitchen finish
 document.querySelectorAll('#gateSeg button').forEach(x=>x.onclick=()=>setGate(x.dataset.g));document.querySelectorAll('#extSeg button').forEach(x=>x.onclick=()=>setExt(x.dataset.e));
-{let k='KT-1';try{k=localStorage.getItem('lr3d-finish')||k}catch(e){};setFinish(k)}
+
 document.querySelectorAll('#finishSeg button').forEach(x=>x.onclick=()=>setFinish(x.dataset.k));
 // ---------------- navigation: look in place, walk with collision ----------------
 // Keys: Up/Down walk · Left/Right turn · A/D slide · W/S tilt up/down · Q/E lower/raise · Shift faster
