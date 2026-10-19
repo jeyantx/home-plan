@@ -63,3 +63,9 @@ All CC0 (public domain) from Poly Haven, https://polyhaven.com, downloaded as 1k
 | `anthurium.glb` | GD-02 anthurium (one plant of the set), in a code-made black pot, porch (8,000 triangles) | "Anthurium Botany 01" by Rob Tuytel and Rico Cilliers, https://polyhaven.com/a/anthurium_botany_01 | CC0 |
 | `fern.glb` | GD-04 ferns in the six wall pots, side passage (one fern of the set, 2,400 triangles) | "Fern 02" by Rob Tuytel and Rico Cilliers, https://polyhaven.com/a/fern_02 | CC0 |
 | `aloe-pot.glb` | GD-10 aloe-like succulent in a white pot, scaled up to an aloe vera pot (6,400 triangles) | "Potted Plant 04" by James Ray Cock, https://polyhaven.com/a/potted_plant_04 | CC0 |
+
+## Site icon
+
+| File | What | Author | Licence |
+|---|---|---|---|
+| `favicon.png` | House icon used as the site icon (browser tab) | [Icons8](https://icons8.com) | Free with a link to Icons8 |

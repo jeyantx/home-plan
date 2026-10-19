@@ -158,6 +158,7 @@ BRANCH=_sp.run(['git','rev-parse','--abbrev-ref','HEAD'],capture_output=True,tex
 out=f'''<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Home Plan v1</title>
+<link rel="icon" type="image/png" href="favicon.png">
 {style}</head><body>
 <header>
  <div><h1>Home plan · {BRANCH}</h1></div>
@@ -255,6 +256,10 @@ _tabs.append(('credits','Credits','<section><h2>Credits</h2><p>Libraries, textur
 def _btn(k,n): return f'<button role="tab" data-tab="{k}" aria-selected="false">{n}</button>'
 app=f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Home Plan</title>
+<link rel="icon" type="image/png" href="favicon.png"><link rel="apple-touch-icon" href="favicon.png">
+<meta name="description" content="I will both lie down in peace, and sleep; for You alone, O Lord, make me dwell in safety - Psalms 4:8">
+<meta property="og:title" content="Home Plan"><meta property="og:description" content="I will both lie down in peace, and sleep; for You alone, O Lord, make me dwell in safety - Psalms 4:8"><meta property="og:image" content="https://jeyantx.github.io/home-plan/favicon.png">
+
 <style>
 :root{{--bg:#f4f2ee;--panel:#ffffff;--ink:#1f2328;--muted:#5d646d;--line:#dcd8d0;--accent:#2f6f4f;--accent-ink:#fff;--chip:#eef3ef}}
 @media (prefers-color-scheme:dark){{:root:not([data-theme="light"]){{--bg:#16181b;--panel:#1f2226;--ink:#e8e6e1;--muted:#a3a8ae;--line:#33373c;--accent:#5fb08a;--accent-ink:#0d1a13;--chip:#23302a}}}}
