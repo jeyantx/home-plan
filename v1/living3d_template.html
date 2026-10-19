@@ -1194,8 +1194,9 @@ if(P.backwall){const bw=P.backwall,[a,b]=bw.pts,t=bw.t,old=std({color:'#cdc4b3',
  const cl=fuG['FU-75'],cyy=(cl.y1+cl.y2)/2,tc=`FU-75 · Clothes drying line · ${cl.note}`;
  for(const x of [cl.x1,cl.x2]){box(x-0.06,x+0.06,cyy-0.06,cyy+0.06,GRD,GRD+6,MAT.blackMetal,{tip:tc});box(x-0.04,x+0.04,cyy-0.6,cyy+0.6,GRD+5.9,GRD+6.0,MAT.blackMetal,{tip:tc})}
  for(const dy of [-0.5,0,0.5]) box(cl.x1,cl.x2,cyy+dy-0.012,cyy+dy+0.012,GRD+5.95,GRD+5.975,MAT.steel,{cast:false,tip:tc});}
-// parked vehicles, on the spots of the 2D plan: car (nose to the house), three two-wheelers on the east strip (front to the gate)
-{const [cx1,cx2,cy1,cy2]=P.car||[11.25,17.0,15.25,30.25],car=createVirtus(THREE,mergeGeometries,{color:'#2f5d8c'});   // VW Virtus, Rising Blue
+// parked vehicles, on the spots of the 2D plan: car (nose to the house), two-wheelers in a lane east of the car (front to the gate)
+const SHOW_VEHICLES=false;   // hidden until the downloaded models are in
+if(SHOW_VEHICLES){const [cx1,cx2,cy1,cy2]=P.car||[11.25,17.0,15.25,30.25],car=createVirtus(THREE,mergeGeometries,{color:'#2f5d8c'});   // VW Virtus, Rising Blue
  car.position.set(mx((cx1+cx2)/2),m(PKZ),m((cy1+cy2)/2));scene.add(car);
  car.traverse(o=>{if(o.isMesh){o.userData.keepUV=true;named(o,`Car · VW Virtus, 14'11" x 5'9" · nose to the house, 1' from the front wall`);if(o.name==='body')wallMeshes.push(o)}});
  for(const [code,name,bx,by,bl,bw] of (P.bikes||[])){const b=/Hunter/.test(name)?createHunter350(THREE,mergeGeometries,{}):createAther450(THREE,mergeGeometries,{});
