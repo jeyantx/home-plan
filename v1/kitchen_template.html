@@ -169,17 +169,23 @@ function basketBoxes(u0,u1,v0,v1,rows){const w=0.018,out=[];rows.forEach(([z,h,n
   for(let u=a+0.07;u<b-0.04;u+=0.08)B(u,u+w,v0,v1,z,z+w),B(u,u+w,v0,v0+w,z,z+h),B(u,u+w,v1-w,v1,z,z+h);
   for(let v=v0+0.08;v<v1-0.04;v+=0.08)B(a,a+w,v,v+w,z,z+h),B(b-w,b,v,v+w,z,z+h);
   B(a-0.03,a,v0,v1,z+h-0.03,z+h),B(b,b+0.03,v0,v1,z+h-0.03,z+h)}});return out}
-function baskets(rec,f){const {fr}=rec,v0=0.06,v1=fr.D-T-0.03,bx=basketBoxes(f.a+T+0.04,f.b-T-0.04,v0,v1,f.rows);const st=std({color:'#dfe2e5',roughness:0.3,metalness:0.35});for(const q of bx)fr.box(q.u1,q.u2,q.v1,q.v2,q.z1,q.z2,st,rec.grp);
-  const sph=(u,v,z,r,col,sy=1)=>{const [X,Y]=fr.toPlan(u,v);const me=new THREE.Mesh(new THREE.SphereGeometry(r*F,16,12),std({color:col,roughness:0.6}));me.scale.y=sy;me.position.copy(W(X,Y,z+r*sy));me.castShadow=true;rec.grp.add(me)};
-  const fill=(a,b,z,r,col,n,seed,sy)=>{const R=rng(seed);for(let k=0;k<n;k++)sph(a+r+R()*(b-a-2*r),v0+r+0.03+R()*(v1-v0-2*r-0.06),z+0.015+(k>n/2?r*0.9:0),r,col,sy)};
+// each row of baskets slides out on its own (click it), with what is in it; built in place, then re-parented to a slide group like a drawer
+function baskets(rec,f){const {fr}=rec,v0=0.06,v1=fr.D-T-0.03,bx=basketBoxes(f.a+T+0.04,f.b-T-0.04,v0,v1,f.rows),st=std({color:'#dfe2e5',roughness:0.3,metalness:0.35});
+  const RN=['Bottom row, 2 baskets: potatoes and coconuts','Middle row, 2 baskets: onions, garlic and ginger','Top row, 1 basket: bananas and lemons'];
+  const items=f.rows.map(([z,h,n],ri)=>{const it={rec,f:{...f,k:'pullout',za:z,zb:z+h},pivot:null,open:0,target:0,kind:'pullout',meshes:[]};
+    it.dir=fr.out.clone();it.maxT=(fr.D-0.35)*0.85*F;it.info=`<b>${rec.m.id}</b> · ${rec.m.name}<br>Pull-out basket row, ${MM(f.b-f.a)} wide, on full-extension runners<br>${RN[ri]||''}`;rec.fronts.push(it);fronts.push(it);return it});
+  const add=(ri,me)=>{items[ri].meshes.push(me);me.userData.front=items[ri];return me};
+  for(const q of bx)add(q.ri,fr.box(q.u1,q.u2,q.v1,q.v2,q.z1,q.z2,st,scene));
+  const sph=(ri,u,v,z,r,col,sy=1)=>{const [X,Y]=fr.toPlan(u,v);const me=new THREE.Mesh(new THREE.SphereGeometry(r*F,16,12),std({color:col,roughness:0.6}));me.scale.y=sy;me.position.copy(W(X,Y,z+r*sy));me.castShadow=true;scene.add(me);add(ri,me)};
+  const fill=(ri,a,b,z,r,col,n,seed,sy)=>{const R=rng(seed);for(let k=0;k<n;k++)sph(ri,a+r+R()*(b-a-2*r),v0+r+0.03+R()*(v1-v0-2*r-0.06),z+0.015+(k>n/2?r*0.9:0),r,col,sy)};
   const at=(ri,i)=>{const q=bx.find(x=>x.ri===ri&&x.i===i);return [q.a+0.02,q.b-0.02,q.z]};
-  {const [a,b,z]=at(0,0);fill(a,b,z,0.11,'#8a5a2b',9,11,0.85)}   // potatoes, brown
-  {const [a,b,z]=at(0,1);fill(a,b,z,0.2,'#6b4423',3,12,1.1)}   // coconuts, dark brown
-  {const [a,b,z]=at(1,0);fill(a,b,z,0.1,'#8e3b5a',10,13,0.9)}   // onions, red-purple
-  {const [a,b,z]=at(1,1);fill(a,b,z,0.07,'#efe6d2',8,14,0.9);fill(a,b,z,0.06,'#c9a46a',4,15,0.7)}   // garlic (white) and ginger (light brown)
+  {const [a,b,z]=at(0,0);fill(0,a,b,z,0.11,'#8a5a2b',9,11,0.85)}   // potatoes, brown
+  {const [a,b,z]=at(0,1);fill(0,a,b,z,0.2,'#6b4423',3,12,1.1)}   // coconuts, dark brown
+  {const [a,b,z]=at(1,0);fill(1,a,b,z,0.1,'#8e3b5a',10,13,0.9)}   // onions, red-purple
+  {const [a,b,z]=at(1,1);fill(1,a,b,z,0.07,'#efe6d2',8,14,0.9);fill(1,a,b,z,0.06,'#c9a46a',4,15,0.7)}   // garlic (white) and ginger (light brown)
   {const [a,b,z]=at(2,0);for(let k=0;k<7;k++){const [X,Y]=fr.toPlan(a+0.25+k*0.08,(v0+v1)/2);const me=new THREE.Mesh(new THREE.CapsuleGeometry(0.045*F,0.42*F,4,8),std({color:'#e8c33a',roughness:0.5}));
-    me.rotation.set(0.25,0,1.25-k*0.06);if(fr.out.z===0)me.rotation.y=Math.PI/2;me.position.copy(W(X,Y,z+0.08+(k%2)*0.04));me.castShadow=true;rec.grp.add(me)}
-   fill(b-0.35,b,z,0.07,'#d8d23a',3,16,1)}}   // bananas (yellow) and lemons
+    me.rotation.set(0.25,0,1.25-k*0.06);if(fr.out.z===0)me.rotation.y=Math.PI/2;me.position.copy(W(X,Y,z+0.08+(k%2)*0.04));me.castShadow=true;scene.add(me);add(2,me)}
+   fill(2,b-0.35,b,z,0.07,'#d8d23a',3,16,1)}}   // bananas (yellow) and lemons
 function buildFront(rec,f){const {m,fr}=rec,up=rec.up,mat=up?M.cream:M.oak,a=f.a+G,b=f.b-G,za=f.za,zb=f.zb,D=fr.D;
   const pivot=new THREE.Group();scene.add(pivot);const item={rec,f,pivot,open:0,target:0,kind:f.k,meshes:[]};
   const add=(me)=>{item.meshes.push(me);me.userData.front=item;return me};
