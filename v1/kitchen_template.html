@@ -48,7 +48,7 @@ ul{margin:0;padding-left:18px}li{margin:3px 0}
  <h1>Modular kitchen · KT-1</h1>
  <button class="btn" id="openAll">Open all</button><button class="btn" id="closeAll">Close all</button>
  <button class="btn" id="sizes" aria-pressed="true" title="Show the sizes of every unit, door and drawer">Sizes</button>
- <button class="btn" id="walls" aria-pressed="true" title="Show or hide the kitchen walls">Walls</button>
+ <button class="btn" id="unfold" aria-pressed="false" title="Swing the east run and the breakfast counter round into one straight line with the back run, all facing you; click again to fold them back">Unfold</button>
  <div class="seg" id="views"><button data-v="all" aria-pressed="true">Whole kitchen</button><button data-v="east">East run</button><button data-v="back">Back run</button><button data-v="bf">Breakfast counter</button><button data-v="up">Wall units</button></div>
  <div class="seg" id="ratioSeg" title="Shape of the 3D picture"><button data-r="fill">Fill</button><button data-r="16:9">16:9</button><button data-r="4:3">4:3</button><button data-r="1:1">1:1</button><button data-r="4:5">4:5</button><button data-r="3:4">3:4</button><button data-r="9:16">9:16</button></div>
  <button class="btn sp" id="panelBtn" aria-pressed="true">Unit list</button>
@@ -105,8 +105,8 @@ function frame(m){const f=m.face;
   return {toPlan,D,U0,U1,out,along,box:(u1,u2,v1,v2,z1,z2,mat,parent)=>{const [Xa,Ya]=toPlan(u1,v1),[Xb,Yb]=toPlan(u2,v2);return boxW(Xa,Xb,Ya,Yb,z1,z2,mat,parent)}}}
 // ---------------- room: floor, the two walls behind the units, the low wall under the folding window, backsplash ----------------
 const room=new THREE.Group();scene.add(room);
-boxW(3.5,16.5,58.9,66.75,-0.1,0,M.floor,room);
-const wallsG=new THREE.Group();scene.add(wallsG);
+boxW(-6.5,23.5,58.9,67.2,-0.1,0,M.floor,room);
+const wallsG=new THREE.Group();   // walls left out so every unit can be seen
 {const w6=P.openings.find(o=>o.id==='W-06'),w12=P.openings.find(o=>o.id==='W-12'),H=10.0;
  // east wall GW-01 with window W-06
  boxW(2.95,3.5,58.75,61.0,0,H,M.wall,wallsG);boxW(2.95,3.5,65.0,66.75,0,H,M.wall,wallsG);boxW(2.95,3.5,61.0,65.0,0,w6.sill,M.wall,wallsG);boxW(2.95,3.5,61.0,65.0,w6.sill+w6.h,H,M.wall,wallsG);
@@ -181,7 +181,11 @@ function contents(rec,f,pivot,add){const {m,fr}=rec,a=f.a,b=f.b,za=f.za,D=fr.D,a
   if(m.id==='K-13'){const z=rec.zb0+0.15;for(let k=0;k<9;k++){const [X,Y]=at(a+0.2+k*0.17,D/2);const pl=new THREE.Mesh(new THREE.CylinderGeometry(0.3*F,0.3*F,0.02*F,28),std({color:'#f6f3ee',roughness:0.3}));pl.rotation.z=Math.PI/2;if(m.face[0]==='y')pl.rotation.y=Math.PI/2;pl.position.copy(W(X,Y,z+0.32));scene.add(pl)}
     const [X,Y]=at((a+b)/2,D/2);boxW(X-0.8,X+0.8,Y-0.45,Y+0.45,z-0.02,z,M.steel,scene)}
   if(['K-12','K-14','K-15'].includes(m.id)){const r=rng(m.id.charCodeAt(3)*7);for(const zz of [rec.zb0+T,rec.zb0+(rec.zt-rec.zb0)/3,rec.zb0+2*(rec.zt-rec.zb0)/3]){let u=a+0.2;while(u<b-0.25){const rr=0.09+r()*0.06,[X,Y]=at(u,D/2);cylW(X,Y,zz,zz+0.3+r()*0.25,rr,std({color:['#e9e4da','#cdbfa8','#7a6a58','#c0392b','#f3efe6'][Math.floor(r()*5)],roughness:0.4}),scene,rr*0.9);u+=rr*2+0.1}}}}
-for(const m of K.modules)buildModule(m);
+const runOf=new Map(),runKey=m=>m.face==='x+'?'E':m.face==='y+'?'F':'B';
+for(const m of K.modules){const n0=scene.children.length;buildModule(m);for(const o of scene.children.slice(n0))runOf.set(o,runKey(m))}
+// the corner of the back run behind the bottle pull-out: sealed, with its plinth and granite top
+{const n0=scene.children.length;boxW(3.5,5.5,64.375,66.375,K.KPL,K.KCH-K.KTOP,M.oakIn);boxW(3.5,5.5,64.5,66.375,0,K.KPL,M.plinth);boxW(3.5,5.5,64.295,66.375,K.KCH-K.KTOP,K.KCH,M.granite);
+ boxW(5.44,5.5,64.375,64.6,K.KPL,K.KCH-K.KTOP,M.oak);for(const o of scene.children.slice(n0))runOf.set(o,'B')}
 // the blind corner wall unit behind K-12 (no front)
 boxW(3.512,4.75,65.0,66.363,K.KUP1,K.KUP2,M.cream);
 // ---------------- appliances on and above the counters ----------------
@@ -206,12 +210,26 @@ renderer.domElement.addEventListener('pointermove',e=>{if(e.buttons){tip.style.d
 function toggle(f,v){f.target=v===undefined?(f.target?0:1):v}
 // re-parent each front so it rotates or slides from its pivot
 for(const f of fronts){const g=new THREE.Group();if(f.origin){g.position.copy(f.origin);scene.add(g);for(const me of f.meshes){me.position.sub(f.origin);g.add(me)}}else{scene.add(g);for(const me of f.meshes)g.add(me)}f.g=g}
-function animate(dt){let moving=false;for(const f of fronts){const k=1-Math.exp(-dt*7);const o=f.open+(f.target-f.open)*k;if(Math.abs(o-f.open)>1e-4)moving=true;f.open=Math.abs(f.target-o)<1e-3?f.target:o;
+for(const f of fronts)runOf.set(f.g,runKey(f.rec.m));
+const RUN={E:new THREE.Group(),B:new THREE.Group(),F:new THREE.Group()};
+for(const o of [...scene.children]){if(o.isLight||o===sun.target||o===room||Object.values(RUN).includes(o))continue;
+  let k=runOf.get(o);if(!k){const c=new THREE.Box3().setFromObject(o).getCenter(new THREE.Vector3()),X=-(o.isCSS2DObject?o.position.x:c.x)/F,Y=(o.isCSS2DObject?o.position.z:c.z)/F;k=X<5.6&&Y<64.3?'E':Y<60.7?'F':'B'}
+  RUN[k].add(o)}
+for(const g of Object.values(RUN))scene.add(g);
+// unfolded: the east run swings about the back corner to face you on the left; the breakfast counter turns round to stand on the right
+const UNF={E:{c:W(3.5,66.375,0),a:-Math.PI/2,off:W(-0.8,0,0)},F:{c:W(13.1125,62.75,0),a:Math.PI,off:W(0.8,0,0)}};
+let unfoldT=0,unfoldTarget=0;
+function placeRuns(){const e=unfoldT*unfoldT*(3-2*unfoldT);for(const k of ['E','F']){const u=UNF[k],q=new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0),u.a*e);
+  RUN[k].quaternion.copy(q);RUN[k].position.copy(u.c).add(u.c.clone().negate().applyQuaternion(q)).add(u.off.clone().multiplyScalar(e))}}
+const unfoldBtn=document.getElementById('unfold');
+unfoldBtn.onclick=()=>{unfoldTarget=unfoldTarget?0:1;unfoldBtn.setAttribute('aria-pressed',!!unfoldTarget);unfoldBtn.textContent=unfoldTarget?'Fold':'Unfold';
+  if(unfoldTarget){fly={p0:camera.position.clone(),t0:controls.target.clone(),p1:W(8.1,28.5,8.0),t1:W(8.1,65.6,4.0),s:0};document.querySelectorAll('#views button').forEach(b=>b.setAttribute('aria-pressed',false))}else goView('all')};
+function animate(dt){if(unfoldT!==unfoldTarget){unfoldT=unfoldTarget?Math.min(1,unfoldT+dt/1.3):Math.max(0,unfoldT-dt/1.3);placeRuns()}let moving=false;for(const f of fronts){const k=1-Math.exp(-dt*7);const o=f.open+(f.target-f.open)*k;if(Math.abs(o-f.open)>1e-4)moving=true;f.open=Math.abs(f.target-o)<1e-3?f.target:o;
   if(f.origin){f.g.quaternion.setFromAxisAngle(f.axis,f.sign*f.maxA*f.open)}else{f.g.position.copy(f.dir).multiplyScalar(f.maxT*f.open)}
   if(f.hlab)f.hlab.visible=f.open>0.5}return moving}
 document.getElementById('openAll').onclick=()=>fronts.forEach(f=>toggle(f,1));document.getElementById('closeAll').onclick=()=>fronts.forEach(f=>toggle(f,0));
 const sizesBtn=document.getElementById('sizes');sizesBtn.onclick=()=>{const on=sizesBtn.getAttribute('aria-pressed')!=='true';sizesBtn.setAttribute('aria-pressed',on);view.classList.toggle('nolab',!on);for(const r of modules){if(r.dimLine)r.dimLine.visible=on;(r.ticks||[]).forEach(t=>t.visible=on)}};
-const wallsBtn=document.getElementById('walls');wallsBtn.onclick=()=>{const on=wallsBtn.getAttribute('aria-pressed')!=='true';wallsBtn.setAttribute('aria-pressed',on);wallsG.visible=on};
+
 // views
 const VIEWS={all:{p:[17.2,61.2,7.6],t:[7.0,63.0,3.2]},east:{p:[12.6,62.6,5.6],t:[4.2,62.8,3.2]},back:{p:[8.6,59.6,5.6],t:[8.0,66.0,2.6]},bf:{p:[9.0,66.0,6.2],t:[9.0,59.6,2.0]},up:{p:[11.0,61.0,4.6],t:[6.0,65.4,7.0]}};
 let fly=null;function goView(k){const v=VIEWS[k];fly={p0:camera.position.clone(),t0:controls.target.clone(),p1:W(...v.p),t1:W(...v.t),s:0};document.querySelectorAll('#views button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===k))}
@@ -245,5 +263,5 @@ let last=performance.now();
 renderer.setAnimationLoop(()=>{const now=performance.now(),dt=Math.min(0.05,(now-last)/1000);last=now;
   if(fly){fly.s=Math.min(1,fly.s+dt/0.9);const e=fly.s*fly.s*(3-2*fly.s);camera.position.lerpVectors(fly.p0,fly.p1,e);controls.target.lerpVectors(fly.t0,fly.t1,e);if(fly.s>=1)fly=null}
   animate(dt);controls.update();renderer.render(scene,camera);labels.render(scene,camera)});
-window.__k={fronts,modules,toggle,goView,scene,camera};
+window.__k={fronts,modules,toggle,goView,scene,camera,RUN,unfold:()=>unfoldBtn.click()};
 </script></body></html>

@@ -157,7 +157,7 @@ out=f'''<!doctype html>
   <label><input type="checkbox" data-layer="L-dims" checked>Dimensions</label>
   <label><input type="checkbox" data-layer="L-furn" checked>Furniture</label>
   <label><input type="checkbox" data-layer="L-struct" checked>Pillars and beams</label>
-  <label><input type="checkbox" data-layer="L-carpath" checked>Car path</label>
+  <label><input type="checkbox" data-layer="L-carpath">Car path</label>
   <label><input type="checkbox" data-layer="L-ug" checked>Tanks and pits (underground)</label>
  </div></details>
  <div id="mread" class="mread" aria-live="polite"></div>

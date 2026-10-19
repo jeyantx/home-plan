@@ -92,7 +92,7 @@ OPENINGS = [
  ('O-01','G','GW-13', 13.75,17.75,'arch',None,None, 7.0,0,'Arch from living room to open area, 4\' wide; ends at the FU-25 cupboard face'),
  ('W-12','G','GW-13', 5.5,11.5,'fold',None,None, 4.0,3.0,'Folding glass window, kitchen to living. Opens left and right; curtain on the living side'),
  ('D-04','G','GW-16', 67.75,70.25,'door','a','-', 7.0,0,'Toilet 2 door, from stair hall, opens inward; hinged at its north end, so the leaf folds back over the shower area, clear of the basin'),
- ('D-05','G','GW-07', 74.25,77.25,'door','b','-', 7.0,0,'Garden door, stair hall to side garden; opens out, hinged at its south end, 1\'5" north of bore BR-01'),
+ ('D-05','G','GW-07', 74.25,77.25,'door','a','-', 7.0,0,'Garden door, stair hall to side garden; opens out, hinged at its north end, so the leaf folds back against the toilet-2 wall GW-06 and the way out to the garden stays clear'),
  ('D-06','G','GW-15', 10.5,13.5,'door','a','+', 7.0,0,'Bedroom 2 door, from stair hall'),
  ('W-01','G','GW-04', 9.75,13.25,'window',None,None, 4.0,3.0,'Study window to parking'),
  ('V-01','G','GW-04', 16.25,18.25,'vent',None,None, 1.5,6.0,'Toilet 1 ventilator'),
@@ -131,8 +131,8 @@ BRANCH_NOTES='''<section class="ask"><h2>Modular kitchen (see the Kitchen tab)</
 </ol></section>
 <section class="ask"><h2>Side garden utility and bedroom 2 window (branch utility-v1, for review)</h2>
 <ol>
-<li><b>Utility corner</b> under the terrace slab: washing machine FU-29 (front-load, 8 kg) and utility basin FU-30 (granite counter, deep steel sink, tall tap and a low bucket tap) on a 4" tiled platform FU-77 with a floor drain, against a new 4' tiled splash wall FU-78 (its granite top is a detergent shelf). Tap, hose and a weatherproof socket for the machine on the wall.</li>
-<li><b>D-05</b> opens out to the side garden; a granite step FU-79 outside it, since its sill is 1' above the garden.</li>
+<li><b>Utility along GW-07</b>, just south of bore BR-01: washing machine FU-29 (front-load, 8 kg) and utility basin FU-30 (granite counter, deep steel sink, tall tap and a low bucket tap) on a 4" tiled platform FU-77 with a floor drain, with white tiles on GW-07 behind them. Tap, hose and a weatherproof socket for the machine on the wall. The way out of D-05 into the garden stays clear; the AC outdoor unit FU-47 moves south of window W-07.</li>
+<li><b>D-05</b> opens out to the side garden, hinged at its north end so it folds back against the toilet-2 wall; a granite step FU-79 outside it, since its sill is 1' above the garden.</li>
 <li><b>Bedroom 2 back door D-10 removed.</b> The back wall gets one big picture window W-08 instead: 8'6" wide and 5' high with a low 2' sill, fixed glass in the middle and a sliding pane each side. In place of bars, an <b>invisible grill</b> of thin stainless-steel wires 2" apart, so the view of the back garden stays open. The back garden is reached through D-05 and the side garden.</li>
 </ol></section>
 <section class="ask"><h2>Water and drainage</h2>
@@ -321,10 +321,9 @@ FURNITURE = [
  ('FU-58','G','Geyser',7.0,8.4,66.75,67.225,'geyser',None,'Toilet 2, on GW-14 above the shower, clear of the rose, bottom at about 6\'3"'),
  ('FU-70','G','Bath rack, 2 shelves',11.33,11.75,66.85,67.7,'over',None,'Toilet 2, wall-mounted on GW-16 in the shower, north of the door, for soap and shampoo'),
  ('FU-79','G','Step outside D-05',8.5,9.5,74.0,77.5,'plat',None,'Granite step, 6" up from the garden; D-05 is 1\' above the garden, so it is two 6" risers down to the garden; the door leaf clears the step'),
- ('FU-77','G','Utility platform',2.75,7.0,74.25,76.75,'plat',None,'Side garden utility, 4" above the garden, grey anti-skid tiles, floor drain in front of the machines; under the terrace slab'),
- ('FU-78','G','Utility splash wall',2.75,6.0,73.875,74.25,'splash',None,'4½" brick, 4\' high, white glazed tiles on the utility side, granite coping that doubles as a shelf; closes the bore court on the utility side (the court stays open to the side passage)'),
- ('FU-29','G','Washing machine, front-load 8 kg',3.0,5.0,74.3,76.25,'wm',None,'Side garden utility, on the platform; 60 x 60 x 85 cm; tap, hose and a covered (IP55) socket on the splash wall, drain to the floor trap'),
- ('FU-30','G','Utility wash basin with tap',5.5,7.0,74.25,75.5,'basin',None,'Side garden utility: granite counter 2\'9" high with a deep steel sink, tall swan-neck tap, a low tap for buckets, white tiles behind; clear of D-05 when it opens'),
+ ('FU-77','G','Utility platform',6.75,9.5,80.0,84.5,'plat',None,'Side garden utility, along GW-07 just south of bore BR-01, 4" above the garden, grey anti-skid tiles, floor drain in front of the machines; white tiles on GW-07 behind them'),
+ ('FU-29','G','Washing machine, front-load 8 kg',7.5,9.45,80.25,82.25,'wm',None,'Side garden utility, against GW-07 on the platform, front to the east; 60 x 60 x 85 cm; tap, hose and a covered (IP55) socket on GW-07, drain to the floor trap'),
+ ('FU-30','G','Utility wash basin with tap',8.0,9.5,82.5,84.25,'basin',None,'Side garden utility, against GW-07: granite counter 2\'9" high with a deep steel sink, tall swan-neck tap, a low tap for buckets, white tiles behind'),
  ('FU-31','G','Queen bed',13.75,20.25,85.0,90.0,'bed','x2','Bedroom 2, head to GW-05'),
  ('FU-32','G','Side table',18.75,20.25,83.25,84.75,'cab',None,'Bedroom 2'),
  ('FU-33','G','Side table and dressing shelf',18.85,20.25,90.25,93.65,'cab',None,'Bedroom 2, one long floating oak shelf on GW-05 (3\'5"): side table with a lamp at the bed end, dressing table with a mirror above and a stool at the other end; replaces FU-35'),
@@ -345,7 +344,7 @@ FURNITURE = [
  ('FU-44','G','AC indoor unit',9.25,9.92,37.25,40.25,'acin',None,'Bedroom 1, on GW-03 above window W-02, about 7\'6" high'),
  ('FU-45','G','AC outdoor unit',9.0,11.67,29.58,30.75,'acout',None,'Bedroom 1, on GW-04 parking face, bracket above window W-01 (about 7\'6"); pipe runs inside the study corner'),
  ('FU-46','G','AC indoor unit',10.25,10.92,85.5,88.5,'acin',None,'Bedroom 2, on GW-07 centred above window W-07 (about 7\'7"), blows straight across the bed'),
- ('FU-47','G','AC outdoor unit',8.33,9.5,82.0,84.67,'acout',None,'Bedroom 2, on GW-07 side-garden face'),
+ ('FU-47','G','AC outdoor unit',8.33,9.5,89.6,92.27,'acout',None,'Bedroom 2, on the GW-07 side-garden face, south of window W-07 (moved for the utility)'),
  ('FU-48','F','AC indoor unit',10.25,10.92,93.0,96.0,'acin',None,'Bedroom 3, on FW-01 facing the bed'),
  ('FU-49','F','AC outdoor unit',8.33,9.5,93.25,95.92,'acout',None,'Bedroom 3, wall bracket on FW-01 outside'),
  ('FU-51','G','Kitchen sink',6.5,8.4,64.625,66.125,'sinkbowl',None,'Kitchen, single bowl on the back counter FU-16, against GW-14'),

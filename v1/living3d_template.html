@@ -1329,49 +1329,43 @@ function vfrMats(){const P=(c,o={})=>new THREE.MeshPhysicalMaterial({color:c,rou
     'glass.001':lens,'glass.002':lens,mirro:mirror,mirror,orange_plastic:amber,yellowplastic:amber,'yellowplastic.001':amber,yellow_plastic:amber,
     redplastic:redl,red:redl,green:P('#1f9e3a'),whiteplastic:white,Material:screen,'Material.006':white,'Material.007':white,'':blk};
   return new Proxy(m,{get:(t,k)=>k in t?t[k]:blk})}
-// side-garden utility (under the terrace slab): platform FU-77, tiled splash wall FU-78, washing machine FU-29, utility basin FU-30
-{const pf=fuG['FU-77'],sw=fuG['FU-78'],wm=fuG['FU-29'],bs=fuG['FU-30'];
- if(pf&&sw&&wm&&bs){const PT=GRD+0.33,T=(f,t)=>`${f.id} · ${f.name} · ${t||f.note}`;
+// side-garden utility along GW-07, just south of bore BR-01: platform FU-77, washing machine FU-29 and utility basin FU-30 with their backs to the wall, fronts to the garden (east)
+{const pf=fuG['FU-77'],wm=fuG['FU-29'],bs=fuG['FU-30'];
+ if(pf&&wm&&bs){const PT=GRD+0.33,T=(f,t)=>`${f.id} · ${f.name} · ${t||f.note}`,WX=9.5;   // WX: the garden face of GW-07
   const tile=std({map:canvasTex(256,256,(g,w,h)=>{g.fillStyle='#f4f4f1';g.fillRect(0,0,w,h);g.fillStyle='#d6d4ce';for(let i=0;i<=4;i++){g.fillRect(i*w/4-1,0,2,h);g.fillRect(0,i*h/4-1,w,2)}},0.6),roughness:0.15,metalness:0.0});
   const ftile=std({map:canvasTex(256,256,(g,w,h)=>{g.fillStyle='#8f9294';g.fillRect(0,0,w,h);const r=rng(4);for(let i=0;i<900;i++){g.fillStyle=r()<0.5?'#83878a':'#9a9d9f';g.fillRect(r()*w,r()*h,2,2)}g.fillStyle='#6f7376';g.fillRect(0,0,w,2);g.fillRect(0,0,2,h)},0.6),roughness:0.85});
   const white=std({color:'#f3f3f1',roughness:0.32,metalness:0.08}),grey=std({color:'#cfd2d5',roughness:0.4,metalness:0.2}),chrome=std({color:'#e3e6e9',roughness:0.12,metalness:1}),
         dark=std({color:'#23272b',roughness:0.25,metalness:0.2}),smoke=std({color:'#2b3a44',roughness:0.05,metalness:0.1,transparent:true,opacity:0.55}),ss=std({color:'#c9ccd0',roughness:0.25,metalness:0.9,side:THREE.DoubleSide});
+  // local frame: u along the wall (plan y), v out from the wall (plan x = WX - v), z height
+  const B=(u1,u2,v1,v2,z1,z2,mt,tip)=>box(WX-v2,WX-v1,u1,u2,z1,z2,mt,{tip}),Pw=(u,v,z)=>new THREE.Vector3(mx(WX-v),m(z),m(u));
   {const st=fuG['FU-79'];if(st)box(st.x1,st.x2,st.y1,st.y2,GRD-0.25,GRD+0.5,MAT.stepStone,{tip:`${st.id} · ${st.name} · ${st.note}`})}
-  // platform and floor drain
   box(pf.x1,pf.x2,pf.y1,pf.y2,GRD-0.25,PT,ftile,{tip:T(pf)});
-  box(5.15,5.4,76.3,76.55,PT,PT+0.012,MAT.blackMetal,{cast:false,tip:`${pf.id} · floor drain (trap) for the washing machine and the basin`});
-  // splash wall: brick, white tiles on the utility face, granite coping as a shelf
-  box(sw.x1,sw.x2,sw.y1,sw.y2,GRD-0.3,GRD+4.0,MAT.ext,{tip:T(sw)});
-  box(sw.x1,sw.x2,sw.y2,sw.y2+0.03,PT,GRD+4.0,tile,{tip:T(sw,'white glazed wall tiles, 1\' x 1\'')});
-  box(sw.x1-0.04,sw.x2+0.04,sw.y1-0.05,sw.y2+0.12,GRD+4.0,GRD+4.1,MAT.stepStone,{tip:T(sw,'granite coping, also a shelf for detergent')});
-  box(6.0,bs.x2,73.875,73.905,PT,PT+4.0,tile,{tip:T(bs,'white tiles behind the basin, on GW-06')});   // tiles on the toilet-2 back wall behind the basin
-  // washing machine, front to the south (towards the garden)
-  {const x1=wm.x1+0.02,x2=wm.x2-0.02,y1=wm.y1,y2=wm.y2,cx=(x1+x2)/2,zb=PT+0.08,zt=PT+2.79,t=T(wm);
-   for(const [fx,fy] of [[x1+0.15,y1+0.15],[x2-0.15,y1+0.15],[x1+0.15,y2-0.15],[x2-0.15,y2-0.15]])cyl(fx,fy,PT,zb,0.07,dark,{tip:t});
-   box(x1,x2,y1,y2-0.02,zb,zt-0.03,white,{tip:t});
-   box(x1-0.005,x2+0.005,y1,y2,zt-0.03,zt,white,{tip:t});                       // top panel
-   box(x1,x2,y2-0.02,y2,zt-0.42,zt-0.04,grey,{tip:t});                         // control panel
-   box(x1+0.08,x1+0.7,y2-0.005,y2+0.012,zt-0.37,zt-0.1,white,{tip:t+' · detergent drawer'});
-   box(cx-0.22,cx+0.2,y2,y2+0.012,zt-0.32,zt-0.16,std({color:'#0f1a20',roughness:0.1,emissive:'#2bb3a6',emissiveIntensity:0.25}),{tip:t+' · display'});
-   {const k=new THREE.Mesh(new THREE.CylinderGeometry(m(0.13),m(0.13),m(0.06),32),chrome);k.rotation.x=Math.PI/2;k.position.set(mx(x2-0.38),m(zt-0.24),m(y2+0.03));scene.add(k);named(k,t+' · programme dial')}
-   const dz=PT+1.35,ring=new THREE.Mesh(new THREE.TorusGeometry(m(0.68),m(0.07),14,48),chrome);ring.position.set(mx(cx),m(dz),m(y2+0.04));scene.add(ring);named(ring,t+' · door');
-   const gl=new THREE.Mesh(new THREE.CircleGeometry(m(0.64),48),smoke);gl.position.set(mx(cx),m(dz),m(y2+0.05));scene.add(gl);named(gl,t+' · door glass');
-   const drum=new THREE.Mesh(new THREE.CircleGeometry(m(0.6),48),std({color:'#7d8287',roughness:0.4,metalness:0.8}));drum.position.set(mx(cx),m(dz),m(y2+0.005));scene.add(drum);named(drum,t+' · drum');
-   box(x1+0.1,x1+0.45,y2,y2+0.01,zb+0.08,zb+0.38,white,{tip:t+' · filter flap'});
-   // tap on the splash wall, hose down behind the machine, covered socket
-   box(x2-0.45,x2-0.33,sw.y2,sw.y2+0.14,GRD+3.55,GRD+3.62,chrome,{tip:`${wm.id} · washing machine tap (angle valve)`});
-   const hose=new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([[x2-0.39,sw.y2+0.14,GRD+3.55],[x2-0.39,sw.y2+0.2,GRD+3.3],[x2-0.5,y1+0.05,zt+0.05],[x2-0.5,y1+0.02,zt-0.3]].map(([x,y,z])=>new THREE.Vector3(mx(x),m(z),m(y)))),20,m(0.03),8),grey);scene.add(hose);named(hose,`${wm.id} · inlet hose`);
-   box(x1+0.1,x1+0.45,sw.y2,sw.y2+0.1,GRD+3.4,GRD+3.75,std({color:'#e4e4e0',roughness:0.5}),{tip:`${wm.id} · weatherproof (IP55) switch socket with a flip cover`});}
+  B(82.3,82.55,2.2,2.45,PT,PT+0.012,MAT.blackMetal,`${pf.id} · floor drain (trap) for the washing machine and the basin`);
+  B(pf.y1,pf.y2,-0.005,0.025,PT,PT+4.0,tile,T(pf,'white glazed wall tiles, 1\' x 1\', on GW-07 behind the machines'));
+  // washing machine
+  {const u1=wm.y1+0.02,u2=wm.y2-0.02,v1=WX-wm.x2,v2=WX-wm.x1,cu=(u1+u2)/2,zb=PT+0.08,zt=PT+2.79,t=T(wm);
+   for(const [fu,fv] of [[u1+0.15,v1+0.15],[u2-0.15,v1+0.15],[u1+0.15,v2-0.15],[u2-0.15,v2-0.15]])cyl(WX-fv,fu,PT,zb,0.07,dark,{tip:t});
+   B(u1,u2,v1,v2-0.02,zb,zt-0.03,white,t);B(u1-0.005,u2+0.005,v1,v2,zt-0.03,zt,white,t);B(u1,u2,v2-0.02,v2,zt-0.42,zt-0.04,grey,t);
+   B(u1+0.08,u1+0.7,v2-0.005,v2+0.012,zt-0.37,zt-0.1,white,t+' · detergent drawer');
+   B(cu-0.22,cu+0.2,v2,v2+0.012,zt-0.32,zt-0.16,std({color:'#0f1a20',roughness:0.1,emissive:'#2bb3a6',emissiveIntensity:0.25}),t+' · display');
+   {const k=new THREE.Mesh(new THREE.CylinderGeometry(m(0.13),m(0.13),m(0.06),32),chrome);k.rotation.z=Math.PI/2;k.position.copy(Pw(u2-0.38,v2+0.03,zt-0.24));scene.add(k);named(k,t+' · programme dial')}
+   const dz=PT+1.35,ring=new THREE.Mesh(new THREE.TorusGeometry(m(0.68),m(0.07),14,48),chrome);ring.rotation.y=Math.PI/2;ring.position.copy(Pw(cu,v2+0.04,dz));scene.add(ring);named(ring,t+' · door');
+   const gl=new THREE.Mesh(new THREE.CircleGeometry(m(0.64),48),smoke);gl.rotation.y=Math.PI/2;gl.position.copy(Pw(cu,v2+0.05,dz));scene.add(gl);named(gl,t+' · door glass');
+   const drum=new THREE.Mesh(new THREE.CircleGeometry(m(0.6),48),std({color:'#7d8287',roughness:0.4,metalness:0.8}));drum.rotation.y=Math.PI/2;drum.position.copy(Pw(cu,v2+0.005,dz));scene.add(drum);named(drum,t+' · drum');
+   B(u1+0.1,u1+0.45,v2,v2+0.01,zb+0.08,zb+0.38,white,t+' · filter flap');
+   B(u2-0.45,u2-0.33,0,0.14,GRD+3.55,GRD+3.62,chrome,`${wm.id} · washing machine tap (angle valve)`);
+   const hose=new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([Pw(u2-0.39,0.14,GRD+3.55),Pw(u2-0.39,0.2,GRD+3.3),Pw(u2-0.5,v1+0.05,zt+0.05),Pw(u2-0.5,v1+0.02,zt-0.3)]),20,m(0.03),8),grey);scene.add(hose);named(hose,`${wm.id} · inlet hose`);
+   B(u1+0.1,u1+0.45,0,0.1,GRD+3.4,GRD+3.75,std({color:'#e4e4e0',roughness:0.5}),`${wm.id} · weatherproof (IP55) switch socket with a flip cover`);}
   // utility basin: granite counter on two granite legs, deep steel sink, swan-neck tap, low tap for buckets
-  {const x1=bs.x1,x2=bs.x2,y1=bs.y1,y2=bs.y2,zt=PT+2.75,t=T(bs),gr=MAT.stepStone,sx1=x1+0.22,sx2=x2-0.22,sy1=y1+0.2,sy2=y2-0.2;
-   for(const [a,b] of [[x1+0.05,x1+0.2],[x2-0.2,x2-0.05]])box(a,b,y1+0.1,y2-0.1,PT,zt-0.12,gr,{tip:t});
-   box(x1,x2,y1,sy1,zt-0.12,zt,gr,{tip:t});box(x1,x2,sy2,y2,zt-0.12,zt,gr,{tip:t});box(x1,sx1,sy1,sy2,zt-0.12,zt,gr,{tip:t});box(sx2,x2,sy1,sy2,zt-0.12,zt,gr,{tip:t});
-   const bw=sx2-sx1,bd=sy2-sy1,bh=0.7,bowl=new THREE.Mesh(new THREE.BoxGeometry(m(bw),m(bh),m(bd)),[ss,ss,null,ss,ss,ss].map(x=>x||new THREE.MeshBasicMaterial({visible:false})));
-   bowl.position.set(mx((sx1+sx2)/2),m(zt-0.12-bh/2),m((sy1+sy2)/2));scene.add(bowl);named(bowl,t+' · deep stainless-steel sink');
-   cyl((x1+x2)/2,y1+0.1,zt,zt+0.7,0.05,chrome,{tip:t+' · swan-neck pillar tap'});
-   const spout=new THREE.Mesh(new THREE.TorusGeometry(m(0.22),m(0.04),10,24,Math.PI),chrome);spout.rotation.y=-Math.PI/2;spout.position.set(mx((x1+x2)/2),m(zt+0.7),m(y1+0.32));scene.add(spout);named(spout,t+' · tap spout');
-   cyl((x1+x2)/2+0.25,y1+0.02,PT+1.1,PT+1.18,0.06,chrome,{tip:t+' · low tap (bib cock) for filling buckets'});
-   const bucket=new THREE.Mesh(new THREE.CylinderGeometry(m(0.5),m(0.4),m(1.0),28,1,true),std({color:'#2f6fb0',roughness:0.5,side:THREE.DoubleSide}));bucket.position.set(mx((x1+x2)/2),m(PT+0.5),m(y1+0.65));scene.add(bucket);named(bucket,t+' · bucket under the low tap');}
+  {const u1=bs.y1,u2=bs.y2,vf=WX-bs.x1,cu=(u1+u2)/2,zt=PT+2.75,t=T(bs),gr=MAT.stepStone,su1=u1+0.22,su2=u2-0.22,sv1=0.2,sv2=vf-0.2;
+   for(const [a2,b2] of [[u1+0.05,u1+0.2],[u2-0.2,u2-0.05]])B(a2,b2,0.1,vf-0.1,PT,zt-0.12,gr,t);
+   B(u1,u2,0,sv1,zt-0.12,zt,gr,t);B(u1,u2,sv2,vf,zt-0.12,zt,gr,t);B(u1,su1,sv1,sv2,zt-0.12,zt,gr,t);B(su2,u2,sv1,sv2,zt-0.12,zt,gr,t);
+   const bh=0.7,bowl=new THREE.Mesh(new THREE.BoxGeometry(m(sv2-sv1),m(bh),m(su2-su1)),[ss,ss,null,ss,ss,ss].map(x=>x||new THREE.MeshBasicMaterial({visible:false})));
+   bowl.position.copy(Pw((su1+su2)/2,(sv1+sv2)/2,zt-0.12-bh/2));scene.add(bowl);named(bowl,t+' · deep stainless-steel sink');
+   cyl(WX-0.1,cu,zt,zt+0.7,0.05,chrome,{tip:t+' · swan-neck pillar tap'});
+   const spout=new THREE.Mesh(new THREE.TorusGeometry(m(0.22),m(0.04),10,24,Math.PI),chrome);spout.position.copy(Pw(cu,0.32,zt+0.7));scene.add(spout);named(spout,t+' · tap spout');
+   cyl(WX-0.02,cu+0.25,PT+1.1,PT+1.18,0.06,chrome,{tip:t+' · low tap (bib cock) for filling buckets'});
+   const bucket=new THREE.Mesh(new THREE.CylinderGeometry(m(0.5),m(0.4),m(1.0),28,1,true),std({color:'#2f6fb0',roughness:0.5,side:THREE.DoubleSide}));bucket.position.copy(Pw(cu,0.65,PT+0.5));scene.add(bucket);named(bucket,t+' · bucket under the low tap');}
  }}
 // two-wheelers side by side along BW-01, between C-01 and C-03
 const bikeObjs={};
@@ -1402,7 +1396,7 @@ for(const [x,y] of [[5.6,36.5],[7.5,22.0],[15.0,24.0]]) downlight(x,y,SLB,'LED d
 // ---------------- other rooms: simple blocks so the views through openings look right ----------------
 const simpleH={bed:1.8,cab:2.3,desk:2.5,ward:7.5,store2:9.4,shelf:6,counter:2.8,counter2:3.0,fridge:5.6,wc:1.3,basin:2.7,wm:2.8,store:3.5,table:2.4,chair:1.5};
 const kmat={counter:MAT.granite,counter2:MAT.granite,fridge:std({color:'#d9dcdf',roughness:0.3,metalness:0.5}),ward:MAT.oak,store2:std({color:'#ebe5da',roughness:0.55}),bed:std({color:'#e9e4da',roughness:0.9}),cab:MAT.oak,desk:MAT.oak,shelf:MAT.oak};
-for(const f of P.furniture){ if(f.fl!=='G'||['FU-03.1','FU-03.2','FU-04','FU-05','FU-06','FU-09.1','FU-09.2','FU-10','FU-11','FU-12','FU-13','FU-14','FU-15','FU-16','FU-16.2','FU-17','FU-18','FU-25','FU-27','FU-31','FU-32','FU-33','FU-34','FU-35','FU-56','FU-29','FU-30','FU-77','FU-78','FU-79'].includes(f.id)) continue;
+for(const f of P.furniture){ if(f.fl!=='G'||['FU-03.1','FU-03.2','FU-04','FU-05','FU-06','FU-09.1','FU-09.2','FU-10','FU-11','FU-12','FU-13','FU-14','FU-15','FU-16','FU-16.2','FU-17','FU-18','FU-25','FU-27','FU-31','FU-32','FU-33','FU-34','FU-35','FU-56','FU-29','FU-30','FU-77','FU-79'].includes(f.id)) continue;
   const h=simpleH[f.kind]; if(!h) continue;
   if(f.kind==='counter'||f.kind==='counter2'){box(f.x1,f.x2,f.y1,f.y2,0.3,h-0.12,MAT.cabinet,{tip:`${f.id} · ${f.name}`});box(f.x1,f.x2,f.y1,f.y2,h-0.12,h,MAT.granite,{tip:`${f.id} · ${f.name} · granite top`});continue}
   box(f.x1,f.x2,f.y1,f.y2,0,h,kmat[f.kind]||std({color:'#e6e2da',roughness:0.8}),{tip:`${f.id} · ${f.name}`});
