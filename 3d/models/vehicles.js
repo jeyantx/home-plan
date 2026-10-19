@@ -298,3 +298,57 @@ export function createAther450(THREE, mergeGeometries, opts = {}) {
 }
 
 export const createCar = createVirtus, createMotorbike = createHunter350, createScooter = createAther450;
+
+// ---------------------------------------------------------------------------------------------------------------------------
+// Downloaded car model (Free3D "Compact Car (Generic)", personal-use licence), converted from .blend to .glb with Blender.
+// The file's own materials did not survive the conversion, so they are restyled here by name.
+// Returns a Group like createVirtus: origin = footprint centre on the ground, front = +Z, scaled to opts.length (default 4.561 m),
+// with userData.wheels {fl, fr, rl, rr} (spin .rotation.x) and userData.steer {fl, fr} (steer .rotation.y).
+export async function loadCarGLB(THREE, GLTFLoader, url, opts = {}) {
+  const gltf = await new GLTFLoader().loadAsync(url);
+  const model = gltf.scene;
+  for (const nm of (opts.remove ?? ['Cube001'])) { const o = model.getObjectByName(nm); if (o) o.parent.remove(o) }   // stray pole in front of the grille
+  const paint = new THREE.MeshPhysicalMaterial({ color: opts.color ?? '#2f5d8c', roughness: 0.28, metalness: 0.55, clearcoat: 1, clearcoatRoughness: 0.05 });
+  const M = {
+    paint,
+    glass: new THREE.MeshPhysicalMaterial({ color: '#1a2026', roughness: 0.04, metalness: 0.1, transparent: true, opacity: 0.82, clearcoat: 1 }),
+    black: new THREE.MeshStandardMaterial({ color: '#121314', roughness: 0.5, metalness: 0.2 }),
+    trim: new THREE.MeshStandardMaterial({ color: '#202124', roughness: 0.7 }),
+    chrome: new THREE.MeshStandardMaterial({ color: '#d9dde1', roughness: 0.12, metalness: 1 }),
+    lamp: new THREE.MeshPhysicalMaterial({ color: '#dfe5ea', roughness: 0.05, metalness: 0.5, clearcoat: 1, emissive: '#fff4dd', emissiveIntensity: 0.15 }),
+    tail: new THREE.MeshPhysicalMaterial({ color: '#a3101a', roughness: 0.08, metalness: 0.2, clearcoat: 1, emissive: '#5a0610', emissiveIntensity: 0.35 }),
+    mirror: new THREE.MeshStandardMaterial({ color: '#c9d1d8', roughness: 0.02, metalness: 1 }),
+    tyre: new THREE.MeshStandardMaterial({ color: '#1b1c1e', roughness: 0.92 }),
+    alloy: new THREE.MeshStandardMaterial({ color: '#b9bdc2', roughness: 0.28, metalness: 0.9 }),
+    hub: new THREE.MeshStandardMaterial({ color: '#5b5e62', roughness: 0.4, metalness: 0.8 }),
+  };
+  const byName = { 'CARR': M.paint, 'VD': M.glass, 'GRADES': M.black, 'LN': M.tail, 'Material.005': M.trim, 'Material.006': M.lamp, 'Material.007': M.black,
+    'Material.008': M.black, 'Material.766': M.chrome, 'Alloy.000': M.chrome, 'Material.004': M.paint, 'Material.883': M.mirror,
+    'Material.003': M.tyre, 'Material.002': M.alloy, 'Material.1009': M.hub, ...(opts.materials || {}) };
+  model.traverse(o => { if (o.isMesh) { const mm = o.material; o.material = byName[mm.name] || M.trim; o.castShadow = true; o.receiveShadow = true; o.userData.srcMaterial = mm.name } });
+  // orient: the file's front is +X; turn it to +Z, scale to length, put the footprint centre at the origin and the tyres on the ground
+  const g = new THREE.Group(); g.name = opts.name ?? 'Car';
+  const holder = new THREE.Group(); holder.add(model); holder.rotation.y = -Math.PI / 2; g.add(holder);
+  g.updateMatrixWorld(true);
+  let bb = new THREE.Box3().setFromObject(holder); const size = bb.getSize(new THREE.Vector3());
+  const k = (opts.length ?? 4.561) / size.z; holder.scale.setScalar(k); g.updateMatrixWorld(true);
+  if (opts.bodyWidth) {   // match the body width (without mirrors) to the real car; the body is the largest paint mesh
+    let body = null; model.traverse(o => { if (o.isMesh && o.userData.srcMaterial === 'CARR' && (!body || o.geometry.attributes.position.count > body.geometry.attributes.position.count)) body = o });
+    if (body) { const w = new THREE.Box3().setFromObject(body).getSize(new THREE.Vector3()).x; holder.scale.z *= opts.bodyWidth / w; g.updateMatrixWorld(true) } }
+  bb = new THREE.Box3().setFromObject(holder); const c = bb.getCenter(new THREE.Vector3());
+  holder.position.set(-c.x, -bb.min.y, -c.z); g.updateMatrixWorld(true);
+  // wheels: hang each wheel node on a pivot at its centre (axle along X), front ones inside a steer group
+  const wheels = {}, steer = {};
+  const nodes = []; model.traverse(o => { if (/^roda/i.test(o.name) && !o.isMesh) nodes.push(o) });
+  for (const n of nodes) {
+    const wb = new THREE.Box3().setFromObject(n), wc = wb.getCenter(new THREE.Vector3());
+    const key = (wc.z > 0 ? 'f' : 'r') + (wc.x > 0 ? 'l' : 'r');
+    const spin = new THREE.Group(); spin.name = 'wheel spin ' + key;
+    if (key[0] === 'f') { const st = new THREE.Group(); st.name = 'steer ' + key; st.position.copy(wc); g.add(st); st.add(spin); steer[key] = st }
+    else { spin.position.copy(wc); g.add(spin) }
+    g.updateMatrixWorld(true); spin.attach(n); wheels[key] = spin;
+  }
+  const fb = new THREE.Box3().setFromObject(g).getSize(new THREE.Vector3());
+  g.userData = { wheels, steer, dims: { length: fb.z, width: fb.x, height: fb.y }, paint };
+  return g;
+}

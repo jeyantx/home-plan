@@ -35,3 +35,8 @@ All CC0 (public domain) from Poly Haven, https://polyhaven.com
 
 ## Site photos (owner's, for reference only)
 - `assets/site-photos/site-01.jpg` to `site-16.jpg`: the plot, the neem tree and the neighbour houses, 2026-10-18.
+
+## Downloaded models (`assets/vehicles/`)
+| File | What | Source | Licence |
+|---|---|---|---|
+| `compact-car.glb` | Car in the parking (scaled to VW Virtus size, 4561 x 1752 mm body); materials restyled in `models/vehicles.js` (`loadCarGLB`) | Free3D "Compact Car (Generic)", https://free3d.com/3d-model/compact-car-generic-875091.html, converted from `202009122216-2.blend` with Blender 5.2 | Personal use only: do not share or publish this model |
