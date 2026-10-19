@@ -307,7 +307,7 @@ FURNITURE = [
  ('FU-16.2','G','Low counter, wet grinder and water',8.6,12.125,64.375,66.375,'counter',None,'Kitchen, 3\'6½" x 2\' on GW-14 up to the toilet 2 wall, top at 2\' from the floor: wet grinder at the sink end, water pots under the RO purifier at the other end'),
  ('FU-17','G','Breakfast counter',5.5,13.5,59.125,60.375,'counter2',None,'Kitchen, 8\' x 1\'3" on GW-13, under the folding glass W-12; joins the east counter with no gap, extended into the old fridge place, microwave at its west end'),
  ('FU-18','G','Fridge',17.75,20.25,59.125,61.375,'fridge',None,'Open area, single door, on GW-05 at the north end of the FU-25 cupboard, flush with its face'),
- ('FU-19','G','Overhead cabinets, back',4.75,9.875,65.125,66.375,'over',None,'Kitchen, on GW-14 above the back counter and sink, glass doors on the unit above the sink, RO purifier below them (dashed)'),
+ ('FU-19','G','Overhead cabinets, back',4.75,8.25,65.125,66.375,'over',None,'Kitchen, on GW-14 above the back counter and sink, glass doors on the unit above the sink, RO purifier below them (dashed)'),
  ('FU-68','G','Top storage, back',4.75,9.875,65.125,66.375,'over',None,'Kitchen, second row of cabinets on GW-14 from 7\' up to the ceiling (dashed)'),
  ('FU-69','G','Top storage, east',3.5,4.75,59.125,66.375,'over',None,'Kitchen, second row of cabinets on GW-01 from 7\' up to the ceiling, right across above the window and chimney (dashed)'),
  ('FU-19.2','G','Overhead shelves, east',3.5,4.75,65.0,66.375,'over',None,'Kitchen, corner unit above the east counter beside the window (dashed)'),
@@ -350,7 +350,7 @@ FURNITURE = [
  ('FU-51','G','Kitchen sink',6.5,8.4,64.625,66.125,'sinkbowl',None,'Kitchen, single bowl on the back counter FU-16, against GW-14'),
  ('FU-64','G','Mixer grinder',3.75,4.6,59.5,60.35,'appl',None,'Kitchen, east counter in the GW-13 corner, socket on GW-01'),
  ('FU-65','G','Wet grinder, table-top',10.75,11.95,64.7,65.9,'appl',None,'Kitchen, on the west end of the 2\' low counter FU-16.2 (where the RO purifier was), socket on GW-14'),
- ('FU-66','G','RO water purifier, wall-mounted',8.7,9.5,65.85,66.375,'over',None,'Kitchen, on GW-14 right next to the sink, above the east end of the 2\' low counter FU-16.2; tap at about 3\'2", so water pots fill standing on the low counter'),
+ ('FU-66','G','RO water purifier, wall-mounted',8.488,9.637,65.456,66.375,'over',None,'Kitchen, on GW-14 in the place of wall unit K-14 (removed), 558 x 350 x 280 mm (H x W x D), bottom at 5\' from the floor; water pots fill standing on the 2\' low counter below'),
  ('FU-67','G','Microwave oven',11.75,13.4,59.15,60.35,'appl',None,'Kitchen, on the west end of the breakfast counter FU-17'),
  ('FU-52','G','Hob (burner) with small chimney',3.6,5.4,62.0,64.0,'hob',None,'Kitchen, under window W-06; chimney hood 2\'6" above the counter, just above the window head, ducted straight out through GW-01'),
  ('FU-53','G','Tap and wash platform',1.375,4.875,92.5,95.0,'washpad',None,'Side garden, paved with drain, in the corner of BW-02 and BW-03'),
@@ -398,6 +398,7 @@ UNDERGROUND=[
 # Fronts: k = drawer / door / lift (flap opens upward) / pullout / blind (fixed); a,b along the run; za,zb heights; hinge 'a' or 'b' end; what = contents.
 KCH,KTOP,KPL,KLOW,KBF=2.83,0.13,0.33,2.0,2.87      # counter top 2'10", top 40 mm, plinth 4", low counter 2', breakfast counter 2'10½" (+40 mm top)
 KUP1,KUP2,KLOFT2=4.9,7.0,9.988                      # wall units 4'11" to 7', loft to the ceiling
+RO_Z1,RO_H=5.0,558/304.8                              # RO purifier FU-66: bottom 5' from the floor, 558 mm high
 def _drawers(a,b,z1,z2,mm,what):
     # drawer stack from the bottom up; mm = front heights in mm (bottom first), 3 mm gaps
     out,z=[],z1
@@ -442,8 +443,6 @@ KITCHEN_MODULES=[
       fronts=[dict(k='door',a=4.75,b=6.5,za=KUP1+0.012,zb=KUP2-0.012,hinge='a',what='masala dabba and spices (2 shelves)')],inside='2 shelves',need='spices at eye level near the hob'),
  dict(id='K-13',name='Dish drainer over the sink',run='Wall units, back',face='y-',x1=6.5,x2=8.25,y1=65.125,y2=66.363,z1=KUP1,z2=KUP2,
       fronts=[dict(k='lift',a=6.5,b=8.25,za=KUP1+0.012,zb=KUP2-0.012,what='steel plate and glass rack, drips straight into the sink')],inside='stainless-steel plate rack and glass rack, open bottom with a drip tray',need='dry washed plates and glasses right over the sink'),
- dict(id='K-14',name='Wall unit',run='Wall units, back',face='y-',x1=8.25,x2=9.875,y1=65.125,y2=66.363,z1=KUP1,z2=KUP2,
-      fronts=[dict(k='door',a=8.25,b=9.875,za=KUP1+0.012,zb=KUP2-0.012,hinge='b',what='tea, coffee, sugar, snacks (2 shelves)')],inside='2 shelves; the RO purifier sits just below it',need='daily jars'),
  dict(id='K-15',name='Wall unit, glass door',run='Wall units, east',face='x+',x1=3.512,x2=4.75,y1=59.137,y2=61.0,z1=KUP1,z2=KUP2,
       fronts=[dict(k='door',a=59.137,b=61.0,za=KUP1+0.012,zb=KUP2-0.012,hinge='a',what='glass jars on show (2 shelves)',glass=True)],inside='2 glass shelves',need='jars on show'),
  dict(id='K-16',name='Loft, back',run='Loft',face='y-',x1=4.69,x2=9.875,y1=65.125,y2=66.363,z1=KUP2+0.05,z2=KLOFT2,
@@ -457,7 +456,7 @@ KITCHEN_NOTES=[
  'Finish KT-1: oak-look laminate base units, cream wall units and loft, black granite top 40 mm, matte black handles; 18 mm BWP plywood carcass (boiling-water-proof, for a wet kitchen).',
  'Base units: 2\'10" to the top of the counter (865 mm), 4" plinth, 600 mm deep. Low counter for the wet grinder and water: 2\' (610 mm). Breakfast counter: 2\'10½" plus its top, 375 mm deep.',
  'Hardware: soft-close hinges and full-extension soft-close drawer runners (bottom hob drawers rated 50 kg), gas struts on the lift-up doors.',
- 'Hob FU-52 (3 burner) over K-02 with the chimney above; sink FU-51 over K-04 with the dish drainer K-13 above it; RO purifier FU-66 next to the sink over the low counter; wet grinder FU-65 on the west end of the low counter; mixer FU-64 on the east run; microwave FU-67 on the breakfast counter.',
+ 'Hob FU-52 (3 burner) over K-02 with the chimney above; sink FU-51 over K-04 with the dish drainer K-13 above it; RO purifier FU-66 (558 x 350 x 280 mm) in the place of wall unit K-14, over the low counter; wet grinder FU-65 on the west end of the low counter; mixer FU-64 on the east run; microwave FU-67 on the breakfast counter.',
 ]
 
 CAR=(11.125,16.875,14.75,29.75)   # VW Virtus size, 14'11" x 5'9" (4561 x 1752 mm), reversed in: nose to the gate, back 1' clear of GW-04; as far west as it can go (3" off the stair line and store FU-56); one short back-and-forth (2'5" forward, 10" back) on the way out

@@ -741,7 +741,7 @@ function cabRun(id,what,x1,x2,y1,y2,z1,z2,face,segs,mat,plinth){
  box(8.6,12.125,bY-0.06,ky2,LOW-KTOP,LOW,MAT.kTop,{tip:'FU-16.2 · Low counter top, 2\' from the floor'});
  box(X1,5.56,59.125,ky2,KCH-KTOP,KCH,MAT.kTop,{tip:'Counter top, 40 mm, east run'});box(5.56,8.6,bY-0.06,ky2,KCH-KTOP,KCH,MAT.kTop,{tip:'Counter top, 40 mm, back run'});
  // wall cabinets FU-19 (GW-14), FU-19.2 and FU-19.3 (GW-01, either side of W-06)
- cabRun('FU-19','Wall cabinets, back',4.69,9.875,ky2-1.25,ky2-0.012,UPZ1,UPZ2,'y-',[[4.75,6.5,'door'],[6.5,8.25,'door'],[8.25,9.875,'door']],MAT.kUp,false);   // K-13 over the sink is the dish drainer
+ cabRun('FU-19','Wall cabinets, back',4.69,8.25,ky2-1.25,ky2-0.012,UPZ1,UPZ2,'y-',[[4.75,6.5,'door'],[6.5,8.25,'door']],MAT.kUp,false);   // K-12 spices, K-13 dish drainer; the RO purifier takes K-14's place   // K-13 over the sink is the dish drainer
  cabRun('FU-19.2','Wall cabinets, east corner',X1+0.012,4.75,65.0,ky2-0.012,UPZ1,UPZ2,'x+',[],MAT.kUp,false);   // blind corner behind FU-19
  cabRun('FU-19.3','Wall cabinets, east',X1+0.012,4.75,59.137,61.0,UPZ1,UPZ2,'x+',[[59.137,61.0,'glass']],MAT.kUp,false);
  // top row to the ceiling (FU-68 on GW-14, FU-69 on GW-01, right across above the window and chimney), with a black shadow line under it
@@ -749,7 +749,7 @@ function cabRun(id,what,x1,x2,y1,y2,z1,z2,face,segs,mat,plinth){
  cabRun('FU-68','Top storage, back',4.69,9.875,ky2-1.25,ky2-0.012,TZ1,TZ2,'y-',[[4.75,6.5,'door'],[6.5,8.25,'door'],[8.25,9.875,'door']],MAT.kUp,false);
  cabRun('FU-69','Top storage, east',X1+0.012,4.75,59.137,ky2-0.012,TZ1,TZ2,'x+',[[59.137,61.0,'door'],[61.0,63.0,'door'],[63.0,65.0,'door']],MAT.kUp,false);
  box(X1+0.012,4.6,59.137,ky2-0.012,UPZ2,TZ1,MAT.blackMetal,{cast:false,tip:'Shadow line, black'});box(4.6,9.8,ky2-1.125,ky2-0.012,UPZ2,TZ1,MAT.blackMetal,{cast:false,tip:'Shadow line, black'});
- for(const [a,b,c,d] of [[4.6,4.66,59.3,60.85],[4.6,4.66,65.15,66.3],[4.9,9.7,ky2-1.125,ky2-1.065]]) ledStrips.push(box(a,b,c,d,UPZ1-0.03,UPZ1,MAT.led,{cast:false,tip:'LED strip under the wall cabinets'}));
+ for(const [a,b,c,d] of [[4.6,4.66,59.3,60.85],[4.6,4.66,65.15,66.3],[4.9,8.1,ky2-1.125,ky2-1.065]]) ledStrips.push(box(a,b,c,d,UPZ1-0.03,UPZ1,MAT.led,{cast:false,tip:'LED strip under the wall cabinets'}));
  const ul=new THREE.PointLight('#ffd7a3',0,m(9),2);ul.position.set(mx(6.0),m(4.2),m(65.0));scene.add(ul);towerLights.push(ul);
  // backsplash: cream 3" x 12" ceramic tiles between counter and wall cabinets; below the W-06 sill
  const st='Backsplash · cream 3" x 12" glazed tiles';
@@ -768,8 +768,8 @@ function cabRun(id,what,x1,x2,y1,y2,z1,z2,face,segs,mat,plinth){
  const mg=fuG['FU-64'];box(mg.x1+0.05,mg.x2-0.05,mg.y1+0.1,mg.y2-0.1,KCH,KCH+0.42,MAT.appWhite,{round:0.06,tip:`FU-64 · Mixer grinder · ${mg.note}`});
  cyl((mg.x1+mg.x2)/2,(mg.y1+mg.y2)/2,KCH+0.42,KCH+1.15,0.22,std({color:'#d8dde0',roughness:0.15,metalness:0.4}),{tip:'Mixer jar',rTop:0.26});
  {const ro=fuG['FU-66'],px=(ro.x1+ro.x2)/2;cyl(px,ro.y1-0.25,LOW,LOW+1.0,0.38,MAT.steel,{tip:'Water pot, steel, filled from the RO tap',rTop:0.3});cyl(px+0.9,ro.y1-0.3,LOW,LOW+0.85,0.32,std({color:'#b4703f',roughness:0.35,metalness:0.7}),{tip:'Water pot, copper',rTop:0.24})}
- const ro=fuG['FU-66'];box(ro.x1,ro.x2,ro.y1,ro.y2-0.012,3.4,4.75,MAT.appWhite,{round:0.06,tip:`FU-66 · RO water purifier · ${ro.note}`});box(ro.x1+0.1,ro.x2-0.1,ro.y1-0.01,ro.y1,4.15,4.45,MAT.blackGlass,{cast:false,tip:'RO purifier display'});
- cyl((ro.x1+ro.x2)/2,ro.y1+0.05,3.2,3.4,0.03,MAT.blackMetal,{tip:'RO tap'});
+ const ro=fuG['FU-66'],rz1=P.kitchen.RO_Z1,rz2=rz1+P.kitchen.RO_H;box(ro.x1,ro.x2,ro.y1,ro.y2-0.012,rz1,rz2,MAT.appWhite,{round:0.06,tip:`FU-66 · RO water purifier · ${ro.note}`});box(ro.x1+0.12,ro.x2-0.12,ro.y1-0.01,ro.y1,rz2-0.62,rz2-0.3,MAT.blackGlass,{cast:false,tip:'RO purifier display'});
+ cyl((ro.x1+ro.x2)/2,ro.y1+0.06,rz1-0.22,rz1,0.035,MAT.blackMetal,{tip:'RO tap'});
  // wet grinder FU-65 on the 2' low counter FU-16.2
  const wg=fuG['FU-65'],wx=(wg.x1+wg.x2)/2,wy=(wg.y1+wg.y2)/2,WZ=LOW;cyl(wx,wy,WZ,WZ+0.38,0.6,MAT.appWhite,{tip:`FU-65 · Wet grinder, table-top · ${wg.note}`,rTop:0.55});
  cyl(wx,wy,WZ+0.38,WZ+1.0,0.44,MAT.steel,{tip:'Wet grinder drum, steel'});cyl(wx,wy,WZ+1.0,WZ+1.08,0.46,std({color:'#d8dde0',roughness:0.2}),{tip:'Wet grinder lid'});
