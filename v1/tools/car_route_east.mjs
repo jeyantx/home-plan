@@ -6,7 +6,7 @@ process.env.MARGIN='0.25';
 const PARKX=+(process.env.PARKX||14.0), XE=+(process.env.XE||12.5), DRY=!!process.env.DRY;   // car spot centre X; east edge of the raised platform by the small gate
 let src=fs.readFileSync(new URL('car_route_plan.mjs',import.meta.url),'utf8');src=src.slice(0,src.indexOf('const S2=Math.PI/2;'));
 const BW=false;   // (single layout now)
-const BIKES=[[0.55,2.96,21.25,28.21],[3.2,5.62,22.17,28.2]];   // TW-1 and TW-2 side by side along BW-01
+const BIKES=[[0.55,2.96,20.75,27.71],[3.2,5.62,21.67,27.7]];   // TW-1 and TW-2 side by side along BW-01
 const PLAT=[[XE,17.125,6.2,11.0],[13.5,17.125,2.667,6.2]];   // raised platform (kerb over 3" high north of Y 11') and the small-gate steps
 src+=`
 for(const b of ${JSON.stringify([...BIKES,...PLAT])})rects.push([b[0]-0.25,b[1]+0.25,b[2]-0.25,b[3]+0.25]);

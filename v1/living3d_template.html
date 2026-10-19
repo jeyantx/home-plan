@@ -1417,10 +1417,10 @@ function vfrMats(){const P=(c,o={})=>new THREE.MeshPhysicalMaterial({color:c,rou
   box(wm.x2-0.45,wm.x2-0.33,Y0,Y0+0.14,CZ+3.55,CZ+3.62,chrome,{tip:`${wm.id} · washing machine tap (angle valve) on GW-17`});
   box(wm.x1+0.1,wm.x1+0.45,Y0,Y0+0.1,CZ+3.4,CZ+3.75,std({color:'#e4e4e0',roughness:0.5}),{tip:`${wm.id} · switch socket with a flip cover`});
   box(cx-0.15,cx+0.15,wm.y2+0.25,wm.y2+0.5,CZ,CZ+0.012,MAT.blackMetal,{cast:false,tip:`${wm.id} · floor drain (trap) for the washing machine`})}}
-// bore court: slab over the washing machine FU-83, drop wall and sunshade over the open side FU-84, bore pump panel FU-86; sump pump panel FU-85 in the porch
+// bore court: slab over the washing machine FU-83 (high enough for a top-load machine) with a side wall on the passage side, bore pump panel FU-86; sump pump panel FU-85 and EB meter FU-87 on GW-04
 {const T=id=>{const f=fuG[id];return `${id} · ${f.name} · ${f.note}`},CZ=-0.97,SZ=CEIL+0.02,pg=std({color:'#c9ccd0',roughness:0.45,metalness:0.3});
- {const f=fuG['FU-83'];if(f){box(f.x1+0.05,f.x2,f.y1,f.y2,CZ+3.17,CZ+3.33,MAT.white,{tip:T('FU-83')});box(f.x1+0.05,f.x2,f.y2-0.05,f.y2,CZ+3.08,CZ+3.17,MAT.white,{tip:T('FU-83')+' · drip edge'})}}
- {const f=fuG['FU-84'];if(f){box(f.x2,f.x2+0.75,f.y1,f.y2,6.0,SZ,MAT.extUp,{tip:T('FU-84')+' · drop wall'});box(f.x1,f.x2,f.y1,f.y2,5.83,6.0,MAT.white,{tip:T('FU-84')})}}
+ {const f=fuG['FU-83'];if(f){box(f.x1+0.05,f.x2,f.y1,f.y2,CZ+4.75,CZ+4.92,MAT.white,{tip:T('FU-83')});box(f.x1+0.05,f.x2,f.y2-0.05,f.y2,CZ+4.66,CZ+4.75,MAT.white,{tip:T('FU-83')+' · drip edge'});
+   box(f.x1,f.x1+0.375,f.y1,f.y2,CZ,CZ+4.92,MAT.extUp,{tip:T('FU-83')+' · side wall on the side-passage side, 4½" brick, plastered'})}}
  // wall panels: FU-86 on GW-18 (wall along y, face toward -x), FU-85 and the EB meter FU-87 on GW-04 (wall along x, face toward the parking, -y)
  for(const [id,z0,z1,z2] of [['FU-86',CZ,4.5,5.75],['FU-85',PKZ,4.5,5.75],['FU-87',PKZ,4.5,6.0]]){const f=fuG[id];if(!f)continue;const alongY=(f.x2-f.x1)<(f.y2-f.y1),meter=id==='FU-87';
    box(f.x1,f.x2,f.y1,f.y2,z0+z1,z0+z2,pg,{tip:T(id)});
@@ -1437,6 +1437,25 @@ function vfrMats(){const P=(c,o={})=>new THREE.MeshPhysicalMaterial({color:c,rou
    box(f.x2-0.5,f.x2-0.26,cy-0.12,cy+0.12,GRD+0.33,GRD+0.342,MAT.blackMetal,{cast:false,tip:T(f)+' · floor drain'});
    const reel=new THREE.Mesh(new THREE.TorusGeometry(m(0.32),m(0.07),10,28),std({color:'#3f7a3a',roughness:0.6}));reel.rotation.y=Math.PI/2;reel.position.set(mx(W0+0.12),m(GRD+3.1),m(f.y2-0.35));scene.add(reel);named(reel,T(f)+' · garden hose on a wall reel')}
  if(p){box(p.x1,p.x2,p.y1,p.y2,GRD,GRD+0.06,grey,{cast:false,tip:T(p)});box((p.x1+p.x2)/2-0.2,(p.x1+p.x2)/2+0.2,(p.y1+p.y2)/2-0.2,(p.y1+p.y2)/2+0.2,GRD+0.06,GRD+0.07,MAT.blackMetal,{cast:false,tip:T(p)+' · floor drain'})}}
+// a wash basin against a wall: granite counter on two granite legs, deep steel sink, swan-neck tap, low tap (bib cock) with a bucket under it
+// WX: the wall face (plan x), SG: +1 if plan x grows out from the wall, PT: floor height under it (feet)
+function drawBasin(bs,WX,SG,PT,t,withBucket=true){const chrome=std({color:'#e3e6e9',roughness:0.12,metalness:1}),ss=std({color:'#c9ccd0',roughness:0.25,metalness:0.9,side:THREE.DoubleSide});
+  const B=(u1,u2,v1,v2,z1,z2,mt,tip)=>box(Math.min(WX+SG*v1,WX+SG*v2),Math.max(WX+SG*v1,WX+SG*v2),u1,u2,z1,z2,mt,{tip}),Pw=(u,v,z)=>new THREE.Vector3(mx(WX+SG*v),m(z),m(u));
+  {const u1=bs.y1,u2=bs.y2,vf=SG>0?bs.x2-WX:WX-bs.x1,cu=(u1+u2)/2,zt=PT+2.75,gr=MAT.stepStone,su1=u1+0.22,su2=u2-0.22,sv1=0.2,sv2=vf-0.2;
+   for(const [a2,b2] of [[u1+0.05,u1+0.2],[u2-0.2,u2-0.05]])B(a2,b2,0.1,vf-0.1,PT,zt-0.12,gr,t);
+   B(u1,u2,0,sv1,zt-0.12,zt,gr,t);B(u1,u2,sv2,vf,zt-0.12,zt,gr,t);B(u1,su1,sv1,sv2,zt-0.12,zt,gr,t);B(su2,u2,sv1,sv2,zt-0.12,zt,gr,t);
+   const bh=0.7,bowl=new THREE.Mesh(new THREE.BoxGeometry(m(sv2-sv1),m(bh),m(su2-su1)),[ss,ss,null,ss,ss,ss].map(x=>x||new THREE.MeshBasicMaterial({visible:false})));
+   bowl.position.copy(Pw((su1+su2)/2,(sv1+sv2)/2,zt-0.12-bh/2));scene.add(bowl);named(bowl,t+' · deep stainless-steel sink');
+   cyl(WX+SG*0.1,cu,zt,zt+0.7,0.05,chrome,{tip:t+' · swan-neck pillar tap'});
+   const spout=new THREE.Mesh(new THREE.TorusGeometry(m(0.22),m(0.04),10,24,Math.PI),chrome);spout.position.copy(Pw(cu,0.32,zt+0.7));scene.add(spout);named(spout,t+' · tap spout');
+   cyl(WX+SG*0.02,cu+0.25,PT+1.1,PT+1.18,0.06,chrome,{tip:t+' · low tap (bib cock) for filling buckets'});
+   const bucket=new THREE.Mesh(new THREE.CylinderGeometry(m(0.5),m(0.4),m(1.0),28,1,true),std({color:'#2f6fb0',roughness:0.5,side:THREE.DoubleSide}));bucket.position.copy(Pw(cu,0.65,PT+0.5));if(withBucket){scene.add(bucket);named(bucket,t+' · bucket under the low tap')}}
+}
+// front wash basin FU-88 on BW-01 in front of the bikes: hands and feet when coming in, a low tap with a hose for the car and bikes; tiles behind, drain in front
+{const f=fuG['FU-88'];if(f){const t=`${f.id} · ${f.name} · ${f.note}`,WX=0.375;drawBasin(f,WX,1,PKZ,t,false);
+  box(WX,WX+0.025,f.y1-0.25,f.y2+0.25,PKZ,PKZ+4.0,std({color:'#f4f4f1',roughness:0.2}),{tip:t+' · white wall tiles on BW-01'});
+  box(f.x2+0.2,f.x2+0.44,(f.y1+f.y2)/2-0.12,(f.y1+f.y2)/2+0.12,PKZ,PKZ+0.012,MAT.blackMetal,{cast:false,tip:t+' · floor drain'});
+  const reel=new THREE.Mesh(new THREE.TorusGeometry(m(0.32),m(0.07),10,28),std({color:'#3f7a3a',roughness:0.6}));reel.rotation.y=Math.PI/2;reel.position.set(mx(WX+0.12),m(PKZ+3.7),m(f.y1-0.15));scene.add(reel);named(reel,t+' · hose on a wall reel, for washing the car and bikes')}}
 // side-garden utility on BW-01, across from bore BR-01: platform FU-77 and utility basin FU-30 with its back to the compound wall, front to the garden (west)
 {const pf=fuG['FU-77'],bs=fuG['FU-30'];
  if(pf&&bs){const PT=GRD+0.33,T=(f,t)=>`${f.id} · ${f.name} · ${t||f.note}`,WX=0.375,SG=1;   // WX: the garden face of BW-01; SG: plan x grows out from the wall
@@ -1450,16 +1469,7 @@ function vfrMats(){const P=(c,o={})=>new THREE.MeshPhysicalMaterial({color:c,rou
   box(pf.x1,pf.x2,pf.y1,pf.y2,GRD-0.25,PT,ftile,{tip:T(pf)});
   {const cu=(bs.y1+bs.y2)/2;B(cu-0.12,cu+0.12,(bs.x2-WX)+0.25,(bs.x2-WX)+0.49,PT,PT+0.012,MAT.blackMetal,`${pf.id} · floor drain (trap) for the basin`)}
   B(pf.y1,pf.y2,-0.005,0.025,PT,PT+4.0,tile,T(pf,'white glazed wall tiles, 1\' x 1\', on BW-01 behind the basin'));
-  // utility basin: granite counter on two granite legs, deep steel sink, swan-neck tap, low tap for buckets
-  {const u1=bs.y1,u2=bs.y2,vf=bs.x2-WX,cu=(u1+u2)/2,zt=PT+2.75,t=T(bs),gr=MAT.stepStone,su1=u1+0.22,su2=u2-0.22,sv1=0.2,sv2=vf-0.2;
-   for(const [a2,b2] of [[u1+0.05,u1+0.2],[u2-0.2,u2-0.05]])B(a2,b2,0.1,vf-0.1,PT,zt-0.12,gr,t);
-   B(u1,u2,0,sv1,zt-0.12,zt,gr,t);B(u1,u2,sv2,vf,zt-0.12,zt,gr,t);B(u1,su1,sv1,sv2,zt-0.12,zt,gr,t);B(su2,u2,sv1,sv2,zt-0.12,zt,gr,t);
-   const bh=0.7,bowl=new THREE.Mesh(new THREE.BoxGeometry(m(sv2-sv1),m(bh),m(su2-su1)),[ss,ss,null,ss,ss,ss].map(x=>x||new THREE.MeshBasicMaterial({visible:false})));
-   bowl.position.copy(Pw((su1+su2)/2,(sv1+sv2)/2,zt-0.12-bh/2));scene.add(bowl);named(bowl,t+' · deep stainless-steel sink');
-   cyl(WX+SG*0.1,cu,zt,zt+0.7,0.05,chrome,{tip:t+' · swan-neck pillar tap'});
-   const spout=new THREE.Mesh(new THREE.TorusGeometry(m(0.22),m(0.04),10,24,Math.PI),chrome);spout.position.copy(Pw(cu,0.32,zt+0.7));scene.add(spout);named(spout,t+' · tap spout');
-   cyl(WX+SG*0.02,cu+0.25,PT+1.1,PT+1.18,0.06,chrome,{tip:t+' · low tap (bib cock) for filling buckets'});
-   const bucket=new THREE.Mesh(new THREE.CylinderGeometry(m(0.5),m(0.4),m(1.0),28,1,true),std({color:'#2f6fb0',roughness:0.5,side:THREE.DoubleSide}));bucket.position.copy(Pw(cu,0.65,PT+0.5));scene.add(bucket);named(bucket,t+' · bucket under the low tap');}
+  drawBasin(bs,WX,SG,PT,T(bs));
  }}
 // two-wheelers side by side along BW-01, between C-01 and C-03
 const bikeObjs={};
@@ -1490,7 +1500,7 @@ for(const [x,y] of [[5.6,36.5],[7.5,22.0],[15.0,24.0]]) downlight(x,y,SLB,'LED d
 // ---------------- other rooms: simple blocks so the views through openings look right ----------------
 const simpleH={bed:1.8,cab:2.3,desk:2.5,ward:7.5,store2:9.4,shelf:6,counter:2.8,counter2:3.0,fridge:5.6,wc:1.3,basin:2.7,wm:2.8,store:3.5,table:2.4,chair:1.5};
 const kmat={counter:MAT.granite,counter2:MAT.granite,fridge:std({color:'#d9dcdf',roughness:0.3,metalness:0.5}),ward:MAT.oak,store2:std({color:'#ebe5da',roughness:0.55}),bed:std({color:'#e9e4da',roughness:0.9}),cab:MAT.oak,desk:MAT.oak,shelf:MAT.oak};
-for(const f of P.furniture){ if(f.fl!=='G'||['FU-03.1','FU-03.2','FU-04','FU-05','FU-06','FU-09.1','FU-09.2','FU-10','FU-11','FU-12','FU-13','FU-14','FU-15','FU-16','FU-16.2','FU-17','FU-18','FU-25','FU-27','FU-31','FU-32','FU-33','FU-34','FU-35','FU-56','FU-29','FU-30','FU-77','FU-79','FU-80','FU-81','FU-82'].includes(f.id)) continue;
+for(const f of P.furniture){ if(f.fl!=='G'||['FU-03.1','FU-03.2','FU-04','FU-05','FU-06','FU-09.1','FU-09.2','FU-10','FU-11','FU-12','FU-13','FU-14','FU-15','FU-16','FU-16.2','FU-17','FU-18','FU-25','FU-27','FU-31','FU-32','FU-33','FU-34','FU-35','FU-56','FU-29','FU-30','FU-77','FU-79','FU-80','FU-81','FU-82','FU-88'].includes(f.id)) continue;
   const h=simpleH[f.kind]; if(!h) continue;
   if(f.kind==='counter'||f.kind==='counter2'){box(f.x1,f.x2,f.y1,f.y2,0.3,h-0.12,MAT.cabinet,{tip:`${f.id} · ${f.name}`});box(f.x1,f.x2,f.y1,f.y2,h-0.12,h,MAT.granite,{tip:`${f.id} · ${f.name} · granite top`});continue}
   box(f.x1,f.x2,f.y1,f.y2,0,h,kmat[f.kind]||std({color:'#e6e2da',roughness:0.8}),{tip:`${f.id} · ${f.name}`});
