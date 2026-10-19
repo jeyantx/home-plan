@@ -56,6 +56,7 @@ canvas{display:block;width:100%;height:100%}
   <div class="seg cams" data-area="5"><button data-c="27">Spiral</button><button data-c="28">Landing</button><button data-c="29">Well</button><button data-c="26">ST-1</button></div>
   <div class="seg cams" data-area="6"><button data-c="28">Landing</button><button data-c="30">Bedroom 3</button><button data-c="23">Terrace</button><button data-c="31">Top</button></div>
   <span class="spacer"></span>
+  <button class="btn" id="animBtn" aria-pressed="false" title="Watch the car come in from the road, reverse into its spot, wait, and drive out">Animate</button>
   <button class="btn" id="photoBtn" aria-pressed="false" title="Ray-traced photo of the current view. Uses the graphics card heavily for about a minute, then stops by itself.">Photo</button>
   <button class="btn" id="saveBtn" title="Save the current image as PNG">Save</button>
   <button class="btn" id="notesBtn" aria-pressed="false">Notes</button>
@@ -88,6 +89,7 @@ import {createNeemTree} from './models/neem-tree.js?v=__BUILD__';
 import {createTNPlant,TN_PLANTS} from './models/tn-plants.js?v=__BUILD__';
 import {createVirtus,createHunter350,createAther450,loadCarGLB} from './models/vehicles.js?v=__BUILD__';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+import {CAR_ROUTE} from './models/car-route.js?v=__BUILD__';
 import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
 
 const P=window.PLAN, F=0.3048, CEIL=10.0, EYE=5.25;
@@ -1012,7 +1014,7 @@ X_(()=>{for(const [a,b,c,d] of slabParts) box(a,b,c,d,SLB,FFZ-0.05,MAT.white,{ti
 // ground-floor pillars that stand free (parking, porch) and the beam drops under the slab outside the rooms
 const inWallG=c=>P.walls.G.some(w=>!['comp','pillar','planter','para'].includes(w.kind)&&c.x1<w.x2-0.01&&c.x2>w.x1+0.01&&c.y1<w.y2-0.01&&c.y2>w.y1+0.01);
 for(const c of P.columns) if(!inWallG(c)){const me=box(c.x1,c.x2,c.y1,c.y2,c.y1<31?PKZ:GRD,SLB,MAT.ext,{tip:`${c.id} · Pillar 1' x 9" · ${c.note}`});wallMeshes.push(me)}
-{const zones=[[2.75,21,15.5,30.75],[2.75,8.5,30.75,40.5]];
+{const zones=[[2.75,21,15.5,30.75],[2.75,8.5,30.75,40.5],[0.375,2.75,19.75,20.5]];   // last: B-01 extension to C-01 at the east wall
  for(const b of P.beams.filter(b=>b.level==='G')) for(const [a,bb,c,d] of zones){const x1=Math.max(b.x1,a),x2=Math.min(b.x2,bb),y1=Math.max(b.y1,c),y2=Math.min(b.y2,d);
    if(x2-x1>0.05&&y2-y1>0.05) box(x1+0.006,x2-0.006,y1+0.006,y2-0.006,SLB-1.08,SLB+0.01,MAT.white,{tip:`${b.id} · Beam 9" x ${b.depth} · ${b.note}`})}}
 // ground: house plinth, porch with 3 steps, parking pavers, road
@@ -1196,13 +1198,48 @@ if(P.backwall){const bw=P.backwall,[a,b]=bw.pts,t=bw.t,old=std({color:'#cdc4b3',
  for(const x of [cl.x1,cl.x2]){box(x-0.06,x+0.06,cyy-0.06,cyy+0.06,GRD,GRD+6,MAT.blackMetal,{tip:tc});box(x-0.04,x+0.04,cyy-0.6,cyy+0.6,GRD+5.9,GRD+6.0,MAT.blackMetal,{tip:tc})}
  for(const dy of [-0.5,0,0.5]) box(cl.x1,cl.x2,cyy+dy-0.012,cyy+dy+0.012,GRD+5.95,GRD+5.975,MAT.steel,{cast:false,tip:tc});}
 // parked vehicles, on the spots of the 2D plan: car (nose to the house), two-wheelers in a lane east of the car (front to the gate)
+// ---- car pose and the parking animation (route planned in v1/tools/car_route_plan.mjs) ----
+const carAnim={car:null,on:false,t0:0,track:null,lastShadow:0};
+const groundAt=y=>y<0?RDZ:y<30.75?zF(y):GRD;
+function setCarPose(x,y,th,steer,spin){const car=carAnim.car;if(!car)return;const R=CAR_ROUTE,cOff=(-R.ovr+R.wb+R.ovf)/2;
+  const cx=x+Math.cos(th)*cOff,cy=y+Math.sin(th)*cOff,fx=x+Math.cos(th)*R.wb,fy=y+Math.sin(th)*R.wb;
+  const gr=groundAt(y),gf=groundAt(fy),gc=groundAt(cy);
+  car.position.set(mx(cx),m(gc),m(cy));car.rotation.order='YXZ';car.rotation.y=Math.atan2(-Math.cos(th),Math.sin(th));car.rotation.x=-Math.atan2(gf-gr,R.wb);
+  const st=car.userData.steer||{},wh=car.userData.wheels||{};for(const k in st)st[k].rotation.y=steer||0;if(spin!==undefined)for(const k in wh)wh[k].rotation.x=spin}
+function buildTrack(){   // one timeline: road run-in, the planned 'in' route, a pause, the 'out' route, road run-out
+  const R=CAR_ROUTE,pts=[];const add=(x,y,th,dir,pause=0)=>pts.push({x,y,th,dir,pause});
+  const i0=R.in[0];for(let k=0;k<12;k++)add(i0[0]+(12-k)*1.5,i0[1],i0[2],1);   // coming along the road from the west
+  R.in.forEach((p,i)=>{if(i+1<R.in.length&&R.in[i+1][3]!==p[3])add(p[0],p[1],p[2],p[3],0.8);else add(p[0],p[1],p[2],p[3])});   // stop briefly to change gear
+  add(...R.park,-1,4.0);                                                         // parked: wait 4 s
+  R.out.forEach((p,i)=>{if(i===0)return;if(i+1<R.out.length&&R.out[i+1][3]!==p[3])add(p[0],p[1],p[2],p[3],0.8);else add(p[0],p[1],p[2],p[3])});
+  const o1=R.out[R.out.length-1];for(let k=1;k<=16;k++)add(o1[0]+Math.cos(o1[2])*k*1.5,o1[1]+Math.sin(o1[2])*k*1.5,o1[2],1);   // away along the road
+  // time stamps: slower inside the plot, quicker on the road; pauses at gear changes
+  let t=0;pts[0].arr=0;pts[0].lv=pts[0].pause;t=pts[0].lv;
+  for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i],ds=Math.hypot(b.x-a.x,b.y-a.y),v=(a.y<-1&&b.y<-1)?7:2.6;t+=ds/v;b.arr=t;t+=b.pause;b.lv=t}
+  return {pts,T:t}}
+function animStep(now){const tr=carAnim.track,t=(now-carAnim.t0)/1000;if(!tr)return;
+  if(t>=tr.T){stopAnim();return}
+  let i=1;while(i<tr.pts.length-1&&tr.pts[i].lv<t)i++;const a=tr.pts[i-1],b=tr.pts[i];   // between a (leaving) and b (arriving), or waiting at b
+  const u=Math.min(1,Math.max(0,(t-a.lv)/Math.max(1e-3,b.arr-a.lv)));
+  let dth=Math.atan2(Math.sin(b.th-a.th),Math.cos(b.th-a.th));const th=a.th+dth*u,x=a.x+(b.x-a.x)*u,y=a.y+(b.y-a.y)*u;
+  const ds=Math.hypot(b.x-a.x,b.y-a.y),dir=b.dir||1,steer=ds>1e-4?Math.max(-0.6,Math.min(0.6,Math.atan(CAR_ROUTE.wb*dth/(dir*ds)))):0;
+  let dist=0;for(let k=1;k<i;k++){const p=tr.pts[k-1],q=tr.pts[k];dist+=(q.dir||1)*Math.hypot(q.x-p.x,q.y-p.y)}dist+=dir*ds*u;
+  setCarPose(x,y,th,steer,m(dist)/0.316);
+  if(now-carAnim.lastShadow>120){renderer.shadowMap.needsUpdate=true;carAnim.lastShadow=now}
+  invalidate()}
+window.__animAt=t=>{carAnim.track=carAnim.track||buildTrack();carAnim.t0=performance.now()-t*1000;animStep(performance.now());const c=carAnim.car;return c?[(-c.position.x/F).toFixed(2),(c.position.z/F).toFixed(2),(c.rotation.y*180/Math.PI).toFixed(0),carAnim.track.T.toFixed(1)]:null};
+function startAnim(){if(!carAnim.car)return;carAnim.track=carAnim.track||buildTrack();carAnim.on=true;carAnim.t0=performance.now();
+  animBtn.textContent='Stop';animBtn.setAttribute('aria-pressed',true);
+  // watch from the house-front corner of the parking, looking out to the gate and the road
+  setView(35)}
+function stopAnim(){carAnim.on=false;setCarPose(...CAR_ROUTE.park,0,0);renderer.shadowMap.needsUpdate=true;animBtn.textContent='Animate';animBtn.setAttribute('aria-pressed',false);invalidate()}
 const SHOW_BIKES=false;   // two-wheelers hidden until downloaded models are in
 const vehicleMeshes=[];
 {const [cx1,cx2,cy1,cy2]=P.car||[11.25,17.0,14.75,29.75];
  loadCarGLB(THREE,GLTFLoader,'assets/vehicles/compact-car.glb',{color:'#2f5d8c',length:4.561,bodyWidth:1.752,name:'Car'}).then(car=>{
-   car.position.set(mx((cx1+cx2)/2),m(PKZ),m((cy1+cy2)/2));scene.add(car);window.__car=car;
+   scene.add(car);window.__car=car;carAnim.car=car;setCarPose(...CAR_ROUTE.park,0,0);
    const d=car.userData.dims,ft=v=>{const i=Math.round(v/F*12);return `${Math.floor(i/12)}'${i%12}"`};
-   car.traverse(o=>{if(o.isMesh){o.userData.keepUV=true;named(o,`Car · compact sedan (Free3D model, scaled to VW Virtus size, 4561 x 1752 mm body) · ${ft(d.length)} x ${ft(d.width)} with mirrors · nose to the house`);vehicleMeshes.push(o)}});
+   car.traverse(o=>{if(o.isMesh){o.userData.keepUV=true;named(o,`Car · compact sedan (Free3D model, scaled to VW Virtus size, 4561 x 1752 mm body) · ${ft(d.length)} x ${ft(d.width)} with mirrors · reversed in, nose to the gate`);vehicleMeshes.push(o)}});
    renderer.shadowMap.needsUpdate=true;if(photo&&pt)pt.setScene(scene,camera);invalidate()}).catch(e=>console.warn('car model',e));
  if(SHOW_BIKES) for(const [code,name,bx,by,bl,bw] of (P.bikes||[])){const b=/Hunter/.test(name)?createHunter350(THREE,mergeGeometries,{}):createAther450(THREE,mergeGeometries,{});
    b.position.set(mx(bx),m(PKZ),m(by));b.rotation.y=Math.PI;scene.add(b);b.traverse(o=>{if(o.isMesh){o.userData.keepUV=true;named(o,`${code} · ${name} · front to the gate, on its side stand`)}})}}
@@ -1332,8 +1369,9 @@ const VIEWS=[
  {p:[11.4,FFZ+EYE,85.6],t:[19.5,FFZ+3.6,95.0],fl:'F'},   // bedroom 3 from its lobby
  {p:[15.2,FFZ+30,85.0],t:[15.2,FFZ,85.01],top:true,fl:'F'},   // top of the first floor (its roof and ceilings hidden)
  {p:[19.6,4.4,96.0],t:[6.0,0.6,104.3]},   // back garden: flower bed along BW-09, clothes line, Tulsi maadam beyond
- {p:[7.0,PKZ+5.25,24.0],t:[7.5,RDZ+0.8,-2.0]},
- {p:[9.0,RDZ+8.0,-14.0],t:[11.0,4.5,34.0]},   // front elevation from across the road, below the neem crown   // levels at the gate: from the parking, looking down the ramp to the crest, the drain and the road: road, crest and drain, ramp, parking
+ {p:[7.0,PKZ+5.25,24.0],t:[7.5,RDZ+0.8,-2.0]},   // levels at the gate: from the parking, looking down the ramp to the crest, the drain and the road: road, crest and drain, ramp, parking
+ {p:[9.0,RDZ+8.0,-14.0],t:[11.0,4.5,34.0]},   // front elevation from across the road, below the neem crown
+ {p:[4.2,PKZ+9.5,29.6],t:[11.5,RDZ+1.0,-2.0]},   // watch the car: from the house-front corner of the parking, out to the gate and the road
 ];
 let hfov=75;
 function applyFov(){const a=camera.aspect||1;camera.fov=THREE.MathUtils.radToDeg(2*Math.atan(Math.tan(THREE.MathUtils.degToRad(hfov)/2)/a));camera.updateProjectionMatrix()}
@@ -1359,6 +1397,7 @@ const optBtn=document.getElementById('optBtn'),optRow=document.getElementById('o
 function setOpt(o){optRow.classList.toggle('hidden',!o);optBtn.setAttribute('aria-pressed',o);optBtn.textContent=o?'Options ▴':'Options ▾';try{localStorage.setItem('lr3d-opts',o?'1':'0')}catch(e){};resize()}
 optBtn.onclick=()=>setOpt(optRow.classList.contains('hidden'));
 document.querySelectorAll('#lensSeg button').forEach(b=>b.onclick=()=>setLens(+b.dataset.f));
+const animBtn=document.getElementById('animBtn');animBtn.onclick=()=>carAnim.on?stopAnim():startAnim();
 const nb=document.getElementById('notesBtn');nb.onclick=()=>{const h=panel.classList.toggle('hidden');nb.setAttribute('aria-pressed',!h)};
 
 // ---------------- photo mode: ray tracing with three-gpu-pathtracer (local copy) ----------------
@@ -1444,6 +1483,7 @@ function walk(){const now=performance.now(),dt=Math.min(0.05,(now-lastT)/1000);l
 document.getElementById('loading').remove();
 renderer.setAnimationLoop(()=>{
   walk();
+  if(carAnim.on)animStep(performance.now());
   if(photo&&pt){
     if(building||document.hidden) return;            // ray tracing pauses in a hidden tab
     if(pt.samples>=PHOTO_SAMPLES){ if(saveReq){pt.renderSample();doSave();saveReq=false} statusEl.textContent=`Photo done: ${Math.floor(pt.samples)} samples. Save image, or move to start a new one.`; return }   // stop: no GPU use once finished

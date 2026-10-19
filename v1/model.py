@@ -123,8 +123,9 @@ LEVELS=dict(road=0.0,hump=0.5,parking=2.0,garden=2.5,floor=3.5)
 RAMP=dict(y_hump=1.0,y_crest=3.25,y_top=12.25,drain=(2.5,3.25))   # gate bevel to Y 1', crest to 3'3" (drain at its inner edge), ramp 1 in 6 to Y 12'3"
 BRANCH_NOTES='''<section class="ask"><h2>Parking plan (branch exterior-v2, for review)</h2>
 <ol>
-<li><b>Car:</b> VW Virtus (14'11" x 5'9"), nose to the house, 1' from the front wall, on the level parking (Y 14'9" to 29'9"). Driver's door on the ST-1 side (3'6" clear); left doors toward the two-wheelers (2'6" clear).</li>
-<li><b>Two-wheelers</b> moved away from pillar C-01 and the compound wall: TW-1 Royal Enfield Hunter 350 and TW-2 Ather 450X in one lane east of the car, front to the gate, leaving a 2'7" walkway from the gate to the porch. A third two-wheeler does not fit without blocking the walkway or the car doors.</li>
+<li><b>Car:</b> VW Virtus size (14'11" x 5'9"), <b>reversed in</b>: nose to the gate, back 1' from the front wall, on the level parking (Y 14'9" to 29'9"). With the neem tree well in front of the spot, a car cannot drive in nose-first (it would need several back-and-forth turns); reversing in from the road takes one stop, and it drives straight out. Checked with a route planner using the Virtus turning circle. The driver's door opens onto the walkway.</li>
+<li><b>Pillar C-01</b> moved 2'4½" east against the compound wall BW-01; beam B-01 extended to it (19'11" span, engineer to size, about 1'9" deep) and B-10 rests on B-01. The parking is now clear of pillars.</li>
+<li><b>Two-wheelers</b>: TW-1 Royal Enfield Hunter 350 and TW-2 Ather 450X in a lane along the east wall, either side of C-01, front to the gate. A walkway stays open between them and the car.</li>
 </ol></section>
 <section class="ask"><h2>Outside windows and colours (branch exterior-v2, for review)</h2>
 <ol>
@@ -349,10 +350,10 @@ for _o in OPENINGS:
     if _o[5]=='window' and _o[0] not in SPEC: SPEC[_o[0]]='UPVC 3-track sliding: 2 glass + 1 mosquito mesh, MS safety grill, 1\'6" sunshade outside'
     if _o[5]=='vent' and _o[0] not in SPEC: SPEC[_o[0]]='Louvred glass ventilator with exhaust fan opening'
 SPEC['V-03']='Louvred glass ventilator with exhaust fan opening'
-CAR=(11.25,17.0,14.75,29.75)   # VW Virtus, 14'11" x 5'9" (4561 x 1752 mm), nose to the house, 1' clear of GW-04; driver (right) side toward ST-1
+CAR=(11.25,17.0,14.75,29.75)   # VW Virtus size, 14'11" x 5'9" (4561 x 1752 mm), reversed in: nose to the gate, back 1' clear of GW-04; driver (right) door opens onto the walkway
 # two-wheelers: (code, model, centre X, centre Y, length, width), front to the gate, in one lane east of the car:
 # 2'7" walkway to the porch on their east side, 2'6" for the car's left doors on their west side, 2'7" clear of pillar C-01
-BIKES=[('TW-1','Royal Enfield Hunter 350',7.4,16.12,6.74,2.62),('TW-2','Ather 450X',7.4,23.27,6.03,2.42)]
+BIKES=[('TW-1','Royal Enfield Hunter 350',2.6,16.12,6.74,2.62),('TW-2','Ather 450X',2.6,23.27,6.03,2.42)]   # lane along the east wall, either side of C-01
 CH_G_FRONT=[0,0.75,12.0,13.5,20.25,21.0]
 
 # ---------- structure (proposal): RCC frame with side pillars only, no pillar inside any room ----------
@@ -360,7 +361,7 @@ CH_G_FRONT=[0,0.75,12.0,13.5,20.25,21.0]
 # id, floors, x1, x2, y1, y2, note.  floors: 'G' = ground floor, continues up later for the future hall; 'G+F' = up to the first-floor roof
 COL_SIZE="1' x 9\""
 COLUMNS = [
- ('C-01','G', 2.75,3.5, 19.75,20.75,'East, front edge of the terrace slab, in the parking'),
+ ('C-01','G', 0.375,1.125, 19.75,20.75,'East, moved against the east compound wall BW-01 so the parking is clear for the two-wheelers; carries the extended B-01'),
  ('C-02','G', 20.25,21.0, 19.75,20.75,'West, front edge of the terrace slab, just behind the ST-1 landing'),
  ('C-03','G', 2.75,3.5, 30.75,31.75,'East, porch front corner'),
  ('C-04','G', 20.25,21.0, 30.75,31.75,'West, corner of GW-04 and GW-05'),
@@ -383,7 +384,7 @@ COLUMNS = [
 ]
 # Beams 9" wide. id, level ('G' = ground-floor roof, 'F' = first-floor roof), x1, x2, y1, y2, depth, note
 BEAMS = [
- ('B-01','G', 2.75,21.0, 19.75,20.5, "1'6\"",'Front beam over the parking, C-01 to C-02; balcony 2 cantilevers 4\'3" in front of it'),
+ ('B-01','G', 0.375,21.0, 19.75,20.5, "1'9\"",'Front beam over the parking, C-01 (now at the east wall) to C-02, 19\'11" span: engineer to size; balcony 2 cantilevers 4\'3" in front of it; B-10 rests on it'),
  ('B-02','G', 2.75,21.0, 30.75,31.5, "1'6\"",'Over GW-04 and the porch front, C-03 to C-04'),
  ('B-03','G', 2.75,21.0, 35.825,36.575, "1'6\"",'Over GW-11, across the porch and the study corner opening, C-05 to C-06'),
  ('B-04','G', 2.75,21.0, 46.125,46.875, "1'6\"",'Over GW-12 (bedroom 1 | living), C-07 to C-08'),
@@ -392,7 +393,7 @@ BEAMS = [
   ('B-07','G', 9.5,21.0, 73.125,73.875, "1'6\"",'Under FW-02, C-14 to C-15'),
  ('B-08','G', 9.5,21.0, 80.065,80.815, "1'3\"",'Over GW-15, C-16 to C-17'),
  ('B-09','G', 9.5,21.0, 94.375,95.125, "1'3\"",'Over GW-08, C-18 to C-19'),
-  ('B-10','G', 2.75,3.5, 19.75,67.125, "1'3\"",'East edge beam over GW-01 and the porch side, C-01 to C-11'),
+  ('B-10','G', 2.75,3.5, 19.75,67.125, "1'3\"",'East edge beam over GW-01 and the porch side, from B-01 (beam on beam) to C-11'),
   ('B-11','G', 9.5,10.25, 73.125,95.125, "1'3\"",'East edge beam over GW-07, C-14 to C-18'),
   ('B-18','G', 6.0,6.75, 66.375,73.875, "1'3\"",'Over GW-18 (bore court | toilet 2), C-20 to C-21'),
   ('B-19','G', 2.75,6.75, 66.375,67.125, "1'3\"",'Over GW-17 (kitchen | bore court), C-11 to C-20'),
