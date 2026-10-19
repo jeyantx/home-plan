@@ -54,7 +54,7 @@ ul{margin:0;padding-left:18px}li{margin:3px 0}
  <button class="btn sp" id="panelBtn" aria-pressed="true">Unit list</button>
 </header>
 <main>
- <div id="view"><div id="tip"></div><div id="hint">Click a door or drawer to open or close it · drag to turn · scroll to zoom · right-drag to move</div></div>
+ <div id="view"><div id="tip"></div><div id="hint">Click a door or drawer to open or close it · ↑↓ walk · ←→ turn · A/D step sideways · W/S look up/down · Q/E lower/raise · drag to turn round · scroll to zoom</div></div>
  <aside id="panel"></aside>
 </main>
 <script>window.PLAN=__PLAN__;</script>
@@ -127,11 +127,12 @@ function buildModule(m){const fr=frame(m),base=m.z1<1,isLoft=m.run==='Loft',up=m
   const U0=Math.max(fr.U0,Math.min(...m.fronts.map(f=>f.a)))-0.0,U1=Math.min(fr.U1,Math.max(...m.fronts.map(f=>f.b))),D=fr.D;
   const uA=m.id==='K-17'?fr.U0:U0,uB=m.id==='K-17'?fr.U1:U1;
   // carcass: open-front box of 18 mm panels
-  fr.box(uA,uA+T,SH,D,zb0,zt,body,grp);fr.box(uB-T,uB,SH,D,zb0,zt,body,grp);fr.box(uA,uB,D-T,D,zb0,zt,inner,grp);fr.box(uA,uB,SH,D,zb0,zb0+T,inner,grp);if(up)fr.box(uA,uB,SH,D,zt-T,zt,body,grp);
+  // panels fit between the two sides (no overlapping faces, so no flicker at the joints); a hair's gap between neighbouring units
+  const e=0.003;fr.box(uA+e,uA+T,SH,D,zb0,zt,body,grp);fr.box(uB-T,uB-e,SH,D,zb0,zt,body,grp);fr.box(uA+T,uB-T,D-T,D,zb0+T,up?zt-T:zt,inner,grp);fr.box(uA+T,uB-T,SH,D-T,zb0,zb0+T,inner,grp);if(up)fr.box(uA+T,uB-T,SH,D,zt-T,zt,body,grp);
   for(let i=1;i<=(SHELVES[m.id]??0);i++){const z=zb0+(zt-zb0)*i/((SHELVES[m.id]??0)+1);fr.box(uA+T,uB-T,SH+0.06,D-T,z-0.03,z,inner,grp)}
-  if(base)fr.box(uA,uB,SH+0.12,D,m.z1,zb0,M.plinth,grp);
+  if(base)fr.box(uA+e,uB-e,SH+0.12,D-0.01,m.z1,zb0-0.002,M.plinth,grp);
   // worktop
-  if(base){const ztop=low?K.KLOW:bf?K.KBF+0.13:K.KCH;fr.box(uA,uB,-0.08,D,ztop-K.KTOP,ztop,M.granite,grp)}
+  if(base){const ztop=low?K.KLOW:bf?K.KBF+0.13:K.KCH;fr.box(uA,uB,-0.08,D,ztop-K.KTOP+0.002,ztop,M.granite,grp)}
   for(const f of m.fronts)buildFront(rec,f);
   // label with the unit size (front width x front height x depth)
   const fw=uB-uA,fh=zt-zb0,c=fr.toPlan((uA+uB)/2,-0.15),lz=up?zb0-0.25:zt+0.32;
@@ -254,9 +255,23 @@ function setRatio(k){frameRatio=/^\d+:\d+$/.test(k)?k:'fill';document.querySelec
 document.querySelectorAll('#ratioSeg button').forEach(x=>x.onclick=()=>setRatio(x.dataset.r));
 {let k='fill';try{k=localStorage.getItem('kt-ratio')||k}catch(e){};frameRatio=/^\d+:\d+$/.test(k)?k:'fill';document.querySelectorAll('#ratioSeg button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.r===frameRatio))}
 addEventListener('resize',resize);resize();
+// keys (same as the house view): arrows walk and turn, A/D step sideways, W/S look up and down, Q/E lower and raise, Shift faster
+const keys=new Set(),KEYS=['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','KeyA','KeyD','KeyW','KeyS','KeyQ','KeyE','ShiftLeft','ShiftRight'];
+addEventListener('keydown',e=>{if(KEYS.includes(e.code)){keys.add(e.code);if(e.code.startsWith('Arrow'))e.preventDefault()}});
+addEventListener('keyup',e=>keys.delete(e.code));addEventListener('blur',()=>keys.clear());
+function walkKeys(dt){if(![...keys].some(k=>!k.startsWith('Shift')))return;fly=null;
+  const fast=keys.has('ShiftLeft')||keys.has('ShiftRight'),sp=(fast?2.6:1.2)*dt,tr=(fast?1.5:0.9)*dt,up=new THREE.Vector3(0,1,0);
+  const off=controls.target.clone().sub(camera.position),f=off.clone().setY(0).normalize(),r=new THREE.Vector3().crossVectors(f,up).normalize(),mv=new THREE.Vector3();
+  if(keys.has('ArrowUp'))mv.addScaledVector(f,sp);if(keys.has('ArrowDown'))mv.addScaledVector(f,-sp);
+  if(keys.has('KeyD'))mv.addScaledVector(r,sp);if(keys.has('KeyA'))mv.addScaledVector(r,-sp);
+  if(keys.has('KeyE'))mv.addScaledVector(up,sp*0.7);if(keys.has('KeyQ'))mv.addScaledVector(up,-sp*0.7);
+  camera.position.add(mv);controls.target.add(mv);
+  if(keys.has('ArrowLeft')||keys.has('ArrowRight')){off.applyAxisAngle(up,keys.has('ArrowLeft')?tr:-tr);controls.target.copy(camera.position).add(off)}
+  if(keys.has('KeyW')||keys.has('KeyS')){const o2=controls.target.clone().sub(camera.position),ax=new THREE.Vector3().crossVectors(o2,up).normalize(),pitched=o2.clone().applyAxisAngle(ax,keys.has('KeyW')?tr*0.8:-tr*0.8);
+    if(Math.abs(pitched.clone().normalize().y)<0.97)controls.target.copy(camera.position).add(pitched)}}
 let last=performance.now();
 renderer.setAnimationLoop(()=>{const now=performance.now(),dt=Math.min(0.05,(now-last)/1000);last=now;
   if(fly){fly.s=Math.min(1,fly.s+dt/0.9);const e=fly.s*fly.s*(3-2*fly.s);camera.position.lerpVectors(fly.p0,fly.p1,e);controls.target.lerpVectors(fly.t0,fly.t1,e);if(fly.s>=1)fly=null}
-  animate(dt);controls.update();renderer.render(scene,camera);labels.render(scene,camera)});
+  walkKeys(dt);animate(dt);controls.update();renderer.render(scene,camera);labels.render(scene,camera)});
 window.__k={fronts,modules,toggle,goView,scene,camera,RUN,unfold:()=>unfoldBtn.click()};
 </script></body></html>

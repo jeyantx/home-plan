@@ -278,7 +278,7 @@ kbd{{display:inline-block;min-width:18px;text-align:center;font:600 11px/1.5 -ap
 </style></head><body>
 <header><h1>Home Plan</h1><nav role="tablist">{_btn('3d','3D view')}{_btn('2d','2D plan')}{_btn('kitchen','Kitchen')}{''.join(_btn(k,n) for k,n,b in _tabs if b)}</nav>
 <div class="keys" id="keys-3d" hidden><span><kbd>↑</kbd><kbd>↓</kbd> walk</span><span><kbd>←</kbd><kbd>→</kbd> turn</span><span><kbd>A</kbd><kbd>D</kbd> step sideways</span><span><kbd>W</kbd><kbd>S</kbd> look up / down</span><span><kbd>Q</kbd><kbd>E</kbd> lower / raise</span><span><kbd>Shift</kbd> faster</span><span>drag: look round</span><span>scroll: walk</span><span>right-drag: slide</span></div>
-<div class="keys" id="keys-kitchen" hidden><span>click a door or drawer: open / close</span><span>drag: turn</span><span>scroll: zoom</span><span>right-drag: move</span></div></header>
+<div class="keys" id="keys-kitchen" hidden><span>click a door or drawer: open / close</span><span><kbd>↑</kbd><kbd>↓</kbd> walk</span><span><kbd>←</kbd><kbd>→</kbd> turn</span><span><kbd>A</kbd><kbd>D</kbd> step sideways</span><span><kbd>W</kbd><kbd>S</kbd> look up / down</span><span><kbd>Q</kbd><kbd>E</kbd> lower / raise</span><span><kbd>Shift</kbd> faster</span><span>drag: turn round</span><span>scroll: zoom</span></div></header>
 <main>
 <div class="pane" id="p-3d"><iframe data-src="3d/living-room.html" title="3D view" allow="fullscreen"></iframe></div>
 <div class="pane" id="p-2d"><iframe data-src="plan-2d.html" title="2D plan"></iframe></div>
