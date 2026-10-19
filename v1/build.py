@@ -113,7 +113,7 @@ td.c{font-weight:700;white-space:nowrap;color:var(--accent)}
 #tip{position:fixed;z-index:50;pointer-events:none;max-width:320px;background:#1f2328;color:#fff;font-size:12.5px;line-height:1.35;padding:6px 9px;border-radius:7px;box-shadow:0 4px 14px rgba(0,0,0,.25);display:none}
 #tip b{color:#9fe0bf}
 .fu:hover>*{filter:brightness(1.08)}
-.hide-L-struct .L-struct,.hide-L-furn .L-furn,.hide-L-rooms .L-rooms,.hide-L-walls .L-walls,.hide-L-open .L-open,.hide-L-dims .L-dims{display:none}
+.hide-L-struct .L-struct,.hide-L-carpath .L-carpath,.hide-L-furn .L-furn,.hide-L-rooms .L-rooms,.hide-L-walls .L-walls,.hide-L-open .L-open,.hide-L-dims .L-dims{display:none}
 #measure[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:600}
 .mread{font-variant-numeric:tabular-nums;font-size:13px;color:var(--ink);background:var(--chip);border:1px solid var(--line);border-radius:8px;padding:5px 10px;min-height:30px;display:none;align-items:center}
 .mread.on{display:inline-flex}
@@ -152,6 +152,7 @@ out=f'''<!doctype html>
   <label><input type="checkbox" data-layer="L-dims" checked>Dimensions</label>
   <label><input type="checkbox" data-layer="L-furn" checked>Furniture</label>
   <label><input type="checkbox" data-layer="L-struct" checked>Pillars and beams</label>
+  <label><input type="checkbox" data-layer="L-carpath" checked>Car path</label>
  </div>
  <div id="mread" class="mread" aria-live="polite"></div>
  <div class="tools" role="group" aria-label="Zoom">

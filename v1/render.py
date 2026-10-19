@@ -227,18 +227,31 @@ def vehicles():
     cx1,cx2,cy1,cy2=getattr(_m,'CAR',(11.25,17.25,13.75,28.75))
     rect(cx1,cx2,cy1,cy2,'#fafafa','#555',0.06,extra='rx="1.0"'); rect(cx1+0.5,cx2-0.5,cy1+8.6,cy1+10.1,'#a9bccd','#555',0.03); rect(cx1+0.5,cx2-0.5,cy1+2.6,cy1+3.8,'#a9bccd','#555',0.03)
     text((cx1+cx2)/2,cy1+5.6,'CAR\nVW Virtus\n14\'11" x 5\'9"',0.36,weight=600,fill='#666')
-    try:   # the car's route (rear-axle centre), from the 3D animation: in = blue (reversing in), out = green
-        import json as _j, os as _o
-        _t=open(_o.path.join(_o.path.dirname(__file__),'..','3d','models','car-route.js')).read(); _r=_j.loads(_t[_t.index('{'):_t.rindex('}')+1])
-        for key,col in (('in','#1f6f8b'),('out','#2f8f4f')):
-            P=[(p[0],p[1]) for p in _r[key] if p[1]>-3]
-            E(f'<polyline class="L-dims" points="{pts(P)}" fill="none" stroke="{col}" stroke-width="0.07" stroke-dasharray="0.3 0.2" opacity="0.8"/>')
-        text(cx1-1.0,cy1-1.2,'car route: in reversing (blue), out forward (green)',0.28,fill='#1f6f8b')
-    except Exception: pass
+    car_path(cx1,cy1)
     for b in getattr(_m,'BIKES',[]):
         if isinstance(b,(int,float)): bike(2.0,b); continue
         code,name,bx,by,bl,bw=b; bike(bx,by)
         text(bx-2.4,by,code+'\n'+name.replace('Royal Enfield ','RE '),0.3,weight=600,fill='#555')
+def car_path(cx1,cy1):
+    # space the car needs going in (blue) and out (green): the swept outline of the body with mirrors, from the 3D animation route
+    try:
+        import json as _j, os as _o, math as _mm
+        _t=open(_o.path.join(_o.path.dirname(__file__),'..','3d','models','car-route.js')).read(); R=_j.loads(_t[_t.index('{'):_t.rindex('}')+1])
+    except Exception: return
+    hw=6.2/2; a0,a1=-R['ovr'],R['wb']+R['ovf']
+    E('<g class="L-carpath">')
+    for key,col in (('in','#1f6f8b'),('out','#2f8f4f')):
+        E(f'<g opacity="0.22" fill="{col}">')
+        for x,y,th,d in R[key]:
+            if y<-4: continue
+            c,s_=_mm.cos(th),_mm.sin(th)
+            q=[(x+c*u-s_*v,y+s_*u+c*v) for u,v in ((a0,-hw),(a1,-hw),(a1,hw),(a0,hw))]
+            E(f'<polygon points="{pts(q)}"/>')
+        E('</g>')
+        P=[(p[0],p[1]) for p in R[key] if p[1]>-4]
+        E(f'<polyline points="{pts(P)}" fill="none" stroke="{col}" stroke-width="0.06" stroke-dasharray="0.3 0.2"/>')
+    text(cx1-0.6,cy1-1.3,'car path: space needed going in, reversing (blue), and out (green)\nshaded = body with mirrors, dashed = rear axle',0.28,fill='#1f6f8b')
+    E('</g>')
 def bike(cx,cy):
     # top view of a two-wheeler, 2'6" x 6', front toward the road
     for wy in (cy-2.35,cy+2.35):
