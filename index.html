@@ -32,9 +32,17 @@ td.c{font-weight:700;white-space:nowrap;color:var(--accent)}
 .jump{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 14px}.jump a{font-size:12.5px;text-decoration:none;border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:4px 10px;color:var(--ink)}.jump a:hover{border-color:var(--accent);color:var(--accent)}
 .doc section{scroll-margin-top:12px}.doc p{margin:6px 0}
 .wide{overflow-x:auto}
+.keys{margin-left:auto;display:flex;flex-wrap:wrap;justify-content:flex-end;gap:3px 12px;font-size:11.5px;color:var(--muted);padding:4px 0 6px;min-width:0}
+.keys[hidden]{display:none}
+.keys span{white-space:nowrap}
+nav{flex:none}
+kbd{display:inline-block;min-width:18px;text-align:center;font:600 11px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 4px;margin-right:2px}
+@media (max-width:1000px){.keys{display:none!important}}
 @media (max-width:640px){header{flex-direction:column;align-items:stretch;gap:0}h1{margin:0 0 4px}.doc{padding:12px 10px 40px}}
 </style></head><body>
-<header><h1>Home Plan</h1><nav role="tablist"><button role="tab" data-tab="3d" aria-selected="false">3D view</button><button role="tab" data-tab="2d" aria-selected="false">2D plan</button><button role="tab" data-tab="kitchen" aria-selected="false">Kitchen</button><button role="tab" data-tab="overview" aria-selected="false">Overview</button><button role="tab" data-tab="details" aria-selected="false">Details</button><button role="tab" data-tab="credits" aria-selected="false">Credits</button></nav></header>
+<header><h1>Home Plan</h1><nav role="tablist"><button role="tab" data-tab="3d" aria-selected="false">3D view</button><button role="tab" data-tab="2d" aria-selected="false">2D plan</button><button role="tab" data-tab="kitchen" aria-selected="false">Kitchen</button><button role="tab" data-tab="overview" aria-selected="false">Overview</button><button role="tab" data-tab="details" aria-selected="false">Details</button><button role="tab" data-tab="credits" aria-selected="false">Credits</button></nav>
+<div class="keys" id="keys-3d" hidden><span><kbd>↑</kbd><kbd>↓</kbd> walk</span><span><kbd>←</kbd><kbd>→</kbd> turn</span><span><kbd>A</kbd><kbd>D</kbd> step sideways</span><span><kbd>W</kbd><kbd>S</kbd> look up / down</span><span><kbd>Q</kbd><kbd>E</kbd> lower / raise</span><span><kbd>Shift</kbd> faster</span><span>drag: look round</span><span>scroll: walk</span><span>right-drag: slide</span></div>
+<div class="keys" id="keys-kitchen" hidden><span>click a door or drawer: open / close</span><span>drag: turn</span><span>scroll: zoom</span><span>right-drag: move</span></div></header>
 <main>
 <div class="pane" id="p-3d"><iframe data-src="3d/living-room.html" title="3D view" allow="fullscreen"></iframe></div>
 <div class="pane" id="p-2d"><iframe data-src="plan-2d.html" title="2D plan"></iframe></div>
@@ -126,7 +134,8 @@ const tabs=[...document.querySelectorAll('nav button')];
 function show(k){if(!document.getElementById('p-'+k))k='3d';
   tabs.forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===k));
   document.querySelectorAll('.pane').forEach(p=>p.classList.toggle('on',p.id==='p-'+k));
-  const f=document.querySelector('#p-'+k+' iframe');if(f&&!f.src)f.src=f.dataset.src;   // load the 2D and 3D pages the first time they are opened
+  const f=document.querySelector('#p-'+k+' iframe');if(f&&!f.src)f.src=f.dataset.src;
+  document.getElementById('keys-3d').hidden=k!=='3d';document.getElementById('keys-kitchen').hidden=k!=='kitchen';   // key help for the 3D tabs, top right   // load the 2D and 3D pages the first time they are opened
   if(location.hash!=='#'+k)history.replaceState(null,'','#'+k);try{localStorage.setItem('hp-tab',k)}catch(e){}}
 tabs.forEach(b=>b.onclick=()=>show(b.dataset.tab));
 document.querySelectorAll('.jump a').forEach(a=>a.onclick=e=>{e.preventDefault();document.querySelector(a.getAttribute('href')).scrollIntoView({behavior:'smooth',block:'start'})});
