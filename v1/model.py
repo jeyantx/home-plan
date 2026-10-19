@@ -352,7 +352,8 @@ FURNITURE = [
  ('FU-65','G','Wet grinder, table-top',10.75,11.95,64.7,65.9,'appl',None,'Kitchen, on the west end of the 2\' low counter FU-16.2 (where the RO purifier was), socket on GW-14'),
  ('FU-66','G','RO water purifier, wall-mounted',8.488,9.637,65.456,66.375,'over',None,'Kitchen, on GW-14 in the place of wall unit K-14 (removed), 558 x 350 x 280 mm (H x W x D), bottom at 5\' from the floor; water pots fill standing on the 2\' low counter below'),
  ('FU-67','G','Microwave oven',11.75,13.4,59.15,60.35,'appl',None,'Kitchen, on the west end of the breakfast counter FU-17'),
- ('FU-52','G','Hob (burner) with small chimney',3.6,5.4,62.0,64.0,'hob',None,'Kitchen, under window W-06; chimney hood 2\'6" above the counter, just above the window head, ducted straight out through GW-01'),
+ ('FU-52','G','Gas stove, 3 burner, glass top (free-standing)',4.015,5.360,62.039,64.336,'hob',None,'Kitchen, stands on the counter over K-02 (not built in, lift it off to clean), 70 x 41 x 13 cm; gas hose down through a grommet to the cylinder in K-02 below; chimney hood above, just over the window head'),
+ ('FU-80','G','Utensil drying rack, steel, 2 tier',3.7,6.3,64.85,66.25,'appl',None,'Kitchen, on the corner counter right beside the sink (over K-03 and the sealed corner), with a drip tray; washed vessels, cookers and plates dry here'),
  ('FU-53','G','Tap and wash platform',1.375,4.875,92.5,95.0,'washpad',None,'Side garden, paved with drain, in the corner of BW-02 and BW-03'),
  ('FU-54','G','Wash basin with tap',19.125,20.625,95.25,96.5,'basin',None,'Back garden, against GW-08 beside window W-08'),
  ('FU-55','G','Tap and wash platform',17.625,20.625,96.75,99.25,'washpad',None,'Back garden, paved, with floor drain'),
@@ -409,13 +410,12 @@ _B1,_B2=KPL,KCH-KTOP          # base fronts 0.33 to 2.70 ft (722 mm)
 _L1,_L2=KPL,KLOW-KTOP         # low counter fronts (469 mm)
 _F1,_F2=KPL,KBF               # breakfast counter fronts (774 mm)
 KITCHEN_MODULES=[
- dict(id='K-01',name='Gas cylinder unit with blind corner',run='East run',face='x+',x1=3.5,x2=5.5,y1=59.125,y2=62.0,z1=0,z2=KCH,
-      fronts=[dict(k='blind',a=59.125,b=60.375,za=_B1,zb=_B2,what='blind corner behind the breakfast counter: spare cylinder'),
-              dict(k='door',a=60.375,b=62.0,za=_B1,zb=_B2,hinge='b',what='LPG cylinder on a pull-out trolley, vented base, short pipe to the hob')],
-      inside='cylinder trolley; spare cylinder in the blind corner; vent holes in the plinth',need='LPG cylinder next to the hob, out of sight but easy to change'),
- dict(id='K-02',name='Hob unit, 3 drawers',run='East run',face='x+',x1=3.5,x2=5.5,y1=62.0,y2=64.375,z1=0,z2=KCH,
-      fronts=_drawers(62.0,64.375,_B1,_B2,[288,288,140],['pressure cookers, idli steamer and big pans','kadai, tawa, frying pans','ladles, spatulas, cutlery tray']),
-      inside='soft-close full-extension drawers, 50 kg rating for the bottom two; cutlery tray in the top drawer',need='pots and pans within one step of the hob'),
+ dict(id='K-01',name='Drawer unit with blind corner',run='East run',face='x+',x1=3.5,x2=5.5,y1=59.125,y2=62.0,z1=0,z2=KCH,
+      fronts=[dict(k='blind',a=59.125,b=60.375,za=_B1,zb=_B2,what='blind corner behind the breakfast counter: spare cylinder')]+_drawers(60.375,62.0,_B1,_B2,[288,288,140],['pressure cookers, idli steamer and big pans','kadai, tawa, frying pans','ladles, spatulas, cutlery tray']),
+      inside='soft-close full-extension drawers, 50 kg rating for the bottom two; cutlery tray in the top drawer; spare cylinder in the blind corner',need='pots and pans one step from the stove'),
+ dict(id='K-02',name='Stove unit, gas cylinder below',run='East run',face='x+',x1=3.5,x2=5.5,y1=62.0,y2=64.375,z1=0,z2=KCH,
+      fronts=[dict(k='door',a=62.0,b=64.375,za=_B1,zb=_B2,hinge='a',what='LPG cylinder on a pull-out trolley: one full-width door, no shelf, so the cylinder comes straight out')],
+      inside='full height and width for the cylinder on a trolley; vent holes in the plinth; the gas hose goes up through a grommet to the free-standing stove FU-52 on the counter',need='the cylinder right under the stove: short hose, easy to change'),
  dict(id='K-03',name='Bottle pull-out',run='Back run',face='y-',x1=5.5,x2=6.45,y1=64.375,y2=66.375,z1=0,z2=KCH,
       fronts=[dict(k='pullout',a=5.5,b=6.45,za=_B1,zb=_B2,what='3 wire baskets: oils, sauces, spice jars')],
       inside='full-height pull-out with 3 baskets; the corner behind it (2\' x 2\') is sealed for the gas pipe and plumbing',need='oil and spices beside the hob'),
@@ -456,7 +456,7 @@ KITCHEN_NOTES=[
  'Finish KT-1: oak-look laminate base units, cream wall units and loft, black granite top 40 mm, matte black handles; 18 mm BWP plywood carcass (boiling-water-proof, for a wet kitchen).',
  'Base units: 2\'10" to the top of the counter (865 mm), 4" plinth, 600 mm deep. Low counter for the wet grinder and water: 2\' (610 mm). Breakfast counter: 2\'10½" plus its top, 375 mm deep.',
  'Hardware: soft-close hinges and full-extension soft-close drawer runners (bottom hob drawers rated 50 kg), gas struts on the lift-up doors.',
- 'Hob FU-52 (3 burner) over K-02 with the chimney above; sink FU-51 over K-04 with the dish drainer K-13 above it; RO purifier FU-66 (558 x 350 x 280 mm) in the place of wall unit K-14, over the low counter; wet grinder FU-65 on the west end of the low counter; mixer FU-64 on the east run; microwave FU-67 on the breakfast counter.',
+ 'Free-standing 3-burner glass-top stove FU-52 (70 x 41 x 13 cm) on the counter over K-02, with the gas cylinder below it and the chimney above; utensil drying rack FU-80 on the corner counter beside the sink; sink FU-51 over K-04 with the dish drainer K-13 above it; RO purifier FU-66 (558 x 350 x 280 mm) in the place of wall unit K-14, over the low counter; wet grinder FU-65 on the west end of the low counter; mixer FU-64 on the east run; microwave FU-67 on the breakfast counter.',
 ]
 
 CAR=(11.125,16.875,14.75,29.75)   # VW Virtus size, 14'11" x 5'9" (4561 x 1752 mm), reversed in: nose to the gate, back 1' clear of GW-04; as far west as it can go (3" off the stair line and store FU-56); one short back-and-forth (2'5" forward, 10" back) on the way out
