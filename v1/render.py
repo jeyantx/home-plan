@@ -533,6 +533,11 @@ def draw_furniture(fl,_late=False):
             E(f'<polygon points="{pts(q)}" fill="#b98a62" stroke="#6b4a2a" stroke-width="0.05"/>')
         elif k=='tulsi':
             R_(x1,x2,y1,y2,'#efe6d2','#8a6a3a',0.05); a=S((x1+x2)/2,(y1+y2)/2); E(f'<circle cx="{a[0]:.3f}" cy="{a[1]:.3f}" r="0.45" fill="#3f6a32"/>')
+        elif k=='gtap':
+            R_(x1,x2,y1,y2,'#d7dde2','#6c7a86',0.04); a=S((x1+x2)/2,y1+0.25); E(f'<circle cx="{a[0]:.3f}" cy="{a[1]:.3f}" r="0.15" fill="#b08d57" stroke="#6b4f32" stroke-width="0.03"/>')
+            text((x1+x2)/2,y2-0.3,'tap',0.26,fill='#334')
+        elif k=='panel':
+            R_(x1-0.05,x2+0.05,y1,y2,'#3a3d40','#222',0.03)
         elif k=='airer':
             R_(x1,x2,y1,y2,'none','#555',0.03,extra='stroke-dasharray="0.2 0.12"')
             for i in range(5): xx=x1+0.15+(x2-x1-0.3)*i/4; line(xx,y1+0.1,xx,y2-0.1,'#777',0.02)

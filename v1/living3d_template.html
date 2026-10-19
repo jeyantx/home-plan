@@ -1412,6 +1412,19 @@ function vfrMats(){const P=(c,o={})=>new THREE.MeshPhysicalMaterial({color:c,rou
   box(wm.x2-0.45,wm.x2-0.33,Y0,Y0+0.14,CZ+3.55,CZ+3.62,chrome,{tip:`${wm.id} · washing machine tap (angle valve) on GW-17`});
   box(wm.x1+0.1,wm.x1+0.45,Y0,Y0+0.1,CZ+3.4,CZ+3.75,std({color:'#e4e4e0',roughness:0.5}),{tip:`${wm.id} · switch socket with a flip cover`});
   box(cx-0.15,cx+0.15,wm.y2+0.25,wm.y2+0.5,CZ,CZ+0.012,MAT.blackMetal,{cast:false,tip:`${wm.id} · floor drain (trap) for the washing machine`})}}
+// bore court: slab over the washing machine FU-83, drop wall and sunshade over the open side FU-84, bore pump panel FU-86; sump pump panel FU-85 in the porch
+{const T=id=>{const f=fuG[id];return `${id} · ${f.name} · ${f.note}`},CZ=-0.97,SZ=CEIL+0.02,pg=std({color:'#c9ccd0',roughness:0.45,metalness:0.3});
+ {const f=fuG['FU-83'];if(f){box(f.x1+0.05,f.x2,f.y1,f.y2,CZ+3.17,CZ+3.33,MAT.white,{tip:T('FU-83')});box(f.x1+0.05,f.x2,f.y2-0.05,f.y2,CZ+3.08,CZ+3.17,MAT.white,{tip:T('FU-83')+' · drip edge'})}}
+ {const f=fuG['FU-84'];if(f){box(f.x2,f.x2+0.75,f.y1,f.y2,6.0,SZ,MAT.extUp,{tip:T('FU-84')+' · drop wall'});box(f.x1,f.x2,f.y1,f.y2,5.83,6.0,MAT.white,{tip:T('FU-84')})}}
+ for(const [id,z0] of [['FU-86',CZ],['FU-85',0]]){const f=fuG[id];if(!f)continue;box(f.x1,f.x2,f.y1,f.y2,z0+4.5,z0+5.75,pg,{tip:T(id)});box(f.x1-0.012,f.x1,f.y1+0.1,f.y2-0.1,z0+5.3,z0+5.6,MAT.blackMetal,{cast:false,tip:T(id)+' · display and switches'});
+   const cy=(f.y1+f.y2)/2;box(f.x1+0.02,f.x2,cy-0.05,cy+0.05,z0,z0+4.5,pg,{cast:false,tip:T(id)+' · cable conduit'})}}
+// back garden: garden tap point FU-54 on GW-08 and its wash platform FU-55
+{const f=fuG['FU-54'],p=fuG['FU-55'],T=g=>`${g.id} · ${g.name} · ${g.note}`,brass=std({color:'#b08d57',roughness:0.35,metalness:0.8}),grey=std({color:'#8f9294',roughness:0.85});
+ if(f){const cx=f.x1+0.3,W0=95.125;box(f.x1,f.x2,f.y1,f.y2,GRD,GRD+0.33,grey,{tip:T(f)+' · 4" tiled step'});box(f.x1,f.x2,W0,W0+0.025,GRD+0.33,GRD+3.4,std({color:'#f4f4f1',roughness:0.2}),{tip:T(f)+' · white wall tiles'});
+   box(cx-0.1,cx+0.1,W0+0.025,W0+0.16,GRD+2.25,GRD+2.5,brass,{tip:T(f)+' · brass bib tap with a hose union'});cyl(cx,W0+0.2,GRD+2.0,GRD+2.3,0.05,brass,{tip:T(f)+' · tap spout'});
+   box(cx-0.12,cx+0.12,f.y2-0.5,f.y2-0.26,GRD+0.33,GRD+0.342,MAT.blackMetal,{cast:false,tip:T(f)+' · floor drain'});
+   const reel=new THREE.Mesh(new THREE.TorusGeometry(m(0.32),m(0.07),10,28),std({color:'#3f7a3a',roughness:0.6}));reel.position.set(mx(f.x2-0.3),m(GRD+3.1),m(W0+0.12));scene.add(reel);named(reel,T(f)+' · garden hose on a wall reel')}
+ if(p){box(p.x1,p.x2,p.y1,p.y2,GRD,GRD+0.06,grey,{cast:false,tip:T(p)});box((p.x1+p.x2)/2-0.2,(p.x1+p.x2)/2+0.2,(p.y1+p.y2)/2-0.2,(p.y1+p.y2)/2+0.2,GRD+0.06,GRD+0.07,MAT.blackMetal,{cast:false,tip:T(p)+' · floor drain'})}}
 // side-garden utility along GW-07, just south of bore BR-01: platform FU-77 and utility basin FU-30 with its back to the wall, front to the garden (east)
 {const pf=fuG['FU-77'],bs=fuG['FU-30'];
  if(pf&&bs){const PT=GRD+0.33,T=(f,t)=>`${f.id} · ${f.name} · ${t||f.note}`,WX=9.5;   // WX: the garden face of GW-07
