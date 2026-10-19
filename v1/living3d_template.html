@@ -86,7 +86,7 @@ import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';
 import {createBambooPlant} from './models/bamboo-plant.js';
 import {createNeemTree} from './models/neem-tree.js';
 import {createTNPlant,TN_PLANTS} from './models/tn-plants.js';
-import {createCar,createScooter,createMotorbike} from './models/vehicles.js';
+import {createVirtus,createHunter350,createAther450} from './models/vehicles.js';
 import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
 
 const P=window.PLAN, F=0.3048, CEIL=10.0, EYE=5.25;
@@ -1195,10 +1195,10 @@ if(P.backwall){const bw=P.backwall,[a,b]=bw.pts,t=bw.t,old=std({color:'#cdc4b3',
  for(const x of [cl.x1,cl.x2]){box(x-0.06,x+0.06,cyy-0.06,cyy+0.06,GRD,GRD+6,MAT.blackMetal,{tip:tc});box(x-0.04,x+0.04,cyy-0.6,cyy+0.6,GRD+5.9,GRD+6.0,MAT.blackMetal,{tip:tc})}
  for(const dy of [-0.5,0,0.5]) box(cl.x1,cl.x2,cyy+dy-0.012,cyy+dy+0.012,GRD+5.95,GRD+5.975,MAT.steel,{cast:false,tip:tc});}
 // parked vehicles, on the spots of the 2D plan: car (nose to the house), three two-wheelers on the east strip (front to the gate)
-{const [cx1,cx2,cy1,cy2]=P.car||[11.25,17.0,15.25,30.25],car=createCar(THREE,mergeGeometries,{color:'#d9dcdf'});
+{const [cx1,cx2,cy1,cy2]=P.car||[11.25,17.0,15.25,30.25],car=createVirtus(THREE,mergeGeometries,{color:'#2f5d8c'});   // VW Virtus, Rising Blue
  car.position.set(mx((cx1+cx2)/2),m(PKZ),m((cy1+cy2)/2));scene.add(car);
  car.traverse(o=>{if(o.isMesh){o.userData.keepUV=true;named(o,`Car · VW Virtus, 14'11" x 5'9" · nose to the house, 1' from the front wall`);if(o.name==='body')wallMeshes.push(o)}});
- for(const [code,name,bx,by,bl,bw] of (P.bikes||[])){const b=/Hunter/.test(name)?createMotorbike(THREE,mergeGeometries,{}):createScooter(THREE,mergeGeometries,{});
+ for(const [code,name,bx,by,bl,bw] of (P.bikes||[])){const b=/Hunter/.test(name)?createHunter350(THREE,mergeGeometries,{}):createAther450(THREE,mergeGeometries,{});
    b.position.set(mx(bx),m(PKZ),m(by));b.rotation.y=Math.PI;scene.add(b);b.traverse(o=>{if(o.isMesh){o.userData.keepUV=true;named(o,`${code} · ${name} · front to the gate, on its side stand`)}})}}
 // the two existing bores (BR-01, BR-02): 2' concrete chamber with a steel cap
 for(const [x,y,id] of [[7.75,78.66,'BR-01'],[4.0,71.85,'BR-02']]){box(x-1,x+1,y-1,y+1,GRD,GRD+0.5,MAT.white,{tip:`${id} · Borewell (existing) · concrete chamber`});cyl(x,y,GRD+0.5,GRD+0.7,0.45,MAT.steel,{tip:`${id} · borewell cap`})}
