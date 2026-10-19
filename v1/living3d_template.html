@@ -734,7 +734,9 @@ function cabRun(id,what,x1,x2,y1,y2,z1,z2,face,segs,mat,plinth){
   for(const [a,b] of gl){if(a>u)lb(u,a,SH,D,zb0,z2,mat);u=b}if(U1>u)lb(u,U1,SH,D,zb0,z2,mat);
   if(plinth)lb(U0,U1,SH+0.12,D,z1,zb0,MAT.plinth);
   const panel=(a,b,za,zb)=>lb(a,b,0,SH,za,zb,mat,{tip:t+' · shutter'});
-  const handle=(a,b,z)=>{const L=Math.min(0.9,(b-a)*0.6),m0=(a+b)/2;lb(m0-L/2,m0+L/2,-0.04,0,z-0.03,z+0.03,MAT.blackMetal,{cast:false,tip:'Handle, matte black'})};
+  const Lh=z1>=4&&/^FU-(18|19|68|69)\b/.test(id);   // kitchen wall units and lofts: L-profile handle along the bottom edge, pulled from below
+  const handle=(a,b,z)=>{if(Lh){const lt='L-profile handle, matte black';lb(a+0.04,b-0.04,-0.03,0,fz1-0.06,fz1+0.06,MAT.blackMetal,{cast:false,tip:lt});lb(a+0.04,b-0.04,0,0.05,fz1-0.06,fz1-0.045,MAT.blackMetal,{cast:false,tip:lt});return}
+    const L=Math.min(0.9,(b-a)*0.6),m0=(a+b)/2;lb(m0-L/2,m0+L/2,-0.04,0,z-0.03,z+0.03,MAT.blackMetal,{cast:false,tip:'Handle, matte black'})};
   const hz=z1>=4?fz1+0.15:(z2>5?3.6:fz2-0.15);   // wall cabinets: handle at the bottom; tall units: at hand height; base units: at the top
   for(const [a,b,type] of segs){
     if(type==='drawers'||type==='drawers2'){const n=type==='drawers2'?2:3,h=(fz2-fz1)/n;for(let i=0;i<n;i++){const za=fz1+i*h+g,zb=fz1+(i+1)*h-g;panel(a+g,b-g,za,zb);handle(a,b,zb-0.15)}}
@@ -747,12 +749,13 @@ function cabRun(id,what,x1,x2,y1,y2,z1,z2,face,segs,mat,plinth){
         cyl(c[0],c[1],zs,zs+hh,rr,std({color:['#e9e4da','#cdbfa8','#7a6a58','#f3efe6'][Math.floor(r()*4)],roughness:0.4}),{tip:'Jar',rTop:rr*0.9});q+=rr*2+0.12}}
       for(const [p1,p2,q1,q2] of [[a+g,b-g,fz1,fz1+w],[a+g,b-g,fz2-w,fz2],[a+g,a+g+w,fz1+w,fz2-w],[b-g-w,b-g,fz1+w,fz2-w]]) lb(p1,p2,0,SH,q1,q2,MAT.blackMetal,{tip:tg});
       glassMeshes.push(lb(a+g+w,b-g-w,0.02,0.035,fz1+w,fz2-w,MAT.glass,{cast:false,tip:tg}));handle(a,b,hz)}
+    else if(type==='plain')panel(a+g,b-g,fz1,fz2);   // corner door part hinged to the cabinet: its handle is on the folding part
     else{panel(a+g,b-g,fz1,fz2);handle(a,b,hz)}}}
 {const X1=3.5,ky2=66.375,bY=64.375,W06=P.openings.find(o=>o.id==='W-06');
  // base cabinets: east run FU-15 on GW-01 (front faces +x), back run FU-16 on GW-14 (front faces -y); both corners are L-shaped corner cupboards (K-01A/B, K-03A/B)
  cabRun('FU-15','Base cabinets, east',X1,5.5,59.125,61.625,0,KCH-KTOP,'x+',[[60.375,61.625,'door']],MAT.kLow,true);   // K-01A, north corner cupboard
  cabRun('FU-15','Base cabinets, east · gas cylinder unit',X1,5.5,61.625,63.125,0,KCH-KTOP,'x+',[[61.625,63.125,'door']],MAT.kLow,false);   // K-02: door down to the floor, no plinth, the cylinder stands on the floor
- cabRun('FU-15','Base cabinets, east',X1,5.5,63.125,ky2,0,KCH-KTOP,'x+',[[63.125,bY,'door']],MAT.kLow,true);   // K-03A, south corner cupboard
+ cabRun('FU-15','Base cabinets, east',X1,5.5,63.125,ky2,0,KCH-KTOP,'x+',[[63.125,bY,'plain']],MAT.kLow,true);   // K-03A, south corner cupboard
  cabRun('FU-16','Base cabinets, back',5.5,8.6,bY,ky2,0,KCH-KTOP,'y-',[[5.5,6.45,'door'],[6.45,8.6,'door2']],MAT.kLow,true);   // K-03B corner cupboard door, K-04 sink unit
  const LOW=2.0;cabRun('FU-16.2','Low counter, wet grinder and water',8.6,12.125,bY,ky2,0,LOW-KTOP,'y-',[[8.6,9.875,'door'],[9.875,12.125,'drawers2']],MAT.kLow,true);   // K-05 water pots, K-06 rice and atta drawers
  box(8.6,12.125,bY-0.06,ky2,LOW-KTOP,LOW,MAT.kTop,{tip:'FU-16.2 · Low counter top, 2\' from the floor'});
@@ -795,7 +798,7 @@ function cabRun(id,what,x1,x2,y1,y2,z1,z2,face,segs,mat,plinth){
  const wg=fuG['FU-65'],wx=(wg.x1+wg.x2)/2,wy=(wg.y1+wg.y2)/2,WZ=LOW;cyl(wx,wy,WZ,WZ+0.38,0.6,MAT.appWhite,{tip:`FU-65 · Wet grinder, table-top · ${wg.note}`,rTop:0.55});
  cyl(wx,wy,WZ+0.38,WZ+1.0,0.44,MAT.steel,{tip:'Wet grinder drum, steel'});cyl(wx,wy,WZ+1.0,WZ+1.08,0.46,std({color:'#d8dde0',roughness:0.2}),{tip:'Wet grinder lid'});
  // breakfast counter FU-17 on GW-13 under W-12 (front faces +y), microwave FU-67 on its west end
- const b=fuG['FU-17'];cabRun('FU-17','Breakfast counter',b.x1,b.x2,b.y1+0.012,b.y2,0,P.kitchen.KBF,'y+',[[5.5,7.1,'door'],[7.1,8.7,'drawers'],[8.7,10.3,'door'],[10.3,11.9,'drawers'],[11.9,13.5,'door']],MAT.kLow,true);
+ const b=fuG['FU-17'];cabRun('FU-17','Breakfast counter',b.x1,b.x2,b.y1+0.012,b.y2,0,P.kitchen.KBF,'y+',[[5.5,7.1,'plain'],[7.1,8.7,'drawers'],[8.7,10.3,'door'],[10.3,11.9,'drawers'],[11.9,13.5,'door']],MAT.kLow,true);
  box(b.x1+0.06,b.x2,b.y1+0.012,b.y2+0.06,KCH-KTOP,KCH,MAT.kTop,{tip:'Breakfast counter top, 40 mm, level with the east run'});
  const mw=fuG['FU-67'];box(mw.x1,mw.x2,mw.y1+0.05,mw.y2-0.05,KCH,KCH+0.96,std({color:'#3a3c3f',roughness:0.4,metalness:0.4}),{round:0.04,tip:`FU-67 · Microwave oven · ${mw.note}`});
  box(mw.x1+0.08,mw.x2-0.45,mw.y2-0.05,mw.y2-0.03,3.1,3.85,MAT.blackGlass,{cast:false,tip:'Microwave door, black glass'});
