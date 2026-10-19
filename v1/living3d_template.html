@@ -87,7 +87,7 @@ import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';
 import {createBambooPlant} from './models/bamboo-plant.js?v=__BUILD__';
 import {createNeemTree} from './models/neem-tree.js?v=__BUILD__';
 import {createTNPlant,TN_PLANTS} from './models/tn-plants.js?v=__BUILD__';
-import {createVirtus,createHunter350,createAther450,loadCarGLB} from './models/vehicles.js?v=__BUILD__';
+import {createVirtus,createHunter350,createAther450,loadCarGLB,loadGLBVehicle} from './models/vehicles.js?v=__BUILD__';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {CAR_ROUTE} from './models/car-route.js?v=__BUILD__';
 import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
@@ -1244,7 +1244,7 @@ function startAnim(){if(!carAnim.car)return;carAnim.track=carAnim.track||buildTr
   // watch from the house-front corner of the parking, looking out to the gate and the road
   setView(35)}
 function stopAnim(){carAnim.on=false;setCarPose(...CAR_ROUTE.park,0,0);renderer.shadowMap.needsUpdate=true;animBtn.textContent='Animate';animBtn.setAttribute('aria-pressed',false);invalidate()}
-const SHOW_BIKES=false;   // two-wheelers hidden until downloaded models are in
+const SHOW_BIKES=false;   // the old code-made two-wheelers stay off; the downloaded models below are used
 const vehicleMeshes=[];
 {const [cx1,cx2,cy1,cy2]=P.car||[11.25,17.0,14.75,29.75];
  loadCarGLB(THREE,GLTFLoader,'assets/vehicles/compact-car.glb',{color:'#2f5d8c',length:4.561,bodyWidth:1.752,name:'Car'}).then(car=>{
@@ -1252,6 +1252,13 @@ const vehicleMeshes=[];
    const d=car.userData.dims,ft=v=>{const i=Math.round(v/F*12);return `${Math.floor(i/12)}'${i%12}"`};
    car.traverse(o=>{if(o.isMesh){o.userData.keepUV=true;named(o,`Car · compact sedan (Free3D model, scaled to VW Virtus size, 4561 x 1752 mm body) · ${ft(d.length)} x ${ft(d.width)} with mirrors · reversed in, nose to the gate`);vehicleMeshes.push(o)}});
    renderer.shadowMap.needsUpdate=true;if(photo&&pt)pt.setScene(scene,camera);invalidate()}).catch(e=>console.warn('car model',e));
+ // two-wheelers from the owner's downloaded models, sized to the real bikes they stand for, front to the gate
+ for(const [code,name,bx,by,bl,bw] of (P.bikes||[])){const moto=/Hunter/.test(name);
+   loadGLBVehicle(THREE,GLTFLoader,moto?'assets/vehicles/motorcycle.glb':'assets/vehicles/scooter.glb',moto?{front:'+x',pitch:-0.035,length:2.055,name:code}:{front:'+z',length:1.837,name:code}).then(b=>{
+     b.position.set(mx(bx),m(PKZ),m(by));b.rotation.y=Math.PI;scene.add(b);
+     const d=b.userData.dims,ft=v=>{const i=Math.round(v/F*12);return `${Math.floor(i/12)}'${i%12}"`};
+     b.traverse(o=>{if(o.isMesh){o.userData.keepUV=true;named(o,`${code} · ${moto?'Motorcycle (Baotian Sanya model, sized to a Royal Enfield Hunter 350)':'Scooter (downloaded model, sized to an Ather 450X)'} · ${ft(d.length)} long, ${ft(d.height)} high · front to the gate`)}});
+     renderer.shadowMap.needsUpdate=true;if(photo&&pt)pt.setScene(scene,camera);invalidate()}).catch(e=>console.warn('bike model',e))}
  if(SHOW_BIKES) for(const [code,name,bx,by,bl,bw] of (P.bikes||[])){const b=/Hunter/.test(name)?createHunter350(THREE,mergeGeometries,{}):createAther450(THREE,mergeGeometries,{});
    b.position.set(mx(bx),m(PKZ),m(by));b.rotation.y=Math.PI;scene.add(b);b.traverse(o=>{if(o.isMesh){o.userData.keepUV=true;named(o,`${code} · ${name} · front to the gate, on its side stand`)}})}}
 // the two existing bores (BR-01, BR-02): 2' concrete chamber with a steel cap

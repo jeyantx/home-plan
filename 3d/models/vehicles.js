@@ -352,3 +352,27 @@ export async function loadCarGLB(THREE, GLTFLoader, url, opts = {}) {
   g.userData = { wheels, steer, dims: { length: fb.z, width: fb.x, height: fb.y }, paint };
   return g;
 }
+
+// Downloaded two-wheeler (or any vehicle) model: orient so its front is +Z, level it, scale to opts.length, stand it on the ground.
+//   opts.front: '+z' (default) or '+x' — which way the file's front faces;  opts.pitch: small correction (rad) about the vehicle's width axis
+//   opts.materials: { srcName: material } overrides; opts.tint: { srcName: '#hex' } recolours
+export async function loadGLBVehicle(THREE, GLTFLoader, url, opts = {}) {
+  const gltf = await new GLTFLoader().loadAsync(url);
+  const model = gltf.scene;
+  model.traverse(o => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true;
+    const fix = m => { const nm = m.name; if (opts.materials && opts.materials[nm]) return opts.materials[nm];
+      if (opts.tint && opts.tint[nm]) { const c = m.clone(); c.color.set(opts.tint[nm]); return c } return m };
+    o.material = Array.isArray(o.material) ? o.material.map(fix) : fix(o.material) } });
+  const g = new THREE.Group(); g.name = opts.name ?? 'Vehicle';
+  const holder = new THREE.Group(); holder.add(model); g.add(holder);
+  if (opts.front === '+x') holder.rotation.y = -Math.PI / 2;
+  const tilt = new THREE.Group(); g.remove(holder); tilt.add(holder); g.add(tilt); tilt.rotation.x = opts.pitch || 0;
+  g.updateMatrixWorld(true);
+  let bb = new THREE.Box3().setFromObject(tilt); const size = bb.getSize(new THREE.Vector3());
+  tilt.scale.setScalar((opts.length ?? size.z) / size.z); g.updateMatrixWorld(true);
+  bb = new THREE.Box3().setFromObject(tilt); const c = bb.getCenter(new THREE.Vector3());
+  tilt.position.set(-c.x, -bb.min.y, -c.z); g.updateMatrixWorld(true);
+  const fb = new THREE.Box3().setFromObject(g).getSize(new THREE.Vector3());
+  g.userData.dims = { length: fb.z, width: fb.x, height: fb.y };
+  return g;
+}
