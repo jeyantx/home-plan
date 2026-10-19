@@ -84,12 +84,12 @@ import {EffectComposer} from 'three/addons/postprocessing/EffectComposer.js';
 import {RenderPass} from 'three/addons/postprocessing/RenderPass.js';
 import {GTAOPass} from 'three/addons/postprocessing/GTAOPass.js';
 import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';
-import {createBambooPlant} from './models/bamboo-plant.js?v=1792408834';
-import {createNeemTree} from './models/neem-tree.js?v=1792408834';
-import {createTNPlant,TN_PLANTS} from './models/tn-plants.js?v=1792408834';
-import {createVirtus,createHunter350,createAther450,loadCarGLB,loadGLBVehicle} from './models/vehicles.js?v=1792408834';
+import {createBambooPlant} from './models/bamboo-plant.js?v=1792409154';
+import {createNeemTree} from './models/neem-tree.js?v=1792409154';
+import {createTNPlant,TN_PLANTS} from './models/tn-plants.js?v=1792409154';
+import {createVirtus,createHunter350,createAther450,loadCarGLB,loadGLBVehicle} from './models/vehicles.js?v=1792409154';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
-import {CAR_ROUTE} from './models/car-route.js?v=1792408834';
+import {CAR_ROUTE} from './models/car-route.js?v=1792409154';
 import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
 
 const P=window.PLAN, F=0.3048, CEIL=10.0, EYE=5.25;
@@ -1356,14 +1356,14 @@ function placeBike(code){const o=bikeObjs[code];if(!o)return;const t=(P.bikes||[
 const SHOW_BIKES=false;   // the old code-made two-wheelers stay off; the downloaded models below are used
 const vehicleMeshes=[];
 {const [cx1,cx2,cy1,cy2]=P.car||[11.25,17.0,14.75,29.75];
- loadCarGLB(THREE,GLTFLoader,'assets/vehicles/compact-car.glb?v=1792408834',{color:'#2f5d8c',length:4.561,bodyWidth:1.752,name:'Car'}).then(car=>{
+ loadCarGLB(THREE,GLTFLoader,'assets/vehicles/compact-car.glb?v=1792409154',{color:'#2f5d8c',length:4.561,bodyWidth:1.752,name:'Car'}).then(car=>{
    scene.add(car);window.__car=car;carAnim.car=car;setCarPose(...CAR_ROUTE.park,0,0);
    const d=car.userData.dims,ft=v=>{const i=Math.round(v/F*12);return `${Math.floor(i/12)}'${i%12}"`};
    car.traverse(o=>{if(o.isMesh){o.userData.keepUV=true;named(o,`Car · compact sedan (Free3D model, scaled to VW Virtus size, 4561 x 1752 mm body) · ${ft(d.length)} x ${ft(d.width)} with mirrors · reversed in, nose to the gate`);vehicleMeshes.push(o)}});
    renderer.shadowMap.needsUpdate=true;if(photo&&pt)pt.setScene(scene,camera);invalidate()}).catch(e=>console.warn('car model',e));
  // two-wheelers from the owner's downloaded models, sized to the real bikes they stand for, front to the gate
  for(const [code,name] of (P.bikes||[])){const moto=/VFR|Hunter/.test(name);
-   loadGLBVehicle(THREE,GLTFLoader,moto?'assets/vehicles/vfr800.glb?v=1792408834':'assets/vehicles/scooter.glb?v=1792408834',moto?{front:'+z',length:2.12,groundMaterial:'rubber',name:code,materials:vfrMats()}:{front:'+z',length:1.837,name:code}).then(b=>{
+   loadGLBVehicle(THREE,GLTFLoader,moto?'assets/vehicles/vfr800.glb?v=1792409154':'assets/vehicles/scooter.glb?v=1792409154',moto?{front:'+z',length:2.12,groundMaterial:'rubber',name:code,materials:vfrMats()}:{front:'+z',length:1.837,name:code}).then(b=>{
      scene.add(b);bikeObjs[code]={b,moto};b.traverse(o=>{if(o.isMesh)o.userData.keepUV=true});placeBike(code);
      renderer.shadowMap.needsUpdate=true;if(photo&&pt)pt.setScene(scene,camera);invalidate()}).catch(e=>console.warn('bike model',e))}
  if(SHOW_BIKES) for(const [code,name,bx,by,bl,bw] of (P.bikes||[])){const b=/Hunter/.test(name)?createHunter350(THREE,mergeGeometries,{}):createAther450(THREE,mergeGeometries,{});
@@ -1617,7 +1617,7 @@ function tourPlan(){const E=EYE,S2=P.spiral,cx=S2.c[0],cy=S2.c[1],sR=FFZ/(S2.n||
   p(6.0,-1.5,RDZ+E);p(6.2,1.6,HUZ+E,'Gate GT-01');p(6.6,7.0,hFront(6.6,7.0)+E);p(7.4,12.5,PKZ+E,'Parking');
   look(14,22,PKZ+2.5,3,70);p(8.2,20.0,PKZ+E);p(7.6,28.0,PKZ+E);p(6.3,31.8,PKZ+E,'Porch');
   p(6.2,34.0,PKZ+E+0.75);p(6.2,36.3,E);p(6.2,40.9,E,'Main door');p(6.0,44.0,E,'Foyer');
-  p(8.5,47.8,E);p(12.6,50.5,E,'Living room');look(19.5,52.5,4.6,5,170);
+  p(8.5,47.8,E);p(12.6,50.5,E,'Living room');look(19.5,52.5,4.6,5,140);
   p(14.6,55.8,E);p(15.75,58.9,E,'Open area (future dining)');p(15.6,61.6,E);
   p(13.6,62.4,E);p(10.2,62.3,E,'Kitchen');look(5.0,63.5,4.4,4,110);
   p(13.0,62.6,E);p(15.2,64.8,E);p(14.6,68.6,E,'Stair hall');p(13.0,72.8,E);p(12.4,76.5,E);p(12.3,79.6,E);
@@ -1627,35 +1627,44 @@ function tourPlan(){const E=EYE,S2=P.spiral,cx=S2.c[0],cy=S2.c[1],sR=FFZ/(S2.n||
   p(13.6,77.8,FFZ+E);p(12.3,78.6,FFZ+E);look(17,76.9,FFZ-2.5,3,60);
   p(12.3,81.0,FFZ+E,'Bedroom 3');p(12.6,84.6,FFZ+E);p(12.8,87.6,FFZ+E);look(17.0,95.5,FFZ+3.5,5,130);
   p(12.5,84.0,FFZ+E);p(12.2,80.0,FFZ+E);p(11.6,77.4,FFZ+E);p(9.9,75.8,FFZ+E);p(7.2,75.2,FFZ+E,'Terrace');
-  p(7.0,70.0,FFZ+E);p(8.8,52.0,FFZ+E);look(11,30,FFZ+2,4,160);p(8.6,32.0,FFZ+E);p(7.0,21.5,FFZ+E,'Balcony 2');p(7.2,18.2,FFZ+E);look(8,-6,FFZ-4,3,70);
+  p(7.0,70.0,FFZ+E);p(8.8,52.0,FFZ+E);look(11,30,FFZ+2,4,120);p(8.6,32.0,FFZ+E);p(7.0,21.5,FFZ+E,'Balcony 2');p(7.2,18.2,FFZ+E);look(8,-6,FFZ-4,3,70);
   p(9.0,17.75,FFZ+E,'Outside stair ST-1');
   for(let x=9.6;x<=17.1;x+=0.5){const z=Math.max(LZ,Math.min(FFZ,LZ+R1*((BX2-x)/TD+0.5)));p(x,17.75,z+E)}
   p(18.2,17.6,LZ+E);p(18.85,16.2,LZ+E);
   for(let y=15.8;y>=A0s-0.4;y-=0.5){const z=Math.max(HUZ,Math.min(LZ,HUZ+R1*((y-A0s)/TD+0.5)));p(18.85,y,z+E)}
   p(18.6,0.8,HUZ+E);p(17.5,-3.0,RDZ+E,'Back on the road');p(12.0,-11.0,RDZ+E);look(11.0,24.0,6.0,4,30,'Home tour done');
-  return T}
+  // stop for a few seconds on entering each room or place (where a caption starts), looking a little round the way ahead
+  const out=[];T.forEach((q,i)=>{out.push(q);if(q.k!=='p'||!q.label||(T[i+1]&&T[i+1].k==='look'))return;
+    const nx=T.slice(i+1).find(r=>r.k==='p'&&Math.hypot(r.x-q.x,r.y-q.y)>2.0);if(!nx)return;const d=Math.hypot(nx.x-q.x,nx.y-q.y);
+    out.push({k:'look',x:q.x+(nx.x-q.x)/d*10,y:q.y+(nx.y-q.y)/d*10,z:q.z-0.6,secs:3,sweep:24,label:q.label})});
+  return out}
 const tour={on:false,segs:null,T:0,t0:0,yaw:0,pitch:0,fl:'G',label:''},tourBtn=document.getElementById('tourBtn'),tourCap=document.getElementById('tourCap');
 const W3=(x,y,z)=>new THREE.Vector3(mx(x),m(z),m(y));
 function buildTour(){const plan=tourPlan(),segs=[];let t=0,cur=null,run=[];
   const flush=()=>{if(run.length<2){run=run.slice(-1);return}
     const curve=new THREE.CatmullRomCurve3(run.map(q=>W3(q.x,q.y,q.z)),false,'centripetal');const N=Math.max(20,Math.round(curve.getLength()/0.05)),tab=[0];let tt=0;
+    let hPrev=null;
     for(let i=1;i<=N;i++){const a=curve.getPointAt((i-1)/N),b=curve.getPointAt(i/N),dh=Math.hypot(b.x-a.x,b.z-a.z),dz=Math.abs(b.y-a.y),ds=Math.hypot(dh,dz);
-      tt+=ds/(m(3.1)/(1+2.2*dz/Math.max(dh,1e-4)*0.6));tab.push(tt)}   // about 3 ft/s on the level, slower on stairs
+      const h=Math.atan2(b.x-a.x,b.z-a.z),turn=hPrev===null?0:Math.abs(Math.atan2(Math.sin(h-hPrev),Math.cos(h-hPrev))),k=turn/Math.max(dh,1e-4);hPrev=h;
+      let v=m(3.1)/(1+2.2*dz/Math.max(dh,1e-4)*0.6);if(k>1e-6)v=Math.min(v,TOUR_TURN/k);   // about 3 ft/s on the level, slower on stairs and round tight turns
+      tt+=ds/v;tab.push(tt)}
     const cum=[0];for(let i=1;i<run.length;i++)cum.push(cum[i-1]+Math.hypot(run[i].x-run[i-1].x,run[i].y-run[i-1].y,run[i].z-run[i-1].z));   // caption where its point is, by distance along the path
     const labels=run.map((q,i)=>q.label?{u:cum[i]/cum[cum.length-1],label:q.label}:null).filter(Boolean);
     segs.push({k:'move',curve,tab,N,t0:t,t1:t+tt,labels});t+=tt;run=run.slice(-1)};
-  for(const q of plan){if(q.k==='p'){run.push(q);cur=q}else{flush();segs.push({k:'look',pos:W3(cur.x,cur.y,cur.z),tgt:W3(q.x,q.y,q.z),secs:q.secs,sweep:q.sweep*Math.PI/180,label:q.label,t0:t,t1:t+q.secs});t+=q.secs}}
+  for(const q of plan){if(q.k==='p'){run.push(q);cur=q}else{flush();const sw=q.sweep*Math.PI/180,secs=Math.max(q.secs,sw/TOUR_PAN+2.0);segs.push({k:'look',pos:W3(cur.x,cur.y,cur.z),tgt:W3(q.x,q.y,q.z),secs,sweep:sw,label:q.label,t0:t,t1:t+secs});t+=secs}}
   flush();return {segs,T:t}}
 const angLerp=(a,b,k)=>a+Math.atan2(Math.sin(b-a),Math.cos(b-a))*k;
+const TOUR_TURN=0.4,TOUR_PAN=0.35;   // head-turn limits (rad/s): walking round turns, and looking round a room
+const angStep=(a,b,f,max)=>{const d=Math.atan2(Math.sin(b-a),Math.cos(b-a));return a+Math.max(-max,Math.min(max,d*f))};
 function tourPose(t,dt){const tr=tour;let sg=tr.segs.find(g=>t<=g.t1)||tr.segs[tr.segs.length-1];let yaw,pitch,pos,label=null;
   if(sg.k==='move'){const tab=sg.tab,lt=Math.min(tab[tab.length-1],Math.max(0,t-sg.t0));let i=1;while(i<tab.length-1&&tab[i]<lt)i++;
     const u=Math.min(1,((i-1)+(lt-tab[i-1])/Math.max(1e-6,tab[i]-tab[i-1]))/sg.N);pos=sg.curve.getPointAt(u);
-    const ah=sg.curve.getPointAt(Math.min(1,u+m(3.0)/sg.curve.getLength())),d=ah.clone().sub(pos);
+    const ah=sg.curve.getPointAt(Math.min(1,u+m(4.5)/sg.curve.getLength())),d=ah.clone().sub(pos);
     if(Math.hypot(d.x,d.z)>1e-3){yaw=Math.atan2(-d.x,-d.z);pitch=Math.atan2(d.y,Math.hypot(d.x,d.z))*0.35-0.08}else{yaw=tr.yaw;pitch=tr.pitch}
     for(const L of sg.labels)if(u>=L.u-1e-6)label=L.label}
   else{pos=sg.pos;const d=sg.tgt.clone().sub(pos),base=Math.atan2(-d.x,-d.z),k=Math.min(1,Math.max(0,(t-sg.t0)/sg.secs)),turn=Math.min(1,(t-sg.t0)/1.0);
-    yaw=base+sg.sweep*0.5*Math.sin(k*Math.PI*2)*Math.min(1,(t-sg.t0)/1.2)*Math.min(1,(sg.t1-t)/1.2);pitch=Math.atan2(d.y,Math.hypot(d.x,d.z));if(sg.label)label=sg.label}
-  const f=dt>0?1-Math.exp(-dt*3.2):1;tr.yaw=dt>0?angLerp(tr.yaw,yaw,f):yaw;tr.pitch=dt>0?tr.pitch+(pitch-tr.pitch)*f:pitch;
+    const e=k*k*(3-2*k);yaw=base+sg.sweep*(e-0.5);pitch=Math.atan2(d.y,Math.hypot(d.x,d.z));if(sg.label)label=sg.label}   // one slow pan from one side of the view to the other
+  if(dt>0){const f=1-Math.exp(-dt*1.8);tr.yaw=angStep(tr.yaw,yaw,f,0.45*dt);tr.pitch+=Math.max(-0.3*dt,Math.min(0.3*dt,(pitch-tr.pitch)*f))}else{tr.yaw=yaw;tr.pitch=pitch}   // gentle, rate-limited head turns
   camera.position.copy(pos);yaw_=tr.yaw;pitch_=tr.pitch;
   if(label&&label!==tr.label){tr.label=label;tourCap.innerHTML=label+'<small>Home tour · any key to stop</small>';tourCap.style.display='block'}
   const fl=pos.y>m(FFZ-1.5)&&pos.y<m(FFZ+CEIL)?'F':'G';if(fl!==tr.fl){tr.fl=fl;applyVis({fl})}}
@@ -1670,6 +1679,9 @@ function stopTour(){tour.on=false;tourCap.style.display='none';tourBtn.textConte
 tourBtn.onclick=()=>tour.on?stopTour():startTour();
 addEventListener('keydown',e=>{if(tour.on&&!e.repeat)stopTour()},true);
 renderer.domElement.addEventListener('pointerdown',()=>{if(tour.on)stopTour()},true);
+window.__tourSim=()=>{if(!tour.segs){const b=buildTour();tour.segs=b.segs;tour.T=b.T}tour.yaw=yaw;tour.pitch=pitch;tourPose(0,0);let py=tour.yaw,mx_=0,at=0;const segT=tour.segs.map(g=>[g.k,(g.t1-g.t0).toFixed(1)]);
+  for(let t=1/30;t<=tour.T;t+=1/30){tourPose(t,1/30);const r=Math.abs(Math.atan2(Math.sin(tour.yaw-py),Math.cos(tour.yaw-py)))*30;if(r>mx_){mx_=r;at=t}py=tour.yaw}
+  return {T:tour.T.toFixed(1),maxDegPerS:(mx_*180/Math.PI).toFixed(1),at:at.toFixed(1),segT}};
 window.__tourAt=t=>{if(!tour.segs){const b=buildTour();tour.segs=b.segs;tour.T=b.T}tourPose(t,0);yaw=yaw_;pitch=pitch_;applyLook();invalidate();
   return [(-camera.position.x/F).toFixed(2),(camera.position.z/F).toFixed(2),(camera.position.y/F).toFixed(2),tour.T.toFixed(1),tour.label]};
 document.getElementById('loading').remove();
