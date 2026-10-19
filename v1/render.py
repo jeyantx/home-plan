@@ -210,8 +210,18 @@ def levels():
     ft=lambda v:("+" if v>0 else "")+fmt(v) if v else "0"
     E('<g class="L-dims">')
     line(0.375,R['y_hump'],21,R['y_hump'],'#1f6f8b',0.04,extra='stroke-dasharray="0.25 0.15"')
-    for a,b in ((0.375,10.0),(15.5,17.1)): rect(a,b,R['drain'][0],R['drain'][1],'#4a4f55','#222',0.02)
-    line(0.375,R['y_top'],17.1,R['y_top'],'#1f6f8b',0.04,extra='stroke-dasharray="0.25 0.15"')
+    for a,b in ((0.375,10.0),): rect(a,b,R['drain'][0],R['drain'][1],'#4a4f55','#222',0.02)
+    SP=getattr(_m,'SIDE_PLATFORM',None)
+    line(0.375,R['y_top'],SP['xe'] if SP else 17.1,R['y_top'],'#1f6f8b',0.04,extra='stroke-dasharray="0.25 0.15"')
+    if SP:   # small gate: three steps up to a level platform at parking height (the ramp is for the car gate only)
+        import math as _mm
+        for q in platform_outlines(SP): E(f'<polygon points="{pts(q)}" fill="#dfe7ec" stroke="#1f6f8b" stroke-width="0.05"/>')
+        st=SP['steps']
+        for y in st: line(platform_cx(y,SP),y,SP['x2'],y,'#1f6f8b',0.04)
+        a=S(15.6,st[0]-0.1); b=S(15.6,st[-1]+1.2)
+        E(f'<line x1="{a[0]:.3f}" y1="{a[1]:.3f}" x2="{b[0]:.3f}" y2="{b[1]:.3f}" stroke="#1f6f8b" stroke-width="0.07" marker-end="url(#arrT)"/>')
+        text(16.3,1.95,'3 steps up 6"',0.3,weight=700,fill='#1f6f8b')
+        text(13.6,11.6,'platform '+ft(L['parking']-L['road']),0.28,weight=700,fill='#1f6f8b')
     a=S(7.0,R['y_crest']+0.4); b=S(7.0,R['y_top']-0.4)
     E(f'<line x1="{a[0]:.3f}" y1="{a[1]:.3f}" x2="{b[0]:.3f}" y2="{b[1]:.3f}" stroke="#1f6f8b" stroke-width="0.09" marker-end="url(#arrT)"/>')
     text(4.4,-0.45,'ROAD '+ft(L['road']),0.3,weight=700,fill='#1f6f8b')
@@ -222,6 +232,22 @@ def levels():
     text(15.2,98.4,'back garden '+ft(L['garden']-L['road']),0.42,weight=700,fill='#1f6f8b')
     text(6.0,42.3,'floor '+ft(L['floor']-L['road']),0.42,weight=700,fill='#1f6f8b')
     E('</g>')
+def platform_cx(y,SP):
+    # east end of a small-gate step at Y: against the tree-well ring, never east of the planter pillar
+    import math as _mm
+    return max(SP['x1'],12.75+_mm.sqrt(max(0.0,2.0**2-(y-4.25)**2)))
+def platform_outlines(SP):
+    # plan outlines of the three steps and the level platform (east edge: round the tree-well ring, then straight to the parking)
+    import math as _mm
+    st=SP['steps'];out=[];x2=SP['x2']
+    for ya,yb in zip(st[:-1],st[1:]):
+        ys=[ya+(yb-ya)*k/6 for k in range(7)]
+        out.append([(platform_cx(y,SP),y) for y in ys]+[(x2,yb),(x2,ya)])
+    y0=st[-1];xe=SP['xe'];ye=4.25+_mm.sqrt(max(0.0,4-(xe-12.75)**2))
+    a0=_mm.atan2(y0-4.25,platform_cx(y0,SP)-12.75);a1=_mm.atan2(ye-4.25,xe-12.75)
+    arc=[(12.75+2.0*_mm.cos(a0+(a1-a0)*k/16),4.25+2.0*_mm.sin(a0+(a1-a0)*k/16)) for k in range(17)]
+    out.append([(x2,y0)]+arc+[(xe,SP['y_end']),(x2,SP['y_end'])])
+    return out
 def vehicles():
     import model as _m
     cx1,cx2,cy1,cy2=getattr(_m,'CAR',(11.25,17.25,13.75,28.75))
@@ -231,7 +257,7 @@ def vehicles():
     for b in getattr(_m,'BIKES',[]):
         if isinstance(b,(int,float)): bike(2.0,b); continue
         code,name,bx,by,bl,bw=b[:6]; fac=b[6] if len(b)>6 else 'N'; bike(bx,by,fac)
-        lab=code+'\n'+name.replace('Royal Enfield ','RE ').replace(' (spare spot)','\n(spare spot)')
+        lab=code+'\n'+name.replace('Royal Enfield ','RE ')
         if fac=='E': text(bx+0.4,by+2.0,lab,0.3,weight=600,fill='#555')
         else: text(bx-2.4,by,lab,0.3,weight=600,fill='#555')
 def car_path(cx1,cy1):
@@ -255,9 +281,9 @@ def car_path(cx1,cy1):
     text(cx1-0.6,cy1-1.3,'car path: space needed going in, reversing (blue), and out (green)\nshaded = body with mirrors, dashed = rear axle',0.28,fill='#1f6f8b')
     E('</g>')
 def bike(cx,cy,fac='N'):
-    # top view of a two-wheeler, 2'6" x 6', front toward the road ('N') or to the east ('E', turned a quarter)
-    if fac=='E':
-        x,y=S(cx,cy); E(f'<g transform="rotate(90 {x:.3f} {y:.3f})">'); bike(cx,cy); E('</g>'); return
+    # top view of a two-wheeler, 2'6" x 6', front toward the road ('N'), the house ('S') or the east ('E')
+    if fac in ('E','S'):
+        x,y=S(cx,cy); E(f'<g transform="rotate({90 if fac=="E" else 180} {x:.3f} {y:.3f})">'); bike(cx,cy); E('</g>'); return
     for wy in (cy-2.35,cy+2.35):
         x,y=S(cx,wy); E(f'<ellipse cx="{x:.3f}" cy="{y:.3f}" rx="0.22" ry="0.75" fill="#2b2b2b"/>')
     x1,y1=S(cx-0.42,cy+1.9); E(f'<rect x="{x1:.3f}" y="{y1:.3f}" width="0.84" height="3.8" rx="0.35" fill="#6d7480" stroke="#333" stroke-width="0.03"/>')
@@ -466,7 +492,7 @@ def draw_struct(fl):
 
 def ground():
     W=walls_of('G')
-    draw_plot('G'); draw_rooms('G'); porch_steps(); tree(); vehicles(); levels()
+    draw_plot('G'); draw_rooms('G'); porch_steps(); levels(); tree(); vehicles()
     draw_furniture('G'); plants(); _trunk(); text(11.0,106.7,'BW-09 back wall (existing, houses behind)',0.3,fill='#666')
     stair_A(); stair_L(); stair_B(op=0.45,dash='stroke-dasharray="0.2 0.12"')
     E('<g opacity="0.72">'); draw_furniture('G',_late=True); E('</g>')

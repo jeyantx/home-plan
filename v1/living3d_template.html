@@ -1022,10 +1022,27 @@ for(const [a,b,c,d] of [[8.25,21,30.75,33.25],[2.75,21,33.25,67.125],[6.0,21,67.
 slab([[2.75,33.25],[8.5,33.25],[8.5,40.5],[2.75,40.5]],MAT.otherFloor,0,'G-02 · Porch floor');
 for(let i=0;i<3;i++) box(3.5,8.25,30.75+i*0.833,33.25,PKZ,PKZ+(i+1)*(-PKZ/3),MAT.stepStone,{tip:`Porch steps, granite, ${Math.round(-PKZ/3*12)}" risers, from the parking`});
 box(0.375,2.75,30.75,30.79,PKZ,GRD,MAT.extTrim,{tip:'Step up from the parking to the side passage, 6"'});
+// small gate GT-02: three steps up from the crest to a level platform at parking height (the ramp serves the car gate only)
+const SPL=P.platform,TWC=(()=>{const t=fuG['FU-76'];return [(t.x1+t.x2)/2,(t.y1+t.y2)/2,(t.x2-t.x1)/2]})();
+const splCx=y=>Math.max(SPL.x1,TWC[0]+Math.sqrt(Math.max(0,TWC[2]**2-(y-TWC[1])**2)));   // east end of a step: against the tree-well ring
+const splAt=(x,y)=>{if(!SPL)return null;const st=SPL.steps;
+  if(y>=st[0]&&y<st[st.length-1]&&x<=SPL.x2&&x>=splCx(y)){let k=0;while(k<st.length-1&&y>=st[k+1])k++;return HUZ+(PKZ-HUZ)*(k+1)/st.length}
+  if(y>=st[st.length-1]&&y<=SPL.y_end&&x<=SPL.x2&&x>=SPL.xe&&Math.hypot(x-TWC[0],y-TWC[1])>=TWC[2])return PKZ;return null};
+const hFront=(x,y)=>{const h=splAt(x,y);return h===null?zF(y):h};   // ground in front of the house, with the small-gate steps and platform
+if(SPL){const st=SPL.steps,L=[];
+  const solid=(pts,top,mat,tip)=>{const sh=new THREE.Shape(pts.map(([x,y])=>new THREE.Vector2(mx(x),-m(y))));const g=new THREE.ExtrudeGeometry(sh,{depth:m(top-(RDZ-0.1)),bevelEnabled:false});g.rotateX(-Math.PI/2);
+    const me=new THREE.Mesh(g,mat);me.position.y=m(RDZ-0.1);me.castShadow=true;me.receiveShadow=true;scene.add(me);named(me,tip);return me};
+  for(let k=0;k<st.length-1;k++){const ya=st[k],yb=st[k+1],P1=[];for(let i=0;i<=6;i++){const y=ya+(yb-ya)*i/6;P1.push([splCx(y),y])}P1.push([SPL.x2,yb],[SPL.x2,ya]);
+    solid(P1,HUZ+(PKZ-HUZ)*(k+1)/st.length,MAT.stepStone,`Small-gate steps · granite, 6" risers, ${Math.round((yb-ya)*12)}" treads · from the gate crest up to the platform (+2'0")`)}
+  {const y0=st[st.length-1],ye=TWC[1]+Math.sqrt(Math.max(0,TWC[2]**2-(SPL.xe-TWC[0])**2)),a0=Math.atan2(y0-TWC[1],splCx(y0)-TWC[0]),a1=Math.atan2(ye-TWC[1],SPL.xe-TWC[0]),P2=[[SPL.x2,y0]];
+    for(let i=0;i<=16;i++){const a=a0+(a1-a0)*i/16;P2.push([TWC[0]+TWC[2]*Math.cos(a),TWC[1]+TWC[2]*Math.sin(a)])}P2.push([SPL.xe,SPL.y_end],[SPL.x2,SPL.y_end]);
+    const pl=solid(P2,PKZ,[MAT.paver,MAT.extTrim],`Small-gate platform · grey pavers at parking level (+2'0") · its east edge is a retaining kerb along the car ramp (1'4" high at the steps, nothing at Y 12'3")`);
+    {const uv=pl.geometry.attributes.uv,pa=pl.geometry.attributes.position;for(let i=0;i<uv.count;i++)uv.setXY(i,pa.getX(i),pa.getZ(i));uv.needsUpdate=true}}}
 {const tp=fuG['FU-76'],tx=(tp.x1+tp.x2)/2,ty=(tp.y1+tp.y2)/2,tr=(tp.x2-tp.x1)/2;   // drive: gate bevel, crest, ramp, level parking; tree well FU-76 left open
  const X0=0.375,X1=21,Y0=0,Y1=30.75,dx=0.25,dy=0.25,pos=[],nor=[];
  for(let x=X0;x<X1-1e-6;x+=dx)for(let y=Y0;y<Y1-1e-6;y+=dy){const xa=x,xb=Math.min(x+dx,X1),ya=y,yb=Math.min(y+dy,Y1);
    if(Math.hypot((xa+xb)/2-tx,(ya+yb)/2-ty)<tr-0.2)continue;
+   if([[xa,ya],[xb,ya],[xb,yb],[xa,yb]].every(([u,v])=>splAt(u,v)!==null))continue;   // under the small-gate steps and platform
    const P4=[[xa,ya],[xb,ya],[xb,yb],[xa,yb]].map(([u,v])=>[mx(u),m(zF(v)+0.03),m(v)]);
    for(const k of [0,1,2,0,2,3])pos.push(...P4[k])}
  const dg=new THREE.BufferGeometry();dg.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));dg.computeVertexNormals();
@@ -1034,16 +1051,17 @@ box(0.375,2.75,30.75,30.79,PKZ,GRD,MAT.extTrim,{tip:'Step up from the parking to
  const drive=new THREE.Mesh(dg,MAT.paver);drive.receiveShadow=true;scene.add(drive);named(drive,`G-01 · Parking and drive · grey interlocking pavers · gate crest +6" over the road, ramp 1 in 6, parking +2'0"`);
  // covered drain across the drive at the inner edge of the crest (to the rainwater pit and the road drain)
  const [d1,d2]=RP.drain,grate=std({color:'#3a3c3e',roughness:0.5,metalness:0.6});
- for(const [a,b] of [[X0,tx-tr-0.05],[tx+tr+0.05,17.1]]) if(b-a>0.1){box(a,b,d1,d2,HUZ-0.03,HUZ+0.035,grate,{cast:false,tip:'Gate drain, 9" wide, steel grating · takes the drive water to the rainwater pit, overflow to the road drain'});
+ for(const [a,b] of [[X0,tx-tr-0.05]]) if(b-a>0.1){box(a,b,d1,d2,HUZ-0.03,HUZ+0.035,grate,{cast:false,tip:'Gate drain, 9" wide, steel grating · takes the drive water to the rainwater pit, overflow to the road drain'});
    for(let x=a+0.1;x<b-0.05;x+=0.2) box(x,x+0.04,d1+0.03,d2-0.03,HUZ+0.035,HUZ+0.04,MAT.blackMetal,{cast:false,tip:'Gate drain grating'})}
  // tree well: low retaining ring, brick with a granite coping; soil and leaf mulch at today's ground
- const ringTop=Math.max(zF(tp.y1),zF(tp.y2))+0.12,sh=new THREE.Shape();sh.absarc(mx(tx),-m(ty),m(tr),0,Math.PI*2,false);const hl=new THREE.Path();hl.absarc(mx(tx),-m(ty),m(tr-0.375),0,Math.PI*2,true);sh.holes.push(hl);
+ const ringTop=PKZ+0.12,sh=new THREE.Shape();sh.absarc(mx(tx),-m(ty),m(tr),0,Math.PI*2,false);const hl=new THREE.Path();hl.absarc(mx(tx),-m(ty),m(tr-0.375),0,Math.PI*2,true);sh.holes.push(hl);
  const kg=new THREE.ExtrudeGeometry(sh,{depth:m(ringTop-RDZ),bevelEnabled:false,curveSegments:48});kg.rotateX(-Math.PI/2);
- const ringZ=y=>Math.max(HUZ+0.04,zF(y)+0.1)-(RDZ-0.02);   // ring top 1" over the drive beside it (low by the gate, higher where the ramp rises)
- {const pa=kg.attributes.position;for(let i=0;i<pa.count;i++)if(pa.getY(i)>m(0.2))pa.setY(i,m(ringZ(pa.getZ(i)/F)));pa.needsUpdate=true;kg.computeVertexNormals()}
+ const ringAt=(X,Z)=>{const x=-X/F,y=Z/F,a=Math.atan2(y-ty,x-tx),ox=tx+(tr+0.3)*Math.cos(a),oy=ty+(tr+0.3)*Math.sin(a);return Math.max(HUZ+0.04,hFront(ox,oy)+0.1)-(RDZ-0.02)};   // ring top 1" over the ground just outside it
+ const ringZ=y=>Math.max(HUZ+0.04,zF(y)+0.1)-(RDZ-0.02);
+ {const pa=kg.attributes.position;for(let i=0;i<pa.count;i++)if(pa.getY(i)>m(0.2))pa.setY(i,m(ringAt(pa.getX(i),pa.getZ(i))));pa.needsUpdate=true;kg.computeVertexNormals()}
  const kb=new THREE.Mesh(kg,MAT.extTrim);kb.position.y=m(RDZ-0.02);kb.castShadow=true;kb.receiveShadow=true;scene.add(kb);named(kb,`FU-76 · Tree well ring, 4½" brick, granite coping · holds back the raised drive · ${tp.note}`);wallMeshes.push(kb);
  const cg=new THREE.ExtrudeGeometry(sh,{depth:m(0.06),bevelEnabled:false,curveSegments:48});cg.rotateX(-Math.PI/2);
- {const pa=cg.attributes.position;for(let i=0;i<pa.count;i++){const top=pa.getY(i)>m(0.03);pa.setY(i,m(ringZ(pa.getZ(i)/F)+(RDZ-0.02)+(top?0.04:-0.02)))}pa.needsUpdate=true;cg.computeVertexNormals()}
+ {const pa=cg.attributes.position;for(let i=0;i<pa.count;i++){const top=pa.getY(i)>m(0.03);pa.setY(i,m(ringAt(pa.getX(i),pa.getZ(i))+(RDZ-0.02)+(top?0.04:-0.02)))}pa.needsUpdate=true;cg.computeVertexNormals()}
  const cp=new THREE.Mesh(cg,MAT.stepStone);scene.add(cp);named(cp,'FU-76 · Tree well coping, grey granite');
  const mulch=std({map:canvasTex(512,512,(g,w,h)=>{const r=rng(61);g.fillStyle='#5b3b25';g.fillRect(0,0,w,h);for(let i=0;i<5000;i++){const c=['#3f2818','#6e4a2e','#7d6a3e','#4a5a2a','#8a6a48'][Math.floor(r()*5)];g.fillStyle=c;g.globalAlpha=0.6;g.save();g.translate(r()*w,r()*h);g.rotate(r()*7);g.fillRect(-4,-1.5,8+r()*8,3);g.restore()}g.globalAlpha=1},0.6),roughness:1});
  cyl(tx,ty,RDZ-0.05,RDZ+0.04,tr-0.375,mulch,{tip:`FU-76 · Tree well · open soil with leaf mulch at today's ground · ${tp.note}`,seg:48}).castShadow=false;}
@@ -1271,11 +1289,11 @@ const vehicleMeshes=[];
    car.traverse(o=>{if(o.isMesh){o.userData.keepUV=true;named(o,`Car · compact sedan (Free3D model, scaled to VW Virtus size, 4561 x 1752 mm body) · ${ft(d.length)} x ${ft(d.width)} with mirrors · reversed in, nose to the gate`);vehicleMeshes.push(o)}});
    renderer.shadowMap.needsUpdate=true;if(photo&&pt)pt.setScene(scene,camera);invalidate()}).catch(e=>console.warn('car model',e));
  // two-wheelers from the owner's downloaded models, sized to the real bikes they stand for, front to the gate
- for(const [code,name,bx,by,bl,bw,fac] of (P.bikes||[])){const moto=/VFR|Hunter/.test(name),east=fac==='E';
+ for(const [code,name,bx,by,bl,bw,fac] of (P.bikes||[])){const moto=/VFR|Hunter/.test(name),east=fac==='E',south=fac==='S';
    loadGLBVehicle(THREE,GLTFLoader,moto?'assets/vehicles/vfr800.glb?v=__BUILD__':'assets/vehicles/scooter.glb?v=__BUILD__',moto?{front:'+z',length:2.12,groundMaterial:'rubber',name:code,materials:vfrMats()}:{front:'+z',length:1.837,name:code}).then(b=>{
-     b.position.set(mx(bx),m(PKZ),m(by));b.rotation.y=east?Math.PI/2:Math.PI;scene.add(b);
+     b.position.set(mx(bx),m(PKZ),m(by));b.rotation.y=east?Math.PI/2:south?0:Math.PI;scene.add(b);
      const d=b.userData.dims,ft=v=>{const i=Math.round(v/F*12);return `${Math.floor(i/12)}'${i%12}"`};
-     b.traverse(o=>{if(o.isMesh){o.userData.keepUV=true;named(o,`${code} · ${moto?'Motorcycle · Honda VFR800 (model by danielfc10, CC BY 3.0, Blend Swap), real size':(/spare/.test(name)?'Spare two-wheeler spot, up to 7\' long (scooter shown)':'Scooter (downloaded model, sized to an Ather 450X)')} · ${ft(d.length)} long, ${ft(d.height)} high · ${east?'front to the east, by the neem':'front to the gate'}`)}});
+     b.traverse(o=>{if(o.isMesh){o.userData.keepUV=true;named(o,`${code} · ${moto?'Motorcycle · Honda VFR800 (model by danielfc10, CC BY 3.0, Blend Swap), real size':'Scooter (downloaded model, sized to an Ather 450X)'} · ${ft(d.length)} long, ${ft(d.height)} high · ${east?'front to the east':south?'front to the house (ridden in forward)':'front to the gate'}`)}});
      renderer.shadowMap.needsUpdate=true;if(photo&&pt)pt.setScene(scene,camera);invalidate()}).catch(e=>console.warn('bike model',e))}
  if(SHOW_BIKES) for(const [code,name,bx,by,bl,bw] of (P.bikes||[])){const b=/Hunter/.test(name)?createHunter350(THREE,mergeGeometries,{}):createAther450(THREE,mergeGeometries,{});
    b.position.set(mx(bx),m(PKZ),m(by));b.rotation.y=Math.PI;scene.add(b);b.traverse(o=>{if(o.isMesh){o.userData.keepUV=true;named(o,`${code} · ${name} · front to the gate, on its side stand`)}})}}
@@ -1494,7 +1512,7 @@ function tryMove(step){const len=step.length();if(!len)return;const dir=step.clo
       const R=a[2]+0.75, dn=Math.hypot(nx-a[0],ny-a[1]), d0=Math.hypot(ox-a[0],oy-a[1]); if(dn<R&&dn<d0)return } }
   camera.position.add(step);
   {const py=camera.position.z/F,px=-camera.position.x/F;   // in front of the house the ground slopes: keep the eye 5'3" above the drive or the road
-   if(py<30.75&&px>-40&&px<60){const g=py<0?RDZ:zF(py),t=m(g+EYE);if(Math.abs(camera.position.y-t)<m(3.0))camera.position.y=t}}}
+   if(py<30.75&&px>-40&&px<60){const g=py<0?RDZ:hFront(px,py),t=m(g+EYE);if(Math.abs(camera.position.y-t)<m(3.0))camera.position.y=t}}}
 function moveVertical(dz){const y=camera.position.y;   // stay within the floor you are on: ground floor, first floor, or free above the house
   const [lo,hi]=y<=m(CEIL+0.5)?[0.4,m(CEIL)-0.15]:y<=m(FFZ+CEIL)?[m(FFZ)+0.4,m(FFZ+CEIL)-0.15]:[0.4,m(200)];
   camera.position.y=Math.max(lo,Math.min(hi,y+dz))}
