@@ -84,12 +84,12 @@ import {EffectComposer} from 'three/addons/postprocessing/EffectComposer.js';
 import {RenderPass} from 'three/addons/postprocessing/RenderPass.js';
 import {GTAOPass} from 'three/addons/postprocessing/GTAOPass.js';
 import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';
-import {createBambooPlant} from './models/bamboo-plant.js?v=1792410970';
-import {createNeemTree} from './models/neem-tree.js?v=1792410970';
-import {createTNPlant,TN_PLANTS} from './models/tn-plants.js?v=1792410970';
-import {createVirtus,createHunter350,createAther450,loadCarGLB,loadGLBVehicle} from './models/vehicles.js?v=1792410970';
+import {createBambooPlant} from './models/bamboo-plant.js?v=1792411112';
+import {createNeemTree} from './models/neem-tree.js?v=1792411112';
+import {createTNPlant,TN_PLANTS} from './models/tn-plants.js?v=1792411112';
+import {createVirtus,createHunter350,createAther450,loadCarGLB,loadGLBVehicle} from './models/vehicles.js?v=1792411112';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
-import {CAR_ROUTE} from './models/car-route.js?v=1792410970';
+import {CAR_ROUTE} from './models/car-route.js?v=1792411112';
 import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
 
 const P=window.PLAN, F=0.3048, CEIL=10.0, EYE=5.25;
@@ -142,6 +142,11 @@ function parkingTile(){return canvasTex(1024,1024,(g,w,h)=>{const u=w/4,r=rng(36
   g.save();g.beginPath();draw((X,Y,W,H)=>g.rect(X+5,Y+5,W-10,H-10));g.clip();
   for(let i=0;i<60000;i++){const t=r(),c=t<0.38?'rgba(70,70,68,0.75)':t<0.7?'rgba(205,205,200,0.8)':t<0.85?'rgba(110,110,106,0.7)':'rgba(170,166,158,0.7)',s=1+r()*2.6;g.fillStyle=c;g.fillRect(r()*w,r()*h,s,s)}
   g.restore()},0.4)}
+// plain light cement (broom-finished concrete): fine grain, faint trowel patches
+function cementTex(){return canvasTex(1024,1024,(g,w,h)=>{const r=rng(707);g.fillStyle='#cbc8c1';g.fillRect(0,0,w,h);
+  for(let i=0;i<300;i++){g.fillStyle=`rgba(${r()<0.5?'255,255,255':'90,85,78'},0.035)`;g.beginPath();g.ellipse(r()*w,r()*h,30+r()*120,15+r()*60,r()*3,0,7);g.fill()}
+  for(let i=0;i<80000;i++){g.fillStyle=r()<0.5?'rgba(0,0,0,0.06)':'rgba(255,255,255,0.08)';const z=1+r()*2;g.fillRect(r()*w,r()*h,z,z)}
+  for(let y=0;y<h;y+=3){g.fillStyle=`rgba(0,0,0,${0.012+r()*0.015})`;g.fillRect(0,y,w,1)}},1.2)}
 function stoneTiles(base,seed,tx,ty,tileFt){return canvasTex(1024,1024*ty/tx,(g,w,h)=>{const r=rng(seed);g.fillStyle=base;g.fillRect(0,0,w,h);
   for(let i=0;i<9000;i++){const v=(r()-.5)*0.05;g.fillStyle=v>0?`rgba(255,255,255,${v})`:`rgba(0,0,0,${-v})`;g.fillRect(r()*w,r()*h,3,3)}
   for(let i=0;i<220;i++){g.fillStyle=`rgba(${r()<.5?'255,255,255':'120,110,95'},0.05)`;g.beginPath();g.ellipse(r()*w,r()*h,8+r()*40,4+r()*20,r()*3,0,7);g.fill()}
@@ -197,6 +202,7 @@ const MAT={
   terrTile:std({map:clayTiles(),roughness:0.85}),
   paver:std({map:stoneTiles('#9d978d',62,4,4,0.75),roughness:0.9}),
   parkTile:std({map:parkingTile(),roughness:0.78}),
+  cement:std({map:cementTex(),roughness:0.92}),
   asphalt:std({color:'#4a4d50',roughness:0.95}),
   stepStone:std({color:'#8e8a84',roughness:0.5}),
   bark:std({color:'#5d4a3a',roughness:1}),
@@ -1062,13 +1068,13 @@ if(SPL){const st=SPL.steps,L=[];
     const pl=solid(P2,PKZ,[MAT.parkTile,MAT.extTrim],`Small-gate platform · grey parking tile at parking level (+2'0") · its east edge is a retaining kerb along the car ramp (1'4" high at the steps, nothing at Y 10'9")`);
     {const uv=pl.geometry.attributes.uv,pa=pl.geometry.attributes.position;for(let i=0;i<uv.count;i++)uv.setXY(i,pa.getX(i),pa.getZ(i));uv.needsUpdate=true}}}
 {const tp=fuG['FU-76'],tx=(tp.x1+tp.x2)/2,ty=(tp.y1+tp.y2)/2,tr=(tp.x2-tp.x1)/2;   // drive: gate bevel, crest, ramp, level parking; tree well FU-76 left open
- const X0=0.375,X1=21,Y0=0,Y1=30.75,dx=0.25,dy=0.25,pos=[],posP=[],nor=[];
+ const X0=0.375,X1=21,Y0=0,Y1=30.75,dx=0.25,dy=0.25,pos=[],posP=[],posC=[],nor=[];
  for(let x=X0;x<X1-1e-6;x+=dx)for(let y=Y0;y<Y1-1e-6;y+=dy){const xa=x,xb=Math.min(x+dx,X1),ya=y,yb=Math.min(y+dy,Y1);
    if(Math.hypot((xa+xb)/2-tx,(ya+yb)/2-ty)<tr-0.2)continue;
    if([[xa,ya],[xb,ya],[xb,yb],[xa,yb]].every(([u,v])=>splAt(u,v)!==null))continue;   // under the small-gate steps and platform
    const P4=[[xa,ya],[xb,ya],[xb,yb],[xa,yb]].map(([u,v])=>[mx(u),m(zF(v)+0.03),m(v)]);
-   const arr=ya>=RP.y_top-1e-6?posP:pos;for(const k of [0,1,2,0,2,3])arr.push(...P4[k])}
-for(const [P_,mat,nm] of [[pos,MAT.parkTile,`G-01 · Gate crest and ramp · grey herringbone parking tile PT-1 (anti-skid grade on the ramp) · crest +6" over the road, ramp 1 in 4 (14 deg) with 1 in 8 ends`],[posP,MAT.parkTile,`G-01 · Parking · grey herringbone parking tile PT-1, 400 x 400 mm, matt · level at +2'0"`]]){const pos=P_;
+   const arr=ya>=RP.y_top-1e-6?posP:ya<RP.y_crest-1e-6?posC:pos;for(const k of [0,1,2,0,2,3])arr.push(...P4[k])}
+for(const [P_,mat,nm] of [[posC,MAT.cement,`G-01 · Gate bevel and crest · plain light cement (broom finish) · crest +6" over the road, up to the gate drain`],[pos,MAT.parkTile,`G-01 · Ramp · grey herringbone parking tile PT-1 (anti-skid grade) · 1 in 4 (14 deg) with 1 in 8 ends`],[posP,MAT.parkTile,`G-01 · Parking · grey herringbone parking tile PT-1, 400 x 400 mm, matt · level at +2'0"`]]){const pos=P_;
  const dg=new THREE.BufferGeometry();dg.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));dg.computeVertexNormals();
  const duv=[];for(let i=0;i<pos.length;i+=3)duv.push(pos[i],pos[i+2]);dg.setAttribute('uv',new THREE.Float32BufferAttribute(duv,2));
  {const dn=dg.attributes.normal;let up=0;for(let i=0;i<dn.count;i++)up+=dn.getY(i);if(up<0){const pa=dg.attributes.position;for(let i=0;i<pa.count;i+=3){for(const c of [0,1,2]){const t=pa.getComponent(i+1,c);pa.setComponent(i+1,c,pa.getComponent(i+2,c));pa.setComponent(i+2,c,t)}}dg.computeVertexNormals()}}   // faces point up
@@ -1107,7 +1113,7 @@ if(P.underground){const iron=std({color:'#3d4043',roughness:0.55,metalness:0.6})
         if(rain)for(let k=-r+0.15;k<r-0.1;k+=0.18){const w=Math.sqrt(Math.max(0,r*r-k*k));box(cx-w+0.05,cx+w-0.05,cy+k,cy+k+0.04,z+0.04,z+0.06,MAT.paver,{cast:false,tip})}}}
     if(code==='UG-01'){const c1=P.columns.find(c=>c.id==='C-01'),vx=c1?c1.x1+0.19:0.56,vy=c1?c1.y2+0.18:20.93;   // tucked into the corner behind pillar C-01 (house side), in the wall colour
       cyl(vx,vy,PKZ,SLB-0.02,0.17,MAT.comp,{tip:`${code} · septic tank vent pipe, 4" PVC painted in the wall colour, in the corner behind pillar C-01, up to the roof`});}}}
-box(-40,70,-17,-0.02,RDZ-0.02,RDZ+0.02,MAT.paver,{cast:false,tip:'Road (north), 17\' wide · grey interlocking pavers · our gate crest is 6" above it, the parking 2\'0", the gardens 2\'6"'});
+box(-40,70,-17,-0.02,RDZ-0.02,RDZ+0.02,MAT.cement,{cast:false,tip:'Road (north), 17\' wide · light cement concrete · our gate crest is 6" above it, the parking 2\'0", the gardens 2\'6"'});
 // compound walls, gate pillars with lamps, planter pillar, gates
 for(const w of P.walls.G.filter(w=>w.kind==='comp')){   // stepped down along the drive (6' above the ground inside); the bottom holds back the fill
   const cuts=[w.y1,...[3.25,5.0,6.75,8.5,10.75,30.75].filter(c=>c>w.y1+0.01&&c<w.y2-0.01),w.y2];
@@ -1375,14 +1381,14 @@ function placeBike(code){const o=bikeObjs[code];if(!o)return;const t=(P.bikes||[
 const SHOW_BIKES=false;   // the old code-made two-wheelers stay off; the downloaded models below are used
 const vehicleMeshes=[];
 {const [cx1,cx2,cy1,cy2]=P.car||[11.25,17.0,14.75,29.75];
- loadCarGLB(THREE,GLTFLoader,'assets/vehicles/compact-car.glb?v=1792410970',{color:'#2f5d8c',length:4.561,bodyWidth:1.752,name:'Car'}).then(car=>{
+ loadCarGLB(THREE,GLTFLoader,'assets/vehicles/compact-car.glb?v=1792411112',{color:'#2f5d8c',length:4.561,bodyWidth:1.752,name:'Car'}).then(car=>{
    scene.add(car);window.__car=car;carAnim.car=car;setCarPose(...CAR_ROUTE.park,0,0);
    const d=car.userData.dims,ft=v=>{const i=Math.round(v/F*12);return `${Math.floor(i/12)}'${i%12}"`};
    car.traverse(o=>{if(o.isMesh){o.userData.keepUV=true;named(o,`Car · compact sedan (Free3D model, scaled to VW Virtus size, 4561 x 1752 mm body) · ${ft(d.length)} x ${ft(d.width)} with mirrors · reversed in, nose to the gate`);vehicleMeshes.push(o)}});
    renderer.shadowMap.needsUpdate=true;if(photo&&pt)pt.setScene(scene,camera);invalidate()}).catch(e=>console.warn('car model',e));
  // two-wheelers from the owner's downloaded models, sized to the real bikes they stand for, front to the gate
  for(const [code,name] of (P.bikes||[])){const moto=/VFR|Hunter/.test(name);
-   loadGLBVehicle(THREE,GLTFLoader,moto?'assets/vehicles/vfr800.glb?v=1792410970':'assets/vehicles/scooter.glb?v=1792410970',moto?{front:'+z',length:2.12,groundMaterial:'rubber',name:code,materials:vfrMats()}:{front:'+z',length:1.837,name:code}).then(b=>{
+   loadGLBVehicle(THREE,GLTFLoader,moto?'assets/vehicles/vfr800.glb?v=1792411112':'assets/vehicles/scooter.glb?v=1792411112',moto?{front:'+z',length:2.12,groundMaterial:'rubber',name:code,materials:vfrMats()}:{front:'+z',length:1.837,name:code}).then(b=>{
      scene.add(b);bikeObjs[code]={b,moto};b.traverse(o=>{if(o.isMesh)o.userData.keepUV=true});placeBike(code);
      renderer.shadowMap.needsUpdate=true;if(photo&&pt)pt.setScene(scene,camera);invalidate()}).catch(e=>console.warn('bike model',e))}
  if(SHOW_BIKES) for(const [code,name,bx,by,bl,bw] of (P.bikes||[])){const b=/Hunter/.test(name)?createHunter350(THREE,mergeGeometries,{}):createAther450(THREE,mergeGeometries,{});
