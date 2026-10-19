@@ -19,6 +19,8 @@ h1{font-size:15px;margin:0 6px 0 0;font-weight:650}
 main{flex:1;min-height:0;display:flex}
 #view{flex:1;position:relative;min-width:0}
 #view canvas{display:block}
+#view>canvas{position:absolute;left:0;top:0}
+#view.framed{background:#3a3d41}
 #hint{position:absolute;left:12px;bottom:10px;background:rgba(20,22,25,.72);color:#fff;font-size:12px;padding:5px 10px;border-radius:8px;pointer-events:none}
 #tip{position:absolute;pointer-events:none;background:#1f2328;color:#fff;font-size:12.5px;line-height:1.35;padding:6px 9px;border-radius:7px;max-width:320px;display:none;z-index:5}
 #tip b{color:#9fe0bf}
@@ -48,6 +50,7 @@ ul{margin:0;padding-left:18px}li{margin:3px 0}
  <button class="btn" id="sizes" aria-pressed="true" title="Show the sizes of every unit, door and drawer">Sizes</button>
  <button class="btn" id="walls" aria-pressed="true" title="Show or hide the kitchen walls">Walls</button>
  <div class="seg" id="views"><button data-v="all" aria-pressed="true">Whole kitchen</button><button data-v="east">East run</button><button data-v="back">Back run</button><button data-v="bf">Breakfast counter</button><button data-v="up">Wall units</button></div>
+ <div class="seg" id="ratioSeg" title="Shape of the 3D picture"><button data-r="fill">Fill</button><button data-r="16:9">16:9</button><button data-r="4:3">4:3</button><button data-r="1:1">1:1</button><button data-r="4:5">4:5</button><button data-r="3:4">3:4</button><button data-r="9:16">9:16</button></div>
  <button class="btn sp" id="panelBtn" aria-pressed="true">Unit list</button>
 </header>
 <main>
@@ -66,7 +69,7 @@ const W=(X,Y,Z)=>new THREE.Vector3(-X*F,Z*F,Y*F);      // plan feet (X from the 
 const view=document.getElementById('view');
 const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(2,devicePixelRatio));renderer.outputColorSpace=THREE.SRGBColorSpace;
 renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.05;renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;view.appendChild(renderer.domElement);
-const labels=new CSS2DRenderer();labels.domElement.style.position='absolute';labels.domElement.style.top='0';labels.domElement.style.pointerEvents='none';view.appendChild(labels.domElement);
+const labels=new CSS2DRenderer();labels.domElement.style.position='absolute';labels.domElement.style.top='0';labels.domElement.style.pointerEvents='none';labels.domElement.style.overflow='hidden';view.appendChild(labels.domElement);
 const scene=new THREE.Scene();scene.background=new THREE.Color(matchMedia('(prefers-color-scheme: dark)').matches?'#1b1d20':'#ece9e3');
 const camera=new THREE.PerspectiveCamera(45,1,0.05,80);
 const controls=new OrbitControls(camera,renderer.domElement);controls.enableDamping=true;controls.dampingFactor=0.09;controls.maxPolarAngle=Math.PI*0.52;controls.minDistance=0.6;controls.maxDistance=12;
@@ -229,7 +232,14 @@ function select(id,openIt){panel.querySelectorAll('tr.mod').forEach(tr=>tr.class
   const row=panel.querySelector(`tr[data-id="${id}"]`);if(row&&!openIt)row.scrollIntoView({block:'nearest',behavior:'smooth'})}
 const panelBtn=document.getElementById('panelBtn');panelBtn.onclick=()=>{const on=panelBtn.getAttribute('aria-pressed')!=='true';panelBtn.setAttribute('aria-pressed',on);panel.classList.toggle('off',!on);resize()};
 // ---------------- loop ----------------
-function resize(){const w=view.clientWidth,h=view.clientHeight;renderer.setSize(w,h);labels.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix()}
+let frameRatio='fill';
+function resize(){const vw=view.clientWidth,vh=view.clientHeight;let w=vw,h=vh;if(frameRatio!=='fill'){const [a,b]=frameRatio.split(':').map(Number),r=a/b;w=Math.min(vw,vh*r);h=w/r}
+  w=Math.max(1,Math.floor(w));h=Math.max(1,Math.floor(h));const L=Math.round((vw-w)/2)+'px',Tp=Math.round((vh-h)/2)+'px';renderer.setSize(w,h);labels.setSize(w,h);
+  for(const el of [renderer.domElement,labels.domElement]){el.style.left=L;el.style.top=Tp}view.classList.toggle('framed',frameRatio!=='fill');
+  camera.aspect=w/h;camera.fov=w>=h?45:Math.min(70,45/(w/h)*0.75);camera.updateProjectionMatrix()}
+function setRatio(k){frameRatio=/^\d+:\d+$/.test(k)?k:'fill';document.querySelectorAll('#ratioSeg button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.r===frameRatio));try{localStorage.setItem('kt-ratio',frameRatio)}catch(e){};resize()}
+document.querySelectorAll('#ratioSeg button').forEach(x=>x.onclick=()=>setRatio(x.dataset.r));
+{let k='fill';try{k=localStorage.getItem('kt-ratio')||k}catch(e){};frameRatio=/^\d+:\d+$/.test(k)?k:'fill';document.querySelectorAll('#ratioSeg button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.r===frameRatio))}
 addEventListener('resize',resize);resize();
 let last=performance.now();
 renderer.setAnimationLoop(()=>{const now=performance.now(),dt=Math.min(0.05,(now-last)/1000);last=now;

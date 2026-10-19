@@ -23,6 +23,8 @@ header .row.hidden{display:none}
 .lbl{font-size:12px;color:var(--muted);margin-right:-6px}
 #view{flex:1;position:relative;min-height:0}
 canvas{display:block;width:100%;height:100%}
+#view>canvas{position:absolute;left:0;top:0}
+#view.framed{background:#3a3d41}
 #tip{position:fixed;pointer-events:none;background:#1f2328;color:#fff;font-size:12.5px;padding:6px 9px;border-radius:7px;display:none;max-width:320px;z-index:5}
 #tip b{color:#9fe0bf}
 #panel{position:absolute;right:12px;top:12px;width:310px;max-height:calc(100% - 24px);overflow:auto;background:rgba(255,255,255,.94);color:#1f2328;border:1px solid #dcd8d0;border-radius:10px;padding:12px 14px;font-size:12.5px}
@@ -66,6 +68,7 @@ canvas{display:block;width:100%;height:100%}
   <button class="btn" id="optBtn" aria-pressed="false" title="Show or hide the gate, colour, finish and lens options">Options ▾</button>
  </div>
  <div class="row hidden" id="optRow">
+  <span class="lbl">Frame</span><div class="seg" id="ratioSeg"><button data-r="fill" title="Use the whole window">Fill</button><button data-r="16:9" title="Show the 3D view at 16:9">16:9</button><button data-r="4:3" title="Show the 3D view at 4:3">4:3</button><button data-r="1:1" title="Show the 3D view at 1:1">1:1</button><button data-r="4:5" title="Show the 3D view at 4:5 (portrait)">4:5</button><button data-r="3:4" title="Show the 3D view at 3:4 (portrait)">3:4</button><button data-r="9:16" title="Show the 3D view at 9:16 (portrait)">9:16</button></div>
   <span class="lbl">Lens</span><div class="seg" id="lensSeg"><button data-f="60" title="Eye-like lens">60°</button><button data-f="75" title="Wide lens">75°</button></div>
   <span class="sub">↑↓ walk · ←→ turn · A/D slide · W/S tilt · Q/E lower/raise · Shift faster · Drag to look around · Scroll to walk · Right-drag to slide · Hover for names</span>
  </div>
@@ -1524,7 +1527,7 @@ const VIEWS=[
  {p:[4.2,PKZ+9.5,29.6],t:[11.5,RDZ+1.0,-2.0]},   // watch the car: from the house-front corner of the parking, out to the gate and the road
 ];
 let hfov=75;
-function applyFov(){const a=camera.aspect||1;camera.fov=THREE.MathUtils.radToDeg(2*Math.atan(Math.tan(THREE.MathUtils.degToRad(hfov)/2)/a));camera.updateProjectionMatrix()}
+function applyFov(){const a=camera.aspect||1;camera.fov=a>=1?THREE.MathUtils.radToDeg(2*Math.atan(Math.tan(THREE.MathUtils.degToRad(hfov)/2)/a)):hfov;camera.updateProjectionMatrix()}   // the lens angle spans the longer side
 // top views cut the house open: a ground-floor top hides everything above the ground-floor ceiling, a first-floor top hides only its own ceilings and roof
 function applyVis(v){const cutG=v.top&&v.fl!=='F',cutF=v.top&&v.fl==='F';
   ceilingMeshes.forEach(c=>c.visible=!cutG);ROOF_F.forEach(c=>c.visible=!(cutG||cutF));
@@ -1581,7 +1584,15 @@ renderer.domElement.addEventListener('pointermove',e=>{if(hoverPending||e.button
 renderer.domElement.addEventListener('pointerleave',()=>tipEl.style.display='none');
 
 // ---------------- start ----------------
-function resize(){const w=view.clientWidth,h=view.clientHeight;renderer.setSize(w,h,false);composer.setSize(w,h);gtao.setSize(w,h);camera.aspect=w/h;applyFov();invalidate()}
+let frameRatio='fill';   // width:height of the 3D picture; 'fill' uses the whole window
+function resize(){const vw=view.clientWidth,vh=view.clientHeight;let w=vw,h=vh;
+  if(frameRatio!=='fill'){const [a,b]=frameRatio.split(':').map(Number),r=a/b;w=Math.min(vw,vh*r);h=w/r}
+  w=Math.max(1,Math.floor(w));h=Math.max(1,Math.floor(h));const c=renderer.domElement;
+  renderer.setSize(w,h,false);c.style.width=w+'px';c.style.height=h+'px';c.style.left=Math.round((vw-w)/2)+'px';c.style.top=Math.round((vh-h)/2)+'px';view.classList.toggle('framed',frameRatio!=='fill');
+  composer.setSize(w,h);gtao.setSize(w,h);camera.aspect=w/h;applyFov();invalidate()}
+function setRatio(k){frameRatio=/^\d+:\d+$/.test(k)?k:'fill';document.querySelectorAll('#ratioSeg button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.r===frameRatio));try{localStorage.setItem('lr3d-ratio',frameRatio)}catch(e){};resize()}
+document.querySelectorAll('#ratioSeg button').forEach(x=>x.onclick=()=>setRatio(x.dataset.r));
+{let k='fill';try{k=localStorage.getItem('lr3d-ratio')||k}catch(e){};frameRatio=/^\d+:\d+$/.test(k)?k:'fill';document.querySelectorAll('#ratioSeg button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.r===frameRatio))}
 addEventListener('resize',resize);resize();
 {let o=false;try{o=localStorage.getItem('lr3d-opts')==='1'}catch(e){};setOpt(o)}   // options row starts closed unless left open
 let so=0,sl='day',sf=75;try{so=0;sl=localStorage.getItem('lr3d-light')||'day';sf=+(localStorage.getItem('lr3d-lens')||75)}catch(e){}
