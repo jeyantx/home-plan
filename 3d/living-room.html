@@ -81,12 +81,12 @@ import {EffectComposer} from 'three/addons/postprocessing/EffectComposer.js';
 import {RenderPass} from 'three/addons/postprocessing/RenderPass.js';
 import {GTAOPass} from 'three/addons/postprocessing/GTAOPass.js';
 import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';
-import {createBambooPlant} from './models/bamboo-plant.js?v=1792407557';
-import {createNeemTree} from './models/neem-tree.js?v=1792407557';
-import {createTNPlant,TN_PLANTS} from './models/tn-plants.js?v=1792407557';
-import {createVirtus,createHunter350,createAther450,loadCarGLB,loadGLBVehicle} from './models/vehicles.js?v=1792407557';
+import {createBambooPlant} from './models/bamboo-plant.js?v=1792407917';
+import {createNeemTree} from './models/neem-tree.js?v=1792407917';
+import {createTNPlant,TN_PLANTS} from './models/tn-plants.js?v=1792407917';
+import {createVirtus,createHunter350,createAther450,loadCarGLB,loadGLBVehicle} from './models/vehicles.js?v=1792407917';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
-import {CAR_ROUTE} from './models/car-route.js?v=1792407557';
+import {CAR_ROUTE} from './models/car-route.js?v=1792407917';
 import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
 
 const P=window.PLAN, F=0.3048, CEIL=10.0, EYE=5.25;
@@ -1300,14 +1300,14 @@ function placeBike(code){const o=bikeObjs[code];if(!o)return;const t=(P.bikes||[
 const SHOW_BIKES=false;   // the old code-made two-wheelers stay off; the downloaded models below are used
 const vehicleMeshes=[];
 {const [cx1,cx2,cy1,cy2]=P.car||[11.25,17.0,14.75,29.75];
- loadCarGLB(THREE,GLTFLoader,'assets/vehicles/compact-car.glb?v=1792407557',{color:'#2f5d8c',length:4.561,bodyWidth:1.752,name:'Car'}).then(car=>{
+ loadCarGLB(THREE,GLTFLoader,'assets/vehicles/compact-car.glb?v=1792407917',{color:'#2f5d8c',length:4.561,bodyWidth:1.752,name:'Car'}).then(car=>{
    scene.add(car);window.__car=car;carAnim.car=car;setCarPose(...CAR_ROUTE.park,0,0);
    const d=car.userData.dims,ft=v=>{const i=Math.round(v/F*12);return `${Math.floor(i/12)}'${i%12}"`};
    car.traverse(o=>{if(o.isMesh){o.userData.keepUV=true;named(o,`Car · compact sedan (Free3D model, scaled to VW Virtus size, 4561 x 1752 mm body) · ${ft(d.length)} x ${ft(d.width)} with mirrors · reversed in, nose to the gate`);vehicleMeshes.push(o)}});
    renderer.shadowMap.needsUpdate=true;if(photo&&pt)pt.setScene(scene,camera);invalidate()}).catch(e=>console.warn('car model',e));
  // two-wheelers from the owner's downloaded models, sized to the real bikes they stand for, front to the gate
  for(const [code,name] of (P.bikes||[])){const moto=/VFR|Hunter/.test(name);
-   loadGLBVehicle(THREE,GLTFLoader,moto?'assets/vehicles/vfr800.glb?v=1792407557':'assets/vehicles/scooter.glb?v=1792407557',moto?{front:'+z',length:2.12,groundMaterial:'rubber',name:code,materials:vfrMats()}:{front:'+z',length:1.837,name:code}).then(b=>{
+   loadGLBVehicle(THREE,GLTFLoader,moto?'assets/vehicles/vfr800.glb?v=1792407917':'assets/vehicles/scooter.glb?v=1792407917',moto?{front:'+z',length:2.12,groundMaterial:'rubber',name:code,materials:vfrMats()}:{front:'+z',length:1.837,name:code}).then(b=>{
      scene.add(b);bikeObjs[code]={b,moto};b.traverse(o=>{if(o.isMesh)o.userData.keepUV=true});placeBike(code);
      renderer.shadowMap.needsUpdate=true;if(photo&&pt)pt.setScene(scene,camera);invalidate()}).catch(e=>console.warn('bike model',e))}
  if(SHOW_BIKES) for(const [code,name,bx,by,bl,bw] of (P.bikes||[])){const b=/Hunter/.test(name)?createHunter350(THREE,mergeGeometries,{}):createAther450(THREE,mergeGeometries,{});
