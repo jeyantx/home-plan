@@ -728,7 +728,7 @@ function cabRun(id,what,x1,x2,y1,y2,z1,z2,face,segs,mat,plinth){
     if(face==='x+'){a=x2-v2;b=x2-v1;c=u1;d=u2}else if(face==='x-'){a=x1+v1;b=x1+v2;c=u1;d=u2}
     else if(face==='y-'){a=u1;b=u2;c=y1+v1;d=y1+v2}else{a=u1;b=u2;c=y2-v2;d=y2-v1}
     return box(a,b,c,d,za,zb,mt,{tip:t,...o})};
-  const zb0=z1+(plinth?KPL:0), fz1=zb0+g, fz2=z2-g;
+  const zb0=z1+(plinth?(plinth===true?KPL:plinth):0), fz1=zb0+g, fz2=z2-g;
   // carcass, leaving the glass units hollow
   const gl=segs.filter(q=>q[2]==='glass').sort((p,q)=>p[0]-q[0]);let u=U0;
   for(const [a,b] of gl){if(a>u)lb(u,a,SH,D,zb0,z2,mat);u=b}if(U1>u)lb(u,U1,SH,D,zb0,z2,mat);
@@ -754,7 +754,7 @@ function cabRun(id,what,x1,x2,y1,y2,z1,z2,face,segs,mat,plinth){
 {const X1=3.5,ky2=66.375,bY=64.375,W06=P.openings.find(o=>o.id==='W-06');
  // base cabinets: east run FU-15 on GW-01 (front faces +x), back run FU-16 on GW-14 (front faces -y); both corners are L-shaped corner cupboards (K-01A/B, K-03A/B)
  cabRun('FU-15','Base cabinets, east',X1,5.5,59.125,61.625,0,KCH-KTOP,'x+',[[60.375,61.625,'plain']],MAT.kLow,true);   // K-01A, north corner cupboard
- cabRun('FU-15','Base cabinets, east · gas cylinder unit',X1,5.5,61.625,63.125,0,KCH-KTOP,'x+',[[61.625,63.125,'door']],MAT.kLow,false);   // K-02: door down to the floor, no plinth, the cylinder stands on the floor
+ cabRun('FU-15','Base cabinets, east · gas cylinder unit',X1,5.5,61.625,63.125,0,KCH-KTOP,'x+',[[61.625,63.125,'door']],MAT.kLow,2/12);   // K-02: low 2" plinth, so 29½" clear above the bottom board; the cylinder stands on it
  cabRun('FU-15','Base cabinets, east',X1,5.5,63.125,ky2,0,KCH-KTOP,'x+',[[63.125,bY,'plain']],MAT.kLow,true);   // K-03A, south corner cupboard
  cabRun('FU-16','Base cabinets, back',5.5,8.6,bY,ky2,0,KCH-KTOP,'y-',[[5.5,6.45,'door'],[6.45,8.6,'door2']],MAT.kLow,true);   // K-03B corner cupboard door, K-04 sink unit
  const LOW=2.0;cabRun('FU-16.2','Low counter, wet grinder and water',8.6,12.125,bY,ky2,0,LOW-KTOP,'y-',[[8.6,9.875,'door'],[9.875,12.125,'drawers2']],MAT.kLow,true);   // K-05 water pots, K-06 rice and atta drawers

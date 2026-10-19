@@ -138,7 +138,7 @@ const T=0.059,SH=0.06,G=0.01;   // 18 mm panels, 18 mm shutters, 3 mm gaps (feet
 const fronts=[],modules=[],leaves=[];
 const SHELVES={'K-04':0,'K-05':1,'K-09':1,'K-11':1,'K-12':2,'K-15':2,'K-16':1,'K-17A':1,'K-17B':1,'K-13':0};
 function buildModule(m){const fr=frame(m),base=m.z1<1,isLoft=m.run==='Loft',up=m.run.startsWith('Wall')||isLoft,low=m.run==='Low counter',bf=m.run==='Breakfast counter';
-  const body=up?M.cream:M.oak,inner=up?M.creamIn:M.oakIn,zb0=m.z1+(base&&!m.noBottom?K.KPL:0),zt=base?(low?K.KLOW-K.KTOP:bf?K.KBF:K.KCH-K.KTOP):m.z2;
+  const body=up?M.cream:M.oak,inner=up?M.creamIn:M.oakIn,zb0=m.z1+(base?(m.plinth??K.KPL):0),zt=base?(low?K.KLOW-K.KTOP:bf?K.KBF:K.KCH-K.KTOP):m.z2;
   const grp=new THREE.Group();scene.add(grp);const rec={m,grp,fr,fronts:[],zb0,zt,up,base};modules.push(rec);
   const U0=Math.max(fr.U0,Math.min(...m.fronts.map(f=>f.a)))-0.0,U1=Math.min(fr.U1,Math.max(...m.fronts.map(f=>f.b))),D=fr.D;
   const full=m.id.startsWith('K-17')||!!m.shelfZ,uA=full?fr.U0:U0,uB=full?fr.U1:U1,oa=m.open_end==='a';
@@ -193,8 +193,8 @@ function buildFront(rec,f){const {m,fr}=rec,up=rec.up,mat=up?M.cream:M.oak,a=f.a
 }
 function contents(rec,f,pivot,add){const {m,fr}=rec,a=f.a,b=f.b,za=f.za,D=fr.D,at=(u,v)=>fr.toPlan(u,v);
   const pot=(u,v,z,r,h,col)=>{const [X,Y]=at(u,v);add(cylW(X,Y,z,z+h,r,std({color:col,roughness:0.3,metalness:0.7}),pivot))};
-  // gas cylinder (26" high, 320 mm across) standing on the floor, 2'8" clear above it
-  if(m.id==='K-02'&&f.k==='door'){const [X,Y]=at((a+b)/2,D/2);cylW(X,Y,0,1.78,0.52,M.red,scene,0.5);cylW(X,Y,1.78,1.95,0.3,M.red,scene,0.22);cylW(X,Y,1.95,2.17,0.15,M.steel,scene)}
+  // gas cylinder (26" high, 320 mm across) on the bottom board over a 2" plinth, 29½" clear above it
+  if(m.id==='K-02'&&f.k==='door'){const [X,Y]=at((a+b)/2,D/2);const z=rec.zb0+T;cylW(X,Y,z,z+1.78,0.52,M.red,scene,0.5);cylW(X,Y,z+1.78,z+1.95,0.3,M.red,scene,0.22);cylW(X,Y,z+1.95,z+2.17,0.15,M.steel,scene)}
   // L-shaped corner cupboards: big vessels on the floor and on the L-shaped shelf
   const ZB=rec.zb0+T,ZS=1.45,stl='#c0c4c8',blk='#3b3c3e';
   if(m.id==='K-01A'&&f===m.fronts[0]){pot(59.75,1.0,ZB,0.42,0.75,stl);pot(60.95,1.0,ZB,0.32,0.6,stl);pot(59.7,1.1,ZS,0.36,0.7,stl);pot(60.9,0.9,ZS,0.3,0.5,stl)}
