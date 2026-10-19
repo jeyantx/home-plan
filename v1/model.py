@@ -127,6 +127,7 @@ BRANCH_NOTES='''<section class="ask"><h2>Parking plan (branch exterior-v2, for r
 <li><b>Tree well FU-76</b> reduced to 4' across, so the car passes the neem with room to spare. Keep at least 10" of open soil round the trunk; widen the ring later only if the trunk grows.</li>
 <li><b>Two-wheelers on the stair side:</b> TW-1 (Royal Enfield Hunter 350) under the high end of ST-1A and the landing, TW-2 (Ather 450X) along BW-07 beside the car, both front to the gate. FU-56 store shrinks to a low tool store under the lower middle of ST-1A.</li>
 <li><b>Car spot</b> moved 2' east (centre X 12'1½"), leaving a 2'4" aisle to the two-wheelers and an 8'11" walkway on the east side to the porch. Reverse in with one stop, drive straight out (checked with the Virtus turning circle).</li>
+<li><b>ST-1 as cast:</b> both flights are steps on a 6" sloping waist slab and the landing ST-1L is a 6" slab, all cast as one RCC piece; the sloping underside of each flight runs into the flat underside of the landing (no step in the soffit). Landing level, risers and treads unchanged.</li>
 <li><b>Pillar C-01</b> moved 2'4½" east against the compound wall BW-01; beam B-01 extended to it (19'11" span, engineer to size, about 1'9" deep) and B-10 rests on B-01. The parking is now clear of pillars.</li>
 </ol></section>
 <section class="ask"><h2>Outside windows and colours (branch exterior-v2, for review)</h2>

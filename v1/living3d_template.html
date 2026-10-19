@@ -1100,15 +1100,26 @@ function setExt(k){if(!EXT[k])k='EX-4';const o=EXT[k];MAT.ext.color.set(o.wall);
 // staircase ST-1: 27 risers of about 6½" from the gate crest, 10" treads, 3'6" wide; ST-1A south along BW-07 (17), landing ST-1L, ST-1B east over the car to balcony 2 (10)
 {const AX1=17.125,AX2=20.625,TD=10/12,LY1=16.0,LY2=19.5,BX2=17.125,NA=17,NB=10,Z0=HUZ,R=(FFZ-Z0)/(NA+NB),A0=LY1-(NA-1)*TD,LZ=Z0+NA*R;
  const gr='Granite tread and riser, grey flamed (anti-skid)',st=`ST-1 outside stair · RCC waist slab, ${(R*12).toFixed(1)}" risers, 10" treads, starts at the gate crest`;
- // ST-1A: tread i covers y A0+i*TD .. +TD, top at Z0+(i+1)*R; each block is one riser plus a 6" waist below it
- for(let i=0;i<NA-1;i++){const y1=A0+i*TD,top=Z0+(i+1)*R;box(AX1,AX2,y1,y1+TD,y1<fuG['FU-56'].y1-0.01?zF(y1)-0.3:top-1.0,top-0.04,MAT.ext,{tip:st+' · ST-1A'});box(AX1-0.03,AX2,y1-0.03,y1+TD,top-0.04,top,MAT.stepStone,{tip:gr})}
- box(AX1,AX2,A0+(NA-1)*TD,LY2,LZ-0.55,LZ-0.04,MAT.ext,{tip:st+' · landing ST-1L, carried by a cantilever beam from C-02'});box(AX1-0.03,AX2,A0+(NA-1)*TD-0.03,LY2+0.03,LZ-0.04,LZ,MAT.stepStone,{tip:'Landing ST-1L, grey flamed granite'});
- // ST-1B: tread j covers x BX2-(j+1)*TD .. BX2-j*TD, top at LZ+(j+1)*R; the 10th riser lands on balcony 2
- for(let j=0;j<NB-1;j++){const x2=BX2-j*TD,top=LZ+(j+1)*R;box(x2-TD,x2,LY1,LY2,top-1.0,top-0.04,MAT.ext,{tip:st+' · ST-1B'});box(x2-TD,x2+0.03,LY1-0.03,LY2+0.03,top-0.04,top,MAT.stepStone,{tip:gr})}
+ // RCC as cast: each flight is steps on a 6" sloping waist slab (smooth sloping underside), the landing a 6" slab, all one piece;
+ // a flight's underside runs on until it meets the landing's flat underside (the kink line under a dog-legged stair)
+ const WT=0.5,WS=WT*Math.hypot(TD,R)/TD,LT=0.5;   // waist thickness, its vertical depth below the riser roots, landing slab thickness
+ const sofA=y=>Z0+R*(y-A0)/TD-WS, sofB=x=>LZ+R*(BX2-x)/TD-WS, yK=A0+TD*(LZ-LT+WS-Z0)/R, xK=BX2-TD*(WS-LT)/R, ySolid=fuG['FU-56'].y1;
+ const prof=(pts,mapS,depth,pos,rotate,tip)=>{const sh=new THREE.Shape(pts.map(mapS));const g=new THREE.ExtrudeGeometry(sh,{depth,bevelEnabled:false});
+   if(rotate)g.rotateY(-Math.PI/2);const me=new THREE.Mesh(g,MAT.ext);me.position.copy(pos);me.castShadow=true;me.receiveShadow=true;scene.add(me);named(me,tip);return me};
+ {const P=[[A0,zF(A0)-0.3]];for(let i=0;i<NA-1;i++){const y1=A0+i*TD,top=Z0+(i+1)*R-0.04;P.push([y1,top],[y1+TD,top])}
+  P.push([LY1,LZ-0.04],[LY2,LZ-0.04],[LY2,LZ-LT],[yK,LZ-LT],[ySolid,sofA(ySolid)],[ySolid,zF(ySolid)-0.3]);
+  for(const y of [7.0,5.5,4.0,3.25])if(y<ySolid&&y>A0)P.push([y,zF(y)-0.3]);
+  prof(P,([y,z])=>new THREE.Vector2(m(y),m(z)),m(AX2-AX1),new THREE.Vector3(mx(AX1),0,0),true,st+' · ST-1A and landing ST-1L, one RCC piece (6" waist, 6" landing slab); landing carried by a cantilever beam from C-02');}
+ {const P=[[BX2,LZ-LT]];for(let j=0;j<NB-1;j++){const x2=BX2-j*TD,top=LZ+(j+1)*R-0.04;P.push([x2,top],[x2-TD,top]);if(j<NB-2)P.push([x2-TD,LZ+(j+2)*R-0.04])}
+  const xe=BX2-(NB-1)*TD;P.push([xe,sofB(xe)],[xK,LZ-LT]);
+  prof(P,([x,z])=>new THREE.Vector2(mx(x),m(z)),m(LY2-LY1),new THREE.Vector3(0,0,m(LY1)),false,st+' · ST-1B, 6" waist slab, cast with the landing');}
+ for(let i=0;i<NA-1;i++){const y1=A0+i*TD,top=Z0+(i+1)*R;box(AX1-0.03,AX2,y1-0.03,y1+TD,top-0.04,top,MAT.stepStone,{tip:gr})}
+ box(AX1-0.03,AX2,A0+(NA-1)*TD-0.03,LY2+0.03,LZ-0.04,LZ,MAT.stepStone,{tip:'Landing ST-1L, grey flamed granite'});
+ for(let j=0;j<NB-1;j++){const x2=BX2-j*TD,top=LZ+(j+1)*R;box(x2-TD,x2+0.03,LY1-0.03,LY2+0.03,top-0.04,top,MAT.stepStone,{tip:gr})}
  // store FU-56 under the foot of ST-1A, with a door to the east
  // store FU-56 fills the space under the high end of ST-1A: one slice per tread, each just under the stair, so its top follows the slope
- const sf=fuG['FU-56'];for(let i=0;i<NA-1;i++){const y1=A0+i*TD,y2=y1+TD,top=Z0+(i+1)*R;if(y1<sf.y1-0.01||y2>sf.y2+0.01)continue;box(sf.x1+0.012,sf.x2-0.012,y1,y2,PKZ-0.3,top-1.0,MAT.ext,{tip:`FU-56 · Store under ST-1A · ${sf.note}`})}
- {const zb=Z0+((sf.y1-A0)/TD+1)*R-1.0;box(sf.x1-0.04,sf.x1+0.012,sf.y1+0.4,sf.y2-0.4,PKZ+0.15,zb-0.2,MAT.extWood,{tip:'FU-56 · low store door, wood-look'})}
+ const sf=fuG['FU-56'];for(let i=0;i<NA-1;i++){const y1=A0+i*TD,y2=y1+TD,top=Z0+(i+1)*R;if(y1<sf.y1-0.01||y2>sf.y2+0.01)continue;box(sf.x1+0.012,sf.x2-0.012,y1,y2,PKZ-0.3,sofA(y1)-0.02,MAT.ext,{tip:`FU-56 · Store under ST-1A · ${sf.note}`})}
+ {const zb=sofA(sf.y1);box(sf.x1-0.04,sf.x1+0.012,sf.y1+0.4,sf.y2-0.4,PKZ+0.15,zb-0.2,MAT.extWood,{tip:'FU-56 · low store door, wood-look'})}
  // railing: black MS posts and 4"-gap balusters, wood-look handrail 3' above the nosing line; merged into two meshes
  const blk=[],wd=[],H=3.0,P3=(x,y,z)=>new THREE.Vector3(mx(x),m(z),m(y));
  const rod=(a,b,w,arr)=>{const d=new THREE.Vector3().subVectors(b,a),L=d.length(),g=new THREE.BoxGeometry(m(w),L,m(w));g.translate(0,L/2,0);
