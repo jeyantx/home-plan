@@ -258,7 +258,9 @@ app=f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="v
 <title>Home Plan</title>
 <link rel="icon" type="image/png" href="favicon.png"><link rel="apple-touch-icon" href="favicon.png">
 <meta name="description" content="I will both lie down in peace, and sleep; for You alone, O Lord, make me dwell in safety - Psalms 4:8">
-<meta property="og:title" content="Home Plan"><meta property="og:description" content="I will both lie down in peace, and sleep; for You alone, O Lord, make me dwell in safety - Psalms 4:8"><meta property="og:image" content="https://jeyantx.github.io/home-plan/favicon.png">
+<meta property="og:title" content="Home Plan"><meta property="og:description" content="I will both lie down in peace, and sleep; for You alone, O Lord, make me dwell in safety - Psalms 4:8"><meta property="og:type" content="website"><meta property="og:site_name" content="Home Plan"><meta property="og:url" content="https://jeyantx.github.io/home-plan/">
+<meta property="og:image" content="https://jeyantx.github.io/home-plan/og-image.png"><meta property="og:image:type" content="image/png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="Home Plan: house icon and Psalms 4:8">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://jeyantx.github.io/home-plan/og-image.png">
 
 <style>
 :root{{--bg:#f4f2ee;--panel:#ffffff;--ink:#1f2328;--muted:#5d646d;--line:#dcd8d0;--accent:#2f6f4f;--accent-ink:#fff;--chip:#eef3ef}}

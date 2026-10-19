@@ -66,3 +66,4 @@ All CC0 (public domain) from Poly Haven, https://polyhaven.com, downloaded as 1k
 | File | What | Author | Licence |
 |---|---|---|---|
 | `favicon.png` | House icon used as the site icon (browser tab) | [Icons8](https://icons8.com) | Free with a link to Icons8 |
+| `og-image.png` | Share picture for link previews (WhatsApp and others): the same house icon with the title and Psalms 4:8 | Icons8 icon, made for this site | Free with a link to Icons8 |
