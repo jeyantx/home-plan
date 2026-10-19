@@ -1250,7 +1250,7 @@ function startAnim(){if(!carAnim.car)return;carAnim.track=carAnim.track||buildTr
   setView(35)}
 function stopAnim(){carAnim.on=false;setCarPose(...CAR_ROUTE.park,0,0);renderer.shadowMap.needsUpdate=true;animBtn.textContent='Animate';animBtn.setAttribute('aria-pressed',false);invalidate()}
 // VFR800 file (old Blender) has only plain grey materials: restyle its parts by material name
-function vfrMats(){const P=(c,o={})=>new THREE.MeshPhysicalMaterial({color:c,roughness:0.35,metalness:0.1,...o});
+function vfrMats(){const P=(c,o={})=>new THREE.MeshPhysicalMaterial({color:c,roughness:0.35,metalness:0.1,side:THREE.DoubleSide,...o});
   const paint=P('#b0141c',{roughness:0.25,metalness:0.4,clearcoat:1,clearcoatRoughness:0.05}),blk=P('#1b1c1f',{roughness:0.5}),dgrey=P('#3a3c40',{roughness:0.45}),
     chrome=P('#dde1e5',{roughness:0.1,metalness:1}),steel=P('#9a9ea3',{roughness:0.3,metalness:0.9}),dmetal=P('#4a4d52',{roughness:0.35,metalness:0.8}),
     rubber=P('#18191b',{roughness:0.92,metalness:0}),lens=P('#e8eef2',{roughness:0.04,metalness:0.2,clearcoat:1,emissive:'#fff4dd',emissiveIntensity:0.12}),
@@ -1265,14 +1265,14 @@ function vfrMats(){const P=(c,o={})=>new THREE.MeshPhysicalMaterial({color:c,rou
 const SHOW_BIKES=false;   // the old code-made two-wheelers stay off; the downloaded models below are used
 const vehicleMeshes=[];
 {const [cx1,cx2,cy1,cy2]=P.car||[11.25,17.0,14.75,29.75];
- loadCarGLB(THREE,GLTFLoader,'assets/vehicles/compact-car.glb',{color:'#2f5d8c',length:4.561,bodyWidth:1.752,name:'Car'}).then(car=>{
+ loadCarGLB(THREE,GLTFLoader,'assets/vehicles/compact-car.glb?v=__BUILD__',{color:'#2f5d8c',length:4.561,bodyWidth:1.752,name:'Car'}).then(car=>{
    scene.add(car);window.__car=car;carAnim.car=car;setCarPose(...CAR_ROUTE.park,0,0);
    const d=car.userData.dims,ft=v=>{const i=Math.round(v/F*12);return `${Math.floor(i/12)}'${i%12}"`};
    car.traverse(o=>{if(o.isMesh){o.userData.keepUV=true;named(o,`Car · compact sedan (Free3D model, scaled to VW Virtus size, 4561 x 1752 mm body) · ${ft(d.length)} x ${ft(d.width)} with mirrors · reversed in, nose to the gate`);vehicleMeshes.push(o)}});
    renderer.shadowMap.needsUpdate=true;if(photo&&pt)pt.setScene(scene,camera);invalidate()}).catch(e=>console.warn('car model',e));
  // two-wheelers from the owner's downloaded models, sized to the real bikes they stand for, front to the gate
  for(const [code,name,bx,by,bl,bw] of (P.bikes||[])){const moto=/VFR|Hunter/.test(name);
-   loadGLBVehicle(THREE,GLTFLoader,moto?'assets/vehicles/vfr800.glb':'assets/vehicles/scooter.glb',moto?{front:'+z',length:2.12,groundMaterial:'rubber',name:code,materials:vfrMats()}:{front:'+z',length:1.837,name:code}).then(b=>{
+   loadGLBVehicle(THREE,GLTFLoader,moto?'assets/vehicles/vfr800.glb?v=__BUILD__':'assets/vehicles/scooter.glb?v=__BUILD__',moto?{front:'+z',length:2.12,groundMaterial:'rubber',name:code,materials:vfrMats()}:{front:'+z',length:1.837,name:code}).then(b=>{
      b.position.set(mx(bx),m(PKZ),m(by));b.rotation.y=Math.PI;scene.add(b);
      const d=b.userData.dims,ft=v=>{const i=Math.round(v/F*12);return `${Math.floor(i/12)}'${i%12}"`};
      b.traverse(o=>{if(o.isMesh){o.userData.keepUV=true;named(o,`${code} · ${moto?'Motorcycle · Honda VFR800 (model by danielfc10, CC BY 3.0, Blend Swap), real size':'Scooter (downloaded model, sized to an Ather 450X)'} · ${ft(d.length)} long, ${ft(d.height)} high · front to the gate`)}});
