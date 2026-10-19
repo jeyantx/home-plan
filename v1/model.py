@@ -400,7 +400,7 @@ UNDERGROUND=[
 # Plan feet like the rest of the model. Base units: 4" plinth, 18 mm carcass, 18 mm shutters, 40 mm granite top.
 # face = the side the fronts face: 'x+' (east run, faces west), 'y-' (back run, faces north), 'y+' (breakfast counter, faces south).
 # Fronts: k = drawer / door / lift (flap opens upward) / pullout / blind (fixed); a,b along the run; za,zb heights; hinge 'a' or 'b' end; what = contents.
-KCH,KTOP,KPL,KLOW,KBF=2.83,0.13,0.33,2.0,2.87      # counter top 2'10", top 40 mm, plinth 4", low counter 2', breakfast counter 2'10½" (+40 mm top)
+KCH,KTOP,KPL,KLOW,KBF=2.83,0.13,0.33,2.0,2.70      # counter top 2'10", top 40 mm, plinth 4", low counter 2'; breakfast counter units 2'8" + 40 mm top, the same height as the east run
 KUP1,KUP2,KLOFT2=4.9,7.0,9.988                      # wall units 4'11" to 7', loft to the ceiling
 KUP1R=5.25                                            # wall units over the drying rack start higher, 5'3"
 RO_Z1,RO_H=5.0,558/304.8                              # RO purifier FU-66: bottom 5' from the floor, 558 mm high
@@ -412,7 +412,7 @@ def _drawers(a,b,z1,z2,mm,what):
     return out
 _B1,_B2=KPL,KCH-KTOP          # base fronts 0.33 to 2.70 ft (722 mm)
 _L1,_L2=KPL,KLOW-KTOP         # low counter fronts (469 mm)
-_F1,_F2=KPL,KBF               # breakfast counter fronts (774 mm)
+_F1,_F2=KPL,KBF               # breakfast counter fronts (722 mm, the same as the base fronts)
 KITCHEN_MODULES=[
 # two L-shaped corner cupboards (like the owner's photo): each is two parts that open into one L, with an L-shaped shelf and a door on each side of the corner
  dict(id='K-01A',name='Corner cupboard, north (L-shaped), east door',run='East run',face='x+',x1=3.5,x2=5.5,y1=59.125,y2=61.625,z1=0,z2=KCH,shelfZ=[1.45],
@@ -440,11 +440,11 @@ KITCHEN_MODULES=[
  dict(id='K-01B',name='Corner cupboard, north (L-shaped), breakfast door',run='Breakfast counter',face='y+',x1=5.5,x2=7.1,y1=59.137,y2=60.375,z1=0,z2=KBF,open_end='a',shelfZ=[1.45],
       fronts=[dict(k='door',a=5.5,b=7.1,za=_F1,zb=_F2,hinge='b',what='plates and bowls; opens into K-01A round the corner')],inside='opens into K-01A: one L-shaped space with an L-shaped shelf',need='everyday plates near the table, and the corner used'),
  dict(id='K-08',name='Breakfast counter unit, 3 drawers',run='Breakfast counter',face='y+',x1=7.1,x2=8.7,y1=59.137,y2=60.375,z1=0,z2=KBF,
-      fronts=_drawers(7.1,8.7,_F1,_F2,[312,300,150],['tiffin boxes','table linen, foil and bags','cutlery tray: ladles, spatulas, spoons']),inside='shallow drawers (300 mm deep); cutlery tray in the top drawer',need='tiffin boxes, table things and cutlery'),
+      fronts=_drawers(7.1,8.7,_F1,_F2,[288,288,140],['tiffin boxes','table linen, foil and bags','cutlery tray: ladles, spatulas, spoons']),inside='shallow drawers (300 mm deep); cutlery tray in the top drawer',need='tiffin boxes, table things and cutlery'),
  dict(id='K-09',name='Breakfast counter unit, glasses and cups',run='Breakfast counter',face='y+',x1=8.7,x2=10.3,y1=59.137,y2=60.375,z1=0,z2=KBF,
       fronts=[dict(k='door',a=8.7,b=10.3,za=_F1,zb=_F2,hinge='b',what='glasses, cups and tumblers (1 shelf)')],inside='one shelf',need='glasses and cups near the table'),
  dict(id='K-10',name='Breakfast counter unit, 3 drawers',run='Breakfast counter',face='y+',x1=10.3,x2=11.9,y1=59.137,y2=60.375,z1=0,z2=KBF,
-      fronts=_drawers(10.3,11.9,_F1,_F2,[312,300,150],['snacks and biscuit tins','pulses and dals in jars','tea, coffee, sugar']),inside='shallow drawers (300 mm deep)',need='dry stores in jars'),
+      fronts=_drawers(10.3,11.9,_F1,_F2,[288,288,140],['snacks and biscuit tins','pulses and dals in jars','tea, coffee, sugar']),inside='shallow drawers (300 mm deep)',need='dry stores in jars'),
  dict(id='K-11',name='Breakfast counter unit, under the microwave',run='Breakfast counter',face='y+',x1=11.9,x2=13.5,y1=59.137,y2=60.375,z1=0,z2=KBF,
       fronts=[dict(k='door',a=11.9,b=13.5,za=_F1,zb=_F2,hinge='b',what='microwave dishes, baking trays (1 shelf)')],inside='one shelf; socket for the microwave FU-67 above',need='microwave things below the microwave'),
  dict(id='K-12',name='Wall unit',run='Wall units, back',face='y-',x1=4.75,x2=6.5,y1=65.125,y2=66.363,z1=KUP1R,z2=KUP2,
@@ -465,7 +465,7 @@ KITCHEN_MODULES=[
 ]
 KITCHEN_NOTES=[
  'Finish KT-1: oak-look laminate base units, cream wall units and loft, black granite top 40 mm, matte black handles; 18 mm BWP plywood carcass (boiling-water-proof, for a wet kitchen).',
- 'Base units: 2\'10" to the top of the counter (865 mm), 4" plinth, 600 mm deep. Low counter for the wet grinder and water: 2\' (610 mm). Breakfast counter: 2\'10½" plus its top, 375 mm deep.',
+ 'Base units: 2\'10" to the top of the counter (865 mm), 4" plinth, 600 mm deep. Low counter for the wet grinder and water: 2\' (610 mm). Breakfast counter: the same 2\'10" as the east run, so the L-shaped corner cupboard K-01A/K-01B has one level top; 375 mm deep.',
  'Hardware: soft-close hinges and full-extension soft-close drawer runners; the two corners are L-shaped cupboards with L-shaped shelves (no carousels, no trolleys) to keep the cost down; a gas strut only on the dish-drainer flap K-13.',
  'Free-standing 3-burner glass-top stove FU-52 (70 x 41 x 13 cm) on the counter over K-02, with the gas cylinder below it; chimney 60 cm wide above it, its duct going up between the two east lofts and out through GW-01 to a vent cowl; utensil drying rack FU-80 on the corner counter beside the sink; sink FU-51 over K-04 with the dish drainer K-13 above it; RO purifier FU-66 (558 x 350 x 280 mm) in the place of wall unit K-14, over the low counter; wet grinder FU-65 on the west end of the low counter; mixer FU-64 on the east run; microwave FU-67 on the breakfast counter.',
 ]

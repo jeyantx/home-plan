@@ -152,7 +152,7 @@ function buildModule(m){const fr=frame(m),base=m.z1<1,isLoft=m.run==='Loft',up=m
   for(const z of m.shelfZ||[])for(const [p,q,v] of parts)fr.box(p,q,v===SH?SH+0.06:v,D-T,z-0.03,z,inner,grp);
   if(base&&!m.noBottom)fr.box(oa?uA-SH-0.12:uA+e,uB-e,SH+0.12,D-0.01,m.z1,zb0-0.002,M.plinth,grp);
   // worktop (the unit opening into a corner cupboard of the same height starts past that one's front edge, so the two tops do not overlap)
-  if(base){const ztop=low?K.KLOW:bf?K.KBF+0.13:K.KCH;fr.box(oa&&!bf?uA+0.08:uA,uB,-0.08,D,ztop-K.KTOP+0.002,ztop,M.granite,grp)}
+  if(base){const ztop=low?K.KLOW:bf?K.KBF+0.13:K.KCH;fr.box(oa?uA+0.08:uA,uB,-0.08,D,ztop-K.KTOP+0.002,ztop,M.granite,grp)}
   for(const f of m.fronts)buildFront(rec,f);
   // label with the unit size (front width x front height x depth)
   const fw=uB-uA,fh=zt-zb0,c=fr.toPlan((uA+uB)/2,-0.15),lz=up?zb0-0.25:zt+0.32;
