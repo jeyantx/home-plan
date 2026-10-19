@@ -3,7 +3,7 @@ const MARGIN=+(process.env.MARGIN||0.5);   // safety gap kept round the body whi
 const WB=8.7, OVR=3.1+MARGIN, OVF=14.96-8.7-3.1+MARGIN, HW=5.75/2+MARGIN;   // wheelbase, rear and front overhang, half width (inflated by the margin)
 const RMIN=11.6;   // rear-axle turning radius (VW Virtus ~5.05 m kerb-to-kerb)
 const bikes=process.argv[2]==='bikes';
-const rects=[[17.125,20.625,2.667,14.25],[20.25,21,19.75,20.75],[12,13.5,-0.2,1.5],[-1,0.75,-0.2,0.75],[13.5,22,-0.2,0.75],[2.75,21,30.75,40],[0.375,1.125,19.75,20.75],[-5,0.375,0.75,40],[20.625,30,0.75,40],[3.5,8.25,30.75,33.25],
+const rects=[[17.125,20.625,2.667,16.0],[20.25,21,19.75,20.75],[12,13.5,-0.2,1.5],[-1,0.75,-0.2,0.75],[13.5,22,-0.2,0.75],[2.75,21,30.75,40],[0.375,1.125,19.75,20.75],[-5,0.375,0.75,40],[20.625,30,0.75,40],[3.5,8.25,30.75,33.25],
   [0.8,1.4,0.3,3.2],[11.35,11.95,0.3,3.2],   // GT-01 leaves folded open at their hinges
   [-60,80,-30,-16.5],[-60,-0.01,-0.01,0.01],[21,80,-0.01,0.01]];   // far kerb of the road; boundary line either side of our gate
 if(bikes) rects.push([17.35,19.97,12.3,19.04],[17.4,19.82,19.6,25.63]);

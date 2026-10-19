@@ -1,12 +1,12 @@
 // Car route along the east side (owner's sketch): drive out forward in one curve past the scooter by the neem, through GT-01, east along the road;
-// come in from the west, stop just past the gate, reverse back along the same curve. Writes 3d/models/car-route.js (bikes on the stair side) or, with LAYOUT=BW, 3d/models/car-route-bw.js (bikes along BW-01).
+// come in from the west, stop just past the gate, reverse back along the same curve. Writes 3d/models/car-route.js. Allow the short back-and-forth with ALLOWSW=1.
 // Gaps: 3" round the body everywhere, 6" at the east gate leaf, the east pillar and the two-wheelers. Run: node car_route_east.mjs
 import fs from 'fs';
 process.env.MARGIN='0.25';
-const PARKX=+(process.env.PARKX||11.125), XE=+(process.env.XE||12.5), DRY=!!process.env.DRY;   // car spot centre X; east edge of the raised platform by the small gate
+const PARKX=+(process.env.PARKX||14.0), XE=+(process.env.XE||12.5), DRY=!!process.env.DRY;   // car spot centre X; east edge of the raised platform by the small gate
 let src=fs.readFileSync(new URL('car_route_plan.mjs',import.meta.url),'utf8');src=src.slice(0,src.indexOf('const S2=Math.PI/2;'));
-const BW=process.env.LAYOUT==='BW';   // bike layout: stair side (default) or both along BW-01
-const BIKES=BW?[[0.55,2.96,21.25,28.21],[3.2,5.62,22.17,28.2]]:[[14.68,17.1,6.4,12.43],[17.455,19.865,12.3,19.26]];   // BW: TW-1 and TW-2 along BW-01; else TW-2 on the platform, TW-1 under ST-1A
+const BW=false;   // (single layout now)
+const BIKES=[[0.55,2.96,21.25,28.21],[3.2,5.62,22.17,28.2]];   // TW-1 and TW-2 side by side along BW-01
 const PLAT=[[XE,17.125,6.2,11.0],[13.5,17.125,2.667,6.2]];   // raised platform (kerb over 3" high north of Y 11') and the small-gate steps
 src+=`
 for(const b of ${JSON.stringify([...BIKES,...PLAT])})rects.push([b[0]-0.25,b[1]+0.25,b[2]-0.25,b[3]+0.25]);
@@ -34,7 +34,7 @@ const R={wb:WB,ovr:3.1,ovf:3.16,park:[PARKX,26.63,-1.5708],in:inn.map(f),out:out
 R.park=R.in.at(-1).slice(0,3);
 fs.writeFileSync(new URL(BW?'../../3d/models/car-route-bw.js':'../../3d/models/car-route.js',import.meta.url),`// Car parking route for the 3D animation, from v1/tools/car_route_east.mjs (hybrid A*, rear-axle bicycle model, steering smoothed).
 // VW Virtus: wheelbase 8'8", rear overhang 3'1", front overhang 3'2", rear-axle turning radius 11'7".
-// Route along the east side: out forward in one curve past the scooter TW-2 by the neem, through GT-01 near its east leaf, then east along the road;
+// Route along the east side: out forward (one short back-and-forth to clear the low end of ST-1A), through GT-01 near its east leaf, then east along the road;
 // in from the west, stop just past the gate, reverse back along the same curve (nose to the gate). Gaps: 6" or more at the gate leaf, the pillar and the bikes.
 // Plan feet: x from the east boundary, y from the road; th = heading in plan angle (direction (cos th, sin th)); dir = +1 forward, -1 reverse.
 // Poses are of the rear-axle centre.

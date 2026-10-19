@@ -56,8 +56,8 @@ def R(x1,x2,y1,y2): return [(x1,y1),(x2,y1),(x2,y2),(x1,y2)]
 def back_y(x): return 106.0-(x-1)/20.0           # back boundary line
 ROOMS = {
  'G': [
-  ('G-01','Parking',R(0.375,21.0,0.75,30.75),'out'),
-  ('G-02','Porch',R(2.75,8.5,30.75,40.5),'porch'),
+  ('G-01','Parking',[(0.375,0.75),(21.0,0.75),(21.0,30.75),(8.5,30.75),(8.5,32.75),(2.75,32.75),(2.75,30.75),(0.375,30.75)],'out'),   # with the 2' bay in front of the porch steps
+  ('G-02','Porch',R(2.75,8.5,32.75,40.5),'porch'),
   ('G-03','Foyer',R(3.5,8.875,41.25,46.75),'in'),
   ('G-04','Living room',R(3.5,20.25,46.75,58.75),'in'),
   ('G-05','Bedroom 1',R(9.25,20.25,36.375,46.375),'bed'),
@@ -126,12 +126,11 @@ RAMP=dict(y_hump=1.0,y_crest=3.25,y_top=10.75,ease=1.5,drain=(2.5,3.25))   # gat
 SIDE_PLATFORM=dict(well=(12.75,4.75,2.25),x1=13.5,x2=17.125,steps=(2.667,3.5,4.333),xe=12.5,y_end=10.75)
 BRANCH_NOTES='''<section class="ask"><h2>Parking plan (branch exterior-v2, for review)</h2>
 <ol>
-<li><b>Car:</b> VW Virtus size (14'11" x 5'9"), <b>reversed in</b>: nose to the gate, back 1' from the front wall, on the level parking (Y 14'9" to 29'9"), now 1' further east (centre X 11'1½"): a 3'5" aisle to TW-1 on its west side and a 7'10" walkway on its east side to the porch. <b>Route along the east side</b> (owner's sketch): it drives out forward in one smooth curve, through GT-01 near its east leaf, and turns east along the road; coming in, it comes from the west, stops just past the gate and reverses back along the same curve (one stop). Gaps: 7" to the folded east gate leaf, 11½" to the east pillar, 1'1" to the tree well, 1'5" to the platform kerb, 2' to the scooter. Checked with a route planner using the Virtus turning circle; the gate stays as it is.</li>
+<li><b>Car:</b> VW Virtus size (14'11" x 5'9"), <b>reversed in</b>: nose to the gate, back 1' from the front wall, on the level parking (Y 14'9" to 29'9"), as far west as it can go (centre X 14', its west side 3" off the stair and store FU-56), leaving 5'6" between the scooter and the car. <b>Route along the east side</b> (owner's sketch): it drives out forward, with one short back-and-forth (2'5" forward, 10" back) to clear the low end of ST-1A, through GT-01 near its east leaf, and turns east along the road; coming in, it comes from the west, stops just past the gate and reverses back along the same path. Checked with a route planner using the Virtus turning circle; the gate stays as it is.</li>
 <li><b>Tree well FU-76</b>: 4'6" across, centred 6" south of the trunk, because the trunk leans south and must stay inside the ring up to the platform height. The ring has one level top, 1" above the small-gate platform, so on the ramp side it stands as a raised bed (up to 1'7" above the drive). Keep at least 10" of open soil round the trunk.</li>
-<li><b>Two-wheelers:</b> TW-1 (motorcycle, Honda VFR800 size: 6'11" long, 4' high) under the high end of ST-1A and the landing, its windscreen where the underside is 5' or more, ridden in forward from the aisle, front to the house; TW-2 (Ather 450X) on the small-gate platform along the side of ST-1A, front to the gate, ridden on from the level parking. The neem trunk leans over the ground in front of the tree (2' to 6' up), so nothing parks there. FU-56 store shrinks to a low tool store under the lower middle of ST-1A.</li>
-<li><b>Option: bikes along BW-01.</b> Both two-wheelers side by side against the east wall between C-01 and C-03, ridden in forward (front to the house), reached up the east walkway without passing the car. The car then moves 2'10½" further west (centre X 14', its west side 3" off the stair line), leaving 5'6" between the scooter and the car. Leaving, the car needs one short back-and-forth (2'5" forward, 10" back) to clear the low end of ST-1A and the small-gate platform; coming in, the same in reverse. Without that back-and-forth the car can go only 1'4½" west of the stair-side spot. Shown with the tick box in 2D and Options, Bikes in 3D.</li>
-<li><b>Small gate GT-02: steps, not ramp.</b> Three 6" granite steps just inside GT-02 (in line with the first treads of ST-1A) lead up to a level platform at parking height (+2'0") between the tree well and ST-1A. Its east edge is a retaining kerb along the car ramp, 1'4" high at the steps and running out to nothing where the ramp meets the parking at Y 12'3". The ramp (1 in 6) now serves the car gate GT-01 only. The tree-well ring holds the platform on its west side.</li>
-<li><b>Car spot</b> moved 3' east in all (centre X 11'1½"), leaving a 3'5" aisle for riding TW-1 in and out and a 7'10" walkway on the east side to the porch.</li>
+<li><b>Two-wheelers along BW-01:</b> TW-1 (motorcycle, Honda VFR800 size: 6'11" long) and TW-2 (Ather 450X) side by side against the east wall between C-01 and C-03, ridden in forward (front to the house) up the east walkway without passing the car. <b>Store FU-56</b> back to its full size under the high end of ST-1A (3'6" x 5'), door facing east at its north end, clear of the parked car.</li>
+<li><b>Porch 2' shorter:</b> the three porch steps start 2' in from the front line (Y 32'9"), leaving a 2' bay of parking in front of them, so there is 4'6" between the parked bikes and the first step. The porch floor is 5'3" deep; the shoe rack moves beside the main door.</li>
+<li><b>Small gate GT-02: steps, not ramp.</b> Three 6" granite steps just inside GT-02 (in line with the first treads of ST-1A) lead up to a level platform at parking height (+2'0") between the tree well and ST-1A, for walking in from the small gate. Its east edge is a retaining kerb along the car ramp, 1'4" high at the steps and running out to nothing where the ramp meets the parking at Y 12'3". The ramp (1 in 6) now serves the car gate GT-01 only. The tree-well ring holds the platform on its west side.</li>
 <li><b>ST-1 as cast:</b> both flights are steps on a 6" sloping waist slab and the landing ST-1L is a 6" slab, all cast as one RCC piece; the sloping underside of each flight runs into the flat underside of the landing (no step in the soffit). Landing level, risers and treads unchanged.</li>
 <li><b>Pillar C-01</b> moved 2'4½" east against the compound wall BW-01; beam B-01 extended to it (19'11" span, engineer to size, about 1'9" deep) and B-10 rests on B-01. The parking is now clear of pillars.</li>
 </ol></section>
@@ -268,7 +267,7 @@ CH_F_BACK_Y=98.6
 # id, floor, name, x1, x2, y1, y2, kind, side, note
 # side = which edge is the head (bed) / back (sofa, WC): 'x1','x2','y1','y2'. Y grows toward the back.
 FURNITURE = [
- ('FU-01','G','Shoe rack',7.25,8.5,33.5,36.5,'cab',None,'Porch, 3\' x 1\'3", against GW-03'),
+ ('FU-01','G','Shoe rack',7.25,8.5,37.25,40.25,'cab',None,'Porch, 3\' x 1\'3", against GW-03, beside the main door'),
  ('FU-02','G','Console with mirror',8.0,8.875,43.5,46.25,'cab',None,'Foyer, keys and mirror'),
  ('FU-03.1','G','3-seat sofa',3.5,6.0,50.0,56.25,'sofa','x1','Living, 6\'3" x 2\'6", back to GW-01 under the windows, moved toward GW-13'),
  ('FU-03.2','G','2-seat sofa',6.0,10.25,56.25,58.75,'sofa','y2','Living, 4\'3" x 2\'6", back against GW-13 (below the folding glass sill); starts where FU-03.1 ends so every seat is free'),
@@ -339,7 +338,7 @@ FURNITURE = [
  ('FU-73','G','Flower bed along the back wall',1.375,20.625,103.14,105.6,'fbed',None,'Back and side garden, 1\'6" deep all along the back wall BW-09, 9" brick kerb, red soil; a row of Tamil Nadu flowering plants PL-01 to PL-12'),
  ('FU-74','G','Tulsi maadam',4.5,6.0,96.75,98.25,'tulsi',None,'Side garden, 1\'6" square, 3\' high plastered pedestal with a lamp niche facing east, Tulsi PL-13 on top'),
  ('FU-75','G','Clothes drying line',10.25,17.25,101.0,101.5,'cline',None,'Back garden, two black MS posts 6\' high with T-arms, 3 steel wires, 7\' long; clear of the back door D-10 and the wash platform'),
- ('FU-56','G','Low store under staircase 1',17.125,20.625,8.6,12.2,'store',None,'Parking, 3\'6" x 3\'7", under the lower middle of ST-1A (about 1\'10" to 3\'8" high inside), small door facing east, for tools and the hose; the high end of ST-1A is now open for two-wheeler TW-1'),
+ ('FU-56','G','Store under staircase 1',17.125,20.625,10.997,16.0,'store',None,'Parking, 3\'6" x 5\', under the high end of ST-1A (about 3\'3" high at the front, 6\'6" at the back); floor at the parking level; door 2\'6" x 3\'8" facing east at its north end (Y 12\' to 14\'6"), clear of the parked car; the low end of the stair is solid'),
 ]
 # door and window types (proposal)
 SPEC = {
@@ -358,13 +357,10 @@ for _o in OPENINGS:
     if _o[5]=='window' and _o[0] not in SPEC: SPEC[_o[0]]='UPVC 3-track sliding: 2 glass + 1 mosquito mesh, MS safety grill, 1\'6" sunshade outside'
     if _o[5]=='vent' and _o[0] not in SPEC: SPEC[_o[0]]='Louvred glass ventilator with exhaust fan opening'
 SPEC['V-03']='Louvred glass ventilator with exhaust fan opening'
-CAR=(8.25,14.0,14.75,29.75)   # VW Virtus size, 14'11" x 5'9" (4561 x 1752 mm), reversed in: nose to the gate, back 1' clear of GW-04; 3'5" aisle to TW-1 on its west side, driver (right) door onto the 7'10" east walkway
+CAR=(11.125,16.875,14.75,29.75)   # VW Virtus size, 14'11" x 5'9" (4561 x 1752 mm), reversed in: nose to the gate, back 1' clear of GW-04; as far west as it can go (3" off the stair line and store FU-56); one short back-and-forth (2'5" forward, 10" back) on the way out
 # two-wheelers: (code, model, centre X, centre Y, length, width, facing); facing 'N' = front to the gate, 'S' = front to the house (length along Y)
-BIKES=[('TW-1','Honda VFR800',18.66,15.78,6.96,2.41,'S'),   # under the high end of ST-1A and the landing (its 4' windscreen where the underside is 5' or more), ridden in forward, front to the house
-       ('TW-2','Ather 450X',15.71,9.6,6.03,2.42,'N')]     # on the small-gate platform along ST-1A, clear of the leaning neem trunk, ridden in from the parking, front to the gate
-# option: both two-wheelers side by side along BW-01, between C-01 and C-03, ridden in forward (front to the house); reached up the east walkway without passing the car
-CAR_EAST=(11.125,16.875,14.75,29.75)   # with the bikes along BW-01: the car as far west as it can go (3" off the stair line), one short back-and-forth (2'5" forward, 10" back) on the way out
-BIKES_EAST=[('TW-1','Honda VFR800',1.755,24.73,6.96,2.41,'S'),('TW-2','Ather 450X',4.41,25.185,6.03,2.42,'S')]
+# side by side along BW-01, between C-01 and C-03, ridden in forward (front to the house); reached up the east walkway without passing the car
+BIKES=[('TW-1','Honda VFR800',1.755,24.73,6.96,2.41,'S'),('TW-2','Ather 450X',4.41,25.185,6.03,2.42,'S')]
 CH_G_FRONT=[0,0.75,12.0,13.5,20.25,21.0]
 
 # ---------- structure (proposal): RCC frame with side pillars only, no pillar inside any room ----------
@@ -428,3 +424,4 @@ STRUCT_NOTES=[
  'Also needed: plinth beams under all walls and a footing under each pillar. The engineer sizes these, and checks pillar sizes for the future floor.',
 ]
 PORCH_STEPS_X=(3.5,8.25)
+PORCH_STEPS_Y=32.75   # porch 2' shorter: the steps start 2' in from the front line, so there is 4'6" between the parked bikes and the first step

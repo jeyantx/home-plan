@@ -66,7 +66,6 @@ canvas{display:block;width:100%;height:100%}
   <span class="lbl">Gate</span><div class="seg" id="gateSeg"><button data-g="GD-1">GD-1 Slats</button><button data-g="GD-2">GD-2 Bars</button><button data-g="GD-3">GD-3 Panels</button></div>
   <span class="lbl">Colour</span><div class="seg" id="extSeg"><button data-e="EX-4" title="Warm white walls, light sand first-floor block, wood-brown frames, charcoal plinth"><i style="background:#f1ece3"></i><i style="background:#d3c2a8"></i><i style="background:#8a5a3a"></i><i style="background:#4f4a45"></i>EX-4</button><button data-e="EX-5" title="Beige walls, white first-floor block, wood-brown frames, dark brown plinth"><i style="background:#d8c5a6"></i><i style="background:#f3efe7"></i><i style="background:#8a5a3a"></i><i style="background:#5a4234"></i>EX-5</button><button data-e="EX-6" title="Light grey walls, dark grey first-floor block, wood-brown frames, charcoal plinth"><i style="background:#c6c3bd"></i><i style="background:#6b6966"></i><i style="background:#8a5a3a"></i><i style="background:#3f4043"></i>EX-6</button><button data-e="EX-7" title="Light beige walls (lighter EX-5), white first-floor block, wood-brown frames, brown plinth"><i style="background:#e6d8c0"></i><i style="background:#f6f3ec"></i><i style="background:#8a5a3a"></i><i style="background:#6a5140"></i>EX-7</button></div>
   <span class="lbl">Finish</span><div class="seg" id="finishSeg"><button data-k="KT-1"><i style="background:#c9a77c"></i><i style="background:#efe9df"></i>KT-1</button><button data-k="KT-2"><i style="background:#efe9df"></i><i style="background:#c9a77c"></i>KT-2</button><button data-k="KT-3"><i style="background:#7d5a3e"></i><i style="background:#efe9df"></i>KT-3</button></div>
-  <span class="lbl">Bikes</span><div class="seg" id="bikeSeg"><button data-b="ST" title="TW-1 under the stair, TW-2 on the small-gate platform">Stair side</button><button data-b="BW" title="Both along the east wall BW-01, between C-01 and C-03">Along BW-01</button></div>
   <span class="lbl">Lens</span><div class="seg" id="lensSeg"><button data-f="60" title="Eye-like lens">60°</button><button data-f="75" title="Wide lens">75°</button></div>
   <span class="sub">↑↓ walk · ←→ turn · A/D slide · W/S tilt · Q/E lower/raise · Shift faster · Drag to look around · Scroll to walk · Right-drag to slide · Hover for names</span>
  </div>
@@ -90,9 +89,7 @@ import {createNeemTree} from './models/neem-tree.js?v=__BUILD__';
 import {createTNPlant,TN_PLANTS} from './models/tn-plants.js?v=__BUILD__';
 import {createVirtus,createHunter350,createAther450,loadCarGLB,loadGLBVehicle} from './models/vehicles.js?v=__BUILD__';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
-import {CAR_ROUTE as CAR_ROUTE_ST} from './models/car-route.js?v=__BUILD__';
-import {CAR_ROUTE_BW} from './models/car-route-bw.js?v=__BUILD__';
-let CAR_ROUTE=CAR_ROUTE_ST;   // the car spot and route go with the bike layout (see setBikes)
+import {CAR_ROUTE} from './models/car-route.js?v=__BUILD__';
 import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
 
 const P=window.PLAN, F=0.3048, CEIL=10.0, EYE=5.25;
@@ -1023,9 +1020,11 @@ for(const c of P.columns) if(!inWallG(c)){const me=box(c.x1,c.x2,c.y1,c.y2,c.y1<
  for(const b of P.beams.filter(b=>b.level==='G')) for(const [a,bb,c,d] of zones){const x1=Math.max(b.x1,a),x2=Math.min(b.x2,bb),y1=Math.max(b.y1,c),y2=Math.min(b.y2,d);
    if(x2-x1>0.05&&y2-y1>0.05) box(x1+0.006,x2-0.006,y1+0.006,y2-0.006,SLB-1.08,SLB+0.01,MAT.white,{tip:`${b.id} · Beam 9" x ${b.depth} · ${b.note}`})}}
 // ground: house plinth, porch with 3 steps, parking pavers, road
-for(const [a,b,c,d] of [[8.25,21,30.75,33.25],[2.75,21,33.25,67.125],[6.0,21,67.125,73.875],[9.5,21,73.875,95.125],[2.75,3.5,31.762,33.25]]) box(a,b,c,d,c<31.8?PKZ:GRD,-0.03,MAT.extBase,{cast:false,tip:'Plinth band · textured paint (or stone cladding) in the base colour'});
-slab([[2.75,33.25],[8.5,33.25],[8.5,40.5],[2.75,40.5]],MAT.otherFloor,0,'G-02 · Porch floor');
-for(let i=0;i<3;i++) box(3.5,8.25,30.75+i*0.833,33.25,PKZ,PKZ+(i+1)*(-PKZ/3),MAT.stepStone,{tip:`Porch steps, granite, ${Math.round(-PKZ/3*12)}" risers, from the parking`});
+const PSY=P.porchY||30.75,PFY=PSY+2.5;   // porch steps start, porch floor start
+for(const [a,b,c,d] of [[8.25,21,30.75,33.25],[8.25,21,33.25,67.125],[2.75,8.25,PFY,67.125],[6.0,21,67.125,73.875],[9.5,21,73.875,95.125],[2.75,3.5,31.762,PFY]].filter(r=>r[3]>r[2]+0.01)) box(a,b,c,d,c<31.8?PKZ:GRD,-0.03,MAT.extBase,{cast:false,tip:'Plinth band · textured paint (or stone cladding) in the base colour'});
+slab([[2.75,PFY],[8.5,PFY],[8.5,40.5],[2.75,40.5]],MAT.otherFloor,0,'G-02 · Porch floor');
+if(PSY>30.76) box(3.5,8.25,30.75,PSY,PKZ-0.2,PKZ+0.03,MAT.paver,{cast:false,tip:`G-01 · Parking bay in front of the porch steps, ${Math.round((PSY-30.75)*12)}" deep · grey pavers`});
+for(let i=0;i<3;i++) box(3.5,8.25,PSY+i*0.833,PFY,PKZ,PKZ+(i+1)*(-PKZ/3),MAT.stepStone,{tip:`Porch steps, granite, ${Math.round(-PKZ/3*12)}" risers, from the parking`});
 box(0.375,2.75,30.75,30.79,PKZ,GRD,MAT.extTrim,{tip:'Step up from the parking to the side passage, 6"'});
 // small gate GT-02: three steps up from the crest to a level platform at parking height (the ramp serves the car gate only)
 const SPL=P.platform,TWC=(()=>{const t=fuG['FU-76'];return [(t.x1+t.x2)/2,(t.y1+t.y2)/2,(t.x2-t.x1)/2]})();
@@ -1146,7 +1145,7 @@ const trunkAxis=[];const trunkAxisAt=hf=>{if(hf<0||hf>12)return null;const k=Mat
  // store FU-56 under the foot of ST-1A, with a door to the east
  // store FU-56 fills the space under the high end of ST-1A: one slice per tread, each just under the stair, so its top follows the slope
  const sf=fuG['FU-56'];for(let i=0;i<NA-1;i++){const y1=A0+i*TD,y2=y1+TD,top=Z0+(i+1)*R;if(y1<sf.y1-0.01||y2>sf.y2+0.01)continue;box(sf.x1+0.012,sf.x2-0.012,y1,y2,PKZ-0.3,sofA(y1)-0.02,MAT.ext,{tip:`FU-56 · Store under ST-1A · ${sf.note}`})}
- {const zb=sofA(sf.y1);box(sf.x1-0.04,sf.x1+0.012,sf.y1+0.4,sf.y2-0.4,PKZ+0.15,zb-0.2,MAT.extWood,{tip:'FU-56 · low store door, wood-look'})}
+ {const d1=12.0,d2=14.5,zb=sofA(d1);box(sf.x1-0.04,sf.x1+0.012,d1,d2,PKZ+0.15,zb-0.2,MAT.extWood,{tip:`FU-56 · store door, wood-look, 2'6" x ${Math.round((zb-0.35-PKZ)*12)}", facing east, clear of the parked car`})}
  // railing: black MS posts and 4"-gap balusters, wood-look handrail 3' above the nosing line; merged into two meshes
  const blk=[],wd=[],H=3.0,P3=(x,y,z)=>new THREE.Vector3(mx(x),m(z),m(y));
  const rod=(a,b,w,arr)=>{const d=new THREE.Vector3().subVectors(b,a),L=d.length(),g=new THREE.BoxGeometry(m(w),L,m(w));g.translate(0,L/2,0);
@@ -1284,17 +1283,12 @@ function vfrMats(){const P=(c,o={})=>new THREE.MeshPhysicalMaterial({color:c,rou
     'glass.001':lens,'glass.002':lens,mirro:mirror,mirror,orange_plastic:amber,yellowplastic:amber,'yellowplastic.001':amber,yellow_plastic:amber,
     redplastic:redl,red:redl,green:P('#1f9e3a'),whiteplastic:white,Material:screen,'Material.006':white,'Material.007':white,'':blk};
   return new Proxy(m,{get:(t,k)=>k in t?t[k]:blk})}
-// two-wheeler layouts: 'ST' = stair side (TW-1 under ST-1A, TW-2 on the small-gate platform), 'BW' = both along BW-01 between C-01 and C-03
-const bikeObjs={};let bikeLayout='ST';
-function placeBike(code){const o=bikeObjs[code];if(!o)return;const L=(bikeLayout==='BW'&&P.bikesEast?P.bikesEast:P.bikes)||[],t=L.find(r=>r[0]===code);if(!t)return;
+// two-wheelers side by side along BW-01, between C-01 and C-03
+const bikeObjs={};
+function placeBike(code){const o=bikeObjs[code];if(!o)return;const t=(P.bikes||[]).find(r=>r[0]===code);if(!t)return;
   const [,name,bx,by,,,fac]=t,b=o.b,d=b.userData.dims,ft=v=>{const i=Math.round(v/F*12);return `${Math.floor(i/12)}'${i%12}"`};
   b.position.set(mx(bx),m(PKZ),m(by));b.rotation.y=fac==='E'?Math.PI/2:fac==='S'?0:Math.PI;
-  const where=bikeLayout==='BW'?'along BW-01 (option)':code==='TW-1'?'under ST-1A':'on the small-gate platform';
-  b.traverse(x=>{if(x.isMesh)named(x,`${code} · ${o.moto?'Motorcycle · Honda VFR800 (model by danielfc10, CC BY 3.0, Blend Swap), real size':'Scooter (downloaded model, sized to an Ather 450X)'} · ${ft(d.length)} long, ${ft(d.height)} high · ${where} · ${fac==='E'?'front to the east':fac==='S'?'front to the house (ridden in forward)':'front to the gate'}`)})}
-function setBikes(k){bikeLayout=k==='BW'?'BW':'ST';for(const c in bikeObjs)placeBike(c);
-  CAR_ROUTE=bikeLayout==='BW'?CAR_ROUTE_BW:CAR_ROUTE_ST;carAnim.track=null;if(carAnim.on)stopAnim();else setCarPose(...CAR_ROUTE.park,0,0);
-  document.querySelectorAll('#bikeSeg button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.b===bikeLayout));try{localStorage.setItem('lr3d-bikes',bikeLayout)}catch(e){};
-  renderer.shadowMap.needsUpdate=true;if(photo&&pt)pt.setScene(scene,camera);invalidate()}
+  b.traverse(x=>{if(x.isMesh)named(x,`${code} · ${o.moto?'Motorcycle · Honda VFR800 (model by danielfc10, CC BY 3.0, Blend Swap), real size':'Scooter (downloaded model, sized to an Ather 450X)'} · ${ft(d.length)} long, ${ft(d.height)} high · along BW-01 · ${fac==='E'?'front to the east':fac==='S'?'front to the house (ridden in forward)':'front to the gate'}`)})}
 const SHOW_BIKES=false;   // the old code-made two-wheelers stay off; the downloaded models below are used
 const vehicleMeshes=[];
 {const [cx1,cx2,cy1,cy2]=P.car||[11.25,17.0,14.75,29.75];
@@ -1507,8 +1501,6 @@ applyOption(so);applyLight(sl);setLens(sf);setView(21);   // open at the gate, o
 document.querySelectorAll('#gateSeg button').forEach(x=>x.onclick=()=>setGate(x.dataset.g));document.querySelectorAll('#extSeg button').forEach(x=>x.onclick=()=>setExt(x.dataset.e));
 {let k='KT-1';try{k=localStorage.getItem('lr3d-finish')||k}catch(e){};setFinish(k)}
 document.querySelectorAll('#finishSeg button').forEach(x=>x.onclick=()=>setFinish(x.dataset.k));
-{let k='ST';try{k=localStorage.getItem('lr3d-bikes')||k}catch(e){};setBikes(k)}
-document.querySelectorAll('#bikeSeg button').forEach(x=>x.onclick=()=>setBikes(x.dataset.b));
 // ---------------- navigation: look in place, walk with collision ----------------
 // Keys: Up/Down walk · Left/Right turn · A/D slide · W/S tilt up/down · Q/E lower/raise · Shift faster
 // Mouse: drag = look around (camera stays put) · scroll = walk · right-drag = slide sideways / up-down
@@ -1527,7 +1519,7 @@ function tryMove(step){const len=step.length();if(!len)return;const dir=step.clo
       const R=a[2]+0.75, dn=Math.hypot(nx-a[0],ny-a[1]), d0=Math.hypot(ox-a[0],oy-a[1]); if(dn<R&&dn<d0)return } }
   camera.position.add(step);
   {const py=camera.position.z/F,px=-camera.position.x/F;   // in front of the house the ground slopes: keep the eye 5'3" above the drive or the road
-   if(py<30.75&&px>-40&&px<60){const g=py<0?RDZ:hFront(px,py),t=m(g+EYE);if(Math.abs(camera.position.y-t)<m(3.0))camera.position.y=t}}}
+   if((py<30.75||(py<(P.porchY||30.75)&&px>3.5&&px<8.25))&&px>-40&&px<60){const g=py<0?RDZ:py>=30.75?PKZ:hFront(px,py),t=m(g+EYE);if(Math.abs(camera.position.y-t)<m(3.0))camera.position.y=t}}}
 function moveVertical(dz){const y=camera.position.y;   // stay within the floor you are on: ground floor, first floor, or free above the house
   const [lo,hi]=y<=m(CEIL+0.5)?[0.4,m(CEIL)-0.15]:y<=m(FFZ+CEIL)?[m(FFZ)+0.4,m(FFZ+CEIL)-0.15]:[0.4,m(200)];
   camera.position.y=Math.max(lo,Math.min(hi,y+dz))}

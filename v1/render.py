@@ -250,24 +250,15 @@ def platform_outlines(SP):
     return out
 def vehicles():
     import model as _m
-    for cls,key,fn in (('L-bikeS','CAR','car-route.js'),('L-bikeE','CAR_EAST','car-route-bw.js')):   # the car spot and route go with the bike layout
-        if not getattr(_m,key,None): continue
-        cx1,cx2,cy1,cy2=getattr(_m,key)
-        E(f'<g class="{cls}">')
-        rect(cx1,cx2,cy1,cy2,'#fafafa','#555',0.06,extra='rx="1.0"'); rect(cx1+0.5,cx2-0.5,cy1+8.6,cy1+10.1,'#a9bccd','#555',0.03); rect(cx1+0.5,cx2-0.5,cy1+2.6,cy1+3.8,'#a9bccd','#555',0.03)
-        text((cx1+cx2)/2,cy1+5.6,'CAR\nVW Virtus\n14\'11" x 5\'9"',0.36,weight=600,fill='#666')
-        car_path(cx1,cy1,fn)
-        E('</g>')
-    for cls,key,lx in (('L-bikeS','BIKES',-2.4),('L-bikeE','BIKES_EAST',0.0)):   # chosen layout, and the BW-01 option (shown with its tick box)
-        E(f'<g class="{cls}">')
-        for b in getattr(_m,key,None) or []:
-            code,name,bx,by,bl,bw=b[:6]; fac=b[6] if len(b)>6 else 'N'; bike(bx,by,fac)
-            lab=code+'\n'+name.replace('Royal Enfield ','RE ')
-            if fac=='E': text(bx+0.4,by+2.0,lab,0.3,weight=600,fill='#555')
-            elif lx: text(bx+lx,by,lab,0.3,weight=600,fill='#555')
-            else: text(bx,by-4.1,lab,0.3,weight=600,fill='#555')
-        if cls=='L-bikeE': text(3.1,29.4,'option: bikes along BW-01',0.28,weight=700,fill='#1f6f8b')
-        E('</g>')
+    cx1,cx2,cy1,cy2=getattr(_m,'CAR',(11.25,17.25,13.75,28.75))
+    rect(cx1,cx2,cy1,cy2,'#fafafa','#555',0.06,extra='rx="1.0"'); rect(cx1+0.5,cx2-0.5,cy1+8.6,cy1+10.1,'#a9bccd','#555',0.03); rect(cx1+0.5,cx2-0.5,cy1+2.6,cy1+3.8,'#a9bccd','#555',0.03)
+    text((cx1+cx2)/2,cy1+5.6,'CAR\nVW Virtus\n14\'11" x 5\'9"',0.36,weight=600,fill='#666')
+    car_path(cx1,cy1)
+    for b in getattr(_m,'BIKES',[]):
+        code,name,bx,by,bl,bw=b[:6]; fac=b[6] if len(b)>6 else 'N'; bike(bx,by,fac)
+        lab=code+'\n'+name.replace('Royal Enfield ','RE ')
+        if fac=='E': text(bx+0.4,by+2.0,lab,0.3,weight=600,fill='#555')
+        else: text(bx,by-4.1,lab,0.3,weight=600,fill='#555')
 def car_path(cx1,cy1,fn='car-route.js'):
     # space the car needs going in (blue) and out (green): the swept outline of the body with mirrors, from the 3D animation route
     try:
