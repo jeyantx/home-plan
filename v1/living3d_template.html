@@ -1717,6 +1717,17 @@ if(window.ResizeObserver)new ResizeObserver(()=>resize()).observe(view);   // th
 {let o=false;try{o=localStorage.getItem('lr3d-opts')==='1'}catch(e){};setOpt(o)}   // options row starts closed unless left open
 let so=0,sl='day',sf=75;try{so=0;sl=localStorage.getItem('lr3d-light')||'day';sf=+(localStorage.getItem('lr3d-lens')||75)}catch(e){}
 applyOption(so);applyLight(sl);setLens(sf);setView(21);   // open at the gate, outside
+// share: Day or Evening, the last chosen view, the exact camera and the lens go into the link (?light=eve&view=21&cam=x,y,z,yaw,pitch&lens=60), so the same 3D view opens for someone else
+const SHARE3=['light','view','cam','lens'];let lastView=21,shareT=0;
+{const Q=new URLSearchParams(location.search),l=Q.get('light'),f=+Q.get('lens'),v=+Q.get('view'),c=(Q.get('cam')||'').split(',').map(Number);
+ if(l==='day'||l==='eve')applyLight(l);if(f===60||f===75)setLens(f);if(Q.has('view')&&VIEWS[v]){setView(v);lastView=v}
+ if(c.length===5&&c.every(Number.isFinite)){camera.position.set(mx(c[0]),m(c[2]),m(c[1]));yaw=c[3]*Math.PI/180;pitch=c[4]*Math.PI/180;applyLook();if(!Q.has('view'))applyVis({fl:c[2]>FFZ-1?'F':'G'});invalidate()}}
+function share(){clearTimeout(shareT);shareT=setTimeout(()=>{if((typeof tour!=='undefined'&&tour.on)||(typeof carAnim!=='undefined'&&carAnim.on))return;
+  const P=new URLSearchParams(location.search);for(const k of SHARE3)P.delete(k);if(curLight!=='day')P.set('light',curLight);P.set('view',lastView);
+  const p=camera.position;P.set('cam',[-p.x/F,p.z/F,p.y/F].map(x=>x.toFixed(2)).concat([yaw,pitch].map(a=>(a*180/Math.PI).toFixed(1))).join(','));if(hfov!==75)P.set('lens',hfov);
+  const q=P.toString().replace(/%2C/g,',');history.replaceState(null,'',(q?'?'+q:location.pathname)+location.hash);
+  try{if(parent!==window){const pl=parent.location,PP=new URLSearchParams(pl.search);for(const k of SHARE3)PP.delete(k);for(const [k,v] of P)if(SHARE3.includes(k))PP.set(k,v);const pq=PP.toString().replace(/%2C/g,',');parent.history.replaceState(null,'',pl.pathname+(pq?'?'+pq:'')+pl.hash)}}catch(e){}},500)}   // the app page shows the same link
+{const _sv=setView;setView=function(i){lastView=i;_sv(i)};const _inv=invalidate;invalidate=function(){_inv();share()};const _al=applyLight;applyLight=function(md){_al(md);share()}}
 setGate('GD-1');setExt('EX-4');setFinish('KT-1');   // fixed choices: GD-1 slatted gates, EX-4 colours, KT-1 kitchen finish
 document.querySelectorAll('#gateSeg button').forEach(x=>x.onclick=()=>setGate(x.dataset.g));document.querySelectorAll('#extSeg button').forEach(x=>x.onclick=()=>setExt(x.dataset.e));
 

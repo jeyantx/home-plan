@@ -314,7 +314,7 @@ for(const cb of document.querySelectorAll('.layers input')){
   function write(){clearTimeout(t);t=setTimeout(()=>{const P=new URLSearchParams(),H=cbs.filter(cb=>cb.defaultChecked&&!cb.checked).map(nm),S=cbs.filter(cb=>!cb.defaultChecked&&cb.checked).map(nm);
     if(mode!=='both')P.set('floor',mode);if(H.length)P.set('hide',H.join(','));if(S.length)P.set('show',S.join(','));
     const q=P.toString().replace(/%2C/g,','),qs=q?'?'+q:location.pathname;history.replaceState(null,'',qs+location.hash);
-    try{if(parent!==window){const pl=parent.location;parent.history.replaceState(null,'',pl.pathname+(q?'?'+q:'')+pl.hash)}}catch(e){}},300)}   // the app page shows the same link
+    try{if(parent!==window){const pl=parent.location,PP=new URLSearchParams(pl.search);for(const k of ['floor','hide','show'])PP.delete(k);for(const [k,v] of P)PP.set(k,v);const pq=PP.toString().replace(/%2C/g,',');parent.history.replaceState(null,'',pl.pathname+(pq?'?'+pq:'')+pl.hash)}}catch(e){}},300)}   // the app page shows the same link
   cbs.forEach(cb=>cb.addEventListener('change',write));
   const _sm=setMode;setMode=function(m){_sm(m);write()};
 })();

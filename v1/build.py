@@ -148,7 +148,7 @@ for(const cb of document.querySelectorAll('.layers input')){
   function write(){clearTimeout(t);t=setTimeout(()=>{const P=new URLSearchParams(),H=cbs.filter(cb=>cb.defaultChecked&&!cb.checked).map(nm),S=cbs.filter(cb=>!cb.defaultChecked&&cb.checked).map(nm);
     if(mode!=='both')P.set('floor',mode);if(H.length)P.set('hide',H.join(','));if(S.length)P.set('show',S.join(','));
     const q=P.toString().replace(/%2C/g,','),qs=q?'?'+q:location.pathname;history.replaceState(null,'',qs+location.hash);
-    try{if(parent!==window){const pl=parent.location;parent.history.replaceState(null,'',pl.pathname+(q?'?'+q:'')+pl.hash)}}catch(e){}},300)}   // the app page shows the same link
+    try{if(parent!==window){const pl=parent.location,PP=new URLSearchParams(pl.search);for(const k of ['floor','hide','show'])PP.delete(k);for(const [k,v] of P)PP.set(k,v);const pq=PP.toString().replace(/%2C/g,',');parent.history.replaceState(null,'',pl.pathname+(pq?'?'+pq:'')+pl.hash)}}catch(e){}},300)}   // the app page shows the same link
   cbs.forEach(cb=>cb.addEventListener('change',write));
   const _sm=setMode;setMode=function(m){_sm(m);write()};
 })();
@@ -305,7 +305,7 @@ const tabs=[...document.querySelectorAll('nav button')];
 function show(k){{if(!document.getElementById('p-'+k))k='3d';
   tabs.forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===k));
   document.querySelectorAll('.pane').forEach(p=>p.classList.toggle('on',p.id==='p-'+k));
-  const f=document.querySelector('#p-'+k+' iframe');if(f&&!f.src)f.src=f.dataset.src+(k==='2d'?location.search:'');   // the 2D plan reads its floor, layers and zoom from the link
+  const f=document.querySelector('#p-'+k+' iframe');if(f&&!f.src)f.src=f.dataset.src+(k==='2d'||k==='3d'?location.search:'');   // the 2D plan and the 3D view read their settings from the link
   if(f){{const fo=()=>{{try{{f.contentWindow.focus()}}catch(e){{}}}};fo();f.addEventListener('load',fo,{{once:true}})}}   // give the keyboard to the page shown, so the arrow keys work without a click first
   document.getElementById('keys-3d').hidden=k!=='3d';document.getElementById('keys-kitchen').hidden=k!=='kitchen';   // key help for the 3D tabs, top right   // load the 2D and 3D pages the first time they are opened
   if(location.hash!=='#'+k)history.replaceState(null,'','#'+k);try{{localStorage.setItem('hp-tab',k)}}catch(e){{}}}}
