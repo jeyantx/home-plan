@@ -57,8 +57,12 @@ aside ul,aside ol{margin:0;padding-left:18px}aside li{margin:3px 0}
 .roomlinks button{border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:999px;padding:3px 9px;font:inherit;font-size:12px;cursor:pointer}
 .roomlinks button:hover{background:var(--chip)}
 
-.layers{display:inline-flex;gap:12px;align-items:center;font-size:13px;color:var(--muted)}
-.layers label{display:inline-flex;gap:5px;align-items:center;cursor:pointer}
+.layers{position:relative;font-size:13px}
+.layers summary{list-style:none;cursor:pointer;border:1px solid var(--line);border-radius:8px;padding:7px 12px;background:var(--panel);color:var(--ink)}
+.layers summary::-webkit-details-marker{display:none}
+.layers summary::after{content:" ▾";color:var(--muted)}
+.layers .menu{position:absolute;z-index:30;top:calc(100% + 4px);left:0;display:flex;flex-direction:column;gap:7px;padding:10px 12px;background:var(--panel);border:1px solid var(--line);border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,.14);white-space:nowrap}
+.layers label{display:flex;gap:6px;align-items:center;cursor:pointer;color:var(--ink)}
 td.c{font-weight:700;white-space:nowrap;color:var(--accent)}
 
 #tip{position:fixed;z-index:50;pointer-events:none;max-width:320px;background:#1f2328;color:#fff;font-size:12.5px;line-height:1.35;padding:6px 9px;border-radius:7px;box-shadow:0 4px 14px rgba(0,0,0,.25);display:none}
@@ -71,11 +75,11 @@ td.c{font-weight:700;white-space:nowrap;color:var(--accent)}
 .measuring .sheet{cursor:crosshair}
 </style></head><body>
 <header>
- <div><h1>Home plan · main</h1><div class="sub">Clean 2D plan with named walls, rooms and openings. Road and gates face north, at the bottom.</div></div>
+ <div><h1>Home plan · main</h1></div>
  <div class="seg" role="group" aria-label="View">
   <button data-view="f0">Ground floor</button><button data-view="f1">First floor</button><button data-view="both">Side by side</button>
  </div>
- <div class="layers">
+ <details class="layers"><summary>Show</summary><div class="menu">
   <label><input type="checkbox" data-layer="L-rooms" checked>Rooms</label>
   <label><input type="checkbox" data-layer="L-walls" checked>Wall codes</label>
   <label><input type="checkbox" data-layer="L-open" checked>Door and window codes</label>
@@ -83,7 +87,7 @@ td.c{font-weight:700;white-space:nowrap;color:var(--accent)}
   <label><input type="checkbox" data-layer="L-furn" checked>Furniture</label>
   <label><input type="checkbox" data-layer="L-struct" checked>Pillars and beams</label>
   <label><input type="checkbox" data-layer="L-carpath" checked>Car path</label>
- </div>
+ </div></details>
  <div id="mread" class="mread" aria-live="polite"></div>
  <div class="tools" role="group" aria-label="Zoom">
   <button id="zin" title="Zoom in" aria-label="Zoom in">+</button><button id="zout" title="Zoom out" aria-label="Zoom out">&minus;</button><button id="measure" title="Measure distance (M). Click start, click end. Shift = straight line, Alt = no snap, Esc = clear" aria-pressed="false">Measure</button><button id="fit" title="Fit whole plan">Fit</button><button id="theme" title="Toggle light or dark" aria-label="Toggle theme">◐</button>
@@ -101,7 +105,7 @@ td.c{font-weight:700;white-space:nowrap;color:var(--accent)}
 <li><b>Tree well FU-76</b>: 4'6" across, centred 6" south of the trunk, because the trunk leans south and must stay inside the ring up to the platform height. The ring has one level top, 1" above the small-gate platform, so on the ramp side it stands as a raised bed (up to 1'7" above the drive). Keep at least 10" of open soil round the trunk.</li>
 <li><b>Two-wheelers along BW-01:</b> TW-1 (motorcycle, Honda VFR800 size: 6'11" long) and TW-2 (Ather 450X) side by side against the east wall between C-01 and C-03, ridden in forward (front to the house) up the east walkway without passing the car. <b>Store FU-56</b> back to its full size under the high end of ST-1A (3'6" x 5'), door facing east at its north end, clear of the parked car.</li>
 <li><b>Porch 2' shorter:</b> the three porch steps start 2' in from the front line (Y 32'9"), leaving a 2' bay of parking in front of them, so there is 4'6" between the parked bikes and the first step. The porch floor is 5'3" deep; the shoe rack moves beside the main door.</li>
-<li><b>Small gate GT-02: steps, not ramp.</b> Three 6" granite steps just inside GT-02 (in line with the first treads of ST-1A) lead up to a level platform at parking height (+2'0") between the tree well and ST-1A, for walking in from the small gate. Its east edge is a retaining kerb along the car ramp, 1'4" high at the steps and running out to nothing where the ramp meets the parking at Y 12'3". The ramp (1 in 6) now serves the car gate GT-01 only. The tree-well ring holds the platform on its west side.</li>
+<li><b>Small gate GT-02: steps, not ramp.</b> Three 6" granite steps just inside GT-02 (in line with the first treads of ST-1A) lead up to a level platform at parking height (+2'0") between the tree well and ST-1A, for walking in from the small gate. Its east edge is a retaining kerb along the car ramp, 1'4" high at the steps and running out to nothing where the ramp meets the parking at Y 10'9". The ramp now serves the car gate GT-01 only. The tree-well ring holds the platform on its west side.</li>
 <li><b>ST-1 as cast:</b> both flights are steps on a 6" sloping waist slab and the landing ST-1L is a 6" slab, all cast as one RCC piece; the sloping underside of each flight runs into the flat underside of the landing (no step in the soffit). Landing level, risers and treads unchanged.</li>
 <li><b>Pillar C-01</b> moved 2'4½" east against the compound wall BW-01; beam B-01 extended to it (19'11" span, engineer to size, about 1'9" deep) and B-10 rests on B-01. The parking is now clear of pillars.</li>
 </ol></section>
@@ -201,7 +205,7 @@ td.c{font-weight:700;white-space:nowrap;color:var(--accent)}
 <li><b>X</b> is feet from the east boundary, from 0 to 21. <b>Y</b> is feet from the road, from 0 to 106. For example, "GW-05 at Y 50'" names one exact spot.</li>
 <li><b>Codes:</b> G- ground-floor room or area, F- first-floor room or area, GW- ground-floor wall, FW- first-floor wall, PW- parapet, BW- boundary wall, D- door, W- window, V- ventilator, O- open arch, GT- gate, ST- staircase.</li>
 <li>Room sizes are clear inside the walls. Walls are drawn at true thickness: 9" outer and 4½" partitions, compound walls and parapets.</li>
-<li>Use the checkboxes above the plan to hide codes or dimensions when you want a clean view.</li>
+<li>Use <b>Show</b> above the plan to hide codes or dimensions when you want a clean view.</li>
 </ul></section>
 <section><h2>What I changed from your draft</h2>
 <ol>

@@ -41,7 +41,7 @@ panel=BN+f'''
 <li><b>X</b> is feet from the east boundary, from 0 to 21. <b>Y</b> is feet from the road, from 0 to 106. For example, "GW-05 at Y 50'" names one exact spot.</li>
 <li><b>Codes:</b> G- ground-floor room or area, F- first-floor room or area, GW- ground-floor wall, FW- first-floor wall, PW- parapet, BW- boundary wall, D- door, W- window, V- ventilator, O- open arch, GT- gate, ST- staircase.</li>
 <li>Room sizes are clear inside the walls. Walls are drawn at true thickness: 9" outer and 4½" partitions, compound walls and parapets.</li>
-<li>Use the checkboxes above the plan to hide codes or dimensions when you want a clean view.</li>
+<li>Use <b>Show</b> above the plan to hide codes or dimensions when you want a clean view.</li>
 </ul></section>
 <section><h2>What I changed from your draft</h2>
 <ol>
@@ -106,8 +106,12 @@ page=open('/Users/jeyant-10189/Work/Personal/own/home-plan/homeplan-4-my-reading
 style=page[page.index('<style>'):page.index('</style>')+8]
 script=page[page.index('<script>'):page.index('</script>')+9]
 style=style.replace('</style>','''
-.layers{display:inline-flex;gap:12px;align-items:center;font-size:13px;color:var(--muted)}
-.layers label{display:inline-flex;gap:5px;align-items:center;cursor:pointer}
+.layers{position:relative;font-size:13px}
+.layers summary{list-style:none;cursor:pointer;border:1px solid var(--line);border-radius:8px;padding:7px 12px;background:var(--panel);color:var(--ink)}
+.layers summary::-webkit-details-marker{display:none}
+.layers summary::after{content:" ▾";color:var(--muted)}
+.layers .menu{position:absolute;z-index:30;top:calc(100% + 4px);left:0;display:flex;flex-direction:column;gap:7px;padding:10px 12px;background:var(--panel);border:1px solid var(--line);border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,.14);white-space:nowrap}
+.layers label{display:flex;gap:6px;align-items:center;cursor:pointer;color:var(--ink)}
 td.c{font-weight:700;white-space:nowrap;color:var(--accent)}
 
 #tip{position:fixed;z-index:50;pointer-events:none;max-width:320px;background:#1f2328;color:#fff;font-size:12.5px;line-height:1.35;padding:6px 9px;border-radius:7px;box-shadow:0 4px 14px rgba(0,0,0,.25);display:none}
@@ -141,11 +145,11 @@ out=f'''<!doctype html>
 <title>Home Plan v1</title>
 {style}</head><body>
 <header>
- <div><h1>Home plan · {BRANCH}</h1><div class="sub">Clean 2D plan with named walls, rooms and openings. Road and gates face north, at the bottom.</div></div>
+ <div><h1>Home plan · {BRANCH}</h1></div>
  <div class="seg" role="group" aria-label="View">
   <button data-view="f0">Ground floor</button><button data-view="f1">First floor</button><button data-view="both">Side by side</button>
  </div>
- <div class="layers">
+ <details class="layers"><summary>Show</summary><div class="menu">
   <label><input type="checkbox" data-layer="L-rooms" checked>Rooms</label>
   <label><input type="checkbox" data-layer="L-walls" checked>Wall codes</label>
   <label><input type="checkbox" data-layer="L-open" checked>Door and window codes</label>
@@ -153,7 +157,7 @@ out=f'''<!doctype html>
   <label><input type="checkbox" data-layer="L-furn" checked>Furniture</label>
   <label><input type="checkbox" data-layer="L-struct" checked>Pillars and beams</label>
   <label><input type="checkbox" data-layer="L-carpath" checked>Car path</label>
- </div>
+ </div></details>
  <div id="mread" class="mread" aria-live="polite"></div>
  <div class="tools" role="group" aria-label="Zoom">
   <button id="zin" title="Zoom in" aria-label="Zoom in">+</button><button id="zout" title="Zoom out" aria-label="Zoom out">&minus;</button><button id="measure" title="Measure distance (M). Click start, click end. Shift = straight line, Alt = no snap, Esc = clear" aria-pressed="false">Measure</button><button id="fit" title="Fit whole plan">Fit</button><button id="theme" title="Toggle light or dark" aria-label="Toggle theme">◐</button>
@@ -186,20 +190,23 @@ _secs=_re.findall(r'<section.*?</section>',panel,_re.S)
 _title=lambda s:(_re.search(r'<h2>(.*?)</h2>',s) or [None,''])[1]
 _how=next(s for s in _secs if _title(s).startswith('How to read'))
 # 2D tab: the plan with only the room list and the reading guide beside it
-open(ROOT+'plan-2d.html','w').write(out.replace(panel,_how).replace(f'<h1>Home plan · {BRANCH}</h1>','<h1>2D plan</h1>'))
+open(ROOT+'plan-2d.html','w').write(out.replace(panel,_how).replace(f'<div><h1>Home plan · {BRANCH}</h1></div>',''))   # the app's tab already names it
 GROUPS=[('overview','Overview',lambda t:t.startswith(('Areas','Staircases','Existing on site','Still open','How to read'))),
-        ('outside','Parking and outside',lambda t:t.startswith(('Parking plan','Outside windows','Raised site levels','Tree pit'))),
-        ('rooms','Rooms and walls',lambda t:t.startswith(('Rooms and areas','Walls'))),
-        ('openings','Doors and windows',lambda t:t.startswith('Doors, windows')),
-        ('structure','Structure',lambda t:t.startswith(('Structure','Pillars','Beams'))),
-        ('furniture','Furniture',lambda t:t.startswith('Furniture')),
-        ('decisions','Decisions log',lambda t:True)]
+        ('details','Details',lambda t:t.startswith(('Parking plan','Outside windows','Raised site levels','Tree pit','Rooms and areas','Walls','Doors, windows','Structure','Pillars','Beams','Furniture')))]
+_tidy=lambda s:_re.sub(r' \((branch [\w-]+|approved), ?(from [\w-]+)?[^)]*\)','',s)
+_slug=lambda t:'d-'+_re.sub(r'[^a-z0-9]+','-',t.lower()).strip('-')[:40]
 _used=set();_tabs=[]
 for key,name,test in GROUPS:
-    body=''
-    for i,s in enumerate(_secs):
-        if i in _used or not test(_title(s)): continue
-        _used.add(i); body+=_re.sub(r' \((branch [\w-]+|approved), ?(from [\w-]+)?[^)]*\)','',s)
+    picked=[_tidy(s) for i,s in enumerate(_secs) if i not in _used and test(_title(s)) and not _used.add(i)]
+    if key=='details':   # one page, in a sensible order, with short jump links to each part
+        ORDER=[('Parking plan','Parking'),('Outside windows','Outside windows'),('Raised site levels','Site levels'),('Tree pit','Tree pit'),('Rooms and areas','Rooms'),('Walls','Walls'),
+               ('Doors, windows','Doors and windows'),('Structure','Structure'),('Pillars','Pillars'),('Beams','Beams'),('Furniture I will','Furniture plan'),('Furniture and fixtures','Furniture list')]
+        rank=lambda s:next((i for i,(p,_) in enumerate(ORDER) if _title(s).startswith(p)),99)
+        chip=lambda s:next((c for p,c in ORDER if _title(s).startswith(p)),_title(s))
+        picked=sorted(picked,key=rank)
+        picked=[s.replace('<section',f'<section id="{_slug(_title(s))}"',1) for s in picked]
+        body='<nav class="jump">'+''.join(f'<a href="#{_slug(_title(s))}">{chip(s)}</a>' for s in picked)+'</nav>'+''.join(picked)
+    else: body=''.join(picked)
     _tabs.append((key,name,body))
 def _md(md):   # small Markdown to HTML for the credits tab (headings, tables, lists, paragraphs, `code`, links)
     import html as _h
@@ -257,7 +264,7 @@ main{{flex:1;min-height:0;position:relative}}
 .t td{{border-bottom:1px solid var(--line);padding:5px 6px;vertical-align:top}}
 .t .n{{text-align:right;font-variant-numeric:tabular-nums}}.t .lbl{{color:var(--muted)}}.t tr.tot td{{font-weight:650}}
 td.c{{font-weight:700;white-space:nowrap;color:var(--accent)}}
-.note{{color:var(--muted);font-size:12.5px;margin:6px 0 0}}\n.doc code{{font:12px ui-monospace,Menlo,monospace;background:var(--chip);padding:1px 4px;border-radius:4px}}\n.doc a{{color:var(--accent)}}.doc p{{margin:6px 0}}
+.note{{color:var(--muted);font-size:12.5px;margin:6px 0 0}}\n.doc code{{font:12px ui-monospace,Menlo,monospace;background:var(--chip);padding:1px 4px;border-radius:4px}}\n.doc a{{color:var(--accent)}}\n.jump{{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 14px}}.jump a{{font-size:12.5px;text-decoration:none;border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:4px 10px;color:var(--ink)}}.jump a:hover{{border-color:var(--accent);color:var(--accent)}}\n.doc section{{scroll-margin-top:12px}}.doc p{{margin:6px 0}}
 .wide{{overflow-x:auto}}
 @media (max-width:640px){{header{{flex-direction:column;align-items:stretch;gap:0}}h1{{margin:0 0 4px}}.doc{{padding:12px 10px 40px}}}}
 </style></head><body>
@@ -275,6 +282,7 @@ function show(k){{if(!document.getElementById('p-'+k))k='3d';
   const f=document.querySelector('#p-'+k+' iframe');if(f&&!f.src)f.src=f.dataset.src;   // load the 2D and 3D pages the first time they are opened
   if(location.hash!=='#'+k)history.replaceState(null,'','#'+k);try{{localStorage.setItem('hp-tab',k)}}catch(e){{}}}}
 tabs.forEach(b=>b.onclick=()=>show(b.dataset.tab));
+document.querySelectorAll('.jump a').forEach(a=>a.onclick=e=>{{e.preventDefault();document.querySelector(a.getAttribute('href')).scrollIntoView({{behavior:'smooth',block:'start'}})}});
 window.addEventListener('hashchange',()=>show(location.hash.slice(1)));
 let first=location.hash.slice(1);if(!first){{try{{first=localStorage.getItem('hp-tab')||''}}catch(e){{}}}}show(first||'3d');
 </script></body></html>'''
