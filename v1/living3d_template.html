@@ -705,14 +705,6 @@ const KCH=2.83, KTOP=0.13, KPL=0.33, SH=0.06, UPZ1=4.9, UPZ2=7.0;   // counter 2
 const kTip=(id,what)=>{const f=fuG[id];return `${id} · ${what} · ${f?f.note:''}`};
 // one run of base or wall cabinets. face: 'x+' / 'x-' / 'y+' / 'y-' = the side the front faces. segs: [a,b,type] along the front;
 // type 'door', 'door2', 'drawers', or 'glass' (black-framed glass door on a hollow unit, contents visible)
-// free-standing 3-burner glass-top gas stove (70 x 41 x 13 cm), front facing +x in plan (west): feet, steel body, black glass top, brass burners, pan supports, knobs
-function stoveModel(h,Z,B,C){const x1=h.x1,x2=h.x2,y1=h.y1,y2=h.y2,L=y2-y1,D=x2-x1,blk=std({color:'#141516',roughness:0.35,metalness:0.4}),brass=std({color:'#b08d57',roughness:0.35,metalness:0.8}),
-   ring=std({color:'#c9ccd0',roughness:0.25,metalness:0.9}),glass=std({color:'#0d0e0f',roughness:0.06,metalness:0.3});
-  for(const [fx,fy] of [[x1+0.12,y1+0.12],[x2-0.12,y1+0.12],[x1+0.12,y2-0.12],[x2-0.12,y2-0.12]])C(fx,fy,Z,Z+0.08,0.06,blk);
-  B(x1+0.04,x2-0.04,y1+0.04,y2-0.04,Z+0.08,Z+0.22,blk);B(x1,x2,y1,y2,Z+0.22,Z+0.25,glass);
-  for(const [fy,fx] of [[y1+L*0.2,x1+D*0.42],[y1+L*0.5,x1+D*0.42],[y1+L*0.8,x1+D*0.6]]){C(fx,fy,Z+0.25,Z+0.26,0.3,ring);C(fx,fy,Z+0.25,Z+0.31,0.17,brass);C(fx,fy,Z+0.31,Z+0.33,0.11,blk);
-    for(const [ax,ay] of [[1,0],[-1,0],[0,1],[0,-1]]){const a=0.24,b=0.44,w=0.03;B(fx+Math.min(ax*a,ax*b)-(ax?0:w),fx+Math.max(ax*a,ax*b)+(ax?0:w),fy+Math.min(ay*a,ay*b)-(ay?0:w),fy+Math.max(ay*a,ay*b)+(ay?0:w),Z+0.25,Z+0.4,blk)}}
-  for(const t of [0.4,0.5,0.6])B(x2-0.01,x2+0.09,y1+L*t-0.06,y1+L*t+0.06,Z+0.1,Z+0.21,blk)}
 // steel 2-tier utensil drying rack with a drip tray
 function rackModel(r,Z,B,C){const st=std({color:'#c9ccd0',roughness:0.3,metalness:0.9}),H=1.6;
   for(const [px,py] of [[r.x1+0.05,r.y1+0.05],[r.x2-0.05,r.y1+0.05],[r.x1+0.05,r.y2-0.05],[r.x2-0.05,r.y2-0.05]])C(px,py,Z,Z+H,0.03,st);
@@ -720,6 +712,14 @@ function rackModel(r,Z,B,C){const st=std({color:'#c9ccd0',roughness:0.3,metalnes
   for(const z of [0.3,1.0]){for(let k=0;k<=8;k++){const x=r.x1+0.05+(r.x2-r.x1-0.1)*k/8;B(x-0.01,x+0.01,r.y1+0.05,r.y2-0.05,Z+z,Z+z+0.02,st)}B(r.x1+0.05,r.x2-0.05,r.y1+0.05,r.y1+0.07,Z+z,Z+z+0.02,st);B(r.x1+0.05,r.x2-0.05,r.y2-0.07,r.y2-0.05,Z+z,Z+z+0.02,st)}
   const pot=std({color:'#bfc3c7',roughness:0.25,metalness:0.85});C(r.x1+0.5,(r.y1+r.y2)/2,Z+0.32,Z+0.85,0.32,pot);C(r.x1+1.3,(r.y1+r.y2)/2,Z+0.32,Z+0.62,0.36,pot);C(r.x2-0.5,(r.y1+r.y2)/2,Z+0.32,Z+0.7,0.28,pot);
   for(let k=0;k<6;k++)B(r.x1+0.4+k*0.3,r.x1+0.42+k*0.3,r.y1+0.3,r.y2-0.3,Z+1.02,Z+1.6,std({color:'#f2efe9',roughness:0.3}))}
+// downloaded appliance models (archibase.net, see 3d/ASSETS.md): front faces +z in the file, real size in metres, sitting on y = 0
+function placeAppliance(url,cx,cy,z,rotY,matFn,tip){new GLTFLoader().load(url+'?v=__BUILD__',g=>{const o=g.scene;o.traverse(n=>{if(n.isMesh){n.castShadow=n.receiveShadow=true;const mt=matFn(n);if(mt)n.material=mt;if(tip)named(n,tip);n.userData.keepUV=true}});
+  o.rotation.y=rotY;o.position.set(mx(cx),m(z),m(cy));scene.add(o);if(typeof renderer!=='undefined'&&renderer.shadowMap)renderer.shadowMap.needsUpdate=true;if(typeof invalidate==='function')invalidate()},undefined,e=>console.warn('appliance',url,e))}
+const APM={glass:std({color:'#0b0c0d',roughness:0.05,metalness:0.3}),black:std({color:'#161718',roughness:0.45,metalness:0.3}),enamel:std({color:'#2b2c2e',roughness:0.4,metalness:0.4}),
+  brass:std({color:'#b08d57',roughness:0.35,metalness:0.8}),steel:std({color:'#c9ccd0',roughness:0.25,metalness:0.9}),white:std({color:'#f3f3f1',roughness:0.32,metalness:0.08}),
+  grey:std({color:'#cfd2d5',roughness:0.4,metalness:0.2}),win:std({color:'#2b3a44',roughness:0.05,metalness:0.1,transparent:true,opacity:0.55})};
+const cookMat=n=>{const nm=n.material?.name||'';return /gold/.test(nm)?APM.brass:/^Box002/.test(n.name)?APM.glass:/broun/.test(nm)?APM.enamel:APM.black};
+const wmMat=n=>{const nm=n.material?.name||'';return /clear_window/.test(nm)?APM.win:/standart_metal/.test(nm)?APM.steel:/black_st|broun/.test(nm)?APM.black:/panel/.test(nm)?APM.grey:APM.white};
 function cabRun(id,what,x1,x2,y1,y2,z1,z2,face,segs,mat,plinth){
   const t=kTip(id,what),g=0.012,alongX=face[0]==='y';
   const U0=alongX?x1:y1,U1=alongX?x2:y2,D=alongX?y2-y1:x2-x1;
@@ -771,7 +771,7 @@ function cabRun(id,what,x1,x2,y1,y2,z1,z2,face,segs,mat,plinth){
  tile(X1,X1+0.03,59.137,61.0,KCH,UPZ1,MAT.kSplash,st);tile(X1,X1+0.03,61.0,65.0,KCH,W06.sill,MAT.kSplash,st);tile(X1,X1+0.03,61.0,65.0,W06.sill+W06.h,UPZ2,MAT.kSplash,st);tile(X1,X1+0.03,65.0,ky2-0.042,KCH,UPZ1,MAT.kSplash,st);
  tile(X1+0.042,8.6,ky2-0.03,ky2,KCH,UPZ1,MAT.kSplash,st);tile(8.6,12.125,ky2-0.03,ky2,LOW,UPZ1,MAT.kSplash,st);
  // hob FU-52 under W-06; chimney hood at the standard 2'6" above the counter, just above the lowered window head, ducted straight out through GW-01
- const h=fuG['FU-52'],ht=`FU-52 · ${h.name} · ${h.note}`;stoveModel(h,KCH,(a,b,c,d,e,f,mt)=>box(a,b,c,d,e,f,mt,{tip:ht}),(x,y,z1,z2,r,mt)=>cyl(x,y,z1,z2,r,mt,{tip:ht}));
+ const h=fuG['FU-52'],ht=`FU-52 · ${h.name} · ${h.note}`;placeAppliance('assets/appliances/cooktop.glb',(h.x1+h.x2)/2,(h.y1+h.y2)/2,KCH,-Math.PI/2,cookMat,ht);   // front to the west, length along the east run
  {const r=fuG['FU-80'];if(r){const rt=`FU-80 · ${r.name} · ${r.note}`;rackModel(r,KCH,(a,b,c,d,e,f,mt)=>box(a,b,c,d,e,f,mt,{tip:rt}),(x,y,z1,z2,rr,mt)=>cyl(x,y,z1,z2,rr,mt,{tip:rt}))}}
  for(const [bx,by,r] of [[4.15,62.55,0.27],[4.15,63.45,0.22],[4.95,63.0,0.3]]) cyl(bx,by,KCH+0.03,KCH+0.09,r,std({color:'#3a3b3d',roughness:0.4,metalness:0.6}),{tip:'Burner',rTop:r*0.85});
  const hz1=W06.sill+W06.h+0.1;   // hood bottom 5'4", about 2'6" above the counter
@@ -1360,15 +1360,7 @@ function vfrMats(){const P=(c,o={})=>new THREE.MeshPhysicalMaterial({color:c,rou
   B(pf.y1,pf.y2,-0.005,0.025,PT,PT+4.0,tile,T(pf,'white glazed wall tiles, 1\' x 1\', on GW-07 behind the machines'));
   // washing machine
   {const u1=wm.y1+0.02,u2=wm.y2-0.02,v1=WX-wm.x2,v2=WX-wm.x1,cu=(u1+u2)/2,zb=PT+0.08,zt=PT+2.79,t=T(wm);
-   for(const [fu,fv] of [[u1+0.15,v1+0.15],[u2-0.15,v1+0.15],[u1+0.15,v2-0.15],[u2-0.15,v2-0.15]])cyl(WX-fv,fu,PT,zb,0.07,dark,{tip:t});
-   B(u1,u2,v1,v2-0.02,zb,zt-0.03,white,t);B(u1-0.005,u2+0.005,v1,v2,zt-0.03,zt,white,t);B(u1,u2,v2-0.02,v2,zt-0.42,zt-0.04,grey,t);
-   B(u1+0.08,u1+0.7,v2-0.005,v2+0.012,zt-0.37,zt-0.1,white,t+' · detergent drawer');
-   B(cu-0.22,cu+0.2,v2,v2+0.012,zt-0.32,zt-0.16,std({color:'#0f1a20',roughness:0.1,emissive:'#2bb3a6',emissiveIntensity:0.25}),t+' · display');
-   {const k=new THREE.Mesh(new THREE.CylinderGeometry(m(0.13),m(0.13),m(0.06),32),chrome);k.rotation.z=Math.PI/2;k.position.copy(Pw(u2-0.38,v2+0.03,zt-0.24));scene.add(k);named(k,t+' · programme dial')}
-   const dz=PT+1.35,ring=new THREE.Mesh(new THREE.TorusGeometry(m(0.68),m(0.07),14,48),chrome);ring.rotation.y=Math.PI/2;ring.position.copy(Pw(cu,v2+0.04,dz));scene.add(ring);named(ring,t+' · door');
-   const gl=new THREE.Mesh(new THREE.CircleGeometry(m(0.64),48),smoke);gl.rotation.y=Math.PI/2;gl.position.copy(Pw(cu,v2+0.05,dz));scene.add(gl);named(gl,t+' · door glass');
-   const drum=new THREE.Mesh(new THREE.CircleGeometry(m(0.6),48),std({color:'#7d8287',roughness:0.4,metalness:0.8}));drum.rotation.y=Math.PI/2;drum.position.copy(Pw(cu,v2+0.005,dz));scene.add(drum);named(drum,t+' · drum');
-   B(u1+0.1,u1+0.45,v2,v2+0.01,zb+0.08,zb+0.38,white,t+' · filter flap');
+   placeAppliance('assets/appliances/washing-machine.glb',WX-(v1+v2)/2,cu,PT,Math.PI/2,wmMat,t);   // front to the east (the garden)
    B(u2-0.45,u2-0.33,0,0.14,GRD+3.55,GRD+3.62,chrome,`${wm.id} · washing machine tap (angle valve)`);
    const hose=new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([Pw(u2-0.39,0.14,GRD+3.55),Pw(u2-0.39,0.2,GRD+3.3),Pw(u2-0.5,v1+0.05,zt+0.05),Pw(u2-0.5,v1+0.02,zt-0.3)]),20,m(0.03),8),grey);scene.add(hose);named(hose,`${wm.id} · inlet hose`);
    B(u1+0.1,u1+0.45,0,0.1,GRD+3.4,GRD+3.75,std({color:'#e4e4e0',roughness:0.5}),`${wm.id} · weatherproof (IP55) switch socket with a flip cover`);}

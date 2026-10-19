@@ -43,3 +43,10 @@ All CC0 (public domain) from Poly Haven, https://polyhaven.com
 | `vfr800.glb` | Two-wheeler TW-1 along BW-01: Honda VFR800 at its real length (2120 mm); converted from `vfr800.blend` (mirror applied, smoothing off, backdrop removed); its plain materials restyled in the 3D page (`vfrMats`) | "Honda VFR800" by danielfc10, Blend Swap, http://www.blendswap.com/blends/view/45121 | CC BY 3.0: credit danielfc10 |
 | `motorcycle.glb` | (not used now) Baotian Sanya motorcycle | Provided by the owner | Not recorded |
 | `scooter.glb` | Two-wheeler TW-2 along BW-01 (sized to an Ather 450X, 1837 mm), textures reduced to 1024 px; converted from the owner's `Scooter Textured.blend` | Provided by the owner | Not recorded: check before sharing |
+
+## Appliance models (`assets/appliances/`)
+| File | What | Source | Licence |
+|---|---|---|---|
+| `cooktop.glb` | Free-standing 3-burner glass-top gas stove FU-52, scaled to 70 x 41 x 13 cm; converted from `Cook top Faber N141117.3DS` (turned Y-up, simplified to about 30,000 triangles); materials restyled in the 3D pages (`cookMat`) | archibase.net, provided by the owner | Free download from archibase.net (licence as on the site) |
+| `washing-machine.glb` | Front-load washing machine FU-29, scaled to 85 cm high; converted from `Washing machine Zanussi N280220.obj` with Blender; materials restyled (`wmMat`) | archibase.net, provided by the owner | Free download from archibase.net (licence as on the site) |
+

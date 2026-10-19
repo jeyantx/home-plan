@@ -352,7 +352,7 @@ FURNITURE = [
  ('FU-65','G','Wet grinder, table-top',10.75,11.95,64.7,65.9,'appl',None,'Kitchen, on the west end of the 2\' low counter FU-16.2 (where the RO purifier was), socket on GW-14'),
  ('FU-66','G','RO water purifier, wall-mounted',8.488,9.637,65.456,66.375,'over',None,'Kitchen, on GW-14 in the place of wall unit K-14 (removed), 558 x 350 x 280 mm (H x W x D), bottom at 5\' from the floor; water pots fill standing on the 2\' low counter below'),
  ('FU-67','G','Microwave oven',11.75,13.4,59.15,60.35,'appl',None,'Kitchen, on the west end of the breakfast counter FU-17'),
- ('FU-52','G','Gas stove, 3 burner, glass top (free-standing)',4.015,5.360,62.039,64.336,'hob',None,'Kitchen, stands on the counter over K-02 (not built in, lift it off to clean), 70 x 41 x 13 cm; gas hose down through a grommet to the cylinder in K-02 below; chimney hood above, just over the window head'),
+ ('FU-52','G','Gas stove, 3 burner, glass top (free-standing)',4.015,5.360,61.500,63.797,'hob',None,'Kitchen, stands on the counter over K-01 and K-02, 1\' north of the drying rack (not built in, lift it off to clean), 70 x 41 x 13 cm; gas hose down through a grommet to the cylinder in K-02 below; chimney hood above, just over the window head'),
  ('FU-80','G','Utensil drying rack, steel, 2 tier',3.7,6.3,64.85,66.25,'appl',None,'Kitchen, on the corner counter right beside the sink (over K-03 and the sealed corner), with a drip tray; washed vessels, cookers and plates dry here'),
  ('FU-53','G','Tap and wash platform',1.375,4.875,92.5,95.0,'washpad',None,'Side garden, paved with drain, in the corner of BW-02 and BW-03'),
  ('FU-54','G','Wash basin with tap',19.125,20.625,95.25,96.5,'basin',None,'Back garden, against GW-08 beside window W-08'),
