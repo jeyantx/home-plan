@@ -136,7 +136,7 @@ const wmMat=n=>{const nm=n.material?.name||'';return /clear_window/.test(nm)?APM
 // ---------------- the units ----------------
 const T=0.059,SH=0.06,G=0.01;   // 18 mm panels, 18 mm shutters, 3 mm gaps (feet)
 const fronts=[],modules=[],leaves=[];
-const SHELVES={'K-04':0,'K-05':1,'K-09':1,'K-11':1,'K-12':2,'K-15':2,'K-16':1,'K-17A':1,'K-17B':1,'K-13':0};
+const SHELVES={'K-04':0,'K-05':1,'K-09':1,'K-12':2,'K-15':2,'K-16':1,'K-17A':1,'K-17B':1,'K-13':0};
 function buildModule(m){const fr=frame(m),base=m.z1<1,isLoft=m.run==='Loft',up=m.run.startsWith('Wall')||isLoft,low=m.run==='Low counter',bf=m.run==='Breakfast counter';
   const body=up?M.cream:M.oak,inner=up?M.creamIn:M.oakIn,zb0=m.z1+(base?(m.plinth??K.KPL):0),zt=base?(low?K.KLOW-K.KTOP:bf?K.KBF:K.KCH-K.KTOP):m.z2;
   const grp=new THREE.Group();scene.add(grp);const rec={m,grp,fr,fronts:[],zb0,zt,up,base};modules.push(rec);
@@ -161,9 +161,27 @@ function buildModule(m){const fr=frame(m),base=m.z1<1,isLoft=m.run==='Loft',up=m
   const short=m.name.replace(/^(Breakfast counter unit|Low counter unit), /,'').replace(/ with blind corner$/,'').replace(/ over the sink$/,'').replace(/, glass door$/,' (glass)').replace(/^Corner cupboard, (north|south) \(L-shaped\), .*$/,'Corner cupboard (L)').replace(/^Loft, east \(.*\)$/,'Loft, east');
   rec.label=label(`${m.id} · ${short[0].toUpperCase()+short.slice(1)}`,W(c[0],c[1],lz),'');
 }
+// open unit (K-11): fixed stainless-steel wire baskets, rows from the bottom up, with onions, potatoes, coconuts, bananas in them
+function basketBoxes(u0,u1,v0,v1,rows){const w=0.018,out=[];rows.forEach(([z,h,n],ri)=>{const bw=(u1-u0-(n-1)*0.05)/n;for(let i=0;i<n;i++){const a=u0+i*(bw+0.05),b=a+bw,B=(p,q,r,s,t,y)=>out.push({u1:p,u2:q,v1:r,v2:s,z1:t,z2:y,ri,z,i,a,b});
+  for(const zz of [z,z+h])B(a,b,v0,v0+w,zz,zz+w),B(a,b,v1-w,v1,zz,zz+w),B(a,a+w,v0,v1,zz,zz+w),B(b-w,b,v0,v1,zz,zz+w);
+  for(let u=a+0.07;u<b-0.04;u+=0.08)B(u,u+w,v0,v1,z,z+w),B(u,u+w,v0,v0+w,z,z+h),B(u,u+w,v1-w,v1,z,z+h);
+  for(let v=v0+0.08;v<v1-0.04;v+=0.08)B(a,a+w,v,v+w,z,z+h),B(b-w,b,v,v+w,z,z+h);
+  B(a-0.03,a,v0,v1,z+h-0.03,z+h),B(b,b+0.03,v0,v1,z+h-0.03,z+h)}});return out}
+function baskets(rec,f){const {fr}=rec,v0=0.06,v1=fr.D-T-0.03,bx=basketBoxes(f.a+T+0.04,f.b-T-0.04,v0,v1,f.rows);const st=std({color:'#dfe2e5',roughness:0.3,metalness:0.35});for(const q of bx)fr.box(q.u1,q.u2,q.v1,q.v2,q.z1,q.z2,st,rec.grp);
+  const sph=(u,v,z,r,col,sy=1)=>{const [X,Y]=fr.toPlan(u,v);const me=new THREE.Mesh(new THREE.SphereGeometry(r*F,16,12),std({color:col,roughness:0.6}));me.scale.y=sy;me.position.copy(W(X,Y,z+r*sy));me.castShadow=true;rec.grp.add(me)};
+  const fill=(a,b,z,r,col,n,seed,sy)=>{const R=rng(seed);for(let k=0;k<n;k++)sph(a+r+R()*(b-a-2*r),v0+r+0.03+R()*(v1-v0-2*r-0.06),z+0.015+(k>n/2?r*0.9:0),r,col,sy)};
+  const at=(ri,i)=>{const q=bx.find(x=>x.ri===ri&&x.i===i);return [q.a+0.02,q.b-0.02,q.z]};
+  {const [a,b,z]=at(0,0);fill(a,b,z,0.11,'#8a5a2b',9,11,0.85)}   // potatoes, brown
+  {const [a,b,z]=at(0,1);fill(a,b,z,0.2,'#6b4423',3,12,1.1)}   // coconuts, dark brown
+  {const [a,b,z]=at(1,0);fill(a,b,z,0.1,'#8e3b5a',10,13,0.9)}   // onions, red-purple
+  {const [a,b,z]=at(1,1);fill(a,b,z,0.07,'#efe6d2',8,14,0.9);fill(a,b,z,0.06,'#c9a46a',4,15,0.7)}   // garlic (white) and ginger (light brown)
+  {const [a,b,z]=at(2,0);for(let k=0;k<7;k++){const [X,Y]=fr.toPlan(a+0.25+k*0.08,(v0+v1)/2);const me=new THREE.Mesh(new THREE.CapsuleGeometry(0.045*F,0.42*F,4,8),std({color:'#e8c33a',roughness:0.5}));
+    me.rotation.set(0.25,0,1.25-k*0.06);if(fr.out.z===0)me.rotation.y=Math.PI/2;me.position.copy(W(X,Y,z+0.08+(k%2)*0.04));me.castShadow=true;rec.grp.add(me)}
+   fill(b-0.35,b,z,0.07,'#d8d23a',3,16,1)}}   // bananas (yellow) and lemons
 function buildFront(rec,f){const {m,fr}=rec,up=rec.up,mat=up?M.cream:M.oak,a=f.a+G,b=f.b-G,za=f.za,zb=f.zb,D=fr.D;
   const pivot=new THREE.Group();scene.add(pivot);const item={rec,f,pivot,open:0,target:0,kind:f.k,meshes:[]};
   const add=(me)=>{item.meshes.push(me);me.userData.front=item;return me};
+  if(f.k==='open'){baskets(rec,f);rec.fronts.push(item);return}
   if(f.k==='blind'){const me=fr.box(a,b,0,SH,za,zb,mat,pivot);add(me);me.userData.front=null;contents(rec,f,pivot,()=>{});rec.fronts.push(item);return}
   // a door part joined by a corner hinge to the door of the unit round the corner (one L-shaped door in 2 parts): it folds onto that door as it opens; the handle is on its free edge
   if(f.k==='leaf'){const pm=K.modules.find(x=>x.id===f.of),pf=pm.fronts.find(x=>x.k==='door'),pfr=frame(pm),[JX,JY]=pfr.toPlan(pf.hinge==='a'?pf.b:pf.a,0),d=u=>{const [X,Y]=fr.toPlan(u,0);return Math.hypot(X-JX,Y-JY)};
@@ -205,7 +223,7 @@ function contents(rec,f,pivot,add){const {m,fr}=rec,a=f.a,b=f.b,za=f.za,D=fr.D,a
   if(m.id==='K-04'&&f.hinge==='a'){for(const d of [0.3,0.85]){const [X,Y]=at(a+0.15+d*0.5,D/2);add(boxW(X-0.22,X+0.22,Y-0.4,Y+0.4,za+0.05,za+1.4,std({color:d<0.5?'#3b7a4a':'#4a4f55',roughness:0.6}),pivot))}}
   if(m.id==='K-05'){pot((a+b)/2,D/2,za+0.06,0.4,1.1,'#5b8fc0')}
   if(m.id==='K-06'&&m.fronts.indexOf(f)===0)for(const d of [0.25,0.6]){const [X,Y]=at(a+(b-a)*d,D/2);add(boxW(X-0.3,X+0.3,Y-0.5,Y+0.5,za+0.06,za+0.85,M.appWhite,pivot))}
-  if(['K-01B','K-09','K-11'].includes(m.id)){const z=rec.zb0+(rec.zt-rec.zb0)/2;for(let k=0;k<3;k++){const [X,Y]=at(a+0.35+k*0.45,D/2);for(let j=0;j<6;j++)cylW(X,Y,za+0.06+j*0.035,za+0.08+j*0.035,m.id==='K-09'?0.12:0.32,std({color:'#f6f3ee',roughness:0.3}),scene)}}
+  if(['K-01B','K-09'].includes(m.id)){const z=rec.zb0+(rec.zt-rec.zb0)/2;for(let k=0;k<3;k++){const [X,Y]=at(a+0.35+k*0.45,D/2);for(let j=0;j<6;j++)cylW(X,Y,za+0.06+j*0.035,za+0.08+j*0.035,m.id==='K-09'?0.12:0.32,std({color:'#f6f3ee',roughness:0.3}),scene)}}
   if(m.id==='K-13'){const z=rec.zb0+0.15;for(let k=0;k<9;k++){const [X,Y]=at(a+0.2+k*0.17,D/2);const pl=new THREE.Mesh(new THREE.CylinderGeometry(0.3*F,0.3*F,0.02*F,28),std({color:'#f6f3ee',roughness:0.3}));pl.rotation.z=Math.PI/2;if(m.face[0]==='y')pl.rotation.y=Math.PI/2;pl.position.copy(W(X,Y,z+0.32));scene.add(pl)}
     const [X,Y]=at((a+b)/2,D/2);boxW(X-0.8,X+0.8,Y-0.45,Y+0.45,z-0.02,z,M.steel,scene)}
   if(['K-12','K-14','K-15'].includes(m.id)){const r=rng(m.id.charCodeAt(3)*7);for(const zz of [rec.zb0+T,rec.zb0+(rec.zt-rec.zb0)/3,rec.zb0+2*(rec.zt-rec.zb0)/3]){let u=a+0.2;while(u<b-0.25){const rr=0.09+r()*0.06,[X,Y]=at(u,D/2);cylW(X,Y,zz,zz+0.3+r()*0.25,rr,std({color:['#e9e4da','#cdbfa8','#7a6a58','#c0392b','#f3efe6'][Math.floor(r()*5)],roughness:0.4}),scene,rr*0.9);u+=rr*2+0.1}}}}
@@ -305,12 +323,12 @@ const panel=document.getElementById('panel');
 {const runs=[...new Set(K.modules.map(m=>m.run))];let h='<h2>Units</h2><div class="sub">W × H × D in mm (front width, height from the floor or the unit height, depth). Click a row to open that unit.</div>';
  for(const run of runs){h+=`<h2>${run}</h2><table class="t">`;for(const m of K.modules.filter(m=>m.run===run)){const fr=frame(m),base=m.z1<1,low=m.run==='Low counter',bf=m.run==='Breakfast counter';
    const uA=Math.min(...m.fronts.map(f=>f.a)),uB=Math.max(...m.fronts.map(f=>f.b)),Hh=base?(low?K.KLOW:bf?K.KBF+0.13:K.KCH):m.z2-m.z1;
-   const fl=m.fronts.filter(f=>f.k!=='blind').map(f=>`${f.k==='drawer'?'drawer':f.k==='pullout'?'pull-out':f.k==='lift'?'lift-up':f.k==='leaf'?'door part':'door'} ${MM(f.b-f.a)}×${MM(f.zb-f.za)}: ${f.what}`).join('<br>');
+   const fl=m.fronts.filter(f=>f.k!=='blind').map(f=>`${f.k==='drawer'?'drawer':f.k==='pullout'?'pull-out':f.k==='lift'?'lift-up':f.k==='leaf'?'door part':f.k==='open'?'open baskets':'door'} ${MM(f.b-f.a)}×${MM(f.zb-f.za)}: ${f.what}`).join('<br>');
    h+=`<tr class="mod" data-id="${m.id}"><td class="c">${m.id}</td><td><b>${m.name}</b><br><span class="sub">${MM(uB-uA)} × ${MM(Hh)} × ${MM(fr.D)} mm · ${FI(uB-uA)} × ${FI(Hh)} × ${FI(fr.D)}</span><br>${fl}<br><span class="sub">Inside: ${m.inside}</span><br><span class="sub">For: ${m.need}</span></td></tr>`}h+='</table>'}
  h+='<h2>Design notes</h2><ul>'+K.notes.map(n=>`<li>${n}</li>`).join('')+'</ul>';panel.innerHTML=h;
  panel.querySelectorAll('tr.mod').forEach(tr=>tr.onclick=()=>select(tr.dataset.id,true))}
 function select(id,openIt){panel.querySelectorAll('tr.mod').forEach(tr=>tr.classList.toggle('sel',tr.dataset.id===id));const rec=modules.find(r=>r.m.id===id);if(!rec)return;
-  if(openIt){const T=rec.fronts.map(f=>f.partner||f).filter(f=>f.kind!=='blind'),any=T.some(f=>f.target);T.forEach(f=>toggle(f,any?0:1));
+  if(openIt){const T=rec.fronts.map(f=>f.partner||f).filter(f=>f.kind!=='blind'&&f.kind!=='open'),any=T.some(f=>f.target);T.forEach(f=>toggle(f,any?0:1));
     const c=rec.fr.toPlan((rec.fr.U0+rec.fr.U1)/2,rec.fr.D/2),zc=(rec.zb0+rec.zt)/2,o=rec.fr.toPlan((rec.fr.U0+rec.fr.U1)/2,-7.5);const rk=runKey(rec.m);fly={p0:camera.position.clone(),t0:controls.target.clone(),p1:unfoldedAt(rk,W(o[0],o[1],zc+2.6)),t1:unfoldedAt(rk,W(c[0],c[1],zc)),s:0}}
   const row=panel.querySelector(`tr[data-id="${id}"]`);if(row&&!openIt)row.scrollIntoView({block:'nearest',behavior:'smooth'})}
 const panelBtn=document.getElementById('panelBtn');panelBtn.onclick=()=>{const on=panelBtn.getAttribute('aria-pressed')!=='true';panelBtn.setAttribute('aria-pressed',on);panel.classList.toggle('off',!on);resize()};

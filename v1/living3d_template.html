@@ -730,7 +730,7 @@ function cabRun(id,what,x1,x2,y1,y2,z1,z2,face,segs,mat,plinth){
     return box(a,b,c,d,za,zb,mt,{tip:t,...o})};
   const zb0=z1+(plinth?(plinth===true?KPL:plinth):0), fz1=zb0+g, fz2=z2-g;
   // carcass, leaving the glass units hollow
-  const gl=segs.filter(q=>q[2]==='glass').sort((p,q)=>p[0]-q[0]);let u=U0;
+  const gl=segs.filter(q=>q[2]==='glass'||q[2]==='open').sort((p,q)=>p[0]-q[0]);let u=U0;
   for(const [a,b] of gl){if(a>u)lb(u,a,SH,D,zb0,z2,mat);u=b}if(U1>u)lb(u,U1,SH,D,zb0,z2,mat);
   if(plinth)lb(U0,U1,SH+0.12,D,z1,zb0,MAT.plinth);
   const panel=(a,b,za,zb)=>lb(a,b,0,SH,za,zb,mat,{tip:t+' · shutter'});
@@ -749,7 +749,14 @@ function cabRun(id,what,x1,x2,y1,y2,z1,z2,face,segs,mat,plinth){
         cyl(c[0],c[1],zs,zs+hh,rr,std({color:['#e9e4da','#cdbfa8','#7a6a58','#f3efe6'][Math.floor(r()*4)],roughness:0.4}),{tip:'Jar',rTop:rr*0.9});q+=rr*2+0.12}}
       for(const [p1,p2,q1,q2] of [[a+g,b-g,fz1,fz1+w],[a+g,b-g,fz2-w,fz2],[a+g,a+g+w,fz1+w,fz2-w],[b-g-w,b-g,fz1+w,fz2-w]]) lb(p1,p2,0,SH,q1,q2,MAT.blackMetal,{tip:tg});
       glassMeshes.push(lb(a+g+w,b-g-w,0.02,0.035,fz1+w,fz2-w,MAT.glass,{cast:false,tip:tg}));handle(a,b,hz)}
-    else if(type==='plain')panel(a+g,b-g,fz1,fz2);   // corner door part hinged to the cabinet: its handle is on the folding part
+    else if(type==='plain')panel(a+g,b-g,fz1,fz2);
+    else if(type==='open'){const k11=P.kitchen.modules.find(q=>q.id==='K-11').fronts[0],st=std({color:'#dfe2e5',roughness:0.3,metalness:0.35}),bt='K-11 · Open steel baskets: onions, potatoes, coconuts, bananas';   // open unit with steel wire baskets (rows from model.py)
+      lb(a,b,D-0.05,D,zb0,z2,mat);lb(a,b,SH,D-0.05,z2-0.06,z2,mat);lb(a,b,SH,D-0.05,zb0,zb0+0.06,mat);lb(a,a+0.06,SH,D-0.05,zb0+0.06,z2-0.06,mat);lb(b-0.06,b,SH,D-0.05,zb0+0.06,z2-0.06,mat);
+      const v0=SH,v1=D-0.08,w=0.018,u0=a+0.1,u1=b-0.1;for(const [z,h,n] of k11.rows){const bw=(u1-u0-(n-1)*0.05)/n;for(let i=0;i<n;i++){const p=u0+i*(bw+0.05),q=p+bw;
+        for(const zz of [z,z+h]){lb(p,q,v0,v0+w,zz,zz+w,st,{cast:false,tip:bt});lb(p,q,v1-w,v1,zz,zz+w,st,{cast:false,tip:bt});lb(p,p+w,v0,v1,zz,zz+w,st,{cast:false,tip:bt});lb(q-w,q,v0,v1,zz,zz+w,st,{cast:false,tip:bt})}
+        for(let u=p+0.07;u<q-0.04;u+=0.1){lb(u,u+w,v0,v1,z,z+w,st,{cast:false,tip:bt});lb(u,u+w,v0,v0+w,z,z+h,st,{cast:false,tip:bt})}
+        const col=[['#8a5a2b','#6b4423'],['#8e3b5a','#efe6d2'],['#e8c33a']][k11.rows.indexOf(k11.rows.find(r=>r[0]===z))][i],r=n===1?0.09:0.1,R=rng(Math.round(z*100)+i);
+        for(let k=0;k<6;k++){const uu=p+r+R()*(q-p-2*r),vv=v0+r+0.03+R()*(v1-v0-2*r-0.06),c=face==='y+'?[uu,y2-vv]:face==='y-'?[uu,y1+vv]:face==='x+'?[x2-vv,uu]:[x1+vv,uu];cyl(c[0],c[1],z+0.015,z+0.015+r*1.7,r,std({color:col,roughness:0.6}),{tip:bt,rTop:r*0.6,seg:12})}}}}   // corner door part hinged to the cabinet: its handle is on the folding part
     else{panel(a+g,b-g,fz1,fz2);handle(a,b,hz)}}}
 {const X1=3.5,ky2=66.375,bY=64.375,W06=P.openings.find(o=>o.id==='W-06');
  // base cabinets: east run FU-15 on GW-01 (front faces +x), back run FU-16 on GW-14 (front faces -y); both corners are L-shaped corner cupboards (K-01A/B, K-03A/B)
@@ -797,7 +804,7 @@ function cabRun(id,what,x1,x2,y1,y2,z1,z2,face,segs,mat,plinth){
  const wg=fuG['FU-65'],wx=(wg.x1+wg.x2)/2,wy=(wg.y1+wg.y2)/2,WZ=LOW;cyl(wx,wy,WZ,WZ+0.38,0.6,MAT.appWhite,{tip:`FU-65 · Wet grinder, table-top · ${wg.note}`,rTop:0.55});
  cyl(wx,wy,WZ+0.38,WZ+1.0,0.44,MAT.steel,{tip:'Wet grinder drum, steel'});cyl(wx,wy,WZ+1.0,WZ+1.08,0.46,std({color:'#d8dde0',roughness:0.2}),{tip:'Wet grinder lid'});
  // breakfast counter FU-17 on GW-13 under W-12 (front faces +y), microwave FU-67 on its west end
- const b=fuG['FU-17'];cabRun('FU-17','Breakfast counter',b.x1,b.x2,b.y1+0.012,b.y2,0,P.kitchen.KBF,'y+',[[5.5,7.1,'door'],[7.1,8.7,'drawers'],[8.7,10.3,'door'],[10.3,11.9,'drawers'],[11.9,13.5,'door']],MAT.kLow,true);
+ const b=fuG['FU-17'];cabRun('FU-17','Breakfast counter',b.x1,b.x2,b.y1+0.012,b.y2,0,P.kitchen.KBF,'y+',[[5.5,7.1,'door'],[7.1,8.7,'drawers'],[8.7,10.3,'door'],[10.3,11.9,'drawers'],[11.9,13.5,'open']],MAT.kLow,true);
  box(b.x1+0.06,b.x2,b.y1+0.012,b.y2+0.06,KCH-KTOP,KCH,MAT.kTop,{tip:'Breakfast counter top, 40 mm, level with the east run'});
  const mw=fuG['FU-67'];box(mw.x1,mw.x2,mw.y1+0.05,mw.y2-0.05,KCH,KCH+0.96,std({color:'#3a3c3f',roughness:0.4,metalness:0.4}),{round:0.04,tip:`FU-67 · Microwave oven · ${mw.note}`});
  box(mw.x1+0.08,mw.x2-0.45,mw.y2-0.05,mw.y2-0.03,3.1,3.85,MAT.blackGlass,{cast:false,tip:'Microwave door, black glass'});
