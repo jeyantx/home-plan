@@ -417,7 +417,7 @@ KITCHEN_MODULES=[
 # two L-shaped corner cupboards (like the owner's photo): each is two parts that open into one L, with an L-shaped shelf and one L-shaped door in 2 parts
 # (k='leaf': the part joined to the door 'of' by a corner hinge; it folds onto that door, which is hinged to the cabinet)
  dict(id='K-01A',name='Corner cupboard, north (L-shaped), east part',run='East run',face='x+',x1=3.5,x2=5.5,y1=59.125,y2=61.625,z1=0,z2=KCH,shelfZ=[1.45],
-      fronts=[dict(k='leaf',of='K-01B',a=60.375,b=61.625,za=_B1,zb=_B2,what='door part on the east side, joined to the K-01B part by a corner hinge: big vessels, idli steamer, pressure cookers on the L-shaped shelves')],
+      fronts=[dict(k='door',a=60.375,b=61.625,za=_B1,zb=_B2,hinge='b',what='one L-shaped door in 2 parts, hinged to the cabinet at its south end next to K-02; the K-01B part folds onto it: big vessels, idli steamer, pressure cookers on the L-shaped shelves')],
       inside='opens through to K-01B behind the breakfast counter: one L-shaped space with an L-shaped shelf at 1\'5", no blind corner',need='use the north corner fully'),
  dict(id='K-02',name='Gas cylinder unit',run='East run',face='x+',x1=3.5,x2=5.5,y1=61.625,y2=63.125,z1=0,z2=KCH,noBottom=True,
       fronts=[dict(k='door',a=61.625,b=63.125,za=0.04,zb=_B2,hinge='a',what='LPG cylinder (26" high) standing on the floor; simple door down to the floor, no trolley')],
@@ -439,7 +439,7 @@ KITCHEN_MODULES=[
       fronts=_drawers(9.875,12.125,_L1,_L2,[300,160],['rice and atta bins (25 kg)','wet grinder stone, batter boxes']),
       inside='deep bottom drawer for rice and atta bins; wet grinder FU-65 on the counter above',need='rice and atta by the wet grinder; batter making at a low, comfortable height'),
  dict(id='K-01B',name='Corner cupboard, north (L-shaped), breakfast part',run='Breakfast counter',face='y+',x1=5.5,x2=7.1,y1=59.137,y2=60.375,z1=0,z2=KBF,open_end='a',shelfZ=[1.45],
-      fronts=[dict(k='door',a=5.5,b=7.1,za=_F1,zb=_F2,hinge='b',what='one L-shaped door in 2 parts, hinged to the cabinet at its west end; the K-01A part folds onto it: plates and bowls')],inside='opens into K-01A: one L-shaped space with an L-shaped shelf',need='everyday plates near the table, and the corner used'),
+      fronts=[dict(k='leaf',of='K-01A',a=5.5,b=7.1,za=_F1,zb=_F2,what='door part on the breakfast side, joined to the K-01A part by a corner hinge: plates and bowls')],inside='opens into K-01A: one L-shaped space with an L-shaped shelf',need='everyday plates near the table, and the corner used'),
  dict(id='K-08',name='Breakfast counter unit, 3 drawers',run='Breakfast counter',face='y+',x1=7.1,x2=8.7,y1=59.137,y2=60.375,z1=0,z2=KBF,
       fronts=_drawers(7.1,8.7,_F1,_F2,[288,288,140],['tiffin boxes','table linen, foil and bags','cutlery tray: ladles, spatulas, spoons']),inside='shallow drawers (300 mm deep); cutlery tray in the top drawer',need='tiffin boxes, table things and cutlery'),
  dict(id='K-09',name='Breakfast counter unit, glasses and cups',run='Breakfast counter',face='y+',x1=8.7,x2=10.3,y1=59.137,y2=60.375,z1=0,z2=KBF,
