@@ -1061,8 +1061,7 @@ if(SPL){const st=SPL.steps,L=[];
  // tree well: low retaining ring, brick with a granite coping; soil and leaf mulch at today's ground
  const ringTop=PKZ+0.12,sh=new THREE.Shape();sh.absarc(mx(tx),-m(ty),m(tr),0,Math.PI*2,false);const hl=new THREE.Path();hl.absarc(mx(tx),-m(ty),m(tr-0.375),0,Math.PI*2,true);sh.holes.push(hl);
  const kg=new THREE.ExtrudeGeometry(sh,{depth:m(ringTop-RDZ),bevelEnabled:false,curveSegments:48});kg.rotateX(-Math.PI/2);
- const ringAt=(X,Z)=>{const x=-X/F,y=Z/F,a=Math.atan2(y-ty,x-tx),ox=tx+(tr+0.3)*Math.cos(a),oy=ty+(tr+0.3)*Math.sin(a);return Math.max(HUZ+0.04,hFront(ox,oy)+0.1)-(RDZ-0.02)};   // ring top 1" over the ground just outside it
- const ringZ=y=>Math.max(HUZ+0.04,zF(y)+0.1)-(RDZ-0.02);
+ const ringAt=()=>PKZ+0.1-(RDZ-0.02);   // one level top, 1" over the platform (a raised bed on the ramp side)
  {const pa=kg.attributes.position;for(let i=0;i<pa.count;i++)if(pa.getY(i)>m(0.2))pa.setY(i,m(ringAt(pa.getX(i),pa.getZ(i))));pa.needsUpdate=true;kg.computeVertexNormals()}
  const kb=new THREE.Mesh(kg,MAT.extTrim);kb.position.y=m(RDZ-0.02);kb.castShadow=true;kb.receiveShadow=true;scene.add(kb);named(kb,`FU-76 · Tree well ring, 4½" brick, granite coping · holds back the raised drive · ${tp.note}`);wallMeshes.push(kb);
  const cg=new THREE.ExtrudeGeometry(sh,{depth:m(0.06),bevelEnabled:false,curveSegments:48});cg.rotateX(-Math.PI/2);

@@ -7,7 +7,7 @@ const rects=[[17.125,20.625,2.667,14.25],[20.25,21,19.75,20.75],[12,13.5,-0.2,1.
   [0.8,1.4,0.3,3.2],[11.35,11.95,0.3,3.2],   // GT-01 leaves folded open at their hinges
   [-60,80,-30,-16.5],[-60,-0.01,-0.01,0.01],[21,80,-0.01,0.01]];   // far kerb of the road; boundary line either side of our gate
 if(bikes) rects.push([17.35,19.97,12.3,19.04],[17.4,19.82,19.6,25.63]);
-const circles=[[12.75,4.25,2.0]];
+const circles=[[12.75,4.75,2.25]];   // tree well FU-76
 function corners(x,y,th){const c=Math.cos(th),s=Math.sin(th);const pts=[];for(const [a,b] of [[-OVR,-HW],[WB+OVF,-HW],[WB+OVF,HW],[-OVR,HW]])pts.push([x+c*a-s*b,y+s*a+c*b]);return pts}
 function collide(x,y,th){const P=corners(x,y,th);const c=Math.cos(th),s=Math.sin(th);
   for(const [x1,x2,y1,y2] of rects){ // SAT

@@ -235,7 +235,7 @@ def levels():
 def platform_cx(y,SP):
     # east end of a small-gate step at Y: against the tree-well ring, never east of the planter pillar
     import math as _mm
-    return max(SP['x1'],12.75+_mm.sqrt(max(0.0,2.0**2-(y-4.25)**2)))
+    cx,cy,r=SP['well']; return max(SP['x1'],cx+_mm.sqrt(max(0.0,r**2-(y-cy)**2)))
 def platform_outlines(SP):
     # plan outlines of the three steps and the level platform (east edge: round the tree-well ring, then straight to the parking)
     import math as _mm
@@ -243,9 +243,9 @@ def platform_outlines(SP):
     for ya,yb in zip(st[:-1],st[1:]):
         ys=[ya+(yb-ya)*k/6 for k in range(7)]
         out.append([(platform_cx(y,SP),y) for y in ys]+[(x2,yb),(x2,ya)])
-    y0=st[-1];xe=SP['xe'];ye=4.25+_mm.sqrt(max(0.0,4-(xe-12.75)**2))
-    a0=_mm.atan2(y0-4.25,platform_cx(y0,SP)-12.75);a1=_mm.atan2(ye-4.25,xe-12.75)
-    arc=[(12.75+2.0*_mm.cos(a0+(a1-a0)*k/16),4.25+2.0*_mm.sin(a0+(a1-a0)*k/16)) for k in range(17)]
+    cx,cy,r=SP['well'];y0=st[-1];xe=SP['xe'];ye=cy+_mm.sqrt(max(0.0,r*r-(xe-cx)**2))
+    a0=_mm.atan2(y0-cy,platform_cx(y0,SP)-cx);a1=_mm.atan2(ye-cy,xe-cx)
+    arc=[(cx+r*_mm.cos(a0+(a1-a0)*k/16),cy+r*_mm.sin(a0+(a1-a0)*k/16)) for k in range(17)]
     out.append([(x2,y0)]+arc+[(xe,SP['y_end']),(x2,SP['y_end'])])
     return out
 def vehicles():
