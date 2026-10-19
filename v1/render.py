@@ -200,6 +200,47 @@ def plants():
         E(f'<g class="fu" data-tip="{tip(c+" · "+_m.PLANT_NAMES.get(t,t))}"><circle cx="{a[0]:.3f}" cy="{a[1]:.3f}" r="0.55" fill="#4f7d3a" stroke="#2c4a20" stroke-width="0.04"/>'
           f'<circle cx="{a[0]:.3f}" cy="{a[1]:.3f}" r="0.25" fill="{col}" stroke="#555" stroke-width="0.02"/></g>')
     E('</g>')
+def garden():
+    # garden plan GD-xx and path GP-01 (model.GARDEN): green circles and beds, small code labels
+    import model as _m
+    G=getattr(_m,'GARDEN',[])
+    if not G: return
+    NM=getattr(_m,'GARDEN_NAMES',{})
+    E('<g class="L-garden">')
+    def circ(x,y,r,fill,stroke,sw=0.04,extra=''):
+        a=S(x,y); E(f'<circle cx="{a[0]:.3f}" cy="{a[1]:.3f}" r="{r:.3f}" fill="{fill}" stroke="{stroke}" stroke-width="{sw}" {extra}/>')
+    def label(x,y,s,sz=0.26): text(x,y,s,sz,weight=700,fill='#24461a')
+    for g in G:
+        t=tip(f"{g['id']} · {g['name']} · {g['where']} · {g['note']}"); k=g['kind']
+        E(f'<g class="fu" data-tip="{t}">')
+        if k=='path':
+            w,sl=g['w'],g['sl']
+            for cx,cy,ax in _m.garden_stones(g):
+                hx,hy=(sl/2,w/2) if ax else (w/2,sl/2)
+                rect(cx-hx,cx+hx,cy-hy,cy+hy,'#c3c6c9','#7d8287',0.03,extra='rx="0.08"')
+            label(5.4,87.6,g['id'],0.24)
+        elif k=='pot':
+            for x in g.get('xs',[g['x']]):
+                circ(x,g['y'],g['r'],'#c8794a','#7a4326',0.04); circ(x,g['y'],g['r']*0.72,'#4f7d3a','#2c4a20',0.03)
+            label(*g.get('lab',(g['x'],g['y']-g['r']-0.25)),g['id'])
+        elif k=='wallpots':
+            for y in g['ys']: rect(g['x'],g['x']+2*g['r'],y-g['r'],y+g['r'],'#4f7d3a','#2c4a20',0.03,extra='rx="0.1"')
+            label(g['x']+0.85,(g['ys'][0]+g['ys'][-1])/2,g['id'],0.24)
+        elif k=='creeper':
+            rect(g['x1'],g['x2'],g['y1'],g['y2'],'#8a5a3a','#6b4a2a',0.03)
+            for i in range(5):
+                y=g['y1']+0.4+i*(g['y2']-g['y1']-0.8)/4; circ((g['x1']+g['x2'])/2,y,0.3,'#4f7d3a','#2c4a20',0.03); circ((g['x1']+g['x2'])/2,y,0.09,'#ffffff','none',0)
+            label(g['x2']+0.55,(g['y1']+g['y2'])/2,g['id'],0.24)
+        elif k=='tree':
+            circ(g['x'],g['y'],g['cr'],'#4f7d3a','#2c4a20',0.04,'fill-opacity="0.28" stroke-dasharray="0.25 0.15"')
+            circ(g['x'],g['y'],g['r'],'#8a5a3a','#777',0.08); circ(g['x'],g['y'],0.28,'#3f6a32','#2c4a20',0.03)
+            label(g['x'],g['y']+g['r']+0.3,g['id'])
+        elif k=='bed':
+            rect(g['x1'],g['x2'],g['y1'],g['y2'],'#8a5a3a','#a8553a',0.1)
+            for tp,x,y in g['plants']: circ(x,y,0.36,'#4f7d3a','#2c4a20',0.03)
+            label((g['x1']+g['x2'])/2,g['y1']-0.35,g['id'])
+        E('</g>')
+    E('</g>')
 def _trunk():
     x,y=S(12.75,4.25); E(f'<circle cx="{x}" cy="{y}" r="0.75" fill="#6b4423" stroke="#3b2412" stroke-width="0.05"/>')
 def levels():
@@ -542,7 +583,7 @@ def draw_struct(fl):
 def ground():
     W=walls_of('G')
     draw_plot('G'); draw_rooms('G'); porch_steps(); levels(); tree(); vehicles(); underground()
-    draw_furniture('G'); plants(); _trunk(); text(11.0,106.7,'BW-09 back wall (existing, houses behind)',0.3,fill='#666')
+    draw_furniture('G'); plants(); garden(); _trunk(); text(11.0,106.7,'BW-09 back wall (existing, houses behind)',0.3,fill='#666')
     stair_A(); stair_L(); stair_B(op=0.45,dash='stroke-dasharray="0.2 0.12"')
     E('<g opacity="0.72">'); draw_furniture('G',_late=True); E('</g>')
     text(14.6,20.6,'flight 1B overhead (7\'7" to 13\' above the parking)',0.3,fill='#6b3a1c')

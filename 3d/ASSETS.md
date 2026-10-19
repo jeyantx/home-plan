@@ -31,6 +31,8 @@ All CC0 (public domain) from Poly Haven, https://polyhaven.com
 - `models/bamboo-plant.js`: bamboo plant in a black pot, procedural, canvas textures.
 - `models/vehicles.js`: VW Virtus, Royal Enfield Hunter 350 and Ather 450X to real sizes (procedural), with wheel, steering, side-stand and lean groups for animation.
 - `models/tn-plants.js`: Tamil Nadu garden plants (malli, sembaruthi, nandiyavattai, vetchi, kanakambaram, nithya kalyani, rose, karuveppilai, tulsi), procedural.
+- `models/garden-plants.js`: garden plan plants GD-01 (areca palm), GD-06 (dwarf banana) and GD-08 (drumstick tree), procedural.
+- `models/tn-plants.js` also draws the garden-plan vegetables and herbs (GD-07, GD-09), the climbing jasmine GD-05 and the lemon GD-11.
 - `models/neem-tree.js`: the existing neem tree at the gate, rebuilt from the site photos (south lean, fork at about 3 m, south limb cut to a stub). Procedural, canvas textures.
 
 ## Site photos (owner's, for reference only)
@@ -50,3 +52,12 @@ All CC0 (public domain) from Poly Haven, https://polyhaven.com
 | `cooktop.glb` | Free-standing 3-burner glass-top gas stove FU-52, scaled to 70 x 41 x 13 cm; converted from `Cook top Faber N141117.3DS` (turned Y-up, simplified to about 30,000 triangles); materials restyled in the 3D pages (`cookMat`) | archibase.net, provided by the owner | Free download from archibase.net (licence as on the site) |
 | `washing-machine.glb` | Front-load washing machine FU-29, scaled to 85 cm high; converted from `Washing machine Zanussi N280220.obj` with Blender; materials restyled (`wmMat`) | archibase.net, provided by the owner | Free download from archibase.net (licence as on the site) |
 
+## Garden plant models (`assets/plants/`)
+All CC0 (public domain) from Poly Haven, https://polyhaven.com, downloaded as 1k glTF and converted with Blender 5.2 (simplified, textures reduced to 512 px, base on the ground, metres).
+
+| File | What | Source | Licence |
+|---|---|---|---|
+| `syngonium-pot.glb` | GD-03 syngonium in a terracotta pot, porch (about 9,000 + 3,300 triangles) | "Potted Plant 02" by Rico Cilliers, https://polyhaven.com/a/potted_plant_02 | CC0 |
+| `anthurium.glb` | GD-02 anthurium (one plant of the set), in a code-made black pot, porch (8,000 triangles) | "Anthurium Botany 01" by Rob Tuytel and Rico Cilliers, https://polyhaven.com/a/anthurium_botany_01 | CC0 |
+| `fern.glb` | GD-04 ferns in the six wall pots, side passage (one fern of the set, 2,400 triangles) | "Fern 02" by Rob Tuytel and Rico Cilliers, https://polyhaven.com/a/fern_02 | CC0 |
+| `aloe-pot.glb` | GD-10 aloe-like succulent in a white pot, scaled up to an aloe vera pot (6,400 triangles) | "Potted Plant 04" by James Ray Cock, https://polyhaven.com/a/potted_plant_04 | CC0 |

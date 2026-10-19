@@ -123,7 +123,19 @@ RAMP=dict(y_hump=1.0,y_crest=3.25,y_top=10.75,ease=1.5,drain=(2.5,3.25))   # gat
 # small gate GT-02: three 6" steps up from the crest (risers in line with ST-1's treads), then a level platform at parking height between the tree well and ST-1A;
 # its east edge is a retaining kerb along the car's ramp (16" high at the north end, nothing where the ramp reaches the parking at Y 10'9")
 SIDE_PLATFORM=dict(well=(12.75,4.75,2.25),x1=13.5,x2=17.125,steps=(2.667,3.5,4.333),xe=12.5,y_end=10.75)
-BRANCH_NOTES='''<section class="ask"><h2>Modular kitchen (see the Kitchen tab)</h2>
+BRANCH_NOTES='''<section class="ask"><h2>Garden plan (branch garden-v1, for review)</h2>
+<ol>
+<li><b>Idea:</b> low-care plants that Tamil Nadu homes use every day (pooja flowers, kitchen greens, herbs), in beds and pots, with the walks, the car route, the bores and the utility kept clear. The existing back bed FU-73 (PL-01 to PL-12), the Tulsi maadam FU-74 and the neem tree stay as they are.</li>
+<li><b>Porch (shade):</b> areca palm GD-01 in a big pot beside the main door, anthurium GD-02 and syngonium GD-03 in pots on the sides, clear of the walk from the steps to the door.</li>
+<li><b>Side passage:</b> six slim wall pots GD-04 (ferns, or money plant) on BW-01, opposite the living-room windows: a green view from the sofa. They stick out only 7" at 4'9" up, so the 2'4" passage stays clear.</li>
+<li><b>Side garden (about 5 hours of midday sun):</b> stepping-stone path GP-01 from the passage to D-05, past the utility and into the back garden. On the east wall: climbing jasmine (mullai) GD-05 opposite the garden door, dwarf banana GD-06 (fed with rinse water from the utility basin), a raised vegetable bed GD-07 (tomato, brinjal, chilli, keerai) and a drumstick tree GD-08 in the south-east corner. A small herb bed GD-09 (mint, ajwain leaf, coriander, vallarai) and two aloe pots GD-10 south of the house corner.</li>
+<li><b>Back garden:</b> kept open for the clothes line and the wash platform; only a lemon tree in a big pot GD-11 in the open south-west corner, by the wash platform and its tap.</li>
+<li><b>Kept clear:</b> nothing over the septic tank, soak pit or sump (all at the front, under the paving); 3' or more round the bore chambers BR-01 and BR-02 for the rig; the D-05 step, the utility platform, the AC unit FU-47 and the recharge pit UG-04 stay open. No coconut, mango or other big tree: no spot is 10' from the house and the walls, and coconuts falling on the path are dangerous. The drumstick is the only tree; cut it back to about 8' after each crop.</li>
+<li><b>Watering:</b> a hose from the low tap of the utility basin FU-30 and the back tap FU-55; a simple drip line with a timer for the vegetable and herb beds; mulch (dry leaves) on all beds to keep the soil cool in summer. Beds are raised 1' so monsoon rain drains away.</li>
+<li><b>Plant list:</b> GD-01 Areca palm · GD-02 Anthurium · GD-03 Syngonium · GD-04 Ferns (wall pots) · GD-05 Mullai (climbing jasmine) · GD-06 Banana (dwarf) · GD-07 Vegetables: tomato, brinjal, chilli, keerai · GD-08 Drumstick (PKM-1) · GD-09 Herbs: mint, ajwain leaf, coriander, vallarai · GD-10 Aloe vera · GD-11 Lemon · GP-01 Stepping-stone path.</li>
+<li><b>3D:</b> the porch pots, the wall-pot ferns and the aloe are free CC0 models from Poly Haven; the palm, banana, drumstick, lemon, jasmine and the bed plants are made in code. Hover any plant for its code and name.</li>
+</ol></section>
+<section class="ask"><h2>Modular kitchen (see the Kitchen tab)</h2>
 <ol>
 <li><b>Units K-01A to K-17B</b>, sized for daily Tamil Nadu cooking: two <b>L-shaped corner cupboards</b> with L-shaped shelves and one L-shaped door in 2 parts joined by a corner hinge, which folds and swings open in one go (K-01A and K-01B at the breakfast-counter corner for big vessels and plates, K-03A and K-03B at the sink corner for pans and bottles), so no corner is wasted; <b>gas cylinder unit K-02</b> under the stove with a plain door, no trolley, on a low 2" plinth with a bottom board, 29½" clear for the 26" cylinder; sink unit with two bins (K-04), low-counter units for water pots and rice and atta (K-05, K-06), breakfast-counter units for tiffin boxes, cutlery, glasses and dry stores (K-08 to K-11), wall units K-12 and K-13 (dish drainer) both from 5'3", glass unit K-15, and lofts with <b>normal hinged doors</b> to the ceiling (K-16, K-17A, K-17B).</li>
 <li><b>Chimney FU-81, 60 cm wide</b>, over the stove; its body and a 6" round duct go up in a 1' gap between the east lofts K-17A and K-17B and out through GW-01 at 8'6" to a steel cowl FU-82 outside (downward opening, back-draft flap).</li>
@@ -259,14 +271,59 @@ PLANTS=[(c,t,x,_bed(x)) for c,t,x in PLANTS]+[('PL-13','tulsi',5.25,97.5)]
 PLANT_NAMES={'malli':'Malli (Jasmine)','sembaruthi':'Sembaruthi (Hibiscus, red)','nandiyavattai':'Nandiyavattai (Crape jasmine)','vetchi':'Vetchi / Idly poo (Ixora, red)',
  'kanakambaram':'Kanakambaram (Crossandra, orange)','nithyakalyani':'Nithya kalyani (Periwinkle, pink)','rose':'Rose (pink)','karuveppilai':'Karuveppilai (Curry leaf)','tulsi':'Tulsi (Holy basil)'}
 PLANT_COL={'malli':'#ffffff','sembaruthi':'#c8102e','nandiyavattai':'#ffffff','vetchi':'#e03a24','kanakambaram':'#ff7a1f','nithyakalyani':'#e2558c','rose':'#c2185b','karuveppilai':'#3d6b2b','tulsi':'#7a4a7e'}
+# ---------- garden plan (branch garden-v1): plantings GD-xx and the stepping-stone path GP-01 ----------
+# kind: 'pot' (x,y = centre, r = pot radius, z = 'porch' (house floor) or 'garden'), 'wallpots' (pots hung on a wall: wall face x, list of y, bottom height zb above the garden),
+#       'creeper' (wall bed x1..x2, y1..y2, trellis height h), 'tree' (x,y = trunk, r = basin ring, h = height, cr = crown radius), 'bed' (raised bed x1..x2, y1..y2, kerb height kh, plants = (type, x, y)),
+#       'path' (segments of stepping stones, w = width)
+# model: which 3D model draws it; 3d/assets/plants/*.glb are CC0 models from Poly Haven, the rest are code-made (3d/models/garden-plants.js, tn-plants.js)
+GARDEN=[
+ dict(id='GD-01',name='Areca palm (butterfly palm) in a big pot',kind='pot',x=3.5,y=39.7,r=0.7,z='porch',h=5.0,model='areca',lab=(4.75,39.3),
+      where='Porch, east corner beside the main door',note='Big terracotta pot, 1\'5" across; bright shade under the porch roof suits it; water twice a week, a cup of compost every 2 months'),
+ dict(id='GD-02',name='Anthurium (red) in a pot',kind='pot',x=3.3,y=37.95,r=0.5,z='porch',h=1.9,model='anthurium',
+      where='Porch, east side, clear of the walk to the door',note='Shade plant, red flowers most of the year; water when the top inch is dry; keep out of the afternoon sun'),
+ dict(id='GD-03',name='Syngonium (arrowhead plant) in a pot',kind='pot',x=7.9,y=36.4,r=0.55,z='porch',h=2.0,model='syngonium',
+      where='Porch, beside the shoe rack FU-01',note='Easy shade plant like a money plant; water once or twice a week'),
+ dict(id='GD-04',name='Wall pots with ferns',kind='wallpots',x=0.375,ys=[48.5,50.0,51.5,54.5,56.0,57.5],zb=4.75,r=0.3,model='fern',
+      where='Side passage, on BW-01 opposite the living-room windows W-04 and W-05',note='Six 7" wall pots on steel brackets, 4\'9" up, only 7" out from the wall (money plant can go in any of them), so the 2\'4" passage stays clear; green view from the sofa; shade-loving, water twice a week'),
+ dict(id='GD-05',name='Mullai (climbing jasmine) on a wire trellis',kind='creeper',x1=0.375,x2=1.125,y1=78.0,y2=82.0,h=6.0,model='mullai',
+      where='Side garden, on BW-01 opposite the garden door D-05',note='Planted in a 9" wall bed, trained on 4 steel wires up the wall; scented white flowers at the door; water every 2 days in summer, prune after flowering'),
+ dict(id='GD-06',name='Banana (dwarf, Poovan or Grand Naine), a clump of 3',kind='tree',x=2.5,y=85.6,r=1.3,h=7.0,cr=2.5,model='banana',
+      where='Side garden, by the east wall, opposite the utility',note='Soft, shallow roots, safe near the wall; it needs a lot of water: give it the rinse water from the utility basin FU-30 (not the soapy machine water); keep only 3 stems, cut the old one after the bunch'),
+ dict(id='GD-07',name='Vegetable bed (raised)',kind='bed',x1=1.5,x2=4.0,y1=89.75,y2=95.75,kh=1.0,
+      plants=[('thakkali',2.15,90.6),('thakkali',3.35,90.6),('kathiri',2.15,92.1),('kathiri',3.35,92.1),('milagai',2.15,93.5),('milagai',3.35,93.5),('keerai',2.15,94.9),('keerai',3.35,94.9)],
+      where='Side garden, along the east wall BW-03',note='2\'6" x 6\', 1\' high brick kerb, red soil with compost; tomato, brinjal, chilli and keerai (greens); about 5 hours of sun (midday); water every morning, a drip line with a timer from the utility tap makes it easy'),
+ dict(id='GD-08',name='Drumstick tree (Murungai, PKM-1, kept low)',kind='tree',x=3.2,y=100.75,r=1.0,h=10.0,cr=2.2,model='moringa',
+      where='Side garden, south-east corner',note='The only tree: light shade, deep roots that do not lift walls; still only 6\'3" from the house, so cut it back to about 8\' after each crop (PKM-1 is the annual kind grown that way); pods and leaves for the kitchen'),
+ dict(id='GD-09',name='Herb bed (raised)',kind='bed',x1=7.0,x2=9.25,y1=98.0,y2=101.5,kh=1.0,
+      plants=[('pudina',7.55,98.7),('karpooravalli',8.7,98.7),('kothamalli',7.55,99.8),('vallarai',8.7,99.8),('pudina',7.55,100.85),('karpooravalli',8.7,100.85)],
+      where='Side garden, south of the house corner, near the kitchen way',note='2\'3" x 3\'6", 1\' high; pudina (mint), karpooravalli (ajwain leaf), kothamalli (coriander), vallarai; water daily in summer'),
+ dict(id='GD-10',name='Aloe vera (Sothu kathalai) pots, 2',kind='pot',x=8.1,y=102.35,r=0.45,z='garden',h=1.4,model='aloe',xs=[7.6,8.65],lab=(8.1,103.15),
+      where='Side garden, south end of the herb bed',note='Full sun, needs water only once a week; for skin and hair'),
+ dict(id='GD-11',name='Lemon (Elumichai) in a big pot',kind='pot',x=19.1,y=101.3,r=0.85,z='garden',h=5.0,model='elumichai',
+      where='Back garden, south-west corner, beside the wash platform FU-55',note='2\' pot in the open, sunny corner, next to the tap; a pot keeps its roots small and away from the house; clear of the clothes line and the path'),
+ dict(id='GP-01',name='Stepping-stone path',kind='path',w=1.5,sl=1.25,pitch=1.9,segs=[[(1.55,75.75),(7.8,75.75)],[(5.4,77.4),(5.4,96.0),(16.9,96.0)]],
+      where='Side passage end to D-05, then south past the utility and west into the back garden',note='Grey granite slabs 1\'6" x 1\'3", 8" apart, set in the grass at ground level; keeps the walk to the utility, the Tulsi maadam and the back garden dry in the monsoon'),
+]
+def garden_stones(g):
+    # stepping stones of a 'path' item: (cx, cy, along-x?) for each slab, evenly spaced along each straight run, one slab at each corner
+    import math as _m
+    out=[]
+    for poly in g['segs']:
+        for i,(a,b) in enumerate(zip(poly[:-1],poly[1:])):
+            L=_m.hypot(b[0]-a[0],b[1]-a[1]); n=max(1,round(L/g['pitch']))
+            for k in range(0 if i==0 else 1,n+1):
+                t=k/n; out.append((a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t,abs(b[0]-a[0])>abs(b[1]-a[1])))
+    return out
+GARDEN_NAMES={'thakkali':'Thakkali (Tomato)','kathiri':'Kathirikkai (Brinjal)','milagai':'Milagai (Chilli)','keerai':'Keerai (Amaranth greens)',
+ 'pudina':'Pudina (Mint)','karpooravalli':'Karpooravalli (Ajwain leaf)','kothamalli':'Kothamalli (Coriander)','vallarai':'Vallarai (Gotu kola)'}
 BORES=[('BR-01',21.0-13.25, back_y(21.0-13.25)-27.0,"13'3\" from west, 27' from south"),('BR-02',21.0-17.0, back_y(21.0-17.0)-34.0,"17' from west, 34' from south")]
 BOREWELL=BORES[0][1:3]
 
 # ---------- drawing positions (layout specific) ----------
 LABELPOS={'G-01':(8.0,24.5),'G-02':(5.6,37.6),'G-03':(6.2,44.6),'G-04':(11.5,53.0),'G-05':(11.45,39.4),'G-06':(11.5,33.6),'G-07':(17.2,33.4),
-          'G-08':(8.0,63.4),'G-09':(15.6,64.6),'G-10':(16.0,70.6),'G-11':(9.25,69.6),'G-16':(3.9,70.1),'G-12':(16.2,92.8),'G-13':(1.55,36.0),'G-14':(5.0,94.0),'G-15':(15.2,100.2),
+          'G-08':(8.0,63.4),'G-09':(15.6,64.6),'G-10':(16.0,70.6),'G-11':(9.25,69.6),'G-16':(3.9,70.1),'G-12':(16.2,92.8),'G-13':(1.55,36.0),'G-14':(7.85,93.65),'G-15':(15.2,100.2),
           'F-01':(6.4,18.0),'F-02':(11.9,47.0),'F-03':(7.9,75.6),'F-04':(12.15,78.0),'F-05':(15.9,95.3),'F-06':(12.05,82.9),'F-07':(16.4,83.75)}
-LABELSIZE={'G-16':0.24,'F-07':0.3,'G-09':0.34,'G-11':0.3,'G-05':0.42,'G-12':0.42,'F-05':0.42,'G-09':0.4,'G-13':0.36,'G-06':0.4,'G-07':0.42,'G-11':0.42,'G-03':0.42,'G-02':0.42,'F-06':0.36,'F-07':0.42,'G-10':0.42,'F-04':0.45,'F-03':0.42,'F-01':0.45,'G-09':0.45,'G-01':0.6,'F-02':0.8}
+LABELSIZE={'G-14':0.34,'G-16':0.24,'F-07':0.3,'G-09':0.34,'G-11':0.3,'G-05':0.42,'G-12':0.42,'F-05':0.42,'G-09':0.4,'G-13':0.36,'G-06':0.4,'G-07':0.42,'G-11':0.42,'G-03':0.42,'G-02':0.42,'F-06':0.36,'F-07':0.42,'G-10':0.42,'F-04':0.45,'F-03':0.42,'F-01':0.45,'G-09':0.45,'G-01':0.6,'F-02':0.8}
 TAGPOS={'GW-01':(3.125,53.0),'GW-05':(20.625,51.0),'GW-07':(9.875,91.5),'BW-01':(0.19,50.0),'GW-04':(19.0,31.125),'GW-13':(12.62,58.94),'GW-12':(17.6,46.56),
         'GW-03':(8.875,33.6),'GW-02':(3.6,40.875),'GW-11':(19.0,36.19),'GW-08':(11.0,94.75),'GW-06':(8.0,73.5),'GW-16':(11.94,71.6),'GW-17':(4.4,66.75),'GW-18':(6.375,72.3),'PW-02':(2.94,40.0),'PW-04':(20.81,40.0),
         'FW-01':(9.875,94.0),'FW-03':(20.625,92.0),'FW-02':(18.4,73.5),'FW-04':(19.0,97.0),'FW-05':(18.0,80.06),'PW-03':(19.4,19.94),'PW-01':(5.0,15.69),'PW-05':(6.0,77.69),

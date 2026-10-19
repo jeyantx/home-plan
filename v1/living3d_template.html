@@ -56,7 +56,7 @@ canvas{display:block;width:100%;height:100%}
   <div class="seg" id="floorSeg" title="Go to a floor at eye level"><button data-fl="G">Ground</button><button data-fl="F">First</button></div>
   <select id="areaSel" title="Choose an area, then a view"><option value="0">Living</option><option value="1">Bedroom 1</option><option value="2">Kitchen</option><option value="3">Bedroom 2</option><option value="4">Outside</option><option value="5">Stairs</option><option value="6">First floor</option></select>
   
-<div class="seg cams" data-area="0"><button data-c="0">Entry</button><button data-c="1">Corner</button><button data-c="2">From sofa</button><button data-c="3">From TV</button><button data-c="4">From kitchen</button><button data-c="5">Top</button></div>  <div class="seg cams" data-area="1"><button data-c="6">Door</button><button data-c="7">Window</button><button data-c="8">Study</button><button data-c="9">Toilet</button><button data-c="10">Top</button></div>  <div class="seg cams" data-area="2"><button data-c="11">Kitchen</button><button data-c="12">Sink</button><button data-c="13">Hob</button><button data-c="14">Fridge</button><button data-c="15">Top</button></div>  <div class="seg cams" data-area="3"><button data-c="16">Door</button><button data-c="17">Bed</button><button data-c="18">Window</button><button data-c="19">Toilet 2</button><button data-c="20">Top</button></div>  <div class="seg cams" data-area="4"><button data-c="21">Gate</button><button data-c="22">Parking</button><button data-c="23">Terrace</button><button data-c="24">Aerial</button><button data-c="25">Side</button><button data-c="26">Stair</button><button data-c="32">Back garden</button><button data-c="33">Gate levels</button><button data-c="34">Front</button></div>
+<div class="seg cams" data-area="0"><button data-c="0">Entry</button><button data-c="1">Corner</button><button data-c="2">From sofa</button><button data-c="3">From TV</button><button data-c="4">From kitchen</button><button data-c="5">Top</button></div>  <div class="seg cams" data-area="1"><button data-c="6">Door</button><button data-c="7">Window</button><button data-c="8">Study</button><button data-c="9">Toilet</button><button data-c="10">Top</button></div>  <div class="seg cams" data-area="2"><button data-c="11">Kitchen</button><button data-c="12">Sink</button><button data-c="13">Hob</button><button data-c="14">Fridge</button><button data-c="15">Top</button></div>  <div class="seg cams" data-area="3"><button data-c="16">Door</button><button data-c="17">Bed</button><button data-c="18">Window</button><button data-c="19">Toilet 2</button><button data-c="20">Top</button></div>  <div class="seg cams" data-area="4"><button data-c="21">Gate</button><button data-c="22">Parking</button><button data-c="23">Terrace</button><button data-c="24">Aerial</button><button data-c="25">Side</button><button data-c="26">Stair</button><button data-c="32">Back garden</button><button data-c="33">Gate levels</button><button data-c="34">Front</button><button data-c="36">Side garden</button><button data-c="37">Porch</button></div>
   <div class="seg cams" data-area="5"><button data-c="27">Spiral</button><button data-c="28">Landing</button><button data-c="29">Well</button><button data-c="26">ST-1</button></div>
   <div class="seg cams" data-area="6"><button data-c="28">Landing</button><button data-c="30">Bedroom 3</button><button data-c="23">Terrace</button><button data-c="31">Top</button></div>
   <span class="spacer"></span>
@@ -89,6 +89,7 @@ import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';
 import {createBambooPlant} from './models/bamboo-plant.js?v=__BUILD__';
 import {createNeemTree} from './models/neem-tree.js?v=__BUILD__';
 import {createTNPlant,TN_PLANTS} from './models/tn-plants.js?v=__BUILD__';
+import {createBanana,createArecaPalm,createMoringa} from './models/garden-plants.js?v=__BUILD__';
 import {createVirtus,createHunter350,createAther450,loadCarGLB,loadGLBVehicle} from './models/vehicles.js?v=__BUILD__';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {CAR_ROUTE} from './models/car-route.js?v=__BUILD__';
@@ -1304,6 +1305,45 @@ if(P.backwall){const bw=P.backwall,[a,b]=bw.pts,t=bw.t,old=std({color:'#cdc4b3',
  const cl=fuG['FU-75'],cyy=(cl.y1+cl.y2)/2,tc=`FU-75 · Clothes drying line · ${cl.note}`;
  for(const x of [cl.x1,cl.x2]){box(x-0.06,x+0.06,cyy-0.06,cyy+0.06,GRD,GRD+6,MAT.blackMetal,{tip:tc});box(x-0.04,x+0.04,cyy-0.6,cyy+0.6,GRD+5.9,GRD+6.0,MAT.blackMetal,{tip:tc})}
  for(const dy of [-0.5,0,0.5]) box(cl.x1,cl.x2,cyy+dy-0.012,cyy+dy+0.012,GRD+5.95,GRD+5.975,MAT.steel,{cast:false,tip:tc});}
+// garden plan GD-01 to GD-11 and the stepping-stone path GP-01 (model.py GARDEN): CC0 plants from Poly Haven (assets/plants, see 3d/ASSETS.md) and code-made ones (models/garden-plants.js, tn-plants.js)
+{const GD=P.garden||[],GN=P.gardenNames||{};
+ const terra=std({color:'#b5643a',roughness:0.9}),soilG=std({color:'#4a2f1e',roughness:1}),brick=std({color:'#a8553a',roughness:0.9}),granite=std({color:'#8a8d90',roughness:0.85}),
+       wire=std({color:'#c9ccd0',roughness:0.3,metalness:0.9}),bracket=std({color:'#26282b',roughness:0.5,metalness:0.6}),blackPot=std({color:'#2b2d30',roughness:0.6});
+ const T=(g,extra)=>`${g.id} · ${g.name}${extra?' · '+extra:''} · ${g.where}`;
+ const tipAll=(o,t)=>o.traverse(n=>{if(n.isMesh){n.userData.keepUV=true;n.castShadow=true;n.receiveShadow=true;named(n,t)}});
+ const refresh=()=>{renderer.shadowMap.needsUpdate=true;if(photo&&pt)pt.setScene(scene,camera);invalidate()};
+ const glbCache={},loadGLB=url=>glbCache[url]||(glbCache[url]=new Promise((res,rej)=>new GLTFLoader().load(url+'?v=__BUILD__',g=>res(g.scene),undefined,rej)));
+ // a downloaded plant, scaled so its height (h, feet) or width (w, feet) fits, standing at plan x, y on height z (feet)
+ const placeGLB=(url,x,y,z,size,rot,t)=>loadGLB(url).then(src=>{const o=src.clone(true),sz=new THREE.Box3().setFromObject(o).getSize(new THREE.Vector3());
+   o.scale.setScalar(size.h?m(size.h)/sz.y:m(size.w)/Math.max(sz.x,sz.z));o.rotation.y=rot||0;o.position.set(mx(x),m(z),m(y));scene.add(o);tipAll(o,t);refresh();return o}).catch(e=>console.warn('plant model',url,e));
+ // a round terracotta pot: rim radius r, height ph (feet), soil just below the rim; returns the soil height
+ const pot=(x,y,z,r,ph,t,mt)=>{cyl(x,y,z,z+ph-0.08,r*0.75,mt||terra,{rTop:r*0.97,tip:t});cyl(x,y,z+ph-0.08,z+ph,r,mt||terra,{tip:t});cyl(x,y,z+ph-0.14,z+ph-0.1,r*0.93,soilG,{tip:t});return z+ph-0.11};
+ const add=(o,x,y,z,t,rot)=>{o.position.set(mx(x),m(z),m(y));o.rotation.y=rot||0;scene.add(o);tipAll(o,t);return o};
+ const tn=(type,seed,x,y,z,t)=>{if(!TN_PLANTS[type])return null;return add(createTNPlant(THREE,mergeGeometries,{type,seed}),x,y,z,t,seed*1.7)};
+ const basin=(x,y,r,t)=>{cyl(x,y,GRD-0.05,GRD+0.04,r,soilG,{tip:t,seg:28});const rim=new THREE.Mesh(new THREE.TorusGeometry(m(r),m(0.12),6,32),soilG);rim.rotation.x=Math.PI/2;rim.position.set(mx(x),m(GRD+0.04),m(y));scene.add(rim);named(rim,t)};
+ for(const g of GD){const zB=g.z==='porch'?0:GRD,t=T(g);
+  if(g.kind==='path'){for(const [cx,cy,ax] of g.stones){const hx=ax?g.sl/2:g.w/2,hy=ax?g.w/2:g.sl/2;box(cx-hx,cx+hx,cy-hy,cy+hy,GRD-0.1,GRD+0.05,granite,{tip:T(g,'granite slab'),cast:false})}}
+  else if(g.kind==='pot'){
+   if(g.model==='areca'){const s=pot(g.x,g.y,zB,g.r,1.2,t);add(createArecaPalm(THREE,mergeGeometries,{seed:3,height:m(g.h-1.2),face:[0,-1],spread:0.2}),g.x,g.y,s,t,0).scale.x=0.75}
+   else if(g.model==='anthurium'){const s=pot(g.x,g.y,zB,g.r,0.85,t,blackPot);placeGLB('assets/plants/anthurium.glb',g.x,g.y,s-0.05,{h:g.h-0.8},0.6,T(g,'model: Poly Haven, CC0'))}
+   else if(g.model==='syngonium')placeGLB('assets/plants/syngonium-pot.glb',g.x,g.y,zB,{h:g.h},2.0,T(g,'model: Poly Haven, CC0'));
+   else if(g.model==='aloe')(g.xs||[g.x]).forEach((x,i)=>placeGLB('assets/plants/aloe-pot.glb',x,g.y,zB,{h:g.h},i*1.3,T(g,'model: Poly Haven, CC0')));
+   else if(g.model==='elumichai'){const s=pot(g.x,g.y,zB,g.r,1.4,t);tn('elumichai',11,g.x,g.y,s,t)}}
+  else if(g.kind==='wallpots'){for(const [i,y] of g.ys.entries()){const cx=g.x+g.r+0.02,z=GRD+g.zb;
+    box(g.x,g.x+0.06,y-0.05,y+0.05,z-0.3,z+0.4,bracket,{tip:T(g,'steel wall bracket')});box(g.x,cx+0.1,y-0.04,y+0.04,z-0.05,z,bracket,{tip:T(g,'steel wall bracket')});
+    const s=pot(cx,y,z,g.r,0.6,t,blackPot);placeGLB('assets/plants/fern.glb',cx,y,s-0.04,{w:1.15},i*1.1,T(g,'Boston fern · model: Poly Haven, CC0'))}}
+  else if(g.kind==='creeper'){const zs=GRD+0.5;
+   box(g.x1,g.x2,g.y1,g.y2,GRD-0.1,zs,brick,{tip:T(g,'9" wall bed, brick kerb')});box(g.x1+0.06,g.x2-0.06,g.y1+0.06,g.y2-0.06,zs,zs+0.02,soilG,{tip:t});
+   for(let k=0;k<4;k++){const y=g.y1+0.4+k*(g.y2-g.y1-0.8)/3;box(g.x1+0.04,g.x1+0.07,y-0.012,y+0.012,zs,GRD+g.h,wire,{cast:false,tip:T(g,'steel trellis wire')})}
+   for(const z of [GRD+2.5,GRD+4.0,GRD+5.5])box(g.x1+0.04,g.x1+0.07,g.y1+0.4,g.y2-0.4,z-0.012,z+0.012,wire,{cast:false,tip:T(g,'steel trellis wire')});
+   const c=tn('mullai',5,g.x1+0.42,(g.y1+g.y2)/2,zs,t);if(c)c.scale.set(0.28,1,1)}
+  else if(g.kind==='tree'){basin(g.x,g.y,g.r,T(g,'soil basin for watering'));
+   if(g.model==='banana')add(createBanana(THREE,mergeGeometries,{seed:6,height:m(g.h/0.87),avoid:[[1,0],[-1,0]],avoidCos:0.6}),g.x,g.y,GRD,t,0);
+   else if(g.model==='moringa')add(createMoringa(THREE,mergeGeometries,{seed:8,height:m(g.h),crown:m(g.cr),avoid:[1,0]}),g.x,g.y,GRD,t,0)}
+  else if(g.kind==='bed'){const k=0.375,zt=GRD+g.kh,tb=T(g,'brick kerb, 1\' high');
+   box(g.x1,g.x2,g.y1,g.y1+k,GRD-0.1,zt,brick,{tip:tb});box(g.x1,g.x2,g.y2-k,g.y2,GRD-0.1,zt,brick,{tip:tb});box(g.x1,g.x1+k,g.y1+k,g.y2-k,GRD-0.1,zt,brick,{tip:tb});box(g.x2-k,g.x2,g.y1+k,g.y2-k,GRD-0.1,zt,brick,{tip:tb});
+   box(g.x1+k,g.x2-k,g.y1+k,g.y2-k,GRD-0.1,zt-0.12,soilG,{tip:T(g,'red soil with compost'),cast:false});
+   g.plants.forEach(([tp,x,y],i)=>tn(tp,i+3,x,y,zt-0.12,`${g.id} · ${GN[tp]||tp} · ${g.name} · ${g.where}`))}}}
 // parked vehicles, on the spots of the 2D plan: car (nose to the house), two-wheelers in a lane east of the car (front to the gate)
 // ---- car pose and the parking animation (route planned in v1/tools/car_route_plan.mjs) ----
 const carAnim={car:null,on:false,t0:0,track:null,lastShadow:0};
@@ -1533,6 +1573,8 @@ const VIEWS=[
  {p:[7.0,PKZ+5.25,24.0],t:[7.5,RDZ+0.8,-2.0]},   // levels at the gate: from the parking, looking down the ramp to the crest, the drain and the road: road, crest and drain, ramp, parking
  {p:[9.0,RDZ+8.0,-14.0],t:[11.0,4.5,34.0]},   // front elevation from across the road, below the neem crown
  {p:[4.2,PKZ+9.5,29.6],t:[11.5,RDZ+1.0,-2.0]},   // watch the car: from the house-front corner of the parking, out to the gate and the road
+ {p:[5.4,EYE+GRD,74.6],t:[3.0,1.6,96.0]},   // side garden from the D-05 path: jasmine, banana, vegetable bed, drumstick, herb bed
+ {p:[7.3,PKZ+5.25,32.2],t:[3.4,1.4,39.6]},   // porch pots from the parking bay: areca palm, anthurium, syngonium
 ];
 let hfov=75;
 function applyFov(){const a=camera.aspect||1;camera.fov=a>=1?THREE.MathUtils.radToDeg(2*Math.atan(Math.tan(THREE.MathUtils.degToRad(hfov)/2)/a)):hfov;camera.updateProjectionMatrix()}   // the lens angle spans the longer side
