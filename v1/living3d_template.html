@@ -32,6 +32,8 @@ canvas{display:block;width:100%;height:100%}
 #panel .sw{display:inline-block;width:12px;height:12px;border-radius:3px;border:1px solid #0002;vertical-align:-2px;margin-right:5px}
 #status{position:absolute;left:12px;bottom:12px;background:rgba(20,22,25,.78);color:#fff;font-size:12.5px;padding:6px 10px;border-radius:8px;display:none}
 #loading{position:absolute;inset:0;display:grid;place-items:center;color:var(--muted)}
+#tourCap{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);background:rgba(20,22,25,.8);color:#fff;font-size:15px;font-weight:600;padding:8px 16px;border-radius:999px;display:none;pointer-events:none;white-space:nowrap}
+#tourCap small{font-weight:400;opacity:.8;margin-left:8px;font-size:12.5px}
 .btn{border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:8px;padding:6px 10px;font:inherit;font-size:13px;cursor:pointer}
 .btn[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:600}
 </style>
@@ -56,6 +58,7 @@ canvas{display:block;width:100%;height:100%}
   <div class="seg cams" data-area="5"><button data-c="27">Spiral</button><button data-c="28">Landing</button><button data-c="29">Well</button><button data-c="26">ST-1</button></div>
   <div class="seg cams" data-area="6"><button data-c="28">Landing</button><button data-c="30">Bedroom 3</button><button data-c="23">Terrace</button><button data-c="31">Top</button></div>
   <span class="spacer"></span>
+  <button class="btn" id="tourBtn" aria-pressed="false" title="Walk through the whole house on a set path: gate, parking, porch, rooms, up the spiral stair, first floor, terrace and down the outside stair. Any key or click stops it.">Home tour</button>
   <button class="btn" id="animBtn" aria-pressed="false" title="Watch the car come in from the road, reverse into its spot, wait, and drive out">Animate</button>
   <button class="btn" id="photoBtn" aria-pressed="false" title="Ray-traced photo of the current view. Uses the graphics card heavily for about a minute, then stops by itself.">Photo</button>
   <button class="btn" id="saveBtn" title="Save the current image as PNG">Save</button>
@@ -67,7 +70,7 @@ canvas{display:block;width:100%;height:100%}
   <span class="sub">↑↓ walk · ←→ turn · A/D slide · W/S tilt · Q/E lower/raise · Shift faster · Drag to look around · Scroll to walk · Right-drag to slide · Hover for names</span>
  </div>
 </header>
-<div id="view"><div id="loading">Loading 3D…</div><div id="panel" class="hidden"></div><div id="status"></div></div>
+<div id="view"><div id="loading">Loading 3D…</div><div id="panel" class="hidden"></div><div id="status"></div><div id="tourCap"></div></div>
 </div>
 <div id="tip"></div>
 <script>window.PLAN=__PLAN__;</script>
@@ -1605,10 +1608,75 @@ function walk(){const now=performance.now(),dt=Math.min(0.05,(now-lastT)/1000);l
    invalidate()});
  const end=e=>{drag=null};el.addEventListener('pointerup',end);el.addEventListener('pointercancel',end);
  el.addEventListener('wheel',e=>{e.preventDefault();tryMove(fwdVec().multiplyScalar(-e.deltaY*0.004));invalidate()},{passive:false});}
+// ---------------- home tour: walk a set path through the house, up the spiral stair, over the terrace and down the outside stair ----------------
+// Path in plan feet (x from the east boundary, y from the road, z = eye height above the ground-floor level). 'p' = walk to, 'look' = stop and look round.
+function tourPlan(){const E=EYE,S2=P.spiral,cx=S2.c[0],cy=S2.c[1],sR=FFZ/(S2.n||18),sA0=S2.start??345,sA=S2.ang||30,wr=1.75,d2r=Math.PI/180;
+  const A1=17.125,A2=20.625,TD=10/12,LY1=16.0,LY2=19.5,BX2=17.125,NA=17,NB=10,R1=(FFZ-HUZ)/(NA+NB),A0s=LY1-(NA-1)*TD,LZ=HUZ+NA*R1;
+  const T=[],p=(x,y,z,label)=>T.push({k:'p',x,y,z,label}),look=(x,y,z,secs=3.5,sweep=50,label)=>T.push({k:'look',x,y,z,secs,sweep,label});
+  p(6.0,-10.0,RDZ+E,'Outside the gate');look(9.5,12,PKZ+3,3,40);
+  p(6.0,-1.5,RDZ+E);p(6.2,1.6,HUZ+E,'Gate GT-01');p(6.6,7.0,hFront(6.6,7.0)+E);p(7.4,12.5,PKZ+E,'Parking');
+  look(14,22,PKZ+2.5,3,70);p(8.2,20.0,PKZ+E);p(7.6,28.0,PKZ+E);p(6.3,31.8,PKZ+E,'Porch');
+  p(6.2,34.0,PKZ+E+0.75);p(6.2,36.3,E);p(6.2,40.9,E,'Main door');p(6.0,44.0,E,'Foyer');
+  p(8.5,47.8,E);p(12.6,50.5,E,'Living room');look(19.5,52.5,4.6,5,170);
+  p(14.6,55.8,E);p(15.75,58.9,E,'Open area (future dining)');p(15.6,61.6,E);
+  p(13.6,62.4,E);p(10.2,62.3,E,'Kitchen');look(5.0,63.5,4.4,4,110);
+  p(13.0,62.6,E);p(15.2,64.8,E);p(14.6,68.6,E,'Stair hall');p(13.0,72.8,E);p(12.4,76.5,E);p(12.3,79.6,E);
+  p(12.3,81.6,E,'Bedroom 2');p(12.0,86.0,E);p(12.2,91.3,E);look(15.0,95.0,4.2,5,120,'Picture window W-08');
+  p(12.0,86.5,E);p(12.3,81.0,E);p(12.6,77.5,E);p(13.2,73.4,E);p(15.6,72.1,E);p(18.0,72.3,E);p(18.6,74.0,E,'Spiral stair ST-2');
+  for(let a=330;a<=885;a+=7.5){const z=Math.max(0,Math.min(FFZ,sR*((a-sA0)/sA+0.5)));p(cx+wr*Math.cos(a*d2r),cy+wr*Math.sin(a*d2r),z+E,a===870?'First-floor landing':undefined)}
+  p(13.6,77.8,FFZ+E);p(12.3,78.6,FFZ+E);look(17,76.9,FFZ-2.5,3,60);
+  p(12.3,81.0,FFZ+E,'Bedroom 3');p(12.6,84.6,FFZ+E);p(12.8,87.6,FFZ+E);look(17.0,95.5,FFZ+3.5,5,130);
+  p(12.5,84.0,FFZ+E);p(12.2,80.0,FFZ+E);p(11.6,77.4,FFZ+E);p(9.9,75.8,FFZ+E);p(7.2,75.2,FFZ+E,'Terrace');
+  p(7.0,70.0,FFZ+E);p(8.8,52.0,FFZ+E);look(11,30,FFZ+2,4,160);p(8.6,32.0,FFZ+E);p(7.0,21.5,FFZ+E,'Balcony 2');p(7.2,18.2,FFZ+E);look(8,-6,FFZ-4,3,70);
+  p(9.0,17.75,FFZ+E,'Outside stair ST-1');
+  for(let x=9.6;x<=17.1;x+=0.5){const z=Math.max(LZ,Math.min(FFZ,LZ+R1*((BX2-x)/TD+0.5)));p(x,17.75,z+E)}
+  p(18.2,17.6,LZ+E);p(18.85,16.2,LZ+E);
+  for(let y=15.8;y>=A0s-0.4;y-=0.5){const z=Math.max(HUZ,Math.min(LZ,HUZ+R1*((y-A0s)/TD+0.5)));p(18.85,y,z+E)}
+  p(18.6,0.8,HUZ+E);p(17.5,-3.0,RDZ+E,'Back on the road');p(12.0,-11.0,RDZ+E);look(11.0,24.0,6.0,4,30,'Home tour done');
+  return T}
+const tour={on:false,segs:null,T:0,t0:0,yaw:0,pitch:0,fl:'G',label:''},tourBtn=document.getElementById('tourBtn'),tourCap=document.getElementById('tourCap');
+const W3=(x,y,z)=>new THREE.Vector3(mx(x),m(z),m(y));
+function buildTour(){const plan=tourPlan(),segs=[];let t=0,cur=null,run=[];
+  const flush=()=>{if(run.length<2){run=run.slice(-1);return}
+    const curve=new THREE.CatmullRomCurve3(run.map(q=>W3(q.x,q.y,q.z)),false,'centripetal');const N=Math.max(20,Math.round(curve.getLength()/0.05)),tab=[0];let tt=0;
+    for(let i=1;i<=N;i++){const a=curve.getPointAt((i-1)/N),b=curve.getPointAt(i/N),dh=Math.hypot(b.x-a.x,b.z-a.z),dz=Math.abs(b.y-a.y),ds=Math.hypot(dh,dz);
+      tt+=ds/(m(3.1)/(1+2.2*dz/Math.max(dh,1e-4)*0.6));tab.push(tt)}   // about 3 ft/s on the level, slower on stairs
+    const cum=[0];for(let i=1;i<run.length;i++)cum.push(cum[i-1]+Math.hypot(run[i].x-run[i-1].x,run[i].y-run[i-1].y,run[i].z-run[i-1].z));   // caption where its point is, by distance along the path
+    const labels=run.map((q,i)=>q.label?{u:cum[i]/cum[cum.length-1],label:q.label}:null).filter(Boolean);
+    segs.push({k:'move',curve,tab,N,t0:t,t1:t+tt,labels});t+=tt;run=run.slice(-1)};
+  for(const q of plan){if(q.k==='p'){run.push(q);cur=q}else{flush();segs.push({k:'look',pos:W3(cur.x,cur.y,cur.z),tgt:W3(q.x,q.y,q.z),secs:q.secs,sweep:q.sweep*Math.PI/180,label:q.label,t0:t,t1:t+q.secs});t+=q.secs}}
+  flush();return {segs,T:t}}
+const angLerp=(a,b,k)=>a+Math.atan2(Math.sin(b-a),Math.cos(b-a))*k;
+function tourPose(t,dt){const tr=tour;let sg=tr.segs.find(g=>t<=g.t1)||tr.segs[tr.segs.length-1];let yaw,pitch,pos,label=null;
+  if(sg.k==='move'){const tab=sg.tab,lt=Math.min(tab[tab.length-1],Math.max(0,t-sg.t0));let i=1;while(i<tab.length-1&&tab[i]<lt)i++;
+    const u=Math.min(1,((i-1)+(lt-tab[i-1])/Math.max(1e-6,tab[i]-tab[i-1]))/sg.N);pos=sg.curve.getPointAt(u);
+    const ah=sg.curve.getPointAt(Math.min(1,u+m(3.0)/sg.curve.getLength())),d=ah.clone().sub(pos);
+    if(Math.hypot(d.x,d.z)>1e-3){yaw=Math.atan2(-d.x,-d.z);pitch=Math.atan2(d.y,Math.hypot(d.x,d.z))*0.35-0.08}else{yaw=tr.yaw;pitch=tr.pitch}
+    for(const L of sg.labels)if(u>=L.u-1e-6)label=L.label}
+  else{pos=sg.pos;const d=sg.tgt.clone().sub(pos),base=Math.atan2(-d.x,-d.z),k=Math.min(1,Math.max(0,(t-sg.t0)/sg.secs)),turn=Math.min(1,(t-sg.t0)/1.0);
+    yaw=base+sg.sweep*0.5*Math.sin(k*Math.PI*2)*Math.min(1,(t-sg.t0)/1.2)*Math.min(1,(sg.t1-t)/1.2);pitch=Math.atan2(d.y,Math.hypot(d.x,d.z));if(sg.label)label=sg.label}
+  const f=dt>0?1-Math.exp(-dt*3.2):1;tr.yaw=dt>0?angLerp(tr.yaw,yaw,f):yaw;tr.pitch=dt>0?tr.pitch+(pitch-tr.pitch)*f:pitch;
+  camera.position.copy(pos);yaw_=tr.yaw;pitch_=tr.pitch;
+  if(label&&label!==tr.label){tr.label=label;tourCap.innerHTML=label+'<small>Home tour · any key to stop</small>';tourCap.style.display='block'}
+  const fl=pos.y>m(FFZ-1.5)&&pos.y<m(FFZ+CEIL)?'F':'G';if(fl!==tr.fl){tr.fl=fl;applyVis({fl})}}
+let yaw_=0,pitch_=0;
+function tourStep(now){const tr=tour,t=(now-tr.t0)/1000,dt=tr.last?Math.min(0.1,(now-tr.last)/1000):0;tr.last=now;
+  if(t>=tr.T+1.5){stopTour();return}
+  tourPose(Math.min(t,tr.T),dt);yaw=yaw_;pitch=pitch_;applyLook();invalidate()}
+function startTour(){if(photo)stopPhoto();if(carAnim.on)stopAnim();if(!tour.segs){const b=buildTour();tour.segs=b.segs;tour.T=b.T}
+  tour.on=true;tour.t0=performance.now();tour.last=0;tour.label='';tour.fl='';applyVis({fl:'G'});tour.yaw=yaw;tour.pitch=pitch;tourPose(0,0);yaw=yaw_;pitch=pitch_;applyLook();
+  tourBtn.textContent='Stop tour';tourBtn.setAttribute('aria-pressed',true);invalidate()}
+function stopTour(){tour.on=false;tourCap.style.display='none';tourBtn.textContent='Home tour';tourBtn.setAttribute('aria-pressed',false);invalidate()}
+tourBtn.onclick=()=>tour.on?stopTour():startTour();
+addEventListener('keydown',e=>{if(tour.on&&!e.repeat)stopTour()},true);
+renderer.domElement.addEventListener('pointerdown',()=>{if(tour.on)stopTour()},true);
+window.__tourAt=t=>{if(!tour.segs){const b=buildTour();tour.segs=b.segs;tour.T=b.T}tourPose(t,0);yaw=yaw_;pitch=pitch_;applyLook();invalidate();
+  return [(-camera.position.x/F).toFixed(2),(camera.position.z/F).toFixed(2),(camera.position.y/F).toFixed(2),tour.T.toFixed(1),tour.label]};
 document.getElementById('loading').remove();
 renderer.setAnimationLoop(()=>{
   walk();
   if(carAnim.on)animStep(performance.now());
+  if(tour.on)tourStep(performance.now());
   if(photo&&pt){
     if(building||document.hidden) return;            // ray tracing pauses in a hidden tab
     if(pt.samples>=PHOTO_SAMPLES){ if(saveReq){pt.renderSample();doSave();saveReq=false} statusEl.textContent=`Photo done: ${Math.floor(pt.samples)} samples. Save image, or move to start a new one.`; return }   // stop: no GPU use once finished
