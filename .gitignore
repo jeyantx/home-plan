@@ -3,3 +3,4 @@ __pycache__/
 *.pyc
 v1/svgs.json
 views/
+.claude/worktrees/
