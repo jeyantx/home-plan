@@ -1027,7 +1027,7 @@ X_(()=>{CURFL='F';ZOFF=FFZ;
 }
 ZOFF=0;CURFL='G';});
 // roof slab of the ground floor (also the terrace floor) and its edge fascia
-const slabParts=[[2.75,9.625,15.5,19.75],[2.75,21,19.75,67.125],[6.0,21,67.125,73.75],[6.0,9.5,73.75,73.875],[2.75,9.5,73.875,77.875],[2.75,6.0,67.125,73.875]];   // full slab, also over the bore court
+const slabParts=[[2.75,9.625,15.5,19.75],[2.75,21,19.75,67.125],[6.0,21,67.125,73.75],[6.0,9.5,73.75,73.875],[2.75,9.5,73.875,77.875],[2.75,6.0,67.125,73.875],[9.5,21,95.125,97.375]];   // full slab, also over the bore court and under the bedroom 3 projection past GW-08
 function holeSlab(x1,x2,y1,y2,z1,z2,h,mat,tip){   // thick slab with a round hole (extruded upward from z1)
   const sh=new THREE.Shape([[x1,y1],[x2,y1],[x2,y2],[x1,y2]].map(p=>new THREE.Vector2(mx(p[0]),-m(p[1]))));
   const q=new THREE.Path();q.absarc(mx(h.x),-m(h.y),m(h.r),0,Math.PI*2,false);sh.holes.push(q);
@@ -1036,8 +1036,8 @@ function holeSlab(x1,x2,y1,y2,z1,z2,h,mat,tip){   // thick slab with a round hol
 X_(()=>{for(const [a,b,c,d] of slabParts) box(a,b,c,d,SLB,FFZ-0.05,MAT.white,{tip:'RCC roof slab and beams, ground floor (terrace floor above)'});
  holeSlab(9.5,21,73.75,95.125,SLB,FFZ-0.05,WELL,MAT.white,'RCC slab over the stair hall and bedroom 2 · 6\' round hole for ST-2, edge beams round it');
  const fz1=SLB-0.012,fz2=FFZ,ft='Slab edge fascia';
- for(const [a,b,c,d] of [[2.75,9.625,15.5-0.03,15.5-0.012],[9.625,21,19.75-0.03,19.75-0.012],[2.75,9.5,77.875+0.012,77.875+0.03],[9.5,21,95.125+0.012,95.125+0.03]]) box(a,b,c,d,fz1,fz2,MAT.extTrim,{tip:ft});
- for(const [a,b,c,d] of [[2.75-0.03,2.75-0.012,15.5,77.875],[9.625+0.012,9.625+0.03,15.5,19.75],[21+0.012,21+0.03,19.75,95.125],[9.5-0.03,9.5-0.012,77.875,95.125]]) box(a,b,c,d,fz1,fz2,MAT.extTrim,{tip:ft});
+ for(const [a,b,c,d] of [[2.75,9.625,15.5-0.03,15.5-0.012],[9.625,21,19.75-0.03,19.75-0.012],[2.75,9.5,77.875+0.012,77.875+0.03],[9.5,21,97.375+0.012,97.375+0.03]]) box(a,b,c,d,fz1,fz2,MAT.extTrim,{tip:ft});
+ for(const [a,b,c,d] of [[2.75-0.03,2.75-0.012,15.5,77.875],[9.625+0.012,9.625+0.03,15.5,19.75],[21+0.012,21+0.03,19.75,97.375],[9.5-0.03,9.5-0.012,77.875,97.375]]) box(a,b,c,d,fz1,fz2,MAT.extTrim,{tip:ft});
  // parapets PW-01..05, 3' high, 4½", with a coping; vertical louvers on the balcony front PW-01
  for(const w of P.walls.F.filter(w=>w.kind==='para')){box(w.x1,w.x2,w.y1,w.y2,FFZ-0.05,FFZ+w.h,MAT.ext,{tip:`${w.id} · ${w.desc} · 3' parapet`});
    box(w.x1-0.06,w.x2+0.06,w.y1-0.06,w.y2+0.06,FFZ+w.h,FFZ+w.h+0.15,MAT.extTrim,{tip:`${w.id} · parapet coping`});wallMeshes.push(scene.children[scene.children.length-2])}
@@ -1299,7 +1299,7 @@ if(P.backwall){const bw=P.backwall,[a,b]=bw.pts,t=bw.t,old=std({color:'#cdc4b3',
     if(fl===1)cyl((x1+x2)/2,y1+6,NBZ+13.5,NBZ+18,2.3,std({color:'#1f2124',roughness:0.6}),{tip:'Black water tank (house behind)'})}
   // their compound walls along the side boundaries behind ours
   for(const x of [1.0,21.0]) box(x-0.19,x+0.19,backY(x)+0.05,backY(x)+3.0,NBZ,NBZ+6,old,{tip:'Compound wall of the houses behind (existing)'});}
-// back flower bed FU-73: 1'6" deep along BW-09, 9" brick kerb, red soil; a row of Tamil Nadu flowering plants; clothes line FU-75
+// back flower bed FU-73: 1'6" deep along BW-09, 9" brick kerb, red soil; a row of Tamil Nadu flowering plants; clothes drying rack FU-75 (in the bore court)
 {const fb=fuG['FU-73'],x1=fb.x1,x2=fb.x2,iy=x=>backY(x)-0.375,KZ=GRD+0.75;
  const kerb=std({color:'#a8553a',roughness:0.9}),soil=std({color:'#7a3f26',roughness:1});
  prism([[x1,iy(x1)],[x2,iy(x2)],[x2,iy(x2)-1.5],[x1,iy(x1)-1.5]],GRD,KZ-0.12,soil,`FU-73 · ${fb.name} · red soil · ${fb.note}`);
@@ -1308,10 +1308,11 @@ if(P.backwall){const bw=P.backwall,[a,b]=bw.pts,t=bw.t,old=std({color:'#cdc4b3',
  for(const pl of (P.plants||[])){const sp=TN_PLANTS[pl.type];if(!sp)continue;const g=createTNPlant(THREE,mergeGeometries,{type:pl.type,seed:+pl.id.slice(3)});
    g.position.set(mx(pl.x),m(KZ-0.12),m(pl.y));g.rotation.y=+pl.id.slice(3)*1.7;scene.add(g);
    g.traverse(o=>{if(o.isMesh){o.userData.keepUV=true;named(o,`${pl.id} · ${sp.name} · ${sp.note}`)}})}
- // clothes line: two black MS posts with T-arms and three wires
- const cl=fuG['FU-75'],cyy=(cl.y1+cl.y2)/2,tc=`FU-75 · Clothes drying line · ${cl.note}`;
- for(const x of [cl.x1,cl.x2]){box(x-0.06,x+0.06,cyy-0.06,cyy+0.06,GRD,GRD+6,MAT.blackMetal,{tip:tc});box(x-0.04,x+0.04,cyy-0.6,cyy+0.6,GRD+5.9,GRD+6.0,MAT.blackMetal,{tip:tc})}
- for(const dy of [-0.5,0,0.5]) box(cl.x1,cl.x2,cyy+dy-0.012,cyy+dy+0.012,GRD+5.95,GRD+5.975,MAT.steel,{cast:false,tip:tc});}
+ // clothes drying rack FU-75: ceiling pulley rack in the bore court (5 steel rods, end bars, ropes up to pulleys under the slab)
+ const cl=fuG['FU-75'],tc=`FU-75 · ${cl.name} · ${cl.note}`,RZ8=8.0,SZ=CEIL+0.02;
+ for(let i=0;i<5;i++){const x=cl.x1+0.15+(cl.x2-cl.x1-0.3)*i/4;box(x-0.03,x+0.03,cl.y1,cl.y2,RZ8,RZ8+0.06,MAT.steel,{tip:tc})}
+ for(const y of [cl.y1+0.3,cl.y2-0.3]){box(cl.x1,cl.x2,y-0.06,y+0.06,RZ8+0.06,RZ8+0.14,MAT.blackMetal,{tip:tc});box((cl.x1+cl.x2)/2-0.02,(cl.x1+cl.x2)/2+0.02,y-0.02,y+0.02,RZ8+0.14,SZ-0.12,std({color:'#e8e2d6',roughness:0.9}),{cast:false,tip:tc+' · rope'});
+   box((cl.x1+cl.x2)/2-0.15,(cl.x1+cl.x2)/2+0.15,y-0.12,y+0.12,SZ-0.12,SZ,MAT.blackMetal,{tip:tc+' · ceiling pulley'})}}
 // garden plan GD-01 to GD-11 (model.py GARDEN): CC0 plants from Poly Haven (assets/plants, see 3d/ASSETS.md) and code-made ones (models/garden-plants.js, tn-plants.js)
 {const GD=P.garden||[],GN=P.gardenNames||{};
  const terra=std({color:'#b5643a',roughness:0.9}),soilG=std({color:'#4a2f1e',roughness:1}),brick=std({color:'#a8553a',roughness:0.9}),granite=std({color:'#8a8d90',roughness:0.85}),

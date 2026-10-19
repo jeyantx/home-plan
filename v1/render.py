@@ -533,6 +533,9 @@ def draw_furniture(fl,_late=False):
             E(f'<polygon points="{pts(q)}" fill="#b98a62" stroke="#6b4a2a" stroke-width="0.05"/>')
         elif k=='tulsi':
             R_(x1,x2,y1,y2,'#efe6d2','#8a6a3a',0.05); a=S((x1+x2)/2,(y1+y2)/2); E(f'<circle cx="{a[0]:.3f}" cy="{a[1]:.3f}" r="0.45" fill="#3f6a32"/>')
+        elif k=='airer':
+            R_(x1,x2,y1,y2,'none','#555',0.03,extra='stroke-dasharray="0.2 0.12"')
+            for i in range(5): xx=x1+0.15+(x2-x1-0.3)*i/4; line(xx,y1+0.1,xx,y2-0.1,'#777',0.02)
         elif k=='cline':
             for xx in (x1,x2): a=S(xx,(y1+y2)/2); E(f'<rect x="{a[0]-0.12:.3f}" y="{a[1]-0.3:.3f}" width="0.24" height="0.6" fill="#222"/>')
             for dy in (-0.2,0,0.2): line(x1,(y1+y2)/2+dy,x2,(y1+y2)/2+dy,'#555',0.025)

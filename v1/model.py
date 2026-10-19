@@ -129,7 +129,7 @@ BRANCH_NOTES='''<section class="ask"><h2>Garden plan (branch garden-v1, for revi
 <li><b>Porch (shade):</b> areca palm GD-01 in a big pot beside the main door, anthurium GD-02 and syngonium GD-03 in pots on the sides, clear of the walk from the steps to the door.</li>
 <li><b>Side passage:</b> six slim wall pots GD-04 (ferns, or money plant) on BW-01, opposite the living-room windows: a green view from the sofa. They stick out only 7" at 4'9" up, so the 2'4" passage stays clear.</li>
 <li><b>Side garden (about 5 hours of midday sun):</b> on the east wall: climbing jasmine (mullai) GD-05 opposite the garden door, dwarf banana GD-06 (fed with rinse water from the utility basin), a raised vegetable bed GD-07 (tomato, brinjal, chilli, keerai) and a drumstick tree GD-08 in the south-east corner. A small herb bed GD-09 (mint, ajwain leaf, coriander, vallarai) and two aloe pots GD-10 south of the house corner.</li>
-<li><b>Back garden:</b> kept open for the clothes line and the wash platform; only a lemon tree in a big pot GD-11 in the open south-west corner, by the wash platform and its tap.</li>
+<li><b>Back garden:</b> kept open round the wash platform; only a lemon tree in a big pot GD-11 in the open south-west corner, by the wash platform and its tap.</li>
 <li><b>Kept clear:</b> nothing over the septic tank, soak pit or sump (all at the front, under the paving); 3' or more round the bore chambers BR-01 and BR-02 for the rig; the D-05 step, the utility platform, the AC unit FU-47 and the recharge pit UG-04 stay open. No coconut, mango or other big tree: no spot is 10' from the house and the walls, and coconuts falling on the path are dangerous. The drumstick is the only tree; cut it back to about 8' after each crop.</li>
 <li><b>Watering:</b> a hose from the low tap of the utility basin FU-30 and the back tap FU-55; a simple drip line with a timer for the vegetable and herb beds; mulch (dry leaves) on all beds to keep the soil cool in summer. Beds are raised 1' so monsoon rain drains away.</li>
 <li><b>Plant list:</b> GD-01 Areca palm · GD-02 Anthurium · GD-03 Syngonium · GD-04 Ferns (wall pots) · GD-05 Mullai (climbing jasmine) · GD-06 Banana (dwarf) · GD-07 Vegetables: tomato, brinjal, chilli, keerai · GD-08 Drumstick (PKM-1) · GD-09 Herbs: mint, ajwain leaf, coriander, vallarai · GD-10 Aloe vera · GD-11 Lemon.</li>
@@ -202,7 +202,7 @@ BRANCH_NOTES='''<section class="ask"><h2>Garden plan (branch garden-v1, for revi
 <ol>
 <li><b>BW-09 back wall</b> (existing, of the houses behind) now shown in 3D, with the houses behind it.</li>
 <li><b>Flower bed FU-73</b>, 1'6" deep, all along the back wall, 9" brick kerb. A row of 12 plants common in Tamil Nadu homes, east to west: Sembaruthi (red hibiscus), Malli (jasmine), Kanakambaram (orange crossandra), Nandiyavattai (white crape jasmine), Nithya kalyani (pink periwinkle), Karuveppilai (curry leaf), Malli, Vetchi / Idly poo (red ixora), Rose, Kanakambaram, Nithya kalyani, Sembaruthi. Tall ones at the ends, low ones in between.</li>
-<li><b>Clothes line FU-75</b> in the back garden.</li>
+<li><b>Clothes drying rack FU-75</b>: a ceiling pulley rack in the bore court by BR-02, under the terrace slab, so clothes dry out of the rain and the floor stays clear for the bore rig.</li>
 </ol></section>
 <section class="ask"><h2>Toilet 2 re-planned (approved, from spiral-v1)</h2>
 <ol>
@@ -416,7 +416,7 @@ FURNITURE = [
  ('FU-55','G','Tap and wash platform',17.625,20.625,96.75,99.25,'washpad',None,'Back garden, paved, with floor drain'),
  ('FU-76','G','Tree well round the neem',10.5,15.0,2.5,7.0,'treepit',None,'Parking, 4\'6" across, centred 6" south of the trunk because the trunk leans south (it stays inside the ring up to the platform height): the trunk stays at today\'s ground; a low retaining ring, 4½" brick with a granite coping; about 10" of open soil with leaf mulch all round the 1\'6" trunk; small so the car can pass'),
  ('FU-73','G','Flower bed along the back wall',1.375,20.625,103.14,105.6,'fbed',None,'Back and side garden, 1\'6" deep all along the back wall BW-09, 9" brick kerb, red soil; a row of Tamil Nadu flowering plants PL-01 to PL-12'),
- ('FU-75','G','Clothes drying line',10.25,17.25,101.0,101.5,'cline',None,'Back garden, two black MS posts 6\' high with T-arms, 3 steel wires, 7\' long; clear of the back door D-10 and the wash platform'),
+ ('FU-75','G','Clothes drying rack, ceiling pulley',3.1,5.65,67.5,73.5,'airer',None,'Bore court G-16, next to BR-02: 5 steel rods 6\' long on a ceiling pulley under the terrace slab; lower it to 5\' to hang clothes, pull it up to 8\' to dry; under cover, so clothes dry in the monsoon too, and the floor stays clear for the bore rig (dashed)'),
  ('FU-56','G','Store under staircase 1',17.125,20.625,10.997,16.0,'store',None,'Parking, 3\'6" x 5\', under the high end of ST-1A (about 3\'3" high at the front, 6\'6" at the back); floor at the parking level; door 2\'6" x 3\'8" facing east at its north end (Y 12\' to 14\'6"), clear of the parked car; the low end of the stair is solid'),
 ]
 # door and window types (proposal)
