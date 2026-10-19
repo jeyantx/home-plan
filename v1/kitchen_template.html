@@ -147,10 +147,12 @@ function buildModule(m){const fr=frame(m),base=m.z1<1,isLoft=m.run==='Loft',up=m
   // L-shaped corner cupboards: the part with no door opens into the unit round the corner (bottom and shelves run right to the front there); the other unit leaves out its side panel at that end
   const e=0.003,iA=oa?uA+e:uA+T,iB=uB-T;if(!oa)fr.box(uA+e,uA+T,SH,D,zb0,zt,body,grp);fr.box(uB-T,uB-e,SH,D,zb0,zt,body,grp);fr.box(iA,iB,D-T,D,zb0+T,up?zt-T:zt,inner,grp);if(up)fr.box(iA,iB,SH,D,zt-T,zt,body,grp);
   const fa=Math.min(...m.fronts.map(f=>f.a)),fb=Math.max(...m.fronts.map(f=>f.b)),parts=m.shelfZ&&!oa?(fa>uA+0.05?[[iA,fa,0.003],[fa,iB,SH]]:[[iA,fb,SH],[fb,iB,0.003]]):[[iA,iB,SH]];
-  if(!m.noBottom)for(const [p,q,v] of parts)fr.box(p,q,v,D-T,zb0,zb0+T,inner,grp);
+  const lowB=base&&m.plinth!=null&&m.plinth<K.KPL,kv=SH+0.17;   // a unit with its bottom board lower than the plinth (K-02): the 4" kick board stays in line, the board sits behind it
+  if(!m.noBottom)for(const [p,q,v] of parts)fr.box(p,q,lowB?kv:v,D-T,zb0,zb0+T,inner,grp);
   for(let i=1;i<=(SHELVES[m.id]??0);i++){const z=zb0+(zt-zb0)*i/((SHELVES[m.id]??0)+1);fr.box(iA,iB,SH+0.06,D-T,z-0.03,z,inner,grp)}
   for(const z of m.shelfZ||[])for(const [p,q,v] of parts)fr.box(p,q,v===SH?SH+0.06:v,D-T,z-0.03,z,inner,grp);
-  if(base&&!m.noBottom)fr.box(oa?uA-SH-0.12:uA+e,uB-e,SH+0.12,D-0.01,m.z1,zb0-0.002,M.plinth,grp);
+  if(lowB){fr.box(uA+e,uB-e,SH+0.12,kv,m.z1,K.KPL-0.002,M.plinth,grp);fr.box(uA+e,uB-e,kv,D-0.01,m.z1,zb0-0.002,M.plinth,grp)}
+  else if(base&&!m.noBottom)fr.box(oa?uA-SH-0.12:uA+e,uB-e,SH+0.12,D-0.01,m.z1,zb0-0.002,M.plinth,grp);
   // worktop (the unit opening into a corner cupboard of the same height starts past that one's front edge, so the two tops do not overlap)
   if(base){const ztop=low?K.KLOW:bf?K.KBF+0.13:K.KCH;fr.box(oa?uA+0.08:uA,uB,-0.08,D,ztop-K.KTOP+0.002,ztop,M.granite,grp)}
   for(const f of m.fronts)buildFront(rec,f);
