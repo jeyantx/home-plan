@@ -40,7 +40,10 @@ ul{margin:0;padding-left:18px}li{margin:3px 0}
 .lab.dim{background:rgba(47,111,79,.92)}
 .lab.small{font-weight:500;font-size:9.5px;background:rgba(31,35,40,.7)}
 .nolab .lab{display:none}
-@media (max-width:760px){aside{width:100%;max-height:40vh;border-left:0;border-top:1px solid var(--line)}main{flex-direction:column}}
+@media (max-width:760px){aside{width:100%;max-height:40vh;border-left:0;border-top:1px solid var(--line)}main{flex-direction:column}
+ header{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding:6px 8px;gap:6px}header::-webkit-scrollbar{display:none}header>*{flex:none}h1{font-size:13.5px}.sp{margin-left:0}.btn,.seg button{padding:5px 8px;font-size:12.5px}#hint{display:none}}
+#mnote{position:absolute;left:8px;right:8px;top:8px;z-index:6;background:rgba(31,35,40,.9);color:#fff;font-size:13px;line-height:1.4;padding:9px 12px;border-radius:10px;display:none;gap:10px;align-items:center}
+#mnote button{margin-left:auto;border:0;border-radius:7px;padding:5px 12px;background:#5fb08a;color:#0d1a13;font-weight:650;flex:none}
 </style>
 <script type="importmap">{"imports":{"three":"./vendor/three/build/three.module.js","three/addons/":"./vendor/three/examples/jsm/"}}</script>
 </head><body>
@@ -54,7 +57,7 @@ ul{margin:0;padding-left:18px}li{margin:3px 0}
  <button class="btn sp" id="panelBtn" aria-pressed="true">Unit list</button>
 </header>
 <main>
- <div id="view"><div id="tip"></div><div id="hint">Click a door or drawer to open or close it · ↑↓ walk · ←→ turn · A/D step sideways · W/S look up/down · Q/E lower/raise · drag to turn round · scroll to zoom</div></div>
+ <div id="view"><div id="mnote"><span>For the best experience, open this on a desktop or laptop. On a phone: tap a door or drawer to open it, drag to turn, pinch to zoom.</span><button id="mnoteOk">OK</button></div><div id="tip"></div><div id="hint">Click a door or drawer to open or close it · ↑↓ walk · ←→ turn · A/D step sideways · W/S look up/down · Q/E lower/raise · drag to turn round · scroll to zoom</div></div>
  <aside id="panel"></aside>
 </main>
 <script>window.PLAN=__PLAN__;</script>
@@ -68,7 +71,9 @@ const MM=ft=>Math.round(ft*304.8),FI=ft=>{const i=Math.round(ft*12*2)/2;const f=
 const W=(X,Y,Z)=>new THREE.Vector3(-X*F,Z*F,Y*F);      // plan feet (X from the east boundary, Y from the road, Z height) to world metres
 // ---------------- renderer, scene, camera ----------------
 const view=document.getElementById('view');
-const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(2,devicePixelRatio));renderer.outputColorSpace=THREE.SRGBColorSpace;
+// phones and small tablets: a lighter view (no anti-aliasing, pixel ratio 1), the unit list starts closed, and a note to use a laptop (?lite=1 / ?lite=0 to force)
+const LITE=(()=>{const q=new URLSearchParams(location.search).get('lite');if(q==='1')return true;if(q==='0')return false;return matchMedia('(pointer:coarse)').matches&&Math.min(screen.width,screen.height)<900})();
+const renderer=new THREE.WebGLRenderer({antialias:!LITE,powerPreference:LITE?'low-power':'high-performance'});renderer.setPixelRatio(LITE?1:Math.min(2,devicePixelRatio));renderer.outputColorSpace=THREE.SRGBColorSpace;
 renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.05;renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;view.appendChild(renderer.domElement);
 const labels=new CSS2DRenderer();labels.domElement.style.position='absolute';labels.domElement.style.top='0';labels.domElement.style.pointerEvents='none';labels.domElement.style.overflow='hidden';view.appendChild(labels.domElement);
 const scene=new THREE.Scene();scene.background=new THREE.Color(matchMedia('(prefers-color-scheme: dark)').matches?'#1b1d20':'#ece9e3');
@@ -348,6 +353,9 @@ function select(id,openIt){panel.querySelectorAll('tr.mod').forEach(tr=>tr.class
     const c=rec.fr.toPlan((rec.fr.U0+rec.fr.U1)/2,rec.fr.D/2),zc=(rec.zb0+rec.zt)/2,o=rec.fr.toPlan((rec.fr.U0+rec.fr.U1)/2,-7.5);const rk=runKey(rec.m);fly={p0:camera.position.clone(),t0:controls.target.clone(),p1:unfoldedAt(rk,W(o[0],o[1],zc+2.6)),t1:unfoldedAt(rk,W(c[0],c[1],zc)),s:0}}
   const row=panel.querySelector(`tr[data-id="${id}"]`);if(row&&!openIt)row.scrollIntoView({block:'nearest',behavior:'smooth'})}
 const panelBtn=document.getElementById('panelBtn');panelBtn.onclick=()=>{const on=panelBtn.getAttribute('aria-pressed')!=='true';panelBtn.setAttribute('aria-pressed',on);panel.classList.toggle('off',!on);resize()};
+if(LITE||innerWidth<760){panelBtn.setAttribute('aria-pressed',false);panel.classList.add('off')}
+if(LITE){let seen=false;try{seen=sessionStorage.getItem('kt-mnote')==='1'}catch(e){}const mn=document.getElementById('mnote');if(!seen)mn.style.display='flex';
+  document.getElementById('mnoteOk').onclick=()=>{mn.style.display='none';try{sessionStorage.setItem('kt-mnote','1')}catch(e){}}}
 // ---------------- loop ----------------
 let frameRatio='fill';
 function resize(){const vw=view.clientWidth,vh=view.clientHeight;let w=vw,h=vh;if(frameRatio!=='fill'){const [a,b]=frameRatio.split(':').map(Number),r=a/b;w=Math.min(vw,vh*r);h=w/r}

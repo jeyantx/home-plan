@@ -281,6 +281,7 @@ main{{flex:1;min-height:0;position:relative}}
 .doc{{max-width:980px;margin:0 auto;padding:20px 16px 48px}}
 .doc section{{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin:0 0 14px}}
 .doc section.ask{{background:var(--chip)}}
+.doc section{{overflow-x:auto}}
 .doc h2{{font-size:15px;margin:0 0 8px}}
 .doc ul,.doc ol{{margin:0;padding-left:20px}}.doc li{{margin:4px 0}}
 .t{{width:100%;border-collapse:collapse;font-size:13px}}

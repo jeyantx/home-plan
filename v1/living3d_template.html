@@ -22,6 +22,14 @@ header .row.hidden{display:none}
 .seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);font-weight:600}
 .lbl{font-size:12px;color:var(--muted);margin-right:-6px}
 #view{flex:1;position:relative;min-height:0}
+#view canvas{touch-action:none}
+@media (max-width:760px){header{padding:5px 8px;gap:4px}header .row{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}header .row::-webkit-scrollbar{display:none}header .row>*{flex:none}.spacer{display:none}h1{font-size:14px}.seg button,.btn{padding:5px 8px;font-size:12.5px}}
+#pad{position:absolute;right:12px;bottom:14px;display:none;grid-template-columns:repeat(3,46px);grid-template-rows:repeat(2,46px);gap:6px;z-index:3;user-select:none;-webkit-user-select:none}
+#pad button{border:1px solid #0003;border-radius:12px;background:rgba(255,255,255,.82);font-size:20px;color:#1f2328;touch-action:none}
+#pad button:active{background:#d8e8dd}
+@media (pointer:coarse){#pad{display:grid}}
+#mnote{position:absolute;left:8px;right:8px;top:8px;z-index:4;background:rgba(31,35,40,.9);color:#fff;font-size:13px;line-height:1.4;padding:9px 12px;border-radius:10px;display:none;gap:10px;align-items:center}
+#mnote button{margin-left:auto;border:0;border-radius:7px;padding:5px 12px;background:#5fb08a;color:#0d1a13;font-weight:650;flex:none}
 canvas{display:block;width:100%;height:100%}
 #view>canvas{position:absolute;left:0;top:0}
 #view.framed{background:#3a3d41}
@@ -77,7 +85,7 @@ canvas{display:block;width:100%;height:100%}
   <span class="lbl">Lens</span><div class="seg" id="lensSeg"><button data-f="60" title="Eye-like lens">60°</button><button data-f="75" title="Wide lens">75°</button></div>
  </div>
 </header>
-<div id="view"><div id="loading"><div class="ld"><div id="ldText">Building the house…</div><div class="bar"><i id="ldBar"></i></div></div></div><div id="panel" class="hidden"></div><div id="status"></div><div id="tourCap"></div></div>
+<div id="view"><div id="mnote"><span>For the best experience, open this on a desktop or laptop. On a phone a lighter 3D view is shown.</span><button id="mnoteOk">OK</button></div><div id="pad" aria-label="Walk"><span></span><button data-k="ArrowUp" aria-label="Walk forward">▲</button><span></span><button data-k="ArrowLeft" aria-label="Turn left">◀</button><button data-k="ArrowDown" aria-label="Walk back">▼</button><button data-k="ArrowRight" aria-label="Turn right">▶</button></div><div id="loading"><div class="ld"><div id="ldText">Building the house…</div><div class="bar"><i id="ldBar"></i></div></div></div><div id="panel" class="hidden"></div><div id="status"></div><div id="tourCap"></div></div>
 </div>
 <div id="tip"></div>
 <script>window.PLAN=__PLAN__;</script>
@@ -109,7 +117,9 @@ const rampH=u=>{const L=RP.y_top-RP.y_crest,e=Math.min(RP.ease||0,L/2),H=PKZ-HUZ
 const zF=y=>y<=0?RDZ:y<RP.y_hump?RDZ+(HUZ-RDZ)*y/RP.y_hump:y<RP.y_crest?HUZ:y<RP.y_top?HUZ+rampH(y-RP.y_crest):PKZ;   // front drive profile
 const m=v=>v*F, mx=v=>-v*F;   // plan X grows toward the west = three -x, so the world is not mirrored
 const view=document.getElementById('view'), statusEl=document.getElementById('status');
-const renderer=new THREE.WebGLRenderer({antialias:true});
+// phones and small tablets get a lighter view: no anti-aliasing, smaller shadows, no ambient-occlusion pass, no car or bike models, no Photo (?lite=1 / ?lite=0 to force)
+const LITE=(()=>{const q=new URLSearchParams(location.search).get('lite');if(q==='1')return true;if(q==='0')return false;return matchMedia('(pointer:coarse)').matches&&Math.min(screen.width,screen.height)<900})();
+const renderer=new THREE.WebGLRenderer({antialias:!LITE,powerPreference:LITE?'low-power':'high-performance'});
 renderer.setPixelRatio(1);
 renderer.shadowMap.enabled=true; renderer.shadowMap.type=THREE.PCFShadowMap; renderer.shadowMap.autoUpdate=false; renderer.shadowMap.needsUpdate=true;
 renderer.toneMapping=THREE.ACESFilmicToneMapping; renderer.toneMappingExposure=1.0;
@@ -1487,7 +1497,7 @@ function placeBike(code){const o=bikeObjs[code];if(!o)return;const t=(P.bikes||[
   b.traverse(x=>{if(x.isMesh)named(x,`${code} · ${o.moto?'Motorcycle · Honda VFR800 (model by danielfc10, CC BY 3.0, Blend Swap), real size':'Scooter (downloaded model, sized to an Ather 450X)'} · ${ft(d.length)} long, ${ft(d.height)} high · along BW-01 · ${fac==='E'?'front to the east':fac==='S'?'front to the house (ridden in forward)':'front to the gate'}`)})}
 const SHOW_BIKES=false;   // the old code-made two-wheelers stay off; the downloaded models below are used
 const vehicleMeshes=[];
-{const [cx1,cx2,cy1,cy2]=P.car||[11.25,17.0,14.75,29.75];
+if(!LITE){const [cx1,cx2,cy1,cy2]=P.car||[11.25,17.0,14.75,29.75];
  loadCarGLB(THREE,GLTFLoader,'assets/vehicles/compact-car.glb?v=__BUILD__',{color:'#2f5d8c',length:4.561,bodyWidth:1.752,name:'Car'}).then(car=>{
    scene.add(car);window.__car=car;carAnim.car=car;setCarPose(...CAR_ROUTE.park,0,0);
    const d=car.userData.dims,ft=v=>{const i=Math.round(v/F*12);return `${Math.floor(i/12)}'${i%12}"`};
@@ -1524,7 +1534,7 @@ new HDRLoader().load('assets/hdri/kloofendal_48d_partly_cloudy_puresky_1k.hdr',t
 const pmrem=new THREE.PMREMGenerator(renderer);const roomEnv=pmrem.fromScene(new RoomEnvironment(),0.04).texture;
 scene.environment=roomEnv;
 const hemi=new THREE.HemisphereLight('#dfeaff','#b8a98f',0.5);scene.add(hemi);
-const sun=new THREE.DirectionalLight('#fff1dc',4.0);sun.castShadow=true;sun.shadow.mapSize.set(4096,4096);sun.shadow.bias=-0.0003;sun.shadow.normalBias=0.02;sun.shadow.radius=3;
+const sun=new THREE.DirectionalLight('#fff1dc',4.0);sun.castShadow=true;sun.shadow.mapSize.set(LITE?1024:4096,LITE?1024:4096);sun.shadow.bias=-0.0003;sun.shadow.normalBias=0.02;sun.shadow.radius=3;
 Object.assign(sun.shadow.camera,{left:-16,right:16,top:20,bottom:-20,near:1,far:120});   // covers the whole plot, front gate to back garden
 const target=new THREE.Object3D();target.position.set(mx(11),0,m(50));scene.add(target);sun.target=target;
 sun.position.set(mx(11)+9,48,m(50)+7);scene.add(sun);   // late-morning sun, high as in Tamil Nadu, from the east-south-east
@@ -1746,6 +1756,13 @@ document.querySelectorAll('#finishSeg button').forEach(x=>x.onclick=()=>setFinis
 // Keys: Up/Down walk · Left/Right turn · A/D slide · W/S tilt up/down · Q/E lower/raise · Shift faster
 // Mouse: drag = look around (camera stays put) · scroll = walk · right-drag = slide sideways / up-down
 const keys=new Set(), NAV=['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','KeyW','KeyS','KeyA','KeyD','KeyQ','KeyE','ShiftLeft','ShiftRight'];
+// touch arrows (phones and tablets): hold to walk forward or back, or to turn
+for(const b of document.querySelectorAll('#pad button')){const k=b.dataset.k,on=e=>{e.preventDefault();keys.add(k);invalidate()},off=()=>keys.delete(k);
+  b.addEventListener('pointerdown',on);for(const ev of ['pointerup','pointerleave','pointercancel'])b.addEventListener(ev,off)}
+// phone note, and the heavy parts left out in the light view
+if(LITE){for(const id of ['photoBtn','animBtn'])document.getElementById(id).style.display='none';
+  let seen=false;try{seen=sessionStorage.getItem('lr3d-mnote')==='1'}catch(e){}
+  const mn=document.getElementById('mnote');if(!seen)mn.style.display='flex';document.getElementById('mnoteOk').onclick=()=>{mn.style.display='none';try{sessionStorage.setItem('lr3d-mnote','1')}catch(e){}}}
 addEventListener('keydown',e=>{if(e.target.closest&&e.target.closest('input,textarea'))return;if(NAV.includes(e.code)){keys.add(e.code);if(e.code.startsWith('Arrow'))e.preventDefault()}});
 addEventListener('keyup',e=>keys.delete(e.code));addEventListener('blur',()=>keys.clear());
 const UP=new THREE.Vector3(0,1,0), colRay=new THREE.Raycaster();
@@ -1890,7 +1907,7 @@ renderer.setAnimationLoop(()=>{
     if(saveReq){doSave();saveReq=false} return}
   const now=performance.now();
   if(dirty){if(curLight!=='day')syncPool();renderer.render(scene,camera);dirty=false;lastChange=now;hqDone=false;}
-  else if(!hqDone&&now-lastChange>220){composer.render();hqDone=true;}
+  else if(!hqDone&&now-lastChange>220){if(!LITE)composer.render();hqDone=true;}
   if(saveReq&&hqDone){composer.render();doSave();saveReq=false}
 });
 window.__ready=true;window.__nav={cam:camera,scene,step:(n)=>{for(let i=0;i<n;i++)tryMove(fwdVec().multiplyScalar(0.05))}};
