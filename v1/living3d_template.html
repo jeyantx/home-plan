@@ -236,7 +236,7 @@ function metreUV(geo){const p=geo.attributes.position,n=geo.attributes.normal;if
 const roomsG=Object.fromEntries(P.rooms.G.map(r=>[r.id,r]));
 const fuG=Object.fromEntries(P.furniture.filter(f=>f.fl==='G').map(f=>[f.id,f])), fuG2=Object.fromEntries(P.furniture.filter(f=>f.fl==='F').map(f=>[f.id,f]));
 const COMMON=new Set(['G-03','G-04','G-09','G-10','G-05','G-06','G-08','G-12']);   // oak-look floor; toilet 1 has its own tiles
-const LX1=3.5,LX2=20.25,LY1=46.75,LY2=58.75;
+const LX1=3.5,LX2=20.25,LY1=46.75,LY2=58.25;
 
 // ---------------- walls with openings ----------------
 const floorOpen=t=>['door','double','arch','frame'].includes(t);
@@ -377,7 +377,7 @@ for(const [a,b,c,d,z] of [[-30,0,0,130,NBZ],[21,60,0,130,NBZ],[0,21,106,130,NBZ]
 // our plot, filled up: gardens, side passage and back yard at GRD (2'6" above the road); the drive in front is built further down
 prism([[0.375,30.8],[2.75,30.8],[2.75,33.3],[20.625,33.3],[20.625,104.65],[1.375,105.6],[1.375,89.375],[0.375,89.375]],NBZ-0.05,GRD-0.004,MAT.grass,null);   // starts behind the porch steps, the plinth and the side-passage step, so no faces overlap
 box(0.375,2.75,30.75,75.125,-1.0,-0.97,MAT.paving,{cast:false,tip:'G-13 Side passage'});
-box(2.75,6.0,67.125,73.875,-1.0,-0.97,MAT.paving,{cast:false,tip:'G-16 Bore court · covered by the terrace slab, open to the side passage'});
+box(2.75,6.0,67.375,73.875,-1.0,-0.97,MAT.paving,{cast:false,tip:'G-16 Bore court · covered by the terrace slab, open to the side passage'});
 // neighbours, from the site photos: east = 2-storey house (pale green ground floor, lavender upper floor); west = blue apartment with a peach ground floor;
 // across the 17' road = a row of 2-storey houses with black water tanks on the roofs
 {const nb=(c)=>std({color:c,roughness:0.95}),win=std({color:'#2b2e31',roughness:0.4}),G=NBZ;
@@ -481,7 +481,7 @@ box(s2.x2-1.3,s2.x2-0.35,s2.y2-1.35,s2.y2-0.85,1.42,2.3,cushMat('#efe6d6'),{roun
  cyl(f.x1+1.1,f.y1+0.9,1.31,1.58,0.24,std({color:'#e7e1d6',roughness:0.45}),{tip:'Ceramic bowl',rTop:0.34});
  box(f.x2-1.1,f.x2-0.35,f.y2-1.2,f.y2-0.45,1.31,1.37,std({color:'#5f5a52',roughness:0.8}),{tip:'Books'});}
 {// two-tone rug: sofa-seat brown centre, dark-brown border; jute weave texture
- const rx1=6.0,rx2=11.6,ry1=49.5,ry2=56.1, W=rx2-rx1, H=ry2-ry1;
+ const rx1=6.0,rx2=11.6,ry1=49.0,ry2=55.6, W=rx2-rx1, H=ry2-ry1;
  const t=canvasTex(1024,Math.round(1024*H/W),(g,w,h)=>{const r=rng(77),b=Math.round(w*0.077);
    g.fillStyle='#6e4a32';g.fillRect(0,0,w,h);                                   // border: dark brown
    g.fillStyle='#b49a80';g.fillRect(b,b,w-2*b,h-2*b);                           // centre: sofa-seat brown
@@ -508,7 +508,7 @@ function addPlant(px,py,hM,seed,tip){
   const mat=c.material.clone();mat.vertexColors=true;const lm=new THREE.Mesh(g,mat);lm.name=c.name;lm.userData.tip=c.userData.tip;lm.castShadow=lm.receiveShadow=true;
   plant.remove(c);plant.add(lm)});
  scene.add(plant);plant.traverse(o=>{if(o.isMesh){o.userData.keepUV=true;named(o,tip)}})}
-addPlant(11.3,57.45,1.5,1,'Bamboo plant in black pot · 5 ft');
+addPlant(11.3,56.95,1.5,1,'Bamboo plant in black pot · 5 ft');
 // sheer curtains: ripple-fold pleats on a ceiling track hung from the band
 function curtain(y1,y2,xp=LX1+0.42,top=BZ,trackTip='Curtain track',axis='y',mat=null,ctip=null){   // axis 'y': wall along plan y at x=xp; 'x': wall along plan x at y=xp
   const w=y2-y1,h=top-0.12,segW=Math.round(w*14),segH=24;
@@ -768,30 +768,30 @@ function cabRun(id,what,x1,x2,y1,y2,z1,z2,face,segs,mat,plinth){
         const col=[['#8a5a2b','#6b4423'],['#8e3b5a','#efe6d2'],['#e8c33a']][k11.rows.indexOf(k11.rows.find(r=>r[0]===z))][i],r=n===1?0.09:0.1,R=rng(Math.round(z*100)+i);
         for(let k=0;k<6;k++){const uu=p+r+R()*(q-p-2*r),vv=v0+r+0.03+R()*(v1-v0-2*r-0.06),c=face==='y+'?[uu,y2-vv]:face==='y-'?[uu,y1+vv]:face==='x+'?[x2-vv,uu]:[x1+vv,uu];cyl(c[0],c[1],z+0.015,z+0.015+r*1.7,r,std({color:col,roughness:0.6}),{tip:bt,rTop:r*0.6,seg:12})}}}}   // corner door part hinged to the cabinet: its handle is on the folding part
     else{panel(a+g,b-g,fz1,fz2);handle(a,b,hz)}}}
-{const X1=3.5,ky2=66.375,bY=64.375,W06=P.openings.find(o=>o.id==='W-06');
+{const X1=3.5,ky2=66.625,bY=64.625,W06=P.openings.find(o=>o.id==='W-06');
  // base cabinets: east run FU-15 on GW-01 (front faces +x), back run FU-16 on GW-14 (front faces -y); both corners are L-shaped corner cupboards (K-01A/B, K-03A/B)
- cabRun('FU-15','Base cabinets, east',X1,5.5,59.125,61.625,0,KCH-KTOP,'x+',[[60.375,61.625,'plain']],MAT.kLow,true);   // K-01A, north corner cupboard
+ cabRun('FU-15','Base cabinets, east',X1,5.5,58.625,61.625,0,KCH-KTOP,'x+',[[59.875,61.625,'plain']],MAT.kLow,true);   // K-01A, north corner cupboard
  cabRun('FU-15','Base cabinets, east · gas cylinder unit',X1,5.5,61.625,63.125,0,KCH-KTOP,'x+',[[61.625,63.125,'door']],MAT.kLow,true);   // K-02: door and kick board in line with the others; inside, the bottom board is on a low 2" base (29½" clear)
  cabRun('FU-15','Base cabinets, east',X1,5.5,63.125,ky2,0,KCH-KTOP,'x+',[[63.125,bY,'plain']],MAT.kLow,true);   // K-03A, south corner cupboard
  cabRun('FU-16','Base cabinets, back',5.5,8.6,bY,ky2,0,KCH-KTOP,'y-',[[5.5,6.45,'door'],[6.45,8.6,'door2']],MAT.kLow,true);   // K-03B corner cupboard door, K-04 sink unit
  const LOW=2.0;cabRun('FU-16.2','Low counter, wet grinder and water',8.6,12.125,bY,ky2,0,LOW-KTOP,'y-',[[8.6,9.875,'door'],[9.875,12.125,'drawers2']],MAT.kLow,true);   // K-05 water pots, K-06 rice and atta drawers
  box(8.6,12.125,bY-0.06,ky2,LOW-KTOP,LOW,MAT.kTop,{tip:'FU-16.2 · Low counter top, 2\' from the floor'});
- box(X1,5.56,59.125,ky2,KCH-KTOP,KCH,MAT.kTop,{tip:'Counter top, 40 mm, east run'});box(5.56,8.6,bY-0.06,ky2,KCH-KTOP,KCH,MAT.kTop,{tip:'Counter top, 40 mm, back run'});
+ box(X1,5.56,58.625,ky2,KCH-KTOP,KCH,MAT.kTop,{tip:'Counter top, 40 mm, east run'});box(5.56,8.6,bY-0.06,ky2,KCH-KTOP,KCH,MAT.kTop,{tip:'Counter top, 40 mm, back run'});
  // wall cabinets FU-19 (GW-14), FU-19.2 and FU-19.3 (GW-01, either side of W-06)
  cabRun('FU-19','Wall cabinets, back',4.69,8.25,ky2-1.25,ky2-0.012,P.kitchen.KUP1R,UPZ2,'y-',[[4.75,6.5,'door'],[6.5,8.25,'door']],MAT.kUp,false);   // K-12 spices and K-13 dish drainer, both from 5'3"; the RO purifier takes K-14's place
  cabRun('FU-19.2','Wall cabinets, east corner',X1+0.012,4.75,65.0,ky2-0.012,P.kitchen.KUP1R,UPZ2,'x+',[],MAT.kUp,false);   // blind corner behind FU-19
- cabRun('FU-19.3','Wall cabinets, east',X1+0.012,4.75,59.137,61.0,UPZ1,UPZ2,'x+',[[59.137,61.0,'glass']],MAT.kUp,false);
+ cabRun('FU-19.3','Wall cabinets, east',X1+0.012,4.75,58.637,61.0,UPZ1,UPZ2,'x+',[[58.637,61.0,'glass']],MAT.kUp,false);
  // top row to the ceiling (FU-68 on GW-14, FU-69 on GW-01, right across above the window and chimney), with a black shadow line under it
  const TZ1=UPZ2+0.05,TZ2=CEIL-0.012;
  cabRun('FU-68','Top storage, back',4.69,12.125,ky2-1.25,ky2-0.012,TZ1,TZ2,'y-',[[4.75,6.5,'door'],[6.5,8.25,'door'],[8.25,9.875,'door'],[9.875,11.0,'door'],[11.0,12.125,'door']],MAT.kUp,false);   // K-16 and K-18 (over the RO and wet grinder)
- cabRun('FU-69','Top storage, east',X1+0.012,4.75,59.137,62.15,TZ1,TZ2,'x+',[[59.137,60.65,'door'],[60.65,62.15,'door']],MAT.kUp,false);   // K-17A
+ cabRun('FU-69','Top storage, east',X1+0.012,4.75,58.637,62.15,TZ1,TZ2,'x+',[[58.637,60.4,'door'],[60.4,62.15,'door']],MAT.kUp,false);   // K-17A
  cabRun('FU-69','Top storage, east',X1+0.012,4.75,62.15,ky2-0.012,TZ1,TZ2,'x+',[[62.15,63.15,'door'],[63.15,65.0,'door']],MAT.kUp,false);   // K-17C over the chimney, K-17B
- box(X1+0.012,4.6,59.137,ky2-0.012,UPZ2,TZ1,MAT.blackMetal,{cast:false,tip:'Shadow line, black'});box(4.6,12.05,ky2-1.125,ky2-0.012,UPZ2,TZ1,MAT.blackMetal,{cast:false,tip:'Shadow line, black'});
- for(const [a,b,c,d] of [[4.6,4.66,59.3,60.85],[4.6,4.66,65.15,66.3],[4.9,8.1,ky2-1.125,ky2-1.065]]) ledStrips.push(box(a,b,c,d,UPZ1-0.03,UPZ1,MAT.led,{cast:false,tip:'LED strip under the wall cabinets'}));
+ box(X1+0.012,4.6,58.637,ky2-0.012,UPZ2,TZ1,MAT.blackMetal,{cast:false,tip:'Shadow line, black'});box(4.6,12.05,ky2-1.125,ky2-0.012,UPZ2,TZ1,MAT.blackMetal,{cast:false,tip:'Shadow line, black'});
+ for(const [a,b,c,d] of [[4.6,4.66,58.8,60.85],[4.6,4.66,65.15,66.55],[4.9,8.1,ky2-1.125,ky2-1.065]]) ledStrips.push(box(a,b,c,d,UPZ1-0.03,UPZ1,MAT.led,{cast:false,tip:'LED strip under the wall cabinets'}));
  const ul=new THREE.PointLight('#ffd7a3',0,m(9),2);ul.position.set(mx(6.0),m(4.2),m(65.0));scene.add(ul);towerLights.push(ul);
  // backsplash: cream 3" x 12" ceramic tiles between counter and wall cabinets; below the W-06 sill
  const st='Backsplash · cream 3" x 12" glazed tiles';
- tile(X1,X1+0.03,59.137,61.0,KCH,UPZ1,MAT.kSplash,st);tile(X1,X1+0.03,61.0,65.0,KCH,W06.sill,MAT.kSplash,st);tile(X1,X1+0.03,61.0,65.0,W06.sill+W06.h,UPZ2,MAT.kSplash,st);tile(X1,X1+0.03,65.0,ky2-0.042,KCH,UPZ1,MAT.kSplash,st);
+ tile(X1,X1+0.03,58.637,61.0,KCH,UPZ1,MAT.kSplash,st);tile(X1,X1+0.03,61.0,65.0,KCH,W06.sill,MAT.kSplash,st);tile(X1,X1+0.03,61.0,65.0,W06.sill+W06.h,UPZ2,MAT.kSplash,st);tile(X1,X1+0.03,65.0,ky2-0.042,KCH,UPZ1,MAT.kSplash,st);
  tile(X1+0.042,8.6,ky2-0.03,ky2,KCH,UPZ1,MAT.kSplash,st);tile(8.6,12.125,ky2-0.03,ky2,LOW,UPZ1,MAT.kSplash,st);
  // hob FU-52 under W-06; chimney hood at the standard 2'6" above the counter, just above the lowered window head, ducted straight out through GW-01
  const h=fuG['FU-52'],ht=`FU-52 · ${h.name} · ${h.note}`;placeAppliance('assets/appliances/cooktop.glb',(h.x1+h.x2)/2,(h.y1+h.y2)/2,KCH,-Math.PI/2,cookMat,ht);   // front to the west, length along the east run
@@ -841,7 +841,7 @@ function setFinish(k){if(!KT[k])k='KT-1';const o=KT[k];finishMat(MAT.kLow,o.low)
 
 
 // ================= TOILET 2 (G-11), 5' x 6'4½": shower across the north end, Indian WC on a 3'6" (east-west) x 2'6" platform in the south-east corner, basin on GW-06 by the door =================
-{const X1=6.75,X2=11.75,Y1=66.75,Y2=73.125,c=0.04,e=0.012,TZ=7.0,tw='Wall tile · greige matte porcelain, 2\' x 1\', to 7\'',v2=P.openings.find(o=>o.id==='V-02'),dr=P.openings.find(o=>o.id==='D-04');
+{const X1=6.75,X2=11.75,Y1=67.0,Y2=73.125,c=0.04,e=0.012,TZ=7.0,tw='Wall tile · greige matte porcelain, 2\' x 1\', to 7\'',v2=P.openings.find(o=>o.id==='V-02'),dr=P.openings.find(o=>o.id==='D-04');
  tile(X1,X2,Y1,Y1+c,0,TZ,MAT.tWall,tw);tile(X1,X2,Y2-c,Y2,0,TZ,MAT.tWall,tw);
  tile(X1,X1+c,Y1+c+e,v2.a,0,TZ,MAT.tWall,tw);tile(X1,X1+c,v2.a,v2.b,0,v2.sill,MAT.tWall,tw);tile(X1,X1+c,v2.b,Y2-c-e,0,TZ,MAT.tWall,tw);
  tile(X2-c,X2,Y1+c+e,dr.a,0,TZ,MAT.tWall,tw);tile(X2-c,X2,dr.b,Y2-c-e,0,TZ,MAT.tWall,tw);
@@ -1096,7 +1096,7 @@ for(const c of P.columns) if(!inWallG(c)){const me=box(c.x1,c.x2,c.y1,c.y2,c.y1<
    if(x2-x1>0.05&&y2-y1>0.05) box(x1+0.006,x2-0.006,y1+0.006,y2-0.006,SLB-1.08,SLB+0.01,MAT.white,{tip:`${b.id} · Beam 9" x ${b.depth} · ${b.note}`})}}
 // ground: house plinth, porch with 3 steps, parking pavers, road
 const PSY=P.porchY||30.75,PFY=PSY+2.5;   // porch steps start, porch floor start
-for(const [a,b,c,d] of [[8.25,21,30.75,33.25],[8.25,21,33.25,67.125],[2.75,8.25,PFY,67.125],[6.0,21,67.125,73.875],[9.5,21,73.875,95.125],[2.75,3.5,31.762,PFY]].filter(r=>r[3]>r[2]+0.01)) box(a,b,c,d,c<31.8?PKZ:GRD,-0.03,MAT.extBase,{cast:false,tip:'Plinth band · textured paint (or stone cladding) in the base colour'});
+for(const [a,b,c,d] of [[8.25,21,30.75,33.25],[8.25,21,33.25,67.375],[2.75,8.25,PFY,67.375],[6.0,21,67.375,73.875],[9.5,21,73.875,95.125],[2.75,3.5,31.762,PFY]].filter(r=>r[3]>r[2]+0.01)) box(a,b,c,d,c<31.8?PKZ:GRD,-0.03,MAT.extBase,{cast:false,tip:'Plinth band · textured paint (or stone cladding) in the base colour'});
 slab([[2.75,PFY],[8.5,PFY],[8.5,40.5],[2.75,40.5]],MAT.otherFloor,0,'G-02 · Porch floor');
 if(PSY>30.76) box(3.5,8.25,30.75,PSY,PKZ-0.2,PKZ+0.03,MAT.parkTile,{cast:false,tip:`G-01 · Parking bay in front of the porch steps, ${Math.round((PSY-30.75)*12)}" deep · grey pavers`});
 for(let i=0;i<3;i++) box(3.5,8.25,PSY+i*0.833,PFY,PKZ,PKZ+(i+1)*(-PKZ/3),MAT.stepStone,{tip:`Porch steps, granite, ${Math.round(-PKZ/3*12)}" risers, from the parking`});
@@ -1412,7 +1412,7 @@ function vfrMats(){const P=(c,o={})=>new THREE.MeshPhysicalMaterial({color:c,rou
     redplastic:redl,red:redl,green:P('#1f9e3a'),whiteplastic:white,Material:screen,'Material.006':white,'Material.007':white,'':blk};
   return new Proxy(m,{get:(t,k)=>k in t?t[k]:blk})}
 // washing machine FU-29 in the bore court, under the drying rack FU-75: back to GW-17, front to the south; tap, socket and drain through GW-17 from the kitchen side
-{const wm=fuG['FU-29'];if(wm){const t=`${wm.id} · ${wm.name} · ${wm.note}`,CZ=-0.97,cx=(wm.x1+wm.x2)/2,cy=(wm.y1+wm.y2)/2,Y0=67.125,chrome=std({color:'#e3e6e9',roughness:0.12,metalness:1});
+{const wm=fuG['FU-29'];if(wm){const t=`${wm.id} · ${wm.name} · ${wm.note}`,CZ=-0.97,cx=(wm.x1+wm.x2)/2,cy=(wm.y1+wm.y2)/2,Y0=67.375,chrome=std({color:'#e3e6e9',roughness:0.12,metalness:1});
   placeAppliance('assets/appliances/washing-machine.glb',cx,cy,CZ,0,wmMat,t);   // front to the south, toward BR-02
   box(wm.x2-0.45,wm.x2-0.33,Y0,Y0+0.14,CZ+3.55,CZ+3.62,chrome,{tip:`${wm.id} · washing machine tap (angle valve) on GW-17`});
   box(wm.x1+0.1,wm.x1+0.45,Y0,Y0+0.1,CZ+3.4,CZ+3.75,std({color:'#e4e4e0',roughness:0.5}),{tip:`${wm.id} · switch socket with a flip cover`});
@@ -1604,7 +1604,7 @@ function applyLight(mode){const day=mode==='day';curLight=mode;
 // level eye-height views: vertical lines stay vertical, like an interior photo
 const VIEWS=[
  {p:[7.0,EYE,47.3],t:[19.0,EYE,56.0]},    // entry, from the foyer
- {p:[18.3,EYE,58.2],t:[5.0,EYE,47.6]},    // corner by the arch, looking at sofa, windows and foyer
+ {p:[18.3,EYE,57.7],t:[5.0,EYE,47.6]},    // corner by the arch, looking at sofa, windows and foyer
  {p:[4.9,3.7,53.2],t:[19.5,3.9,52.75]},   // seated on the 3-seater, looking at the TV wall
  {p:[18.2,EYE,47.6],t:[4.0,EYE,57.0]},    // from the TV wall corner
  {p:[16.0,EYE,66.0],t:[11.8,EYE,50.0]},   // from the open area through the arch
@@ -1789,7 +1789,7 @@ function tourPlan(){const E=EYE,S2=P.spiral,cx=S2.c[0],cy=S2.c[1],sR=FFZ/(S2.n||
   look(14,22,PKZ+2.5,3,70);p(8.2,20.0,PKZ+E);p(7.6,28.0,PKZ+E);p(6.3,31.8,PKZ+E,'Porch');
   p(6.2,34.0,PKZ+E+0.75);p(6.2,36.3,E);p(6.2,40.9,E,'Main door');p(6.0,44.0,E,'Foyer');
   p(8.5,47.8,E);p(12.6,50.5,E,'Living room');look(19.5,52.5,4.6,5,140);
-  p(14.6,55.8,E);p(15.75,58.9,E,'Open area (future dining)');p(15.6,61.6,E);
+  p(14.6,55.8,E);p(15.75,58.4,E,'Open area (future dining)');p(15.6,61.6,E);
   p(13.6,62.4,E);p(10.2,62.3,E,'Kitchen');look(5.0,63.5,4.4,4,110);
   p(13.0,62.6,E);p(15.2,64.8,E);p(14.6,68.6,E,'Stair hall');p(13.0,72.8,E);p(12.4,76.5,E);p(12.3,79.6,E);
   p(12.3,81.6,E,'Bedroom 2');p(12.0,86.0,E);p(12.2,91.3,E);look(15.0,95.0,4.2,5,120,'Picture window W-08');

@@ -106,18 +106,18 @@ function frame(m){const f=m.face;
   return {toPlan,D,U0,U1,out,along,box:(u1,u2,v1,v2,z1,z2,mat,parent)=>{const [Xa,Ya]=toPlan(u1,v1),[Xb,Yb]=toPlan(u2,v2);return boxW(Xa,Xb,Ya,Yb,z1,z2,mat,parent)}}}
 // ---------------- room: floor, the two walls behind the units, the low wall under the folding window, backsplash ----------------
 const room=new THREE.Group();scene.add(room);
-boxW(-6.5,23.5,58.9,67.2,-0.1,0,M.floor,room);
+boxW(-6.5,23.5,58.4,67.45,-0.1,0,M.floor,room);
 const wallsG=new THREE.Group();   // walls left out so every unit can be seen
 {const w6=P.openings.find(o=>o.id==='W-06'),w12=P.openings.find(o=>o.id==='W-12'),H=10.0;
  // east wall GW-01 with window W-06
- boxW(2.95,3.5,58.75,61.0,0,H,M.wall,wallsG);boxW(2.95,3.5,65.0,66.75,0,H,M.wall,wallsG);boxW(2.95,3.5,61.0,65.0,0,w6.sill,M.wall,wallsG);boxW(2.95,3.5,61.0,65.0,w6.sill+w6.h,H,M.wall,wallsG);
+ boxW(2.95,3.5,58.25,61.0,0,H,M.wall,wallsG);boxW(2.95,3.5,65.0,67.0,0,H,M.wall,wallsG);boxW(2.95,3.5,61.0,65.0,0,w6.sill,M.wall,wallsG);boxW(2.95,3.5,61.0,65.0,w6.sill+w6.h,H,M.wall,wallsG);
  boxW(3.1,3.2,61.0,65.0,w6.sill,w6.sill+w6.h,M.glass,wallsG);
  // back wall (GW-17 / GW-14) and the low part of GW-13 under the folding window
- boxW(3.5,13.5,66.375,66.95,0,H,M.wall,wallsG);
- boxW(3.5,13.5,58.75,59.125,0,w12.sill,M.wall,wallsG);boxW(11.5,13.5,58.75,59.125,w12.sill,H,M.wall,wallsG);boxW(3.5,5.5,58.75,59.125,w12.sill,H,M.wall,wallsG);
+ boxW(3.5,13.5,66.625,67.2,0,H,M.wall,wallsG);
+ boxW(3.5,13.5,58.25,58.625,0,w12.sill,M.wall,wallsG);boxW(11.5,13.5,58.25,58.625,w12.sill,H,M.wall,wallsG);boxW(3.5,5.5,58.25,58.625,w12.sill,H,M.wall,wallsG);
  // backsplash tiles between the counter and the wall units
  const sp=(a,b,c,d,z1,z2)=>boxW(a,b,c,d,z1,z2,M.tile,wallsG);
- sp(3.5,3.53,59.137,61.0,K.KCH,K.KUP1);sp(3.5,3.53,61.0,65.0,K.KCH,w6.sill);sp(3.5,3.53,65.0,66.363,K.KCH,K.KUP1);sp(3.53,8.6,66.345,66.375,K.KCH,K.KUP1);sp(8.6,12.125,66.345,66.375,K.KLOW,K.KUP1);}
+ sp(3.5,3.53,58.637,61.0,K.KCH,K.KUP1);sp(3.5,3.53,61.0,65.0,K.KCH,w6.sill);sp(3.5,3.53,65.0,66.613,K.KCH,K.KUP1);sp(3.53,8.6,66.595,66.625,K.KCH,K.KUP1);sp(8.6,12.125,66.595,66.625,K.KLOW,K.KUP1);}
 // steel 2-tier utensil drying rack, 2' wide and 2'4" high: a 1'6" compartment for vessels and cookers below, an 8" one for plates on top, drip tray
 function rackModel(r,Z,B,C){const st=std({color:'#c9ccd0',roughness:0.3,metalness:0.9}),H=2.33,s1=0.12,s2=s1+1.5,cy=(r.y1+r.y2)/2;
   for(const [px,py] of [[r.x1+0.05,r.y1+0.05],[r.x2-0.05,r.y1+0.05],[r.x1+0.05,r.y2-0.05],[r.x2-0.05,r.y2-0.05]])C(px,py,Z,Z+H,0.03,st);
@@ -225,8 +225,8 @@ function contents(rec,f,pivot,add){const {m,fr}=rec,a=f.a,b=f.b,za=f.za,D=fr.D,a
   if(m.id==='K-02'&&f.k==='door'){const [X,Y]=at((a+b)/2,D/2);const z=rec.zb0+T;cylW(X,Y,z,z+1.78,0.52,M.red,scene,0.5);cylW(X,Y,z+1.78,z+1.95,0.3,M.red,scene,0.22);cylW(X,Y,z+1.95,z+2.17,0.15,M.steel,scene)}
   // L-shaped corner cupboards: big vessels on the floor and on the L-shaped shelf
   const ZB=rec.zb0+T,ZS=1.45,stl='#c0c4c8',blk='#3b3c3e';
-  if(m.id==='K-01A'&&f===m.fronts[0]){pot(59.75,1.0,ZB,0.42,0.75,stl);pot(60.95,1.0,ZB,0.32,0.6,stl);pot(59.7,1.1,ZS,0.36,0.7,stl);pot(60.9,0.9,ZS,0.3,0.5,stl)}
-  if(m.id==='K-03A'&&f===m.fronts[0]){pot(63.75,1.0,ZB,0.55,0.25,blk);pot(65.4,1.0,ZB,0.45,0.6,stl);pot(65.4,1.0,ZS,0.5,0.22,blk);pot(63.75,0.9,ZS,0.38,0.45,stl)}
+  if(m.id==='K-01A'&&f===m.fronts[0]){pot(59.3,1.0,ZB,0.42,0.75,stl);pot(60.75,1.0,ZB,0.32,0.6,stl);pot(59.25,1.1,ZS,0.36,0.7,stl);pot(60.7,0.9,ZS,0.3,0.5,stl)}
+  if(m.id==='K-03A'&&f===m.fronts[0]){pot(63.9,1.0,ZB,0.55,0.25,blk);pot(65.65,1.0,ZB,0.45,0.6,stl);pot(65.65,1.0,ZS,0.5,0.22,blk);pot(63.9,0.9,ZS,0.38,0.45,stl)}
   if(m.id==='K-03B'){const r=rng(77);for(const z of [ZB,ZS])for(let q=0;q<4;q++)pot(5.62+q*0.2,0.5+r()*1.0,z,0.09,0.55+r()*0.3,['#c98a2b','#7a3b16','#e8d9a8','#3f6a2a'][q])}
   if(m.id==='K-04'&&f.hinge==='a'){for(const d of [0.3,0.85]){const [X,Y]=at(a+0.15+d*0.5,D/2);add(boxW(X-0.22,X+0.22,Y-0.4,Y+0.4,za+0.05,za+1.4,std({color:d<0.5?'#3b7a4a':'#4a4f55',roughness:0.6}),pivot))}}
   // K-05: two orange plastic water kudams, one behind the other (profile from the owner's picture: narrow base, wide shoulder, short neck with a rim)
@@ -240,7 +240,7 @@ function contents(rec,f,pivot,add){const {m,fr}=rec,a=f.a,b=f.b,za=f.za,D=fr.D,a
 const runOf=new Map(),runKey=m=>m.face==='x+'?'E':m.face==='y+'?'F':'B';
 for(const m of K.modules){const n0=scene.children.length;buildModule(m);for(const o of scene.children.slice(n0))runOf.set(o,runKey(m))}
 // the blind corner wall unit behind K-12 (no front)
-boxW(3.512,4.75,65.0,66.363,K.KUP1R,K.KUP2,M.cream);
+boxW(3.512,4.75,65.0,66.613,K.KUP1R,K.KUP2,M.cream);
 // ---------------- appliances on and above the counters ----------------
 {const h=fu['FU-52'];placeAppliance('assets/appliances/cooktop.glb',(h.x1+h.x2)/2,(h.y1+h.y2)/2,K.KCH,-Math.PI/2,cookMat,null,'E');label('FU-52 · Gas stove (free-standing)',W((h.x1+h.x2)/2,(h.y1+h.y2)/2,K.KCH+0.75));
  {const r=fu['FU-80'];if(r){rackModel(r,K.KCH,(a,b,c,d,e,f,mt)=>boxW(a,b,c,d,e,f,mt),(x,y,z1,z2,rr,mt)=>cylW(x,y,z1,z2,rr,mt));label('FU-80 · Utensil drying rack',W((r.x1+r.x2)/2,(r.y1+r.y2)/2,K.KCH+1.95))}}
@@ -280,11 +280,11 @@ for(const L of leaves){const P=fronts.find(x=>x.rec.m.id===L.f.of),pf=P.f,[JX,JY
   P.info+=`<br>One L-shaped door in 2 parts: ${MM(pf.b-pf.a)} + ${MM(L.f.b-L.f.a)} mm (the ${L.rec.m.id} part), joined by a corner hinge; it folds and swings open in one go<br>${L.f.what}`}
 const RUN={E:new THREE.Group(),B:new THREE.Group(),F:new THREE.Group()};
 for(const o of [...scene.children]){if(o.isLight||o===sun.target||o===room||Object.values(RUN).includes(o))continue;
-  let k=runOf.get(o);if(!k){const c=new THREE.Box3().setFromObject(o).getCenter(new THREE.Vector3()),X=-(o.isCSS2DObject?o.position.x:c.x)/F,Y=(o.isCSS2DObject?o.position.z:c.z)/F;k=X<5.6&&Y<64.3?'E':Y<60.7?'F':'B'}
+  let k=runOf.get(o);if(!k){const c=new THREE.Box3().setFromObject(o).getCenter(new THREE.Vector3()),X=-(o.isCSS2DObject?o.position.x:c.x)/F,Y=(o.isCSS2DObject?o.position.z:c.z)/F;k=X<5.6&&Y<64.55?'E':Y<60.2?'F':'B'}
   RUN[k].add(o)}
 for(const g of Object.values(RUN))scene.add(g);
 // unfolded: the east run swings about the back corner to face you on the left; the breakfast counter turns round to stand on the right
-const UNF={E:{c:W(3.5,66.375,0),a:-Math.PI/2,off:W(-0.8,0,0)},F:{c:W(13.1125,62.75,0),a:Math.PI,off:W(0.8,0,0)}};
+const UNF={E:{c:W(3.5,66.625,0),a:-Math.PI/2,off:W(-0.8,0,0)},F:{c:W(13.1125,62.625,0),a:Math.PI,off:W(0.8,0,0)}};
 let unfoldT=0,unfoldTarget=0;
 function placeRuns(){const e=unfoldT*unfoldT*(3-2*unfoldT);for(const k of ['E','F']){const u=UNF[k],q=new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0),u.a*e);
   RUN[k].quaternion.copy(q);RUN[k].position.copy(u.c).add(u.c.clone().negate().applyQuaternion(q)).add(u.off.clone().multiplyScalar(e))}}
