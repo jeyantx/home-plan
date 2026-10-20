@@ -42,6 +42,10 @@ ul{margin:0;padding-left:18px}li{margin:3px 0}
 .nolab .lab{display:none}
 @media (max-width:760px){aside{width:100%;max-height:40vh;border-left:0;border-top:1px solid var(--line)}main{flex-direction:column}
  header{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding:6px 8px;gap:6px}header::-webkit-scrollbar{display:none}header>*{flex:none}h1{font-size:13.5px}.sp{margin-left:0}.btn,.seg button{padding:5px 8px;font-size:12.5px}#hint{display:none}}
+#pad{position:absolute;right:12px;bottom:14px;display:none;grid-template-columns:repeat(3,46px);grid-template-rows:repeat(2,46px);gap:6px;z-index:3;user-select:none;-webkit-user-select:none}
+#pad button{border:1px solid #0003;border-radius:12px;background:rgba(255,255,255,.82);font-size:20px;color:#1f2328;touch-action:none}
+#pad button:active{background:#d8e8dd}
+@media (pointer:coarse){#pad{display:grid}}
 #mnote{position:absolute;left:8px;right:8px;top:8px;z-index:6;background:rgba(31,35,40,.9);color:#fff;font-size:13px;line-height:1.4;padding:9px 12px;border-radius:10px;display:none;gap:10px;align-items:center}
 #mnote button{margin-left:auto;border:0;border-radius:7px;padding:5px 12px;background:#5fb08a;color:#0d1a13;font-weight:650;flex:none}
 </style>
@@ -57,7 +61,7 @@ ul{margin:0;padding-left:18px}li{margin:3px 0}
  <button class="btn sp" id="panelBtn" aria-pressed="true">Unit list</button>
 </header>
 <main>
- <div id="view"><div id="mnote"><span>For the best experience, open this on a desktop or laptop. On a phone: tap a door or drawer to open it, drag to turn, pinch to zoom.</span><button id="mnoteOk">OK</button></div><div id="tip"></div><div id="hint">Click a door or drawer to open or close it · ↑↓ walk · ←→ turn · A/D step sideways · W/S look up/down · Q/E lower/raise · drag to turn round · scroll to zoom</div></div>
+ <div id="view"><div id="pad" aria-label="Walk"><button data-k="ArrowLeft" aria-label="Turn left" title="Turn left">↶</button><button data-k="ArrowUp" aria-label="Walk forward" title="Walk forward">▲</button><button data-k="ArrowRight" aria-label="Turn right" title="Turn right">↷</button><button data-k="KeyA" aria-label="Step left" title="Step left">◀</button><button data-k="ArrowDown" aria-label="Walk back" title="Walk back">▼</button><button data-k="KeyD" aria-label="Step right" title="Step right">▶</button></div><div id="mnote"><span>For the best experience, open this on a desktop or laptop. On a phone: tap a door or drawer to open it, drag to turn, pinch to zoom.</span><button id="mnoteOk">OK</button></div><div id="tip"></div><div id="hint">Click a door or drawer to open or close it · ↑↓ walk · ←→ turn · A/D step sideways · W/S look up/down · Q/E lower/raise · drag to turn round · scroll to zoom</div></div>
  <aside id="panel"></aside>
 </main>
 <script>window.PLAN=__PLAN__;</script>
@@ -369,7 +373,9 @@ addEventListener('resize',resize);resize();
 // keys (same as the house view): arrows walk and turn, A/D step sideways, W/S look up and down, Q/E lower and raise, Shift faster
 const keys=new Set(),KEYS=['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','KeyA','KeyD','KeyW','KeyS','KeyQ','KeyE','ShiftLeft','ShiftRight'];
 addEventListener('keydown',e=>{if(KEYS.includes(e.code)){keys.add(e.code);if(e.code.startsWith('Arrow'))e.preventDefault()}});
-addEventListener('keyup',e=>keys.delete(e.code));addEventListener('blur',()=>keys.clear());
+addEventListener('keyup',e=>keys.delete(e.code));
+// touch arrows (phones and tablets): hold to walk, turn or step sideways
+for(const b of document.querySelectorAll('#pad button')){const c=b.dataset.k,on=e=>{e.preventDefault();keys.add(c)},off=()=>keys.delete(c);b.addEventListener('pointerdown',on);for(const ev of ['pointerup','pointerleave','pointercancel'])b.addEventListener(ev,off)}addEventListener('blur',()=>keys.clear());
 function walkKeys(dt){if(![...keys].some(k=>!k.startsWith('Shift')))return;fly=null;
   const fast=keys.has('ShiftLeft')||keys.has('ShiftRight'),sp=(fast?2.6:1.2)*dt,tr=(fast?1.5:0.9)*dt,up=new THREE.Vector3(0,1,0);
   const off=controls.target.clone().sub(camera.position),f=off.clone().setY(0).normalize(),r=new THREE.Vector3().crossVectors(f,up).normalize(),mv=new THREE.Vector3();
@@ -386,7 +392,10 @@ for(const L of LABS){L.wf=lctx.measureText(L.full).width+14;L.ws=lctx.measureTex
 let fitAt=0;const lv=new THREE.Vector3();
 function fitLabels(now){if(now-fitAt<160)return;fitAt=now;const W2=renderer.domElement.clientWidth/2,H2=renderer.domElement.clientHeight/2,H=17,placed=[],hit=r=>placed.some(q=>r[0]<q[2]&&q[0]<r[2]&&r[1]<q[3]&&q[1]<r[3]);
   const list=LABS.map(L=>{L.o.getWorldPosition(lv);const dist=lv.distanceTo(camera.position);lv.project(camera);return {L,x:(lv.x+1)*W2,y:(1-lv.y)*H2,z:lv.z,dist}}).filter(e=>e.z<1).sort((a,b)=>a.dist-b.dist);
-  for(const e of list){const rf=[e.x-e.L.wf/2,e.y-H/2,e.x+e.L.wf/2,e.y+H/2];let t=e.L.full,r=rf;if(hit(rf)){t=e.L.short;r=[e.x-e.L.ws/2,e.y-H/2,e.x+e.L.ws/2,e.y+H/2]}placed.push(r);if(e.L.cur!==t){e.L.d.textContent=t;e.L.cur=t}}}
+  for(const e of list){const rf=[e.x-e.L.wf/2,e.y-H/2,e.x+e.L.wf/2,e.y+H/2],rs=[e.x-e.L.ws/2,e.y-H/2,e.x+e.L.ws/2,e.y+H/2];let t=LITE?e.L.short:e.L.full,r=LITE?rs:rf,show=true;
+    if(hit(r)){if(r===rf&&!hit(rs)){t=e.L.short;r=rs}else show=false}
+    if(show)placed.push(r);if(e.L.cur!==t){e.L.d.textContent=t;e.L.cur=t}const v=show?'':'hidden';if(e.L.d.style.visibility!==v)e.L.d.style.visibility=v}
+  for(const L of LABS)if(!list.some(e=>e.L===L))L.d.style.visibility='hidden'}
 let last=performance.now();
 renderer.setAnimationLoop(()=>{const now=performance.now(),dt=Math.min(0.05,(now-last)/1000);last=now;
   if(fly){fly.s=Math.min(1,fly.s+dt/0.9);const e=fly.s*fly.s*(3-2*fly.s);camera.position.lerpVectors(fly.p0,fly.p1,e);controls.target.lerpVectors(fly.t0,fly.t1,e);if(fly.s>=1)fly=null}

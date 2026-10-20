@@ -144,7 +144,10 @@ let mode='both';
 function store(k,v){try{localStorage.setItem(k,v)}catch(e){}}
 function load(k){try{return localStorage.getItem(k)}catch(e){return null}}
 function visible(){return mode==='both'?['f0','f1']:[mode]}
-function apply(){for(const k of visible()) svgs[k].setAttribute('viewBox',`${view.x} ${view.y} ${view.w} ${view.h}`)}
+let committed=null,gesture=false,rafA=0;
+function applyNow(){cancelAnimationFrame(rafA);rafA=0;for(const k of ['f0','f1']){svgs[k].style.transform='';if(visible().includes(k))svgs[k].setAttribute('viewBox',`${view.x} ${view.y} ${view.w} ${view.h}`)}committed={...view}}
+function apply(){if(rafA)return;rafA=requestAnimationFrame(()=>{rafA=0;if(!gesture||!committed){applyNow();return}
+  for(const k of visible()){const el=svgs[k],W=el.clientWidth||el.getBoundingClientRect().width,s1=W/view.w;el.style.transformOrigin='0 0';el.style.transform=`translate(${(committed.x-view.x)*s1}px,${(committed.y-view.y)*s1}px) scale(${committed.w/view.w})`}})}
 function fitView(){
   const el=sheets[visible()[0]], r=el.getBoundingClientRect(), a=r.width/r.height, fa=FULL.w/FULL.h;
   if(a>fa){const w=FULL.h*a; view={x:FULL.x-(w-FULL.w)/2,y:FULL.y,w,h:FULL.h}}
@@ -176,13 +179,13 @@ function goTo(floor,x,y){
 // pointer pan + pinch
 for(const k of ['f0','f1']){
   const el=sheets[k]; const pts=new Map(); let last=null, pinch=null;
-  el.addEventListener('pointerdown',e=>{el.setPointerCapture(e.pointerId); pts.set(e.pointerId,{x:e.clientX,y:e.clientY}); el.classList.add('drag');
+  el.addEventListener('pointerdown',e=>{el.setPointerCapture(e.pointerId); pts.set(e.pointerId,{x:e.clientX,y:e.clientY}); el.classList.add('drag');gesture=true;
     if(pts.size===2){const [a,b]=[...pts.values()]; pinch={d:Math.hypot(a.x-b.x,a.y-b.y)}} last={x:e.clientX,y:e.clientY}});
   el.addEventListener('pointermove',e=>{ if(!pts.has(e.pointerId)) return; pts.set(e.pointerId,{x:e.clientX,y:e.clientY});
     const r=el.getBoundingClientRect();
     if(pts.size===2 && pinch){const [a,b]=[...pts.values()]; const d=Math.hypot(a.x-b.x,a.y-b.y); if(d>0){zoomAt(pinch.d/d,(a.x+b.x)/2,(a.y+b.y)/2,el); pinch.d=d} return;}
     if(last){view.x-=(e.clientX-last.x)/r.width*view.w; view.y-=(e.clientY-last.y)/r.height*view.h; apply()} last={x:e.clientX,y:e.clientY}});
-  const end=e=>{pts.delete(e.pointerId); if(pts.size<2) pinch=null; if(!pts.size){last=null; el.classList.remove('drag')} else {const p=[...pts.values()][0]; last={x:p.x,y:p.y}}};
+  const end=e=>{pts.delete(e.pointerId); if(pts.size<2) pinch=null; if(!pts.size){last=null; el.classList.remove('drag');gesture=false;applyNow()} else {const p=[...pts.values()][0]; last={x:p.x,y:p.y}}};
   el.addEventListener('pointerup',end); el.addEventListener('pointercancel',end);
   el.addEventListener('wheel',e=>{e.preventDefault(); const f=Math.exp((e.ctrlKey?e.deltaY*2:e.deltaY)*0.0015); zoomAt(f,e.clientX,e.clientY,el)},{passive:false});
   el.addEventListener('dblclick',e=>zoomAt(0.5,e.clientX,e.clientY,el));
