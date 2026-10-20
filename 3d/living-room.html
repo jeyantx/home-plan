@@ -65,6 +65,7 @@ canvas{display:block;width:100%;height:100%}
   <div class="seg cams" data-area="6"><button data-c="28">Landing</button><button data-c="30">Bedroom 3</button><button data-c="23">Terrace</button><button data-c="31">Top</button></div>
   <span class="spacer"></span>
   <button class="btn" id="tourBtn" aria-pressed="false" title="Walk through the whole house on a set path: gate, parking, porch, rooms, up the spiral stair, first floor, terrace and down the outside stair. Any key or click stops it.">Home tour</button>
+  <button class="btn" id="gateBtn" aria-pressed="true" title="Open or close the two front gates GT-01 and GT-02 (bi-fold, they fold inward)">Close gates</button>
   <button class="btn" id="animBtn" aria-pressed="false" title="Watch the car come in from the road, reverse into its spot, wait, and drive out">Animate car parking</button>
   <button class="btn" id="photoBtn" aria-pressed="false" title="Ray-traced photo of the current view. Uses the graphics card heavily for about a minute, then stops by itself.">Photo</button>
   <button class="btn" id="saveBtn" title="Save the current image as PNG">Save</button>
@@ -90,13 +91,13 @@ import {EffectComposer} from 'three/addons/postprocessing/EffectComposer.js';
 import {RenderPass} from 'three/addons/postprocessing/RenderPass.js';
 import {GTAOPass} from 'three/addons/postprocessing/GTAOPass.js';
 import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';
-import {createBambooPlant} from './models/bamboo-plant.js?v=1792466436';
-import {createNeemTree} from './models/neem-tree.js?v=1792466436';
-import {createTNPlant,TN_PLANTS} from './models/tn-plants.js?v=1792466436';
-import {createBanana,createArecaPalm,createMoringa} from './models/garden-plants.js?v=1792466436';
-import {createVirtus,createHunter350,createAther450,loadCarGLB,loadGLBVehicle} from './models/vehicles.js?v=1792466436';
+import {createBambooPlant} from './models/bamboo-plant.js?v=1792469292';
+import {createNeemTree} from './models/neem-tree.js?v=1792469292';
+import {createTNPlant,TN_PLANTS} from './models/tn-plants.js?v=1792469292';
+import {createBanana,createArecaPalm,createMoringa} from './models/garden-plants.js?v=1792469292';
+import {createVirtus,createHunter350,createAther450,loadCarGLB,loadGLBVehicle} from './models/vehicles.js?v=1792469292';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
-import {CAR_ROUTE} from './models/car-route.js?v=1792466436';
+import {CAR_ROUTE} from './models/car-route.js?v=1792469292';
 import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
 
 const P=window.PLAN, F=0.3048, CEIL=10.0, EYE=5.25;
@@ -719,7 +720,7 @@ function rackModel(r,Z,B,C){const st=std({color:'#c9ccd0',roughness:0.3,metalnes
   const pot=std({color:'#bfc3c7',roughness:0.25,metalness:0.85});C(r.x1+0.45,cy,Z+s1+0.02,Z+s1+0.9,0.32,pot);C(r.x2-0.45,cy,Z+s1+0.02,Z+s1+0.55,0.36,pot);C(r.x2-0.5,cy,Z+s1+0.6,Z+s1+1.3,0.28,pot);
   for(let k=0;k<5;k++)B(r.x1+0.4+k*0.28,r.x1+0.42+k*0.28,r.y1+0.3,r.y2-0.3,Z+s2+0.03,Z+s2+0.6,std({color:'#f2efe9',roughness:0.3}))}
 // downloaded appliance models (archibase.net, see 3d/ASSETS.md): front faces +z in the file, real size in metres, sitting on y = 0
-function placeAppliance(url,cx,cy,z,rotY,matFn,tip){new GLTFLoader().load(url+'?v=1792466436',g=>{const o=g.scene;o.traverse(n=>{if(n.isMesh){n.castShadow=n.receiveShadow=true;const mt=matFn(n);if(mt)n.material=mt;if(tip)named(n,tip);n.userData.keepUV=true}});
+function placeAppliance(url,cx,cy,z,rotY,matFn,tip){new GLTFLoader().load(url+'?v=1792469292',g=>{const o=g.scene;o.traverse(n=>{if(n.isMesh){n.castShadow=n.receiveShadow=true;const mt=matFn(n);if(mt)n.material=mt;if(tip)named(n,tip);n.userData.keepUV=true}});
   o.rotation.y=rotY;o.position.set(mx(cx),m(z),m(cy));scene.add(o);if(typeof renderer!=='undefined'&&renderer.shadowMap)renderer.shadowMap.needsUpdate=true;if(typeof invalidate==='function')invalidate()},undefined,e=>console.warn('appliance',url,e))}
 const APM={glass:std({color:'#0b0c0d',roughness:0.05,metalness:0.3}),black:std({color:'#161718',roughness:0.45,metalness:0.3}),enamel:std({color:'#2b2c2e',roughness:0.4,metalness:0.4}),
   brass:std({color:'#b08d57',roughness:0.35,metalness:0.8}),steel:std({color:'#c9ccd0',roughness:0.25,metalness:0.9}),white:std({color:'#f3f3f1',roughness:0.32,metalness:0.08}),
@@ -1180,11 +1181,17 @@ for(const w of P.walls.G.filter(w=>w.kind==='pillar')){const PT=HUZ+w.h;const me
     const b=new THREE.Mesh(new THREE.SphereGeometry(m(s),10,8),i%3?MAT.leaf:std({color:['#d6336c','#e8590c','#f06595'][i%3],roughness:0.7}));b.position.set(mx(px),m(HUZ+w.h+0.2+r()*0.6),m(py));b.castShadow=true;scene.add(b);named(b,'Flowering plants in the planter')}}}
 // gates GT-01 and GT-02: black MS frame; three infill designs swap in place (geometry swap, so hover and walking stay right)
 const GD={'GD-1':'horizontal wood-look slats with 1" gaps','GD-2':'black vertical flat bars with a wood-look band near the top','GD-3':'solid wood-look panels with three thin vertical slots'};
-const gateMeshes=[];
+const gateMeshes=[],GATES=[],FOLD=1.45;   // GATES: each leaf's hinge panel p1 and folding panel p2; open 1 = folded back, 0 = shut across the opening
+function poseGates(t){for(const g of GATES){g.p1.rotation.y=g.sg*FOLD*t;g.p2.rotation.y=-g.sg*2*FOLD*t}}
+const gateAnim={open:1,target:1,last:0};
+function setGatesOpen(v){gateAnim.target=v?1:0;gateAnim.last=0;const b=document.getElementById('gateBtn');if(b){b.textContent=v?'Close gates':'Open gates';b.setAttribute('aria-pressed',!!v)}invalidate()}
+function gateStep(now){if(gateAnim.open===gateAnim.target)return;const dt=gateAnim.last?Math.min(0.1,(now-gateAnim.last)/1000):0;gateAnim.last=now;
+  const d=dt/1.6;gateAnim.open=gateAnim.target>gateAnim.open?Math.min(gateAnim.target,gateAnim.open+d):Math.max(gateAnim.target,gateAnim.open-d);
+  const e=gateAnim.open*gateAnim.open*(3-2*gateAnim.open);poseGates(e);renderer.shadowMap.needsUpdate=true;if(gateAnim.open===gateAnim.target&&photo&&pt)pt.setScene(scene,camera);invalidate()}
 {const gy1=0.3,gy2=0.45,z1=HUZ+0.12,z2=z1+5.85,fr=0.15;   // bottom 1½" over the crest, so the folding leaves clear the drive
  const gb=(x1,x2,y1,y2,za,zb)=>new THREE.BoxGeometry(m(x2-x1),m(zb-za),m(y2-y1)).translate(mx((x1+x2)/2),m((za+zb)/2),m((y1+y2)/2));
  // GT-01 and GT-02 are inward bi-fold gates: each leaf is two panels that fold back on themselves, so they sweep only half a leaf over the level crest
- const gyc=(gy1+gy2)/2,FOLD=1.45;
+ const gyc=(gy1+gy2)/2;
  const build=(a,b)=>{const designs={};
   for(const k in GD){const blk=[],wd=[];
    blk.push(gb(a,b,gy1,gy2,z1,z1+fr),gb(a,b,gy1,gy2,z2-fr,z2),gb(a,a+fr,gy1,gy2,z1+fr,z2-fr),gb(b-fr,b,gy1,gy2,z1+fr,z2-fr));
@@ -1200,10 +1207,11 @@ const gateMeshes=[];
     me.userData.designs=Object.fromEntries(Object.keys(GD).map(k=>[k,designs[k][i]]));me.userData.gate=label;parent.add(me);named(me,'');gateMeshes.push(me);wallMeshes.push(me)}};
  for(const o of P.openings.filter(o=>o.type==='gate')){const mid=(o.a+o.b)/2;
   for(const [a,b,h] of [[o.a+0.05,mid-0.03,'a'],[mid+0.03,o.b-0.05,'b']]){const sg=h==='a'?1:-1,hx=h==='a'?a:b,jx=(a+b)/2,far=h==='a'?[jx+0.01,b]:[a,jx-0.01],near=h==='a'?[a,jx-0.01]:[jx+0.01,b];
-   const p1=new THREE.Group();p1.position.set(mx(hx),0,m(gyc));p1.rotation.y=sg*FOLD;scene.add(p1);
-   hang(build(...near),hx,p1,`${o.id} (bi-fold, open)`);
-   const p2=new THREE.Group();p2.position.set(mx(jx)-mx(hx),0,0);p2.rotation.y=-sg*2*FOLD;p1.add(p2);
-   hang(build(...far),jx,p2,`${o.id} (bi-fold, open)`);}}}
+   const p1=new THREE.Group();p1.position.set(mx(hx),0,m(gyc));scene.add(p1);
+   hang(build(...near),hx,p1,`${o.id} (bi-fold)`);
+   const p2=new THREE.Group();p2.position.set(mx(jx)-mx(hx),0,0);p1.add(p2);
+   hang(build(...far),jx,p2,`${o.id} (bi-fold)`);GATES.push({p1,p2,sg})}}
+ poseGates(1)}
 function setGate(k){if(!GD[k])k='GD-1';for(const me of gateMeshes){me.geometry=me.userData.designs[k];me.userData.tip=`Gate ${me.userData.gate} · ${k} · MS frame, black powder-coat · ${GD[k]}`}
   document.querySelectorAll('#gateSeg button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.g===k));try{localStorage.setItem('lr3d-gate',k)}catch(e){};renderer.shadowMap.needsUpdate=true;if(photo&&pt)pt.setScene(scene,camera);invalidate()}
 function setExt(k){if(!EXT[k])k='EX-4';const o=EXT[k];MAT.ext.color.set(o.wall);MAT.extTrim.color.set(o.trim);MAT.extBase.color.set(o.base);MAT.extUp.color.set(o.up);
@@ -1330,7 +1338,7 @@ if(P.backwall){const bw=P.backwall,[a,b]=bw.pts,t=bw.t,old=std({color:'#cdc4b3',
  const T=(g,extra)=>`${g.id} · ${g.name}${extra?' · '+extra:''} · ${g.where}`;
  const tipAll=(o,t)=>o.traverse(n=>{if(n.isMesh){n.userData.keepUV=true;n.castShadow=true;n.receiveShadow=true;named(n,t)}});
  const refresh=()=>{renderer.shadowMap.needsUpdate=true;if(photo&&pt)pt.setScene(scene,camera);invalidate()};
- const glbCache={},loadGLB=url=>glbCache[url]||(glbCache[url]=new Promise((res,rej)=>new GLTFLoader().load(url+'?v=1792466436',g=>res(g.scene),undefined,rej)));
+ const glbCache={},loadGLB=url=>glbCache[url]||(glbCache[url]=new Promise((res,rej)=>new GLTFLoader().load(url+'?v=1792469292',g=>res(g.scene),undefined,rej)));
  // a downloaded plant, scaled so its height (h, feet) or width (w, feet) fits, standing at plan x, y on height z (feet)
  const placeGLB=(url,x,y,z,size,rot,t)=>loadGLB(url).then(src=>{const o=src.clone(true),sz=new THREE.Box3().setFromObject(o).getSize(new THREE.Vector3());
    o.scale.setScalar(size.h?m(size.h)/sz.y:m(size.w)/Math.max(sz.x,sz.z));o.rotation.y=rot||0;o.position.set(mx(x),m(z),m(y));scene.add(o);tipAll(o,t);refresh();return o}).catch(e=>console.warn('plant model',url,e));
@@ -1393,7 +1401,8 @@ function animStep(now){const tr=carAnim.track,t=(now-carAnim.t0)/1000;if(!tr)ret
   if(now-carAnim.lastShadow>120){renderer.shadowMap.needsUpdate=true;carAnim.lastShadow=now}
   invalidate()}
 window.__animAt=t=>{carAnim.track=carAnim.track||buildTrack();carAnim.t0=performance.now()-t*1000;animStep(performance.now());const c=carAnim.car;return c?[(-c.position.x/F).toFixed(2),(c.position.z/F).toFixed(2),(c.rotation.y*180/Math.PI).toFixed(0),carAnim.track.T.toFixed(1)]:null};
-function startAnim(){if(!carAnim.car)return;carAnim.track=carAnim.track||buildTrack();carAnim.on=true;carAnim.t0=performance.now();
+function startAnim(){if(!carAnim.car)return;if(!gateAnim.target)setGatesOpen(1);   // the car needs the gates open
+carAnim.track=carAnim.track||buildTrack();carAnim.on=true;carAnim.t0=performance.now();
   animBtn.textContent='Stop car parking';animBtn.setAttribute('aria-pressed',true);
   // watch from the house-front corner of the parking, looking out to the gate and the road
   setView(35)}
@@ -1479,14 +1488,14 @@ function placeBike(code){const o=bikeObjs[code];if(!o)return;const t=(P.bikes||[
 const SHOW_BIKES=false;   // the old code-made two-wheelers stay off; the downloaded models below are used
 const vehicleMeshes=[];
 {const [cx1,cx2,cy1,cy2]=P.car||[11.25,17.0,14.75,29.75];
- loadCarGLB(THREE,GLTFLoader,'assets/vehicles/compact-car.glb?v=1792466436',{color:'#2f5d8c',length:4.561,bodyWidth:1.752,name:'Car'}).then(car=>{
+ loadCarGLB(THREE,GLTFLoader,'assets/vehicles/compact-car.glb?v=1792469292',{color:'#2f5d8c',length:4.561,bodyWidth:1.752,name:'Car'}).then(car=>{
    scene.add(car);window.__car=car;carAnim.car=car;setCarPose(...CAR_ROUTE.park,0,0);
    const d=car.userData.dims,ft=v=>{const i=Math.round(v/F*12);return `${Math.floor(i/12)}'${i%12}"`};
    car.traverse(o=>{if(o.isMesh){o.userData.keepUV=true;named(o,`Car · compact sedan (Free3D model, scaled to VW Virtus size, 4561 x 1752 mm body) · ${ft(d.length)} x ${ft(d.width)} with mirrors · reversed in, nose to the gate`);vehicleMeshes.push(o)}});
    renderer.shadowMap.needsUpdate=true;if(photo&&pt)pt.setScene(scene,camera);invalidate()}).catch(e=>console.warn('car model',e));
  // two-wheelers from the owner's downloaded models, sized to the real bikes they stand for, front to the gate
  for(const [code,name] of (P.bikes||[])){const moto=/VFR|Hunter/.test(name);
-   loadGLBVehicle(THREE,GLTFLoader,moto?'assets/vehicles/vfr800.glb?v=1792466436':'assets/vehicles/scooter.glb?v=1792466436',moto?{front:'+z',length:2.12,groundMaterial:'rubber',name:code,materials:vfrMats()}:{front:'+z',length:1.837,name:code}).then(b=>{
+   loadGLBVehicle(THREE,GLTFLoader,moto?'assets/vehicles/vfr800.glb?v=1792469292':'assets/vehicles/scooter.glb?v=1792469292',moto?{front:'+z',length:2.12,groundMaterial:'rubber',name:code,materials:vfrMats()}:{front:'+z',length:1.837,name:code}).then(b=>{
      scene.add(b);bikeObjs[code]={b,moto};b.traverse(o=>{if(o.isMesh)o.userData.keepUV=true});placeBike(code);
      renderer.shadowMap.needsUpdate=true;if(photo&&pt)pt.setScene(scene,camera);invalidate()}).catch(e=>console.warn('bike model',e))}
  if(SHOW_BIKES) for(const [code,name,bx,by,bl,bw] of (P.bikes||[])){const b=/Hunter/.test(name)?createHunter350(THREE,mergeGeometries,{}):createAther450(THREE,mergeGeometries,{});
@@ -1670,6 +1679,7 @@ function setOpt(o){optRow.classList.toggle('hidden',!o);optBtn.setAttribute('ari
 optBtn.onclick=()=>setOpt(optRow.classList.contains('hidden'));
 document.querySelectorAll('#lensSeg button').forEach(b=>b.onclick=()=>setLens(+b.dataset.f));
 const animBtn=document.getElementById('animBtn');animBtn.onclick=()=>carAnim.on?stopAnim():startAnim();
+document.getElementById('gateBtn').onclick=()=>setGatesOpen(gateAnim.target?0:1);
 const nb=document.getElementById('notesBtn');nb.onclick=()=>{const h=panel.classList.toggle('hidden');nb.setAttribute('aria-pressed',!h)};
 
 // ---------------- photo mode: ray tracing with three-gpu-pathtracer (local copy) ----------------
@@ -1843,7 +1853,7 @@ let yaw_=0,pitch_=0;
 function tourStep(now){const tr=tour,t=(now-tr.t0)/1000,dt=tr.last?Math.min(0.1,(now-tr.last)/1000):0;tr.last=now;
   if(t>=tr.T+1.5){stopTour();return}
   tourPose(Math.min(t,tr.T),dt);yaw=yaw_;pitch=pitch_;applyLook();invalidate()}
-function startTour(){if(photo)stopPhoto();if(carAnim.on)stopAnim();if(!tour.segs){const b=buildTour();tour.segs=b.segs;tour.T=b.T}
+function startTour(){if(photo)stopPhoto();if(carAnim.on)stopAnim();if(!gateAnim.target)setGatesOpen(1);if(!tour.segs){const b=buildTour();tour.segs=b.segs;tour.T=b.T}
   tour.on=true;tour.t0=performance.now();tour.last=0;tour.label='';tour.fl='';applyVis({fl:'G'});tour.yaw=yaw;tour.pitch=pitch;tourPose(0,0);yaw=yaw_;pitch=pitch_;applyLook();
   tourBtn.textContent='Stop tour';tourBtn.setAttribute('aria-pressed',true);invalidate()}
 function stopTour(){tour.on=false;tourCap.style.display='none';tourBtn.textContent='Home tour';tourBtn.setAttribute('aria-pressed',false);invalidate()}
@@ -1870,6 +1880,7 @@ const tick=()=>new Promise(r=>setTimeout(r,30));
 renderer.setAnimationLoop(()=>{
   if(preparing)return;
   walk();
+  gateStep(performance.now());
   if(carAnim.on)animStep(performance.now());
   if(tour.on)tourStep(performance.now());
   if(photo&&pt){
