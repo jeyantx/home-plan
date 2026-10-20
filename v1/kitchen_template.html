@@ -202,14 +202,16 @@ function buildFront(rec,f){const {m,fr}=rec,up=rec.up,mat=up?M.cream:M.oak,a=f.a
   if(f.k==='blind'){const me=fr.box(a,b,0,SH,za,zb,mat,pivot);add(me);me.userData.front=null;contents(rec,f,pivot,()=>{});rec.fronts.push(item);return}
   // a door part joined by a corner hinge to the door of the unit round the corner (one L-shaped door in 2 parts): it folds onto that door as it opens; the handle is on its free edge
   if(f.k==='leaf'){const pm=K.modules.find(x=>x.id===f.of),pf=pm.fronts.find(x=>x.k==='door'),pfr=frame(pm),[JX,JY]=pfr.toPlan(pf.hinge==='a'?pf.b:pf.a,0),d=u=>{const [X,Y]=fr.toPlan(u,0);return Math.hypot(X-JX,Y-JY)};
-    const cornerA=d(f.a)<d(f.b);item.free=cornerA?f.b:f.a;add(fr.box(a,b,0,SH,za,zb,mat,pivot));const hu=cornerA?b-0.2:a+0.2;add(fr.box(hu-0.03,hu+0.03,-0.05,0,zb-0.75,zb-0.15,M.handle,pivot));
+    const cornerA=d(f.a)<d(f.b);item.free=cornerA?f.b:f.a;add(fr.box(a,b,0,SH,za,zb,rec.up?M.cream:mat,pivot));const hu=cornerA?b-0.2:a+0.2;
+    if(rec.up){add(fr.box(a+0.04,b-0.04,-0.03,0,za-0.06,za+0.06,M.handle,pivot));add(fr.box(a+0.04,b-0.04,0,0.05,za-0.06,za-0.045,M.handle,pivot))}   // loft corner part: the L-profile handle along its bottom edge
+    else add(fr.box(hu-0.03,hu+0.03,-0.05,0,zb-0.75,zb-0.15,M.handle,pivot));
     contents(rec,f,pivot,me=>me);rec.fronts.push(item);leaves.push(item);return}
   const hasLeaf=K.modules.some(x=>x.fronts.some(q=>q.k==='leaf'&&q.of===m.id));
   // the front panel and its handle, built in place, then re-parented to a pivot
   const panel=add(fr.box(a,b,0,SH,za,zb,f.glass?M.glass:mat,pivot));
   if(f.glass){for(const [p1,p2,q1,q2] of [[a,b,za,za+0.06],[a,b,zb-0.06,zb],[a,a+0.06,za,zb],[b-0.06,b,za,zb]])add(fr.box(p1,p2,-0.005,SH+0.005,q1,q2,M.handle,pivot))}
   const hz=up?za+0.18:(f.k==='door'&&zb-za>1.5?zb-0.22:zb-0.14),hl=Math.min(0.9,(b-a)*0.55),hm=(a+b)/2;
-  if(up){add(fr.box(a+0.04,b-0.04,-0.03,0,za-0.06,za+0.06,M.handle,pivot));add(fr.box(a+0.04,b-0.04,0,0.05,za-0.06,za-0.045,M.handle,pivot))}   // L-profile handle along the bottom edge: pull from below
+  if(up){if(!hasLeaf){add(fr.box(a+0.04,b-0.04,-0.03,0,za-0.06,za+0.06,M.handle,pivot));add(fr.box(a+0.04,b-0.04,0,0.05,za-0.06,za-0.045,M.handle,pivot))}}   // L-profile handle along the bottom edge: pull from below
   else if(f.k==='door'){if(!hasLeaf){const hu=f.hinge==='a'?b-0.2:a+0.2;add(fr.box(hu-0.03,hu+0.03,-0.05,0,zb-0.75,zb-0.15,M.handle,pivot))}}
   else add(fr.box(hm-hl/2,hm+hl/2,-0.05,0,hz-0.03,hz+0.03,M.handle,pivot));
   // drawer box / pull-out basket travel with the front

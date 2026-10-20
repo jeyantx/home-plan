@@ -794,9 +794,9 @@ function cabRun(id,what,x1,x2,y1,y2,z1,z2,face,segs,mat,plinth){
  cabRun('FU-19.3','Wall cabinets, east',X1+0.012,4.75,58.637,61.0,UPZ1,UPZ2,'x+',[[58.637,61.0,'glass']],MAT.kUp,false);
  // top row to the ceiling (FU-68 on GW-14, FU-69 on GW-01, right across above the window and chimney), with a black shadow line under it
  const TZ1=UPZ2+0.05,TZ2=CEIL-0.012;
- cabRun('FU-68','Top storage, back',4.69,12.125,ky2-1.25,ky2-0.012,TZ1,TZ2,'y-',[[4.75,6.5,'door'],[6.5,8.25,'door'],[8.25,9.875,'door'],[9.875,11.0,'door'],[11.0,12.125,'door']],MAT.kUp,false);   // K-16 and K-18 (over the RO and wet grinder)
+ cabRun('FU-68','Top storage, back',4.75,12.125,ky2-1.25,ky2-0.012,TZ1,TZ2,'y-',[[4.75,6.5,'door'],[6.5,8.25,'door'],[8.25,9.875,'door'],[9.875,11.0,'door'],[11.0,12.125,'door']],MAT.kUp,false);   // K-16 and K-18 (over the RO and wet grinder)
  cabRun('FU-69','Top storage, east',X1+0.012,4.75,58.637,62.15,TZ1,TZ2,'x+',[[58.637,60.4,'door'],[60.4,62.15,'door']],MAT.kUp,false);   // K-17A
- cabRun('FU-69','Top storage, east',X1+0.012,4.75,62.15,ky2-0.012,TZ1,TZ2,'x+',[[62.15,63.15,'door'],[63.15,65.0,'door']],MAT.kUp,false);   // K-17C over the chimney, K-17B
+ cabRun('FU-69','Top storage, east',X1+0.012,4.75,62.15,ky2-0.012,TZ1,TZ2,'x+',[[62.15,63.15,'door'],[63.15,65.375,'plain']],MAT.kUp,false);   // K-17C over the chimney, K-17B (corner door, out to the K-16 front)
  box(X1+0.012,4.6,58.637,ky2-0.012,UPZ2,TZ1,MAT.blackMetal,{cast:false,tip:'Shadow line, black'});box(4.6,12.05,ky2-1.125,ky2-0.012,UPZ2,TZ1,MAT.blackMetal,{cast:false,tip:'Shadow line, black'});
  for(const [a,b,c,d] of [[4.6,4.66,58.8,60.85],[4.6,4.66,65.15,66.55],[4.9,8.1,ky2-1.125,ky2-1.065]]) ledStrips.push(box(a,b,c,d,UPZ1-0.03,UPZ1,MAT.led,{cast:false,tip:'LED strip under the wall cabinets'}));
  const ul=new THREE.PointLight('#ffd7a3',0,m(9),2);ul.position.set(mx(6.0),m(4.2),m(65.0));scene.add(ul);towerLights.push(ul);
@@ -1230,6 +1230,11 @@ function setExt(k){if(!EXT[k])k='EX-4';const o=EXT[k];MAT.ext.color.set(o.wall);
 // neem tree (existing, rebuilt from the site photos; 3d/models/neem-tree.js): trunk 3'6" from the road, leaning south, south limb cut to a stub
 const trunkAxis=[];const trunkAxisAt=hf=>{if(hf<0||hf>12)return null;const k=Math.floor(hf),a=trunkAxis[k],b=trunkAxis[Math.min(12,k+1)]||a;if(!a)return null;const t=hf-k;return [a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t,Math.max(a[2],b[2])]};
 {const tree=createNeemTree(THREE,{seed:1,cut:true});tree.position.set(mx(12.75),m(RDZ),m(4.25));scene.add(tree);   // the trunk stays at today's ground, in the tree well
+ // leaf cards that would pass through the balcony and terrace slab (from 4" under the slab to 4" over the terrace floor, front of the house from Y 15'3") are left out
+ tree.updateMatrixWorld(true);tree.traverse(o=>{if(!o.isMesh||o.name!=='NeemLeaves')return;const g=o.geometry,p=g.attributes.position,n=g.index?g.index.count:p.count,v=new THREE.Vector3(),keep=[];
+   for(let i=0;i<n;i+=3){let x=0,y=0,z=0;for(let j=0;j<3;j++){v.fromBufferAttribute(p,g.index?g.index.getX(i+j):i+j).applyMatrix4(o.matrixWorld);x+=v.x;y+=v.y;z+=v.z}
+     const X=-x/3/F,Y=z/3/F,H=y/3/F;if(!(Y>15.25&&X>2.5&&X<21.2&&H>SLB-0.35&&H<FFZ+0.35))for(let j=0;j<3;j++)keep.push(g.index?g.index.getX(i+j):i+j)}
+   g.setIndex(keep)});
  tree.traverse(o=>{if(o.isMesh){o.userData.keepUV=true;named(o,o.userData.tip||'Neem tree (existing)');if(o.name==='NeemTrunk'||o.name==='NeemStub')wallMeshes.push(o)}});
  // trunk axis and radius by height (plan feet), read from the model itself, so walking never ends up inside the leaning trunk
  {tree.updateMatrixWorld(true);const tm=tree.getObjectByName('NeemTrunk');if(tm){const p=tm.geometry.attributes.position,v=new THREE.Vector3(),bins=[];
