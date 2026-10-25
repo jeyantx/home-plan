@@ -549,7 +549,7 @@ box(LX2-0.02,LX2,47.6,48.1,4.0,4.4,MAT.white,{tip:'Switch board'});box(9.3,9.8,L
 
 
 // ================= BEDROOM 1 (G-05), its study corner (G-06) and TOILET 1 (G-07): same Japandi warm-oak style =================
-const BX1=9.25,BX2=20.25,BY1=36.375,BY2=46.375;   // bedroom 1 main rectangle; the study corner opens off its south-east side
+const BX1=9.25,BX2=20.25,BY1=35.375,BY2=46.375;   // bedroom 1 main rectangle; the study corner opens off its south-east side
 // ceiling band with cove pocket and LED, as in the living room
 bandSide(BX1,BX2,BY1,BY1+BW,'y+');bandSide(BX1,BX2,BY2-BW,BY2,'y-');
 bandSide(BX1,BX1+BW,BY1+BW,BY2-BW,'x+');bandSide(BX2-BW,BX2,BY1+BW,BY2-BW,'x-');
@@ -559,9 +559,9 @@ for(const [x,y] of [[BX1+0.5,38.4],[BX1+0.5,44.6],[13.0,BY2-0.45],[16.6,BY1+0.45
 downlight(11.5,34.0,CEIL,'Recessed LED downlight, study corner (warm white)');
 ceilingFan(14.6,41.4,0.3);
 {const hS=0.33,d=0.04,t='Tile skirting, 4"';   // skirting where the wall meets the floor (not behind the wardrobe)
- box(BX1,BX1+d,31.5,BY2,0,hS,MAT.skirt,{tip:t});box(BX1+d,BX1+0.25,BY2-d,BY2,0,hS,MAT.skirt,{tip:t});box(12.5,13.75,BY2-d,BY2,0,hS,MAT.skirt,{tip:t});
- box(13.75,14.5,BY1,BY1+d,0,hS,MAT.skirt,{tip:t});box(17.0,17.25,BY1,BY1+d,0,hS,MAT.skirt,{tip:t});box(BX1+d,12.5,31.5,31.5+d,0,hS,MAT.skirt,{tip:t});
- box(13.75-d,13.75,31.5+d,33.75,0,hS,MAT.skirt,{tip:t});}
+ box(BX1,BX1+d,30.5,BY2,0,hS,MAT.skirt,{tip:t});box(BX1+d,BX1+0.25,BY2-d,BY2,0,hS,MAT.skirt,{tip:t});box(12.5,13.75,BY2-d,BY2,0,hS,MAT.skirt,{tip:t});
+ box(13.75,14.5,BY1,BY1+d,0,hS,MAT.skirt,{tip:t});box(17.0,17.25,BY1,BY1+d,0,hS,MAT.skirt,{tip:t});box(BX1+d,12.5,30.5,30.5+d,0,hS,MAT.skirt,{tip:t});
+ box(13.75-d,13.75,30.5+d,32.75,0,hS,MAT.skirt,{tip:t});}
 // curtains on W-02: wall-mounted track at 7'4", between the window head (7') and the AC (7'7"), so the AC stays clear
 for(const [a,b] of [[36.45,37.6],[39.65,41.2]]) curtain(a,b,9.55,7.4,'Curtain track, wall-mounted at 7\'4" below the AC');
 // AC indoor unit FU-44 above W-02
@@ -632,7 +632,7 @@ addPlant(10.05,42.3,1.2,3,'Bamboo plant in black pot · 4 ft');
  const r=rng(55);for(const z of [0.0,1.45,2.9,4.35,5.9]){box(s.x1,s.x2-0.1,s.y1+0.07,s.y2-0.07,z,z+0.1,MAT.oak,{tip:ts});
    if(z>5)continue;let y=s.y1+0.15;while(y<s.y2-0.4){if(r()<0.7){const h=0.7+r()*0.5;box(s.x1+0.15,s.x2-0.2,y,y+0.12,z+0.101,z+0.1+h,std({color:['#b5a891','#d9d2c3','#6f6a60','#a2826a','#e8e3d8'][Math.floor(r()*5)],roughness:0.75}),{tip:'Books'});y+=0.13}else{cyl(s.x1+0.6,y+0.25,z+0.101,z+0.5,0.16,std({color:'#cdbfa8',roughness:0.55}),{tip:'Ceramic vase',rTop:0.1});y+=0.55}}}
  // roman blind on W-01, half lowered
- box(9.65,13.35,31.5+0.012,31.6,6.1,7.25,std({color:'#cdb69a',roughness:1,normalMap:T.linen.normalMap}),{tip:'Roman blind · light-brown linen, half lowered'});
+ box(9.65,13.35,30.5+0.012,30.6,6.1,7.25,std({color:'#cdb69a',roughness:1,normalMap:T.linen.normalMap}),{tip:'Roman blind · light-brown linen, half lowered'});
  for(const z of [6.3,6.7]) box(9.65,13.35,31.6,31.66,z,z+0.12,std({color:'#c2a98c',roughness:1,normalMap:T.linen.normalMap}),{cast:false,tip:'Roman blind fold'});}
 
 // ---------------- TOILET 1 (G-07): greige matte tiles to 7' (shower walls too), wall-hung WC, floating vanity ----------------
@@ -654,7 +654,7 @@ function tile(x1,x2,y1,y2,z1,z2,mat,tip){const me=box(x1,x2,y1,y2,z1,z2,mat,{cas
   for(let i=0;i<p.count;i++){const ax=Math.abs(n.getX(i)),ay=Math.abs(n.getY(i)),az=Math.abs(n.getZ(i));
     if(ay>=ax&&ay>=az)uv.setXY(i,p.getX(i)+me.position.x,p.getZ(i)+me.position.z);else if(ax>=az)uv.setXY(i,p.getZ(i)+me.position.z,p.getY(i)+me.position.y);else uv.setXY(i,p.getX(i)+me.position.x,p.getY(i)+me.position.y)}
   me.userData.keepUV=true;return me}
-{const X1=14.125,X2=20.25,Y1=31.5,Y2=36.0,c=0.04,e=0.012,TZ=7.0,tw='Wall tile · greige matte porcelain, 2\' x 1\', to 7\'',tsw='Shower wall tile · wood-look porcelain, to 7\'';
+{const X1=14.125,X2=20.25,Y1=30.5,Y2=35.0,c=0.04,e=0.012,TZ=7.0,tw='Wall tile · greige matte porcelain, 2\' x 1\', to 7\'',tsw='Shower wall tile · wood-look porcelain, to 7\'';
  // front wall GW-04 (V-01 at x 16.25-18.25, sill 6')
  tile(X1,17.25,Y1,Y1+c,0,6.0,MAT.tWall,tw);tile(17.25,X2,Y1,Y1+c,0,6.0,MAT.tWall,tw);
  tile(X1,16.25,Y1,Y1+c,6.0,TZ,MAT.tWall,tw);tile(18.25,X2,Y1,Y1+c,6.0,TZ,MAT.tWall,tw);
@@ -960,17 +960,16 @@ X_(()=>{CURFL='F';ZOFF=FFZ;P.walls.F.forEach(buildWall);
  ZOFF=0;CURFL='G';});
 // ================= BEDROOM 3 (F-05), its lobby (F-06) and TOILET 3 (F-07): same Japandi warm-oak design as bedrooms 1 and 2 =================
 X_(()=>{CURFL='F';ZOFF=FFZ;
-{const X1=10.25,X2=20.25,Y1=84.875,Y2=96.625,f2=id=>fuG2[id];
+{const X1=10.25,X2=20.25,Y1=80.25,Y2=94.375,f2=id=>fuG2[id];
  tagAs(ROOF_F,()=>{bandSide(X1,X2,Y1,Y1+BW,'y+');bandSide(X1,X2,Y2-BW,Y2,'y-');bandSide(X1,X1+BW,Y1+BW,Y2-BW,'x+');bandSide(X2-BW,X2,Y1+BW,Y2-BW,'x-');
-  for(const [x,y] of [[X1+0.5,87.0],[X1+0.5,92.4],[17.4,Y1+0.45],[12.6,Y2-0.45]]) downlight(x,y,BZ);
-  ceilingFan(15.1,90.9,0.3);downlight(12.05,82.6,CEIL,'LED ceiling light, bedroom 3 lobby (warm white)');});
+  for(const [x,y] of [[X1+0.5,84.5],[X1+0.5,90.6],[17.4,Y1+1.8],[12.6,Y2-0.45]]) downlight(x,y,BZ);
+  ceilingFan(15.1,87.3,0.3);});
  {const hS=0.33,d=0.04,t='Tile skirting, 4"';
-  box(X1,X1+d,80.25,Y2,0,hS,MAT.skirt,{tip:t});box(X1+d,X2,Y2-d,Y2,0,hS,MAT.skirt,{tip:t});box(13.5,13.875,80.25,80.25+d,0,hS,MAT.skirt,{tip:t});
-  box(13.875-d,13.875,80.25+d,82.0,0,hS,MAT.skirt,{tip:t});}   // east wall, back wall, lobby walls beside D-07 and D-08
+  box(X1,X1+d,Y1,Y2,0,hS,MAT.skirt,{tip:t});box(X1+d,X2,Y2-d,Y2,0,hS,MAT.skirt,{tip:t});}   // east wall and back wall
  // AC FU-48 on FW-01 facing the bed
  {const ac=f2('FU-48');box(X1+0.012,ac.x2,ac.y1,ac.y2,7.55,8.5,std({color:'#f4f4f2',roughness:0.35}),{round:0.08,tip:`FU-48 · AC indoor unit, 1.5 ton split · ${ac.note}`});
   box(ac.x2,ac.x2+0.02,ac.y1+0.15,ac.y2-0.15,7.62,7.7,MAT.blackMetal,{cast:false,tip:'FU-48 · AC air outlet'});}
- // curtains: W-10 (FW-01) from the band, kept clear of the AC; W-11 (FW-04)
+ // curtains: W-10 (FW-01) from the band, kept clear of the AC; beside the balcony door D-11 (FW-04)
  for(const [a,b] of [[87.2,88.6],[92.45,92.95]]) curtain(a,b,X1+0.42,BZ,'Curtain track');
  for(const [a,b] of [[11.7,13.1],[17.4,18.6]]) curtain(a,b,Y2-0.42,BZ,'Curtain track','x');
  // queen bed FU-36, head to FW-03, headboard wall panel across both side tables
@@ -1001,7 +1000,7 @@ X_(()=>{CURFL='F';ZOFF=FFZ;
     for(let i=0;i<4;i++){g.fillStyle=['#a9846a','#8a6a4f','#c79a74','#6e5440'][i];g.globalAlpha=0.55;g.fillRect(w*(0.08+i*0.22),h*(0.25+0.08*(i%2)),w*0.16,h*0.5)}
     g.globalAlpha=1;for(let i=0;i<9000;i++){const v=(r()-.5)*0.06;g.fillStyle=v>0?`rgba(255,255,255,${v})`:`rgba(0,0,0,${-v})`;g.fillRect(r()*w,r()*h,2,2)}},1);t.repeat.set(1,1);
   const pl=new THREE.Mesh(new THREE.PlaneGeometry(m(ay2-ay1-0.2),m(az2-az1-0.2)),std({map:t,roughness:0.9}));pl.rotation.y=Math.PI/2;pl.position.set(mx(X2-0.115),m(FFZ+(az1+az2)/2),m((ay1+ay2)/2));scene.add(pl);named(pl,'Framed art · four earthy blocks, textured canvas');pl.userData.keepUV=true;}
- // sliding wardrobe FU-39 with loft on FW-07
+ // sliding wardrobe FU-39 with loft on FW-05, by the entrance
  {const wd=f2('FU-39'),sg=[[wd.x1,wd.x1+(X2-0.012-wd.x1)/3,'door'],[wd.x1+(X2-0.012-wd.x1)/3,wd.x1+2*(X2-0.012-wd.x1)/3,'door'],[wd.x1+2*(X2-0.012-wd.x1)/3,X2-0.012,'door']];
   cabRun('FU-39','Sliding wardrobe, oak veneer',wd.x1,X2-0.012,Y1+0.012,wd.y2,0,7.55,'y+',sg,MAT.oak,true);
   cabRun('FU-39','Wardrobe loft, oak veneer',wd.x1,X2-0.012,Y1+0.012,wd.y2,7.562,BZ-0.005,'y+',sg,MAT.oak,false);}
@@ -1017,38 +1016,38 @@ X_(()=>{CURFL='F';ZOFF=FFZ;
  // a small bamboo plant in the lobby corner
  {const plant=createBambooPlant(THREE,{seed:7,height:1.3});plant.position.set(mx(10.85),m(FFZ),m(84.1));scene.add(plant);plant.traverse(o=>{if(o.isMesh){o.userData.keepUV=true;named(o,'Bamboo plant in a black pot')}})}
 }
-// TOILET 3 (F-07), 6' x 4'3": greige tiles to 7', wall-hung WC FU-41, basin FU-42 by the door, shower FU-43 across the west end with curtain FU-61
-{const X1=14.25,X2=20.25,Y1=80.25,Y2=84.5,c=0.04,e=0.012,TZ=7.0,tw='Wall tile · greige matte porcelain, 2\' x 1\', to 7\'',f2=id=>fuG2[id],dr=P.openings.find(o=>o.id==='D-08');
- tile(X1,X2,Y1,Y1+c,0,TZ,MAT.tWall,tw);tile(X1,X2,Y2-c,Y2,0,TZ,MAT.tWall,tw);tile(X2-c,X2,Y1+c+e,Y2-c-e,0,TZ,MAT.tWall,tw);
- tile(X1,X1+c,Y1+c+e,dr.a,0,TZ,MAT.tWall,tw);tile(X1,X1+c,dr.b,Y2-c-e,0,TZ,MAT.tWall,tw);
- // WC FU-41 on FW-05: tiled cistern ledge, wall-hung bowl facing south
+// TOILET 3 (F-07), 5'7½" x 4'7½", east of bedroom 3 over the side garden: greige tiles to 7', WC FU-41 and basin FU-42 on the south wall, shower FU-43 in the north-east with rose and geyser FU-60 on the east wall, door D-08 in FW-01 (west)
+{const X1=3.875,X2=9.5,Y1=80.25,Y2=84.875,c=0.04,e=0.012,TZ=7.0,tw='Wall tile · greige matte porcelain, 2\' x 1\', to 7\'',f2=id=>fuG2[id],dr=P.openings.find(o=>o.id==='D-08');
+ tile(X1,X2,Y1,Y1+c,0,TZ,MAT.tWall,tw);tile(X1,X2,Y2-c,Y2,0,TZ,MAT.tWall,tw);tile(X1,X1+c,Y1+c+e,Y2-c-e,0,TZ,MAT.tWall,tw);
+ tile(X2-c,X2,Y1+c+e,dr.a,0,TZ,MAT.tWall,tw);tile(X2-c,X2,dr.b,Y2-c-e,0,TZ,MAT.tWall,tw);
+ // WC FU-41 on the south wall, facing north: tiled cistern ledge, wall-hung bowl
  const w=f2('FU-41'),wx=(w.x1+w.x2)/2;
- tile(w.x1-0.15,w.x2+0.15,Y1+c+e,Y1+0.6,0,3.3,MAT.tWall,'Concealed cistern ledge, tiled · shelf on top');box(w.x1-0.17,w.x2+0.17,Y1+c+e,Y1+0.62,3.3,3.38,MAT.oak,{tip:'Ledge top, oak-look'});
- box(wx-0.35,wx+0.35,Y1+0.6,Y1+0.61,2.55,3.05,MAT.blackMetal,{cast:false,tip:'Flush plate, matte black'});
- const bowl=new THREE.Mesh(new THREE.SphereGeometry(m(0.5),32,20),MAT.ceramic);bowl.scale.set(1.0,0.55,1.75);bowl.position.set(mx(wx),m(FFZ+1.12),m(Y1+1.35));bowl.castShadow=true;scene.add(bowl);named(bowl,`FU-41 · Western WC, wall-hung · ${w.note}`);
- box(wx-0.47,wx+0.47,Y1+0.62,Y1+2.1,1.38,1.46,MAT.ceramic,{round:0.035,tip:'FU-41 · soft-close seat'});
- cyl(w.x2+0.35,Y1+c+0.05,3.0,3.5,0.06,MAT.blackMetal,{tip:'Health faucet, matte black'});
- // basin FU-42 on FW-05 beside the door, mirror above
- const b=f2('FU-42'),bxc=(b.x1+b.x2)/2;box(b.x1+0.05,b.x2-0.05,Y1+c+e,b.y2-0.05,2.3,2.68,MAT.ceramic,{round:0.1,tip:`FU-42 · Wash basin, wall-hung · ${b.note}`});
- cyl(bxc,(Y1+b.y2)/2+0.05,2.6,2.685,0.42,std({color:'#e4e6e7',roughness:0.15}),{tip:'Basin bowl'});
- box(bxc-0.04,bxc+0.04,Y1+c,Y1+c+0.45,3.0,3.07,MAT.blackMetal,{tip:'Basin tap, wall-mounted, matte black'});
- box(b.x1+0.1,b.x2-0.1,Y1+c+e,Y1+c+0.04,3.5,5.7,MAT.mirror,{cast:false,tip:'Mirror with warm LED backlight'});ledStrips.push(box(b.x1+0.05,b.x2-0.05,Y1+c+e,Y1+c+0.03,3.45,3.5,MAT.led,{cast:false,tip:'Mirror backlight'}));
- // shower FU-43: rose and mixer on FW-03, geyser FU-60, floor trap, curtain rod FU-61 with a waffle curtain drawn back
+ tile(w.x1,w.x2+0.15,Y2-0.6,Y2-c-e,0,3.3,MAT.tWall,'Concealed cistern ledge, tiled · shelf on top');box(w.x1,w.x2+0.17,Y2-0.62,Y2-c-e,3.3,3.38,MAT.oak,{tip:'Ledge top, oak-look'});
+ box(wx-0.35,wx+0.35,Y2-0.61,Y2-0.6,2.55,3.05,MAT.blackMetal,{cast:false,tip:'Flush plate, matte black'});
+ const bowl=new THREE.Mesh(new THREE.SphereGeometry(m(0.5),32,20),MAT.ceramic);bowl.scale.set(1.0,0.55,1.75);bowl.position.set(mx(wx),m(FFZ+1.12),m(Y2-1.35));bowl.castShadow=true;scene.add(bowl);named(bowl,`FU-41 · Western WC, wall-hung · ${w.note}`);
+ box(wx-0.47,wx+0.47,Y2-2.1,Y2-0.62,1.38,1.46,MAT.ceramic,{round:0.035,tip:'FU-41 · soft-close seat'});
+ cyl(w.x2+0.35,Y2-c-0.05,3.0,3.5,0.06,MAT.blackMetal,{tip:'Health faucet, matte black'});
+ // basin FU-42 on the south wall by the door, mirror above
+ const bs=f2('FU-42'),bxc=(bs.x1+bs.x2)/2;box(bs.x1+0.05,bs.x2-0.05,bs.y1+0.05,Y2-c-e,2.3,2.68,MAT.ceramic,{round:0.1,tip:`FU-42 · Wash basin, wall-hung · ${bs.note}`});
+ cyl(bxc,(bs.y1+Y2)/2-0.05,2.6,2.685,0.42,std({color:'#e4e6e7',roughness:0.15}),{tip:'Basin bowl'});
+ box(bxc-0.04,bxc+0.04,Y2-c-0.45,Y2-c,3.0,3.07,MAT.blackMetal,{tip:'Basin tap, wall-mounted, matte black'});
+ box(bs.x1+0.1,bs.x2-0.1,Y2-c-0.04,Y2-c-e,3.5,5.7,MAT.mirror,{cast:false,tip:'Mirror with warm LED backlight'});ledStrips.push(box(bs.x1+0.05,bs.x2-0.05,Y2-c-0.03,Y2-c-e,3.45,3.5,MAT.led,{cast:false,tip:'Mirror backlight'}));
+ // shower FU-43: rose and mixer on the east wall, geyser FU-60, floor trap, curtain rod FU-61 with a waffle curtain drawn back
  const sh=f2('FU-43'),sy=(sh.y1+sh.y2)/2;
- box(X2-c-0.9,X2-c,sy-0.03,sy+0.03,6.95,7.0,MAT.blackMetal,{tip:'Shower arm, matte black'});cyl(X2-c-0.9,sy,6.75,6.8,0.3,MAT.blackMetal,{tip:'Shower rose, 8", matte black'});
- {const mxr=cyl(X2-c-0.02,sy,3.5,3.75,0.16,MAT.blackMetal,{tip:'Shower mixer, matte black',seg:24});mxr.rotation.z=Math.PI/2;}
+ box(X1+c,X1+c+0.9,sy-0.03,sy+0.03,6.95,7.0,MAT.blackMetal,{tip:'Shower arm, matte black'});cyl(X1+c+0.9,sy,6.75,6.8,0.3,MAT.blackMetal,{tip:'Shower rose, 8", matte black'});
+ {const mxr=cyl(X1+c+0.02,sy,3.5,3.75,0.16,MAT.blackMetal,{tip:'Shower mixer, matte black',seg:24});mxr.rotation.z=Math.PI/2;}
  box((sh.x1+sh.x2)/2-0.21,(sh.x1+sh.x2)/2+0.21,sy-0.21,sy+0.21,0.006,0.016,std({color:'#9a9893',roughness:0.4,metalness:0.6}),{cast:false,tip:'Floor trap, 5" square steel grating'});
- const gy=f2('FU-60');box(gy.x1,X2-c-e,gy.y1,gy.y2,6.25,7.4,MAT.appWhite,{round:0.12,tip:`FU-60 · Geyser, 15 L · ${gy.note}`});
- const cr=f2('FU-61');box(cr.x1,cr.x2,Y1+c,Y2-c,7.0,7.05,MAT.blackMetal,{tip:`FU-61 · Shower curtain rod, matte black · ${cr.note}`});
+ const gy=f2('FU-60');box(X1+c+e,gy.x2,gy.y1,gy.y2,6.25,7.4,MAT.appWhite,{round:0.12,tip:`FU-60 · Geyser, 15 L · ${gy.note}`});
+ const cr=f2('FU-61');box(cr.x1,cr.x2,cr.y1+c,cr.y2,7.0,7.05,MAT.blackMetal,{tip:`FU-61 · Shower curtain rod, matte black · ${cr.note}`});
  curtain(Y1+c+0.05,Y1+1.4,(cr.x1+cr.x2)/2,7.0,'Shower curtain rod','y',std({color:'#dcd8cf',roughness:1,side:THREE.DoubleSide,normalMap:T.linen.normalMap}),'FU-61 · Shower curtain, waffle cotton, drawn back');
- // exhaust fan FU-62 in the ceiling, ducted to the roof
+ // exhaust fan FU-62 in the ceiling
  {const ex=f2('FU-62');tagAs(ROOF_F,()=>{box(ex.x1+0.2,ex.x2-0.2,ex.y1+0.2,ex.y2-0.2,CEIL-0.04,CEIL-0.002,MAT.white,{tip:`FU-62 · Exhaust fan grille · ${ex.note}`});
    for(let k=0;k<5;k++) box(ex.x1+0.25,ex.x2-0.25,ex.y1+0.28+k*0.11,ex.y1+0.3+k*0.11,CEIL-0.05,CEIL-0.04,MAT.blackMetal,{cast:false,tip:'Exhaust fan grille'});
-   downlight(16.0,83.0,CEIL,'LED ceiling light, toilet 3 (warm white)');});}
+   downlight(7.6,82.4,CEIL,'LED ceiling light, toilet 3 (warm white)');});}
 }
 ZOFF=0;CURFL='G';});
 // roof slab of the ground floor (also the terrace floor) and its edge fascia
-const slabParts=[[2.75,9.625,15.5,19.75],[2.75,21,19.75,67.125],[6.0,21,67.125,73.75],[6.0,9.5,73.75,73.875],[2.75,9.5,73.875,77.875],[2.75,6.0,67.125,73.875],[9.5,21,95.125,97.375]];   // full slab, also over the bore court and under the bedroom 3 projection past GW-08
+const slabParts=[[2.75,9.625,15.5,19.75],[2.75,21,19.75,67.125],[6.0,21,67.125,73.75],[6.0,9.5,73.75,73.875],[2.75,9.5,73.875,85.25],[2.75,6.0,67.125,73.875],[9.5,21,95.125,98.125]];   // full slab, also over the bore court and under the bedroom 3 projection past GW-08
 function holeSlab(x1,x2,y1,y2,z1,z2,h,mat,tip){   // thick slab with a round hole (extruded upward from z1)
   const sh=new THREE.Shape([[x1,y1],[x2,y1],[x2,y2],[x1,y2]].map(p=>new THREE.Vector2(mx(p[0]),-m(p[1]))));
   const q=new THREE.Path();q.absarc(mx(h.x),-m(h.y),m(h.r),0,Math.PI*2,false);sh.holes.push(q);
@@ -1057,17 +1056,17 @@ function holeSlab(x1,x2,y1,y2,z1,z2,h,mat,tip){   // thick slab with a round hol
 X_(()=>{for(const [a,b,c,d] of slabParts) box(a,b,c,d,SLB,FFZ-0.05,MAT.white,{tip:'RCC roof slab and beams, ground floor (terrace floor above)'});
  holeSlab(9.5,21,73.75,95.125,SLB,FFZ-0.05,WELL,MAT.white,'RCC slab over the stair hall and bedroom 2 · 6\' round hole for ST-2, edge beams round it');
  const fz1=SLB-0.012,fz2=FFZ,ft='Slab edge fascia';
- for(const [a,b,c,d] of [[2.75,9.625,15.5-0.03,15.5-0.012],[9.625,21,19.75-0.03,19.75-0.012],[2.75,9.5,77.875+0.012,77.875+0.03],[9.5,21,97.375+0.012,97.375+0.03]]) box(a,b,c,d,fz1,fz2,MAT.extTrim,{tip:ft});
- for(const [a,b,c,d] of [[2.75-0.03,2.75-0.012,15.5,77.875],[9.625+0.012,9.625+0.03,15.5,19.75],[21+0.012,21+0.03,19.75,97.375],[9.5-0.03,9.5-0.012,77.875,97.375]]) box(a,b,c,d,fz1,fz2,MAT.extTrim,{tip:ft});
+ for(const [a,b,c,d] of [[2.75,9.625,15.5-0.03,15.5-0.012],[9.625,21,19.75-0.03,19.75-0.012],[2.75,9.5,85.25+0.012,85.25+0.03],[9.5,21,98.125+0.012,98.125+0.03]]) box(a,b,c,d,fz1,fz2,MAT.extTrim,{tip:ft});
+ for(const [a,b,c,d] of [[2.75-0.03,2.75-0.012,15.5,85.25],[9.625+0.012,9.625+0.03,15.5,19.75],[21+0.012,21+0.03,19.75,98.125],[9.5-0.03,9.5-0.012,85.25,98.125]]) box(a,b,c,d,fz1,fz2,MAT.extTrim,{tip:ft});
  // parapets PW-01..05, 3' high, 4½", with a coping; vertical louvers on the balcony front PW-01
  for(const w of P.walls.F.filter(w=>w.kind==='para')){box(w.x1,w.x2,w.y1,w.y2,FFZ-0.05,FFZ+w.h,MAT.ext,{tip:`${w.id} · ${w.desc} · 3' parapet`});
    box(w.x1-0.06,w.x2+0.06,w.y1-0.06,w.y2+0.06,FFZ+w.h,FFZ+w.h+0.15,MAT.extTrim,{tip:`${w.id} · parapet coping`});wallMeshes.push(scene.children[scene.children.length-2])}
  for(let x=2.95;x<9.55;x+=0.33) box(x,x+0.12,15.5-0.15,15.5-0.035,FFZ-0.4,FFZ+3.0,MAT.extWood,{tip:'Balcony front louvers, wood-look aluminium'});
  // roof of the first floor (bedroom 3 block), low parapet, overhead tank FU-71 on a stand, cat ladder FU-72
  let RZ,RT;tagAs(ROOF_F,()=>{
- RZ=FFZ+SLB;RT=RZ+1.0;box(9.5,21,73.125,97.375,RZ,RT,MAT.white,{tip:'RCC roof slab, first floor'});
- for(const [a,b,c,d] of [[9.5,21,73.125,73.5],[9.5,21,97.0,97.375],[9.5,9.875,73.5,97.0],[20.625,21,73.5,97.0]]){box(a,b,c,d,RT,RT+1.5,MAT.extUp,{tip:'Roof parapet, 1\'6"'});box(a-0.04,b+0.04,c-0.04,d+0.04,RT+1.5,RT+1.62,MAT.extTrim,{tip:'Roof parapet coping'})}
- slab([[9.875,73.5],[20.625,73.5],[20.625,97.0],[9.875,97.0]],MAT.terrTile,RT+0.005,'Roof of bedroom 3 · pressed clay tiles');
+ RZ=FFZ+SLB;RT=RZ+1.0;box(9.5,21,73.125,95.125,RZ,RT,MAT.white,{tip:'RCC roof slab, first floor'});box(3.125,9.5,79.875,85.25,RZ,RZ+0.5,MAT.white,{tip:'RCC roof slab over toilet 3'});
+ for(const [a,b,c,d] of [[9.5,21,73.125,73.5],[9.5,21,94.75,95.125],[9.5,9.875,73.5,94.75],[20.625,21,73.5,94.75]]){box(a,b,c,d,RT,RT+1.5,MAT.extUp,{tip:'Roof parapet, 1\'6"'});box(a-0.04,b+0.04,c-0.04,d+0.04,RT+1.5,RT+1.62,MAT.extTrim,{tip:'Roof parapet coping'})}
+ slab([[9.875,73.5],[20.625,73.5],[20.625,94.75],[9.875,94.75]],MAT.terrTile,RT+0.005,'Roof of bedroom 3 · pressed clay tiles');
  const tk=fuG2['FU-71'],tx=(tk.x1+tk.x2)/2,ty=(tk.y1+tk.y2)/2;box(tk.x1+0.2,tk.x2-0.2,tk.y1+0.2,tk.y2-0.2,RT,RT+1.0,MAT.white,{tip:'RCC tank stand, 1\''});
  cyl(tx,ty,RT+1.0,RT+5.6,2.45,MAT.tank,{tip:`FU-71 · Overhead water tank, 2000 L, white · ${tk.note}`,rTop:2.35,seg:40});cyl(tx,ty,RT+5.6,RT+5.95,0.8,MAT.tank,{tip:'Tank lid'});
  for(const z of [RT+2.2,RT+3.8]) cyl(tx,ty,z,z+0.12,2.48,MAT.tank,{tip:'Tank rib',seg:40});
@@ -1078,7 +1077,7 @@ X_(()=>{for(const [a,b,c,d] of slabParts) box(a,b,c,d,SLB,FFZ-0.05,MAT.white,{ti
  for(const c of P.columns.filter(c=>c.floors==='G')) box(c.x1+0.012,c.x2-0.012,c.y1+0.012,c.y2-0.012,FFZ-0.05,FFZ+1.25,MAT.white,{tip:`${c.id} · pillar stub, 1'3" high, bars inside for the future hall`});
 });
 // W-01 (study, front wall GW-04): small gable window frame WF-2: a frame that hugs the window, a sill ledge, and a little tiled gable on top
-{const o=P.openings.find(o=>o.id==='W-01'),xa=o.a,xb=o.b,xc=(xa+xb)/2,z1=o.sill,z2=o.sill+o.h,Yf=30.75-0.035,tan=MAT.extWood,tt='W-01 · gable window frame WF-2 · wood-look brown frame (aluminium or HPL), red clay-tile roof';
+{const o=P.openings.find(o=>o.id==='W-01'),xa=o.a,xb=o.b,xc=(xa+xb)/2,z1=o.sill,z2=o.sill+o.h,Yf=29.75-0.035,tan=MAT.extWood,tt='W-01 · gable window frame WF-2 · wood-look brown frame (aluminium or HPL), red clay-tile roof';
  const prismXZ=(pts,y1,y2,mat,tip)=>{const sh=new THREE.Shape(pts.map(([x,z])=>new THREE.Vector2(mx(x),m(z))));
    const g=new THREE.ExtrudeGeometry(sh,{depth:m(y2-y1),bevelEnabled:false});const me=new THREE.Mesh(g,mat);me.position.z=m(y1);me.castShadow=true;me.receiveShadow=true;scene.add(me);named(me,tip);return me};
  const fw=0.33,fd=0.33;   // 4" frame, 4" out from the wall
@@ -1094,7 +1093,7 @@ X_(()=>{for(const [a,b,c,d] of slabParts) box(a,b,c,d,SLB,FFZ-0.05,MAT.white,{ti
  prismXZ([[ea,Z0-0.05],[xc,az+0.08],[eb,Z0-0.05],[eb,Z0-0.15],[xc,az-0.02],[ea,Z0-0.15]],Yf-PD-0.08,Yf,tile,tt+' · roof, red clay tiles (Mangalore style)');
  box(xc-0.06,xc+0.06,Yf-PD-0.08,Yf,az+0.05,az+0.14,std({color:'#8a3420',roughness:0.7}),{tip:tt+' · ridge tile'});
  // scroll ornaments across the middle of the grill, in the frame brown
- const orn=std({color:'#c49a6c',roughness:0.5,metalness:0.3}),gy=31.5-0.12;
+ const orn=std({color:'#c49a6c',roughness:0.5,metalness:0.3}),gy=30.5-0.12;
  for(const cx of [xc-0.95,xc,xc+0.95]){const cz2=z1+1.7;
    for(const [dx,dz,rot] of [[-0.13,0.14,0],[-0.13,-0.14,0],[0.13,0.14,Math.PI],[0.13,-0.14,Math.PI]]){const t=new THREE.Mesh(new THREE.TorusGeometry(m(0.11),m(0.014),6,20,4.4),orn);t.rotation.z=rot+(dz>0?-0.6:0.6)+(rot?0:Math.PI)-Math.PI;t.position.set(mx(cx+dx),m(cz2+dz),m(gy));scene.add(t);named(t,'W-01 · grill scroll ornament, brown')}
    const d=new THREE.Mesh(new THREE.TorusGeometry(m(0.09),m(0.014),6,4),orn);d.rotation.z=Math.PI/4;d.position.set(mx(cx),m(cz2),m(gy));scene.add(d);named(d,'W-01 · grill diamond ornament, brown')}
@@ -1102,12 +1101,12 @@ X_(()=>{for(const [a,b,c,d] of slabParts) box(a,b,c,d,SLB,FFZ-0.05,MAT.white,{ti
 // ground-floor pillars that stand free (parking, porch) and the beam drops under the slab outside the rooms
 const inWallG=c=>P.walls.G.some(w=>!['comp','pillar','planter','para'].includes(w.kind)&&c.x1<w.x2-0.01&&c.x2>w.x1+0.01&&c.y1<w.y2-0.01&&c.y2>w.y1+0.01);
 for(const c of P.columns) if(!inWallG(c)){const me=box(c.x1,c.x2,c.y1,c.y2,c.y1<31?PKZ:GRD,SLB,MAT.ext,{tip:`${c.id} · Pillar 1' x 9" · ${c.note}`});wallMeshes.push(me)}
-{const zones=[[2.75,21,15.5,30.75],[2.75,8.5,30.75,40.5],[0.375,2.75,19.75,20.5]];   // last: B-01 extension to C-01 at the east wall
+{const zones=[[2.75,21,15.5,29.75],[2.75,8.5,29.75,40.5],[0.375,2.75,19.75,20.5]];   // last: B-01 extension to C-01 at the east wall
  for(const b of P.beams.filter(b=>b.level==='G')) for(const [a,bb,c,d] of zones){const x1=Math.max(b.x1,a),x2=Math.min(b.x2,bb),y1=Math.max(b.y1,c),y2=Math.min(b.y2,d);
    if(x2-x1>0.05&&y2-y1>0.05) box(x1+0.006,x2-0.006,y1+0.006,y2-0.006,SLB-1.08,SLB+0.01,MAT.white,{tip:`${b.id} · Beam 9" x ${b.depth} · ${b.note}`})}}
 // ground: house plinth, porch with 3 steps, parking pavers, road
 const PSY=P.porchY||30.75,PFY=PSY+2.5;   // porch steps start, porch floor start
-for(const [a,b,c,d] of [[8.25,21,30.75,33.25],[8.25,21,33.25,67.375],[2.75,8.25,PFY,67.375],[6.0,21,67.375,73.875],[9.5,21,73.875,95.125],[2.75,3.5,31.762,PFY]].filter(r=>r[3]>r[2]+0.01)) box(a,b,c,d,c<31.8?PKZ:GRD,-0.03,MAT.extBase,{cast:false,tip:'Plinth band · textured paint (or stone cladding) in the base colour'});
+for(const [a,b,c,d] of [[8.25,21,29.75,33.25],[8.25,21,33.25,67.375],[2.75,8.25,PFY,67.375],[6.0,21,67.375,73.875],[9.5,21,73.875,95.125],[2.75,3.5,31.762,PFY]].filter(r=>r[3]>r[2]+0.01)) box(a,b,c,d,c<31.8?PKZ:GRD,-0.03,MAT.extBase,{cast:false,tip:'Plinth band · textured paint (or stone cladding) in the base colour'});
 slab([[2.75,PFY],[8.5,PFY],[8.5,40.5],[2.75,40.5]],MAT.otherFloor,0,'G-02 · Porch floor');
 if(PSY>30.76) box(3.5,8.25,30.75,PSY,PKZ-0.2,PKZ+0.03,MAT.parkTile,{cast:false,tip:`G-01 · Parking bay in front of the porch steps, ${Math.round((PSY-30.75)*12)}" deep · grey pavers`});
 for(let i=0;i<3;i++) box(3.5,8.25,PSY+i*0.833,PFY,PKZ,PKZ+(i+1)*(-PKZ/3),MAT.stepStone,{tip:`Porch steps, granite, ${Math.round(-PKZ/3*12)}" risers, from the parking`});

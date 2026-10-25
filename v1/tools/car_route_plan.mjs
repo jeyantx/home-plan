@@ -3,7 +3,7 @@ const MARGIN=+(process.env.MARGIN||0.5);   // safety gap kept round the body whi
 const WB=8.7, OVR=3.1+MARGIN, OVF=14.96-8.7-3.1+MARGIN, HW=5.75/2+MARGIN;   // wheelbase, rear and front overhang, half width (inflated by the margin)
 const RMIN=11.6;   // rear-axle turning radius (VW Virtus ~5.05 m kerb-to-kerb)
 const bikes=process.argv[2]==='bikes';
-const rects=[[17.125,20.625,2.667,16.0],[20.25,21,19.75,20.75],[12,13.5,-0.2,1.5],[-1,0.75,-0.2,0.75],[13.5,22,-0.2,0.75],[2.75,21,30.75,40],[0.375,1.125,19.75,20.75],[-5,0.375,0.75,40],[20.625,30,0.75,40],[3.5,8.25,30.75,33.25],
+const rects=[[17.125,20.625,2.667,16.0],[20.25,21,19.75,20.75],[12,13.5,-0.2,1.5],[-1,0.75,-0.2,0.75],[13.5,22,-0.2,0.75],[2.75,8.5,30.75,40],[8.5,21,29.75,40],[0.375,1.125,19.75,20.75],[-5,0.375,0.75,40],[20.625,30,0.75,40],[3.5,8.25,30.75,33.25],
   [0.8,1.4,0.3,3.2],[11.35,11.95,0.3,3.2],   // GT-01 leaves folded open at their hinges
   [-60,80,-30,-16.5],[-60,-0.01,-0.01,0.01],[21,80,-0.01,0.01]];   // far kerb of the road; boundary line either side of our gate
 if(bikes) rects.push([17.35,19.97,12.3,19.04],[17.4,19.82,19.6,25.63]);
@@ -34,7 +34,7 @@ function plan(start,goal,goalTol){
   return {n:null,it}}
 const S2=Math.PI/2;
 // in: from the road (driving west along the far lane) to the spot, nose south
-const park=[+(process.argv[3]||13),29.73-WB-OVF,S2];   // rear axle so the front sits 1' from the wall
+const park=[+(process.argv[3]||13),28.73-WB-OVF,S2];   // rear axle so the front sits 1' from the wall
 const rin=plan([-35,-10,0],park,n=>Math.hypot(n.x-park[0],n.y-park[1])<0.35&&Math.abs(Math.atan2(Math.sin(n.th-S2),Math.cos(n.th-S2)))<0.05);
 const trace=n=>{const out=[];while(n){out.push([+n.x.toFixed(3),+n.y.toFixed(3),+n.th.toFixed(4),n.dir]);n=n.par}return out.reverse()};
 const segs=t=>{let c=0;for(let i=1;i<t.length;i++)if(t[i][3]!==t[i-1][3])c++;return c};

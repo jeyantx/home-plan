@@ -126,7 +126,12 @@ RAMP=dict(y_hump=1.0,y_crest=3.25,y_top=10.75,ease=1.5,drain=(2.5,3.25))   # gat
 # small gate GT-02: three 6" steps up from the crest (risers in line with ST-1's treads), then a level platform at parking height between the tree well and ST-1A;
 # its east edge is a retaining kerb along the car's ramp (16" high at the north end, nothing where the ramp reaches the parking at Y 10'9")
 SIDE_PLATFORM=dict(well=(12.75,4.75,2.25),x1=13.5,x2=17.125,steps=(2.667,3.5,4.333),xe=12.5,y_end=10.75)
-BRANCH_NOTES='''<section class="ask"><h2>Garden plan (branch garden-v1, for review)</h2>
+BRANCH_NOTES='''<section class="ask"><h2>Areas for the engineer (built-up and parking cover)</h2>
+<ol>
+<li><b>Built-up area: 1,365 sq ft</b> (outside faces of the walls): ground floor rooms with the foyer 967, porch 56, bore court (roofed) 21; first floor bedroom 3, landing and wardrobe area 253, toilet 3 34, balcony 3 34. The open terrace is not counted (it is the ground floor's roof).</li>
+<li><b>Car parking cover: 229 sq ft</b>: the parking under the roof slab in front of the house and the porch, including the part under balcony 2 (counted here, not again as built-up).</li>
+</ol></section>
+<section class="ask"><h2>Garden plan (branch garden-v1, for review)</h2>
 <ol>
 <li><b>Idea:</b> low-care plants that Tamil Nadu homes use every day (pooja flowers, kitchen greens, herbs), in beds and pots, with the walks, the car route, the bores and the utility kept clear. The existing back bed FU-73 (PL-01 to PL-12) and the neem tree stay as they are.</li>
 <li><b>Porch (shade):</b> areca palm GD-01 in a big pot beside the main door, anthurium GD-02 and syngonium GD-03 in pots on the sides, clear of the walk from the steps to the door.</li>
