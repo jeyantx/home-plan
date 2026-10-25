@@ -16,7 +16,7 @@ export {plan,WB,RMIN};`;
 const tmp=new URL('./.car_route_east_tmp_'+process.pid+'.mjs',import.meta.url);fs.writeFileSync(tmp,src);
 const {plan,WB}=await import(tmp.href);fs.unlinkSync(tmp);
 const N2=-Math.PI/2,ang=(a,b)=>Math.abs(Math.atan2(Math.sin(a-b),Math.cos(a-b)));
-const park=[PARKX,29.73-3.1,N2];
+const park=[PARKX,28.73-3.1,N2];
 const r=plan(park,[-40,-8,Math.PI],n=>n.y<-4&&n.x<-20&&ang(n.th,Math.PI)<0.15);
 if(!r.n){console.log(JSON.stringify({PARKX,XE,out:'none'}));process.exit(1)}
 let sw=0;for(let n=r.n;n&&n.par;n=n.par)if(n.dir!==n.par.dir&&n.par.par)sw++;if(sw){console.log(JSON.stringify({PARKX,XE,switches:sw}));if(!process.env.ALLOWSW)process.exit(1)}
