@@ -109,7 +109,7 @@ OPENINGS = [
  ('W-08','G','GW-08', 10.75,19.25,'window',None,None, 5.0,2.0,'Bedroom 2 back picture window to the back garden, 8\'6" x 5\', low 2\' sill; replaces the back door D-10'),
  ('GT-01','G','FRONT', 0.75,12.0,'gate',None,'+', 6.0,0,'Large gate, 11\'3", bi-fold double leaf (4 panels), folds inward over the level crest, east of the planter pillar'),
  ('GT-02','G','FRONT', 13.5,20.25,'gate',None,'+', 6.0,0,'Small gate, 6\'9", bi-fold double leaf (4 panels), folds inward over the level crest, west of the planter pillar'),
- ('D-07','F','FW-05', 10.5,13.5,'door','a','+', 7.0,0,'Bedroom 3 door, from landing'),
+ ('D-07','F','FW-05', 10.5,13.5,'door','a','-', 7.0,0,'Bedroom 3 door, from the landing; opens out onto the landing, hinged at its east end so it folds right back against FW-01'),
  ('D-08','F','FW-01', 80.75,83.0,'door','a','-', 7.0,0,'Toilet 3 door, 2\'3", from bedroom 3, on the left as you come in; opens into the toilet'),
  ('D-09','F','FW-01', 74.25,77.25,'door','a','+', 7.0,0,'Landing door to terrace corner; opens inward onto the landing, hinged at its north end so it folds back against FW-02; 1" raised sill outside against rain'),
  ('W-09','F','FW-02', 13.0,16.5,'window',None,None, 4.0,3.0,'Landing window to terrace'),
