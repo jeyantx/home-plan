@@ -114,6 +114,7 @@ OPENINGS = [
  ('D-09','F','FW-01', 74.25,77.25,'door','a','+', 7.0,0,'Landing door to terrace corner; opens inward onto the landing, hinged at its north end so it folds back against FW-02; 1" raised sill outside against rain'),
  ('W-09','F','FW-02', 13.0,16.5,'window',None,None, 4.0,3.0,'Landing window to terrace'),
  ('W-10','F','FW-01', 88.5,92.5,'window',None,None, 4.0,3.0,'Bedroom 3 side window'),
+ ('W-11','F','FW-04', 14.75,18.25,'window',None,None, 4.0,3.0,'Bedroom 3 back window, over the study desk'),
  ('D-11','F','FW-04', 11.0,13.75,'door','a','+', 7.0,0,'Bedroom 3 to balcony 3, single door 2\'9", near the east corner, hinged at its east end; opens fully against the wall'),
 ]
 
@@ -394,11 +395,11 @@ FURNITURE = [
  ('FU-32','G','Side table',18.75,20.25,83.25,84.75,'cab',None,'Bedroom 2'),
  ('FU-33','G','Side table and dressing shelf',18.85,20.25,90.25,93.65,'cab',None,'Bedroom 2, one long floating oak shelf on GW-05 (3\'5"): side table with a lamp at the bed end, dressing table with a mirror above and a stool at the other end; replaces FU-35'),
  ('FU-34','G','Wardrobe with loft',14.0,20.25,80.625,81.9583,'ward',None,'Bedroom 2, 6\'3" x 1\'4", on GW-15'),
- ('FU-36','F','Queen bed',13.75,20.25,87.0,92.0,'bed','x2','Bedroom 3, head to FW-03'),
- ('FU-37','F','Side table',18.75,20.25,85.25,86.75,'cab',None,'Bedroom 3'),
- ('FU-38','F','Side table',18.75,20.25,92.25,93.75,'cab',None,'Bedroom 3'),
+ ('FU-36','F','Queen bed',13.75,20.25,86.0,91.0,'bed','x2','Bedroom 3, head to FW-03'),
+ ('FU-37','F','Side table',18.75,20.25,84.25,85.75,'cab',None,'Bedroom 3'),
+ ('FU-38','F','Side table',18.75,20.25,91.25,92.75,'cab',None,'Bedroom 3'),
  ('FU-39','F','Sliding wardrobe with loft',14.5,20.25,80.25,81.5833,'ward',None,'Bedroom 3, 5\'9" x 1\'4", on FW-05 (where toilet 3 was)'),
- ('FU-40','F','Study desk',10.25,11.75,88.5,92.5,'desk',None,'Bedroom 3, under W-10'),
+ ('FU-40','F','Study desk',14.5,18.5,92.875,94.375,'desk',None,'Bedroom 3, on FW-04 under the back window W-11, chair in front; the east side by W-10 is left clear as the way to the balcony door'),
  ('FU-41','F','Western WC',3.875,6.125,83.25,84.875,'wc','y1','Toilet 3, cistern on FW-05, faces south; 2\' clear in front'),
  ('FU-42','F','Wash basin, wall-hung',8.1,9.5,83.5,84.875,'basin',None,'Toilet 3, on FW-05 right beside the door; mirror above'),
  ('FU-43','F','Shower area',3.875,6.5,80.25,83.0,'shower',None,'Toilet 3, 2\'3" x 4\'3" across the west end (was 1\'9" x 2\'3"); floor trap in the middle'),
