@@ -344,7 +344,7 @@ function buildOpening(o,w,horiz,s0,out=0){
     const glassTop=/glass upper half/.test(P.spec[o.id]||'');
     const mat=o.id==='D-01'?MAT.teak:(['D-03','D-04','D-08'].includes(o.id)||glassTop?MAT.white:MAT.oak);
     const leaves=o.type==='double'?[[u1,(u1+u2)/2,'a'],[(u1+u2)/2,u2,'b']]:[[u1,u2,o.hinge||'a']];
-    const open={'D-01':1.15,'D-02':1.2,'D-03':1.2,'D-04':1.47,'D-05':1.45,'D-06':1.5,'D-07':1.5,'D-08':1.45,'D-09':1.45}[o.id]||0;   // first-floor doors shown open too   // main door, bedroom 1 and toilet 1 doors shown open
+    const open={'D-01':1.15,'D-02':1.2,'D-03':1.2,'D-04':1.47,'D-05':1.45,'D-06':1.5,'D-07':1.5,'D-08':1.45,'D-09':1.45,'D-11':1.57}[o.id]||0;   // first-floor doors shown open too   // main door, bedroom 1 and toilet 1 doors shown open
     for(const [a,b,h] of leaves){const len=b-a, hingeU=h==='a'?a:b;
       const leaf=new THREE.Mesh(new THREE.BoxGeometry(m(len-0.24),m(o.h-0.14),m(th)),mat);leaf.castShadow=true;leaf.receiveShadow=true;
       const piv=new THREE.Group();const p=along(horiz,w,hingeU,T/2);piv.position.set(mx(p[0]),m(ZOFF),m(p[1]));
@@ -971,7 +971,7 @@ X_(()=>{CURFL='F';ZOFF=FFZ;
   box(ac.x2,ac.x2+0.02,ac.y1+0.15,ac.y2-0.15,7.62,7.7,MAT.blackMetal,{cast:false,tip:'FU-48 · AC air outlet'});}
  // curtains: W-10 (FW-01) from the band, kept clear of the AC; beside the balcony door D-11 (FW-04)
  for(const [a,b] of [[87.2,88.6],[92.45,92.95]]) curtain(a,b,X1+0.42,BZ,'Curtain track');
- for(const [a,b] of [[11.7,13.1],[17.4,18.6]]) curtain(a,b,Y2-0.42,BZ,'Curtain track','x');
+ for(const [a,b] of [[13.9,15.1]]) curtain(a,b,Y2-0.42,BZ,'Curtain track','x');
  // queen bed FU-36, head to FW-03, headboard wall panel across both side tables
  const f=f2('FU-36'),tip=`FU-36 · Queen bed · oak platform, 6'6" x 5' · ${f.note}`;
  box(f.x1+0.35,f.x2-0.2,f.y1+0.3,f.y2-0.3,0,0.32,MAT.plinth,{tip});

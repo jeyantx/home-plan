@@ -114,7 +114,7 @@ OPENINGS = [
  ('D-09','F','FW-01', 74.25,77.25,'door','a','+', 7.0,0,'Landing door to terrace corner; opens inward onto the landing, hinged at its north end so it folds back against FW-02; 1" raised sill outside against rain'),
  ('W-09','F','FW-02', 13.0,16.5,'window',None,None, 4.0,3.0,'Landing window to terrace'),
  ('W-10','F','FW-01', 88.5,92.5,'window',None,None, 4.0,3.0,'Bedroom 3 side window'),
- ('D-11','F','FW-04', 13.0,17.5,'double',None,'+', 7.0,0,'Bedroom 3 to balcony 3, sliding glass door, 4\'6"'),
+ ('D-11','F','FW-04', 11.0,13.75,'door','a','+', 7.0,0,'Bedroom 3 to balcony 3, single door 2\'9", near the east corner, hinged at its east end; opens fully against the wall'),
 ]
 
 # ---------- building outlines (outer wall faces) for built-up area ----------
