@@ -8,7 +8,7 @@ ffb=poly_area(FF_OUTLINE)
 land=poly_area(PLOT)
 rooms={f:{r[0]:(r[1],r[2]) for r in ROOMS[f]} for f in ROOMS}
 def ra(f,i): return poly_area(rooms[f][i][1])
-terr=ra('F','F-02')+ra('F','F-03')+ra('F','F-01')
+terr=ra('F','F-02')+ra('F','F-01')
 garden=ra('G','G-14')+ra('G','G-15')
 def dims(P):
     xs=[p[0] for p in P]; ys=[p[1] for p in P]; return max(xs)-min(xs), max(ys)-min(ys)
@@ -61,7 +61,7 @@ panel=BN+f'''
 <li><b>Toilet 3 (F-07) has no outside wall.</b> I recommend swapping it with the bedroom 3 lobby so it sits on FW-01 and gets a ventilator. The alternative is an exhaust fan with a duct to the roof.</li>
 <li><b>No windows on the west wall</b>, since it is on the boundary next to the apartment.</li>
 <li><b>W-02</b>, the bedroom 1 window, looks onto the porch. Fine for privacy, or would you prefer frosted glass?</li>
-<li><b>Utility area:</b> the side garden strip under the terrace corner (F-03), from Y 75'9" to 80', is covered. It suits the washing machine and a wash area next to garden door D-05.</li>
+<li><b>Utility area:</b> the side garden strip under toilet 3 (F-07), from Y 75'9" to 80', is covered. It suits the washing machine and a wash area next to garden door D-05.</li>
 </ol></section>
 <section><h2>Areas</h2>
 <table class="t">

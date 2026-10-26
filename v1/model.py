@@ -42,11 +42,11 @@ WALLS = {
   ('FW-03', 20.25,21.0, 73.125,95.125, 'outer', 10.0, 'West wall, on the boundary'),
   ('FW-04', 9.5,21.0, 94.375,95.125, 'outer', 10.0, 'Back wall of bedroom 3, right over GW-08'),
   ('FW-05', 10.25,20.25, 79.875,80.25, 'part', 10.0, 'Landing | bedroom 3'),
-    ('FW-07', 3.125,9.5, 79.875,80.25, 'outer', 10.0, 'Toilet 3 | terrace corner (where the parapet PW-05 was)'),
-  ('FW-08', 3.125,3.875, 80.25,85.25, 'outer', 10.0, 'East wall of toilet 3'),
-  ('FW-09', 3.125,9.5, 84.875,85.25, 'outer', 10.0, 'South wall of toilet 3'),
+  ('FW-07', 2.75,9.5, 79.875,80.25, 'outer', 10.0, 'South wall of toilet 3 (where the parapet PW-05 was)'),
+  ('FW-08', 2.75,3.125, 73.125,79.875, 'outer', 10.0, 'East wall of toilet 3, on the line of PW-02'),
+  ('FW-09', 2.75,9.5, 73.125,73.5, 'outer', 10.0, 'North wall of toilet 3, facing the open terrace'),
   ('PW-01', 2.75,9.625, 15.5,15.875, 'para', 3, 'Front parapet of balcony 2'),
-  ('PW-02', 2.75,3.125, 15.5,79.875, 'para', 3, 'East parapet of balcony, terrace and terrace corner (terrace now covers the bore court too)'),
+  ('PW-02', 2.75,3.125, 15.5,73.125, 'para', 3, 'East parapet of balcony and terrace, up to toilet 3 (terrace covers the bore court too)'),
   ('PW-03', 9.625,21.0, 19.75,20.125, 'para', 3, 'Front parapet of terrace, behind staircase 1 (now from the top of ST-1B)'),
   ('PW-04', 20.625,21.0, 20.125,73.125, 'para', 3, 'West parapet of terrace'),
   ('PW-06', 9.5,9.875, 95.125,98.125, 'para', 3, 'East parapet of balcony 3'),
@@ -79,10 +79,9 @@ ROOMS = {
  'F': [
   ('F-01','Balcony 2',R(3.125,9.625,15.875,20.125),'terr'),
   ('F-02','Open terrace',[(3.125,20.125),(20.625,20.125),(20.625,73.125),(3.125,73.125)],'terr'),
-  ('F-03','Terrace corner',R(3.125,9.5,73.125,79.875),'terr'),
   ('F-04','Stair landing',R(10.25,20.25,73.875,79.875),'in'),
   ('F-05','Bedroom 3',R(10.25,20.25,80.25,94.375),'bed'),
-    ('F-07','Toilet 3',R(3.875,9.5,80.25,84.875),'wet'),
+  ('F-07','Toilet 3',R(3.125,9.5,73.5,79.875),'wet'),
   ('F-08','Balcony 3',R(9.5,21.0,95.125,98.125),'terr'),
  ]}
 
@@ -110,9 +109,8 @@ OPENINGS = [
  ('GT-01','G','FRONT', 0.75,12.0,'gate',None,'+', 6.0,0,'Large gate, 11\'3", bi-fold double leaf (4 panels), folds inward over the level crest, east of the planter pillar'),
  ('GT-02','G','FRONT', 13.5,20.25,'gate',None,'+', 6.0,0,'Small gate, 6\'9", bi-fold double leaf (4 panels), folds inward over the level crest, west of the planter pillar'),
  ('D-07','F','FW-05', 10.5,13.5,'door','a','-', 7.0,0,'Bedroom 3 door, from the landing; opens out onto the landing, hinged at its east end so it folds right back against FW-01'),
- ('D-08','F','FW-01', 80.75,83.0,'door','a','-', 7.0,0,'Toilet 3 door, 2\'3", from bedroom 3, on the left as you come in; opens into the toilet'),
- ('D-09','F','FW-01', 74.25,77.25,'door','a','+', 7.0,0,'Landing door to terrace corner; opens inward onto the landing, hinged at its north end so it folds back against FW-02; 1" raised sill outside against rain'),
- ('W-09','F','FW-02', 13.0,16.5,'window',None,None, 4.0,3.0,'Landing window to terrace'),
+ ('D-09','F','FW-01', 74.25,76.5,'door','a','-', 7.0,0,'Toilet 3 door, 2\'3", from the landing (outside bedroom 3); opens into the toilet, hinged at its north end'),
+ ('D-12','F','FW-02', 10.5,13.25,'door','a','+', 7.0,0,'Landing door to the open terrace, 2\'9" (in place of the old window W-09), east of the spiral stair; opens onto the landing, hinged at its east end; 1" raised sill outside against rain'),
  ('W-10','F','FW-01', 88.5,92.5,'window',None,None, 4.0,3.0,'Bedroom 3 side window'),
  ('W-11','F','FW-04', 14.75,18.25,'window',None,None, 4.0,3.0,'Bedroom 3 back window, over the study desk'),
  ('D-11','F','FW-04', 11.0,13.75,'door','a','+', 7.0,0,'Bedroom 3 to balcony 3, single door 2\'9", near the east corner, hinged at its east end; opens fully against the wall'),
@@ -129,7 +127,7 @@ RAMP=dict(y_hump=1.0,y_crest=3.25,y_top=10.75,ease=1.5,drain=(2.5,3.25))   # gat
 SIDE_PLATFORM=dict(well=(12.75,4.75,2.25),x1=13.5,x2=17.125,steps=(2.667,3.5,4.333),xe=12.5,y_end=10.75)
 BRANCH_NOTES='''<section class="ask"><h2>Areas for the engineer (built-up and parking cover)</h2>
 <ol>
-<li><b>Built-up area: 1,365 sq ft</b> (outside faces of the walls): ground floor rooms with the foyer 967, porch 56, bore court (roofed) 21; first floor bedroom 3, landing and wardrobe area 253, toilet 3 34, balcony 3 34. The open terrace is not counted (it is the ground floor's roof).</li>
+<li><b>Built-up area: 1,379 sq ft</b> (outside faces of the walls): ground floor rooms with the foyer 967, porch 56, bore court (roofed) 21; first floor bedroom 3, landing and wardrobe area 253, toilet 3 48 (on the terrace corner), balcony 3 34. The open terrace is not counted (it is the ground floor's roof).</li>
 <li><b>Car parking cover: 229 sq ft</b>: the parking under the roof slab in front of the house and the porch, including the part under balcony 2 (counted here, not again as built-up).</li>
 </ol></section>
 <section class="ask"><h2>Garden plan (branch garden-v1, for review)</h2>
@@ -331,14 +329,14 @@ BOREWELL=BORES[0][1:3]
 # ---------- drawing positions (layout specific) ----------
 LABELPOS={'G-01':(8.0,24.5),'G-02':(5.6,37.6),'G-03':(6.2,44.6),'G-04':(11.5,53.0),'G-05':(11.45,39.4),'G-06':(11.5,33.6),'G-07':(17.2,33.4),
           'G-08':(8.0,63.4),'G-09':(15.6,64.6),'G-10':(16.0,70.6),'G-11':(9.25,69.6),'G-16':(3.9,70.1),'G-12':(16.2,92.8),'G-13':(1.55,36.0),'G-14':(7.85,93.65),'G-15':(15.2,100.2),
-          'F-01':(6.4,18.0),'F-02':(11.9,47.0),'F-03':(7.9,75.6),'F-04':(12.15,78.0),'F-05':(15.9,93.3),'F-07':(6.7,82.5),'F-08':(15.2,96.6)}
+          'F-01':(6.4,18.0),'F-02':(11.9,47.0),'F-04':(12.15,78.0),'F-05':(15.9,93.3),'F-07':(7.6,77.3),'F-08':(15.2,96.6)}
 LABELSIZE={'G-14':0.34,'G-16':0.24,'F-07':0.3,'G-09':0.34,'G-11':0.3,'G-05':0.42,'G-12':0.42,'F-05':0.42,'G-09':0.4,'G-13':0.36,'G-06':0.4,'G-07':0.42,'G-11':0.42,'G-03':0.42,'G-02':0.42,'F-06':0.36,'F-07':0.42,'G-10':0.42,'F-04':0.45,'F-03':0.42,'F-01':0.45,'G-09':0.45,'G-01':0.6,'F-02':0.8}
 TAGPOS={'GW-01':(3.125,53.0),'GW-05':(20.625,51.0),'GW-07':(9.875,91.5),'BW-01':(0.19,50.0),'GW-04':(19.0,31.125),'GW-13':(12.62,58.44),'GW-12':(17.6,46.56),
         'GW-03':(8.875,33.6),'GW-02':(3.6,40.875),'GW-11':(19.0,35.19),'GW-08':(11.0,94.75),'GW-06':(8.0,73.5),'GW-16':(11.94,71.6),'GW-17':(4.4,67.0),'GW-18':(6.375,72.3),'PW-02':(2.94,40.0),'PW-04':(20.81,40.0),
         'FW-01':(9.875,94.0),'FW-03':(20.625,92.0),'FW-02':(18.4,73.5),'FW-04':(19.0,97.0),'FW-05':(18.0,80.06),'PW-03':(19.4,19.94),'PW-01':(5.0,15.69),'PW-05':(6.0,77.69),
         'GW-15':(18.4,80.44),'GW-14':(8.0,66.81),'GW-10':(13.94,34.6),'GW-09':(9.06,43.0),'BW-03':(1.19,98.0),'BW-07':(20.81,25.0),'BW-08':(20.81,100.5),'BW-02':(0.6,89.19)}
 OPENTAGOFF={'W-01':-0.75,'V-01':-0.75,'W-02':0.9,'W-03':-1.0,'W-04':-1.0,'W-05':-1.0,'W-06':-1.0,'V-02':-1.0,'W-07':-1.0,'W-08':0.8,'D-01':-1.4,'D-02':-2.2,'D-03':-1.6,
-            'O-01':-0.8,'D-04':1.6,'D-05':-1.5,'D-06':1.7,'D-07':1.7,'D-08':-1.4,'D-09':-1.6,'W-09':-0.8,'W-10':-1.0,'W-11':0.8,'W-12':-0.85,'D-10':0.9}
+            'O-01':-0.8,'D-04':1.6,'D-05':-1.5,'D-06':1.7,'D-07':1.7,'D-08':-1.4,'D-09':-1.6,'D-12':0.8,'W-10':-1.0,'W-11':0.8,'W-12':-0.85,'D-10':0.9}
 SPC=(17.0,76.875); SPR=35/12   # ST-2 spiral: centre and outer radius (5'10" across)
 # ST-2: 18 risers of 7 2/3" (11'6" floor to floor), 17 oak treads of 30 deg + a 60 deg landing at the first floor.
 # Climbs anticlockwise (outer handrail on your right going up). Tread 1 starts on the 345 deg line (plan angle: 0 = west, 90 = south),
@@ -400,14 +398,14 @@ FURNITURE = [
  ('FU-38','F','Side table',18.75,20.25,91.25,92.75,'cab',None,'Bedroom 3'),
  ('FU-39','F','Sliding wardrobe with loft',14.5,20.25,80.25,81.5833,'ward',None,'Bedroom 3, 5\'9" x 1\'4", on FW-05 (where toilet 3 was)'),
  ('FU-40','F','Study desk',14.5,18.5,92.875,94.375,'desk',None,'Bedroom 3, on FW-04 under the back window W-11, chair in front; the east side by W-10 is left clear as the way to the balcony door'),
- ('FU-41','F','Western WC',3.875,6.125,83.25,84.875,'wc','y1','Toilet 3, cistern on FW-05, faces south; 2\' clear in front'),
- ('FU-42','F','Wash basin, wall-hung',8.1,9.5,83.5,84.875,'basin',None,'Toilet 3, on FW-05 right beside the door; mirror above'),
- ('FU-43','F','Shower area',3.875,6.5,80.25,83.0,'shower',None,'Toilet 3, 2\'3" x 4\'3" across the west end (was 1\'9" x 2\'3"); floor trap in the middle'),
- ('FU-60','F','Geyser',3.875,4.325,80.6,82.0,'geyser',None,'Toilet 3, on FW-03 above the shower, bottom at about 6\'3"'),
- ('FU-61','F','Shower curtain rod',6.45,6.55,80.25,83.0,'curtain',None,'Toilet 3, keeps the WC side dry'),
+ ('FU-41','F','Western WC',3.125,5.375,78.25,79.875,'wc','y2','Toilet 3, in the south-east corner, cistern on FW-07, faces north; 2\' clear in front'),
+ ('FU-42','F','Wash basin, wall-hung',7.4,8.9,78.5,79.875,'basin',None,'Toilet 3, on FW-07 near the door; mirror above'),
+ ('FU-43','F','Shower area',3.125,6.0,73.5,76.25,'shower',None,'Toilet 3, 2\'10" x 2\'9" in the north-east corner; floor trap in the middle'),
+ ('FU-60','F','Geyser',3.125,3.575,74.0,75.4,'geyser',None,'Toilet 3, on FW-08 above the shower, bottom at about 6\'3"'),
+ ('FU-61','F','Shower curtain rod',3.125,6.0,76.15,76.25,'curtain',None,'Toilet 3, keeps the WC side dry'),
+ ('FU-62','F','Exhaust fan',3.125,3.6,76.75,77.75,'fan',None,'Toilet 3, on the outside wall FW-08, high up, blowing out over the side garden'),
  ('FU-71','F','Overhead water tank, 2000 L',15.2,20.2,89.2,94.2,'over',None,'On the bedroom 3 roof (above F-05), 5\' across x 5\' high on a 1\' RCC stand near FW-03; highest point for good pressure, clear of the future hall'),
  ('FU-72','F','Cat ladder to the bedroom 3 roof',18.0,19.5,72.6,73.125,'over',None,'MS ladder on the terrace face of FW-02, for reaching the water tank'),
- ('FU-62','F','Exhaust fan, ducted to roof',4.9,5.9,81.0,82.0,'fan',None,'Toilet 3 has no outside wall: ceiling exhaust fan with a duct up through the roof slab'),
  ('FU-44','G','AC indoor unit',9.25,9.92,37.25,40.25,'acin',None,'Bedroom 1, on GW-03 above window W-02, about 7\'6" high'),
  ('FU-45','G','AC outdoor unit',9.0,11.67,28.58,29.75,'acout',None,'Bedroom 1, on GW-04 parking face, bracket above window W-01 (about 7\'6"); pipe runs inside the study corner'),
  ('FU-46','G','AC indoor unit',10.25,10.92,85.5,88.5,'acin',None,'Bedroom 2, on GW-07 centred above window W-07 (about 7\'7"), blows straight across the bed'),
@@ -572,8 +570,6 @@ COLUMNS = [
   ('C-11','G', 2.75,3.5, 66.375,67.375,'East, end of GW-01 at the bore court corner'),
   ('C-12','G', 20.25,21.0, 66.375,67.375,'West, in GW-05 behind the FU-25 store cupboard, in line with GW-14'),
   ('C-20','G0', 6.0,6.75, 66.625,67.625,'Bore court corner: GW-17, GW-18 and GW-14; footing kept away from bore BR-02. Ground floor only: stops at the roof slab, no stub on the terrace, so the future hall has no pillar in the middle'),
-  ('C-22','G0', 0.375,1.125, 84.75,85.5,'New, against the east compound wall BW-01 (like C-01), in line with the south wall of toilet 3; clear of the utility platform and the banana bed; carries B-21'),
-  ('C-23','G0', 0.375,1.125, 77.1,77.85,'New, against BW-01 (like C-01), just north of the jasmine trellis GD-05; carries B-22'),
   ('C-21','G0', 6.0,6.75, 72.875,73.875,'Bore court corner: GW-18 and GW-06; eccentric footing needed, it is close to bore BR-02. Ground floor only: stops at the roof slab, no stub on the terrace'),
   ('C-14','G+F', 9.5,10.25, 73.125,74.125,'Corner of GW-06 and GW-07; runs up in FW-01'),
  ('C-15','G+F', 20.25,21.0, 73.0,74.0,'West, in GW-05 under FW-02; runs up in FW-03'),
@@ -596,9 +592,6 @@ BEAMS = [
  ('B-09','G', 9.5,21.0, 94.375,95.125, "1'3\"",'Over GW-08, C-18 to C-19'),
   ('B-10','G', 2.75,3.5, 19.75,67.375, "1'3\"",'East edge beam over GW-01 and the porch side, from B-01 (beam on beam) to C-11'),
   ('B-11','G', 9.5,10.25, 73.125,95.125, "1'3\"",'East edge beam over GW-07, C-14 to C-18'),
-  ('B-21','G', 0.375,9.5, 84.75,85.5, "1'3\"",'From C-22 on BW-01 across the side garden walkway to GW-07, under the south wall of toilet 3'),
-  ('B-22','G', 0.375,9.5, 77.1,77.85, "1'3\"",'From C-23 on BW-01 to GW-07, under the north part of toilet 3'),
-  ('B-23','G', 2.75,3.5, 77.1,85.5, "1'3\"",'Under the east wall of toilet 3, B-22 to B-21'),
   ('B-18','G', 6.0,6.75, 66.625,73.875, "1'3\"",'Over GW-18 (bore court | toilet 2), C-20 to C-21'),
   ('B-19','G', 2.75,6.75, 66.625,67.375, "1'3\"",'Over GW-17 (kitchen | bore court), C-11 to C-20'),
   ('B-20','G', 2.75,10.25, 73.125,73.875, "1'3\"",'Over GW-06, C-21 to C-14; cantilevers 3\'3" east, and the terrace corner cantilevers 4\' south of it'),
