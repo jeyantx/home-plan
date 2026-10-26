@@ -110,7 +110,7 @@ OPENINGS = [
  ('GT-02','G','FRONT', 13.5,20.25,'gate',None,'+', 6.0,0,'Small gate, 6\'9", bi-fold double leaf (4 panels), folds inward over the level crest, west of the planter pillar'),
  ('D-07','F','FW-05', 10.5,13.5,'door','a','-', 7.0,0,'Bedroom 3 door, from the landing; opens out onto the landing, hinged at its east end so it folds right back against FW-01'),
  ('D-09','F','FW-01', 74.25,76.5,'door','a','-', 7.0,0,'Toilet 3 door, 2\'3", from the landing (outside bedroom 3); opens into the toilet, hinged at its north end'),
- ('D-12','F','FW-02', 10.5,13.25,'door','a','+', 7.0,0,'Landing door to the open terrace, 2\'9" (in place of the old window W-09), east of the spiral stair; opens onto the landing, hinged at its east end; 1" raised sill outside against rain'),
+ ('D-12','F','FW-02', 10.5,13.25,'door','a','-', 7.0,0,'Landing door to the open terrace, 2\'9" (in place of the old window W-09), east of the spiral stair; opens out onto the terrace, hinged at its east end so it swings out onto the terrace, clear of the toilet door D-09; 1" raised sill against rain'),
  ('W-10','F','FW-01', 88.5,92.5,'window',None,None, 4.0,3.0,'Bedroom 3 side window'),
  ('W-11','F','FW-04', 14.75,18.25,'window',None,None, 4.0,3.0,'Bedroom 3 back window, over the study desk'),
  ('D-11','F','FW-04', 11.0,13.75,'door','a','+', 7.0,0,'Bedroom 3 to balcony 3, single door 2\'9", near the east corner, hinged at its east end; opens fully against the wall'),
@@ -336,7 +336,7 @@ TAGPOS={'GW-01':(3.125,53.0),'GW-05':(20.625,51.0),'GW-07':(9.875,91.5),'BW-01':
         'FW-01':(9.875,94.0),'FW-03':(20.625,92.0),'FW-02':(18.4,73.5),'FW-04':(19.0,97.0),'FW-05':(18.0,80.06),'PW-03':(19.4,19.94),'PW-01':(5.0,15.69),'PW-05':(6.0,77.69),
         'GW-15':(18.4,80.44),'GW-14':(8.0,66.81),'GW-10':(13.94,34.6),'GW-09':(9.06,43.0),'BW-03':(1.19,98.0),'BW-07':(20.81,25.0),'BW-08':(20.81,100.5),'BW-02':(0.6,89.19)}
 OPENTAGOFF={'W-01':-0.75,'V-01':-0.75,'W-02':0.9,'W-03':-1.0,'W-04':-1.0,'W-05':-1.0,'W-06':-1.0,'V-02':-1.0,'W-07':-1.0,'W-08':0.8,'D-01':-1.4,'D-02':-2.2,'D-03':-1.6,
-            'O-01':-0.8,'D-04':1.6,'D-05':-1.5,'D-06':1.7,'D-07':1.7,'D-08':-1.4,'D-09':-1.6,'D-12':0.8,'W-10':-1.0,'W-11':0.8,'W-12':-0.85,'D-10':0.9}
+            'O-01':-0.8,'D-04':1.6,'D-05':-1.5,'D-06':1.7,'D-07':1.7,'D-08':-1.4,'D-09':-1.6,'D-12':-0.8,'W-10':-1.0,'W-11':0.8,'W-12':-0.85,'D-10':0.9}
 SPC=(17.0,76.875); SPR=35/12   # ST-2 spiral: centre and outer radius (5'10" across)
 # ST-2: 18 risers of 7 2/3" (11'6" floor to floor), 17 oak treads of 30 deg + a 60 deg landing at the first floor.
 # Climbs anticlockwise (outer handrail on your right going up). Tread 1 starts on the 345 deg line (plan angle: 0 = west, 90 = south),
