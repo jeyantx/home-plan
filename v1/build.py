@@ -77,7 +77,7 @@ panel=BN+f'''
 </table></section>
 <section><h2>Staircases</h2>
 <ul>
-<li><b>ST-1 outside stair</b>, 3'6" wide inside the west compound wall BW-07, granite treads 10", 27 risers of about 6½" from the gate crest (+6" over the road) to the first floor (+15' over the road). ST-1A runs north to south along BW-07 from Y 2'8" to 16', 17 risers. ST-1L is a 3'6" x 3'6" landing about 7'7" above the parking. ST-1B turns east over the car, 10 risers, onto balcony 2. Store FU-56 under the high end of ST-1A.</li>
+<li><b>ST-1 outside stair</b>, 3'6" wide inside the west compound wall BW-07, granite treads 10", 27 risers of about 6½" from the gate crest (+6" over the road) to the first floor (+15' over the road). ST-1A runs north to south along BW-07 from Y 2'8" to 16', 17 risers. ST-1L is a 3'6" x 3'6" landing about 7'7" above the parking. ST-1B turns east over the car, 10 risers, onto balcony 2. Open under the high end of ST-1A (no store), clear of the car.</li>
 <li><b>ST-2 spiral stair</b>, 5'10" across, in the stair hall. 18 risers of 7⅔", 17 oak treads of 30° and a landing; climbs anticlockwise from the west side and arrives facing east on the first-floor stair landing F-04. 6' round hole in the slab.</li>
 </ul></section>
 <section><h2>Furniture I will propose next (for your approval)</h2>

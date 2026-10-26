@@ -1245,7 +1245,7 @@ const trunkAxis=[];const trunkAxisAt=hf=>{if(hf<0||hf>12)return null;const k=Mat
  // RCC as cast: each flight is steps on a 6" sloping waist slab (smooth sloping underside), the landing a 6" slab, all one piece;
  // a flight's underside runs on until it meets the landing's flat underside (the kink line under a dog-legged stair)
  const WT=0.5,WS=WT*Math.hypot(TD,R)/TD,LT=0.5;   // waist thickness, its vertical depth below the riser roots, landing slab thickness
- const sofA=y=>Z0+R*(y-A0)/TD-WS, sofB=x=>LZ+R*(BX2-x)/TD-WS, yK=A0+TD*(LZ-LT+WS-Z0)/R, xK=BX2-TD*(WS-LT)/R, ySolid=fuG['FU-56'].y1;
+ const sofA=y=>Z0+R*(y-A0)/TD-WS, sofB=x=>LZ+R*(BX2-x)/TD-WS, yK=A0+TD*(LZ-LT+WS-Z0)/R, xK=BX2-TD*(WS-LT)/R, ySolid=11.0;   // solid up to Y 11', open under the high end (no store, so the car's mirror clears)
  const prof=(pts,mapS,depth,pos,rotate,tip)=>{const sh=new THREE.Shape(pts.map(mapS));const g=new THREE.ExtrudeGeometry(sh,{depth,bevelEnabled:false});
    if(rotate)g.rotateY(-Math.PI/2);const me=new THREE.Mesh(g,MAT.ext);me.position.copy(pos);me.castShadow=true;me.receiveShadow=true;scene.add(me);named(me,tip);return me};
  {const P=[[A0,zF(A0)-0.3]];for(let i=0;i<NA-1;i++){const y1=A0+i*TD,top=Z0+(i+1)*R-0.04;P.push([y1,top],[y1+TD,top])}
@@ -1258,10 +1258,6 @@ const trunkAxis=[];const trunkAxisAt=hf=>{if(hf<0||hf>12)return null;const k=Mat
  for(let i=0;i<NA-1;i++){const y1=A0+i*TD,top=Z0+(i+1)*R;box(AX1-0.03,AX2,y1-0.03,y1+TD,top-0.04,top,MAT.stepStone,{tip:gr})}
  box(AX1-0.03,AX2,A0+(NA-1)*TD-0.03,LY2+0.03,LZ-0.04,LZ,MAT.stepStone,{tip:'Landing ST-1L, grey flamed granite'});
  for(let j=0;j<NB-1;j++){const x2=BX2-j*TD,top=LZ+(j+1)*R;box(x2-TD,x2+0.03,LY1-0.03,LY2+0.03,top-0.04,top,MAT.stepStone,{tip:gr})}
- // store FU-56 fills the space under the high end of ST-1A; its top runs flush along the sloping underside of the waist slab
- const sf=fuG['FU-56'];
- prof([[sf.y1,PKZ-0.3],[sf.y2,PKZ-0.3],[sf.y2,Math.min(sofA(sf.y2),LZ-LT)-0.02],[sf.y1,sofA(sf.y1)-0.02]],([y,z])=>new THREE.Vector2(m(y),m(z)),m(sf.x2-sf.x1-0.024),new THREE.Vector3(mx(sf.x1+0.012),0,0),true,`FU-56 · Store under ST-1A · ${sf.note}`);
- {const d1=12.0,d2=14.5,zb=sofA(d1);box(sf.x1-0.04,sf.x1+0.012,d1,d2,PKZ+0.15,zb-0.2,MAT.extWood,{tip:`FU-56 · store door, wood-look, 2'6" x ${Math.round((zb-0.35-PKZ)*12)}", facing east, clear of the parked car`})}
  // railing: black MS posts and 4"-gap balusters, wood-look handrail 3' above the nosing line; merged into two meshes
  const blk=[],wd=[],H=3.0,P3=(x,y,z)=>new THREE.Vector3(mx(x),m(z),m(y));
  const rod=(a,b,w,arr)=>{const d=new THREE.Vector3().subVectors(b,a),L=d.length(),g=new THREE.BoxGeometry(m(w),L,m(w));g.translate(0,L/2,0);
@@ -1522,7 +1518,7 @@ for(const [x,y] of [[5.6,36.5],[7.5,22.0],[15.0,24.0]]) downlight(x,y,SLB,'LED d
 // ---------------- other rooms: simple blocks so the views through openings look right ----------------
 const simpleH={bed:1.8,cab:2.3,desk:2.5,ward:7.5,store2:9.4,shelf:6,counter:2.8,counter2:3.0,fridge:5.6,wc:1.3,basin:2.7,wm:2.8,store:3.5,table:2.4,chair:1.5};
 const kmat={counter:MAT.granite,counter2:MAT.granite,fridge:std({color:'#d9dcdf',roughness:0.3,metalness:0.5}),ward:MAT.oak,store2:std({color:'#ebe5da',roughness:0.55}),bed:std({color:'#e9e4da',roughness:0.9}),cab:MAT.oak,desk:MAT.oak,shelf:MAT.oak};
-for(const f of P.furniture){ if(f.fl!=='G'||['FU-03.1','FU-03.2','FU-04','FU-05','FU-06','FU-09.1','FU-09.2','FU-10','FU-11','FU-12','FU-13','FU-14','FU-15','FU-16','FU-16.2','FU-17','FU-18','FU-25','FU-27','FU-31','FU-32','FU-33','FU-34','FU-35','FU-56','FU-29','FU-30','FU-77','FU-79','FU-80','FU-81','FU-82','FU-88'].includes(f.id)) continue;
+for(const f of P.furniture){ if(f.fl!=='G'||['FU-03.1','FU-03.2','FU-04','FU-05','FU-06','FU-09.1','FU-09.2','FU-10','FU-11','FU-12','FU-13','FU-14','FU-15','FU-16','FU-16.2','FU-17','FU-18','FU-25','FU-27','FU-31','FU-32','FU-33','FU-34','FU-35','FU-29','FU-30','FU-77','FU-79','FU-80','FU-81','FU-82','FU-88'].includes(f.id)) continue;
   const h=simpleH[f.kind]; if(!h) continue;
   if(f.kind==='counter'||f.kind==='counter2'){box(f.x1,f.x2,f.y1,f.y2,0.3,h-0.12,MAT.cabinet,{tip:`${f.id} · ${f.name}`});box(f.x1,f.x2,f.y1,f.y2,h-0.12,h,MAT.granite,{tip:`${f.id} · ${f.name} · granite top`});continue}
   box(f.x1,f.x2,f.y1,f.y2,0,h,kmat[f.kind]||std({color:'#e6e2da',roughness:0.8}),{tip:`${f.id} · ${f.name}`});
