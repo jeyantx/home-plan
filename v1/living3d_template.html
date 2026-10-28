@@ -180,7 +180,7 @@ function shade(hex,k){const c=new THREE.Color(hex);c.offsetHSL(0,0,k);return '#'
 const std=o=>new THREE.MeshStandardMaterial(o), phys=o=>new THREE.MeshPhysicalMaterial(o);
 const paintN=new THREE.Vector2(0.06,0.06);   // smooth emulsion over plaster: only a hint of texture
 const MAT={
-  ceiling:std({color:'#fbfaf7',roughness:0.92,normalMap:T.paint.normalMap,normalScale:paintN}),
+  ceiling:std({color:'#efd2bb',roughness:0.92,normalMap:T.paint.normalMap,normalScale:paintN}),
   otherFloor:std({map:stoneTiles('#e7e2da',5,2,2,2),roughness:0.6}),
   wallOut:std({color:'#ece6dc',roughness:0.95}),
   white:std({color:'#f6f4f0',roughness:0.9,normalMap:T.paint.normalMap,normalScale:paintN}),
@@ -949,7 +949,7 @@ const EXT={   // wood-look brown window frames, balcony louvers and gate slats i
  'EX-4':{name:'White house, light sand upper block, wood brown, charcoal base',wall:'#f1ece3',up:'#d3c2a8',trim:'#e4ddd1',base:'#4f4a45',louver:'wood'},
  'EX-5':{name:'Beige house, white upper block, wood brown, dark brown base',wall:'#d8c5a6',up:'#f3efe7',trim:'#f6f2ea',base:'#4e3a2c',louver:'wood'},
  'EX-6':{name:'Light grey house, dark grey upper block, wood brown, charcoal base',wall:'#c6c3bd',up:'#6b6966',trim:'#f4f2ee',base:'#3a3b3e',louver:'wood'},
- 'EX-8':{name:'Sage and clay: off-white house, clay (terracotta) upper block, white bands, dark brown base',wall:'#f2ede3',up:'#c98a66',trim:'#f6f2ea',base:'#4e3a2c',louver:'wood'},
+ 'EX-8':{name:'Sage and clay: sage green house, clay (terracotta) bands and copings, dark brown base',wall:'#b7c4a5',up:'#b7c4a5',trim:'#c98a66',base:'#4e3a2c',louver:'wood'},
  'EX-7':{name:'Light beige house (lighter EX-5), white upper block, wood brown, brown base',wall:'#e6d8c0',up:'#f6f3ec',trim:'#f8f5ef',base:'#6a5140',louver:'wood'}};
 const extMeshes=[];   // top views hide these too
 const X_=fn=>{const n0=scene.children.length;fn();for(const o of scene.children.slice(n0)){ceilingMeshes.push(o);extMeshes.push(o)}};   // mark what a block adds as 'roof level'
@@ -1546,7 +1546,7 @@ const gtao=new GTAOPass(scene,camera,1,1);gtao.output=GTAOPass.OUTPUT.Default;gt
 // ---------------- options, light, views, lens ----------------
 const OPTIONS=[
  {name:'Warm oak',floor:'oak',wall:'#cdd6c3',accent:'#c98a66',accentWall:'niche',sofa:'#b49a80',rug:'#d8c7a6',curtain:'#b9987a',
-  notes:['Floor: light-oak wood-look porcelain planks, 8" x 48" (shown with a real oak-floor scan)','Walls: light sage green emulsion, one shade in every room (one bulk order, cheaper); TV niches in clay (terracotta) as the only accent; ceiling and band in white','TV wall: civil-work niches, oak-veneer centre wall and console (mid-range)','Sofa: wooden frame in walnut-tone stain with mild-brown cushions; terracotta and cream throw cushions','Rug: two-tone, sofa-seat brown centre with a narrow dark-brown border','Curtains: light-brown sheer (latte); dark brown would make this low-daylight room gloomy','Art: two framed textured canvases on GW-12'],sw:['#cfae86','#f2ede4','#d9cfc0','#c49a6c']},
+  notes:['Floor: light-oak wood-look porcelain planks, 8" x 48" (shown with a real oak-floor scan)','Walls: light sage green emulsion, one shade in every room (one bulk order, cheaper); TV niches in clay (terracotta) as the only accent; ceiling in a light clay tint (like the photo), the band round it in white','TV wall: civil-work niches, oak-veneer centre wall and console (mid-range)','Sofa: wooden frame in walnut-tone stain with mild-brown cushions; terracotta and cream throw cushions','Rug: two-tone, sofa-seat brown centre with a narrow dark-brown border','Curtains: light-brown sheer (latte); dark brown would make this low-daylight room gloomy','Art: two framed textured canvases on GW-12'],sw:['#cfae86','#f2ede4','#d9cfc0','#c49a6c']},
 ];
 const panel=document.getElementById('panel');let curOpt=0,curLight='day';
 function applyOption(i){const o=OPTIONS[i];curOpt=i;
