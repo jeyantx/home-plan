@@ -949,6 +949,7 @@ const EXT={   // wood-look brown window frames, balcony louvers and gate slats i
  'EX-4':{name:'White house, light sand upper block, wood brown, charcoal base',wall:'#f1ece3',up:'#d3c2a8',trim:'#e4ddd1',base:'#4f4a45',louver:'wood'},
  'EX-5':{name:'Beige house, white upper block, wood brown, dark brown base',wall:'#d8c5a6',up:'#f3efe7',trim:'#f6f2ea',base:'#4e3a2c',louver:'wood'},
  'EX-6':{name:'Light grey house, dark grey upper block, wood brown, charcoal base',wall:'#c6c3bd',up:'#6b6966',trim:'#f4f2ee',base:'#3a3b3e',louver:'wood'},
+ 'EX-8':{name:'Sage and clay: off-white house, clay (terracotta) upper block, white bands, dark brown base',wall:'#f2ede3',up:'#c98a66',trim:'#f6f2ea',base:'#4e3a2c',louver:'wood'},
  'EX-7':{name:'Light beige house (lighter EX-5), white upper block, wood brown, brown base',wall:'#e6d8c0',up:'#f6f3ec',trim:'#f8f5ef',base:'#6a5140',louver:'wood'}};
 const extMeshes=[];   // top views hide these too
 const X_=fn=>{const n0=scene.children.length;fn();for(const o of scene.children.slice(n0)){ceilingMeshes.push(o);extMeshes.push(o)}};   // mark what a block adds as 'roof level'
@@ -1544,8 +1545,8 @@ const gtao=new GTAOPass(scene,camera,1,1);gtao.output=GTAOPass.OUTPUT.Default;gt
 
 // ---------------- options, light, views, lens ----------------
 const OPTIONS=[
- {name:'Warm oak',floor:'oak',wall:'#f6e1d1',accent:'#e9cfbd',accentWall:'niche',sofa:'#b49a80',rug:'#d8c7a6',curtain:'#b9987a',
-  notes:['Floor: light-oak wood-look porcelain planks, 8" x 48" (shown with a real oak-floor scan)','Walls: light peach emulsion (all interior walls); TV niches a shade deeper; ceiling and band in white','TV wall: civil-work niches, oak-veneer centre wall and console (mid-range)','Sofa: wooden frame in walnut-tone stain with mild-brown cushions; terracotta and cream throw cushions','Rug: two-tone, sofa-seat brown centre with a narrow dark-brown border','Curtains: light-brown sheer (latte); dark brown would make this low-daylight room gloomy','Art: two framed textured canvases on GW-12'],sw:['#cfae86','#f2ede4','#d9cfc0','#c49a6c']},
+ {name:'Warm oak',floor:'oak',wall:'#cdd6c3',accent:'#c98a66',accentWall:'niche',sofa:'#b49a80',rug:'#d8c7a6',curtain:'#b9987a',
+  notes:['Floor: light-oak wood-look porcelain planks, 8" x 48" (shown with a real oak-floor scan)','Walls: light sage green emulsion, one shade in every room (one bulk order, cheaper); TV niches in clay (terracotta) as the only accent; ceiling and band in white','TV wall: civil-work niches, oak-veneer centre wall and console (mid-range)','Sofa: wooden frame in walnut-tone stain with mild-brown cushions; terracotta and cream throw cushions','Rug: two-tone, sofa-seat brown centre with a narrow dark-brown border','Curtains: light-brown sheer (latte); dark brown would make this low-daylight room gloomy','Art: two framed textured canvases on GW-12'],sw:['#cfae86','#f2ede4','#d9cfc0','#c49a6c']},
 ];
 const panel=document.getElementById('panel');let curOpt=0,curLight='day';
 function applyOption(i){const o=OPTIONS[i];curOpt=i;
@@ -1565,7 +1566,7 @@ function applyOption(i){const o=OPTIONS[i];curOpt=i;
   <li><b>Windows:</b> UPVC sliding, MS grill GR-1 (plain vertical round bars, 12 mm @ 5", one middle flat) on every window and ventilator, granite sill. Sheer crepe-georgette curtains in ripple folds hang from a track on the band.</li>
   <li><b>Kitchen glass W-12:</b> black bi-fold frames with an oak ledge. <b>Arch O-01:</b> round-top plastered arch.</li>
   </ul><h2>Bedroom 1 (G-05) and study corner (G-06)</h2><ul>
-  <li><b>Floor, walls, ceiling:</b> same oak-look planks, light-peach walls and civil-work band with LED cove as the living room; 4 downlights in the band, one in the study corner; one ceiling fan.</li>
+  <li><b>Floor, walls, ceiling:</b> same oak-look planks, light sage green walls and civil-work band with LED cove as the living room; 4 downlights in the band, one in the study corner; one ceiling fan.</li>
   <li><b>Bed FU-06:</b> low oak platform with a shadow-gap base. Headboard wall: oak-veneer panel with grooves to 3'4", a 4" oak ledge with an LED strip under it, a mild-brown linen pad. One framed canvas above.</li>
   <li><b>Wardrobe FU-09.1 + FU-09.2:</b> L-shaped, floor to band, oak-veneer shutters with lofts, black J-profile handles, shadow-gap plinth.</li>
   <li><b>Window W-02:</b> light-brown sheer curtains; AC FU-44 above it. Small bamboo plant by the window.</li>
@@ -1575,7 +1576,7 @@ function applyOption(i){const o=OPTIONS[i];curOpt=i;
   <li><b>Layout:</b> hob FU-52 under W-06 (window lowered to 4' x 2', head at 5'3") with the chimney hood at the standard 2'6" above the counter; sink FU-51 on the back counter against GW-14; wall cabinets on GW-14 and GW-01 (glass doors on the unit above the sink and the one left of the window), plus a top row FU-68 and FU-69 up to the ceiling; cream 3" x 12" backsplash tiles; LED strips under the wall cabinets.</li>
   <li><b>Appliances:</b> mixer grinder FU-64 in the GW-13 corner, wet grinder FU-65 on its own 2' low counter FU-16.2 beside the sink, RO purifier FU-66 on GW-14 above the west end of the low counter (pots fill straight from it), microwave FU-67 on the breakfast counter FU-17 (now 8' long, joined to the east counter). Fridge FU-18 on GW-05 at the north end of the store cupboard FU-25, with a loft above.</li>
   </ul><h2>Bedroom 2 (G-12)</h2><ul>
-  <li>Same design as bedroom 1: oak-look floor, peach walls, ceiling band with LED cove, 4 downlights, ceiling fan.</li>
+  <li>Same design as bedroom 1: oak-look floor, light sage green walls, ceiling band with LED cove, 4 downlights, ceiling fan.</li>
   <li><b>Bed FU-31:</b> oak platform; headboard wall panel in grooved oak veneer runs across both floating side tables FU-32 and FU-33 (each with a drawer and a linen-shade lamp); linen pad, LED ledge, framed canvas.</li>
   <li><b>Wardrobe FU-34</b> on GW-15 with loft, oak veneer, black handles. <b>FU-33</b> is one long floating oak shelf: side table with a lamp at the bed end, dressing table with a framed mirror and a linen stool at the other end (FU-35 merged into it).</li>
   <li><b>Windows:</b> AC FU-46 centred above W-07, blowing across the bed; W-07 curtains on a wall track below it; W-08 is a big picture window (8'6" x 5', low sill) with an invisible grill and curtains that stack at its ends.</li>
@@ -1748,7 +1749,7 @@ function share(){clearTimeout(shareT);shareT=setTimeout(()=>{if((typeof tour!=='
   const q=P.toString().replace(/%2C/g,',');history.replaceState(null,'',(q?'?'+q:location.pathname)+location.hash);
   try{if(parent!==window){const pl=parent.location,PP=new URLSearchParams(pl.search);for(const k of SHARE3)PP.delete(k);for(const [k,v] of P)if(SHARE3.includes(k))PP.set(k,v);const pq=PP.toString().replace(/%2C/g,',');parent.history.replaceState(null,'',pl.pathname+(pq?'?'+pq:'')+pl.hash)}}catch(e){}},500)}   // the app page shows the same link
 {const _sv=setView;setView=function(i){lastView=i;_sv(i)};const _inv=invalidate;invalidate=function(){_inv();share()};const _al=applyLight;applyLight=function(md){_al(md);share()}}
-setGate('GD-1');setExt('EX-4');setFinish('KT-1');   // fixed choices: GD-1 slatted gates, EX-4 colours, KT-1 kitchen finish
+setGate('GD-1');setExt('EX-8');setFinish('KT-1');   // fixed choices: GD-1 slatted gates, EX-8 sage-and-clay colours, KT-1 kitchen finish
 document.querySelectorAll('#gateSeg button').forEach(x=>x.onclick=()=>setGate(x.dataset.g));document.querySelectorAll('#extSeg button').forEach(x=>x.onclick=()=>setExt(x.dataset.e));
 
 document.querySelectorAll('#finishSeg button').forEach(x=>x.onclick=()=>setFinish(x.dataset.k));

@@ -97,7 +97,7 @@ const floorTex=canvasTex(512,512,(g,w,h)=>{const r=rng(9);g.fillStyle='#d8d2c6';
 const std=o=>new THREE.MeshStandardMaterial(o);
 const M={oak:std({map:oakTex,roughness:0.55}),oakIn:std({color:'#d8c29f',roughness:0.7}),cream:std({color:'#efe9df',roughness:0.5}),creamIn:std({color:'#f4f0e8',roughness:0.7}),
  granite:std({map:granTex,roughness:0.28,metalness:0.1}),plinth:std({color:'#2a2b2d',roughness:0.6}),handle:std({color:'#1c1d1f',roughness:0.4,metalness:0.6}),
- steel:std({color:'#c9ccd0',roughness:0.25,metalness:0.9}),wire:std({color:'#b9bdc1',roughness:0.3,metalness:0.9}),wall:std({color:'#f3efe8',roughness:0.95}),
+ steel:std({color:'#c9ccd0',roughness:0.25,metalness:0.9}),wire:std({color:'#b9bdc1',roughness:0.3,metalness:0.9}),wall:std({color:'#cdd6c3',roughness:0.95}),
  tile:std({map:tileTex,roughness:0.3}),floor:std({map:floorTex,roughness:0.6}),glass:std({color:'#cfe3ea',roughness:0.05,metalness:0,transparent:true,opacity:0.3}),
  blackGlass:std({color:'#121314',roughness:0.08,metalness:0.3}),appWhite:std({color:'#f2f2f0',roughness:0.35}),red:std({color:'#b3201f',roughness:0.45}),
  drawer:std({color:'#e9e2d6',roughness:0.7}),sel:std({color:'#2f6f4f',transparent:true,opacity:0.18,depthWrite:false})};
@@ -135,7 +135,7 @@ function rackModel(r,Z,B,C){const st=std({color:'#c9ccd0',roughness:0.3,metalnes
   const pot=std({color:'#bfc3c7',roughness:0.25,metalness:0.85});C(r.x1+0.45,cy,Z+s1+0.02,Z+s1+0.9,0.32,pot);C(r.x2-0.45,cy,Z+s1+0.02,Z+s1+0.55,0.36,pot);C(r.x2-0.5,cy,Z+s1+0.6,Z+s1+1.3,0.28,pot);
   for(let k=0;k<5;k++)B(r.x1+0.4+k*0.28,r.x1+0.42+k*0.28,r.y1+0.3,r.y2-0.3,Z+s2+0.03,Z+s2+0.6,std({color:'#f2efe9',roughness:0.3}))}
 // downloaded appliance models (archibase.net, see 3d/ASSETS.md): front faces +z in the file, real size in metres, sitting on y = 0
-function placeAppliance(url,cx,cy,z,rotY,matFn,tip,run){new GLTFLoader().load(url+'?v=1793044886',g=>{const o=g.scene;o.traverse(n=>{if(n.isMesh){n.castShadow=n.receiveShadow=true;const mt=matFn(n);if(mt)n.material=mt;n.userData.keepUV=true}});
+function placeAppliance(url,cx,cy,z,rotY,matFn,tip,run){new GLTFLoader().load(url+'?v=1793162083',g=>{const o=g.scene;o.traverse(n=>{if(n.isMesh){n.castShadow=n.receiveShadow=true;const mt=matFn(n);if(mt)n.material=mt;n.userData.keepUV=true}});
   o.rotation.y=rotY;o.position.set(-cx*F,z*F,cy*F);(run&&typeof RUN!=='undefined'?RUN[run]:scene).add(o);if(typeof renderer!=='undefined'&&renderer.shadowMap)renderer.shadowMap.needsUpdate=true;if(typeof invalidate==='function')invalidate()},undefined,e=>console.warn('appliance',url,e))}
 const APM={glass:std({color:'#0b0c0d',roughness:0.05,metalness:0.3}),black:std({color:'#161718',roughness:0.45,metalness:0.3}),enamel:std({color:'#2b2c2e',roughness:0.4,metalness:0.4}),
   brass:std({color:'#b08d57',roughness:0.35,metalness:0.8}),steel:std({color:'#c9ccd0',roughness:0.25,metalness:0.9}),white:std({color:'#f3f3f1',roughness:0.32,metalness:0.08}),

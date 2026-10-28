@@ -97,7 +97,7 @@ const floorTex=canvasTex(512,512,(g,w,h)=>{const r=rng(9);g.fillStyle='#d8d2c6';
 const std=o=>new THREE.MeshStandardMaterial(o);
 const M={oak:std({map:oakTex,roughness:0.55}),oakIn:std({color:'#d8c29f',roughness:0.7}),cream:std({color:'#efe9df',roughness:0.5}),creamIn:std({color:'#f4f0e8',roughness:0.7}),
  granite:std({map:granTex,roughness:0.28,metalness:0.1}),plinth:std({color:'#2a2b2d',roughness:0.6}),handle:std({color:'#1c1d1f',roughness:0.4,metalness:0.6}),
- steel:std({color:'#c9ccd0',roughness:0.25,metalness:0.9}),wire:std({color:'#b9bdc1',roughness:0.3,metalness:0.9}),wall:std({color:'#f3efe8',roughness:0.95}),
+ steel:std({color:'#c9ccd0',roughness:0.25,metalness:0.9}),wire:std({color:'#b9bdc1',roughness:0.3,metalness:0.9}),wall:std({color:'#cdd6c3',roughness:0.95}),
  tile:std({map:tileTex,roughness:0.3}),floor:std({map:floorTex,roughness:0.6}),glass:std({color:'#cfe3ea',roughness:0.05,metalness:0,transparent:true,opacity:0.3}),
  blackGlass:std({color:'#121314',roughness:0.08,metalness:0.3}),appWhite:std({color:'#f2f2f0',roughness:0.35}),red:std({color:'#b3201f',roughness:0.45}),
  drawer:std({color:'#e9e2d6',roughness:0.7}),sel:std({color:'#2f6f4f',transparent:true,opacity:0.18,depthWrite:false})};
