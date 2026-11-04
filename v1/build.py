@@ -293,8 +293,9 @@ def _store_tab():   # Store tab: FU-25 front elevation (looking west, north end 
                 short=(short+' '+wd).strip()
             if short.endswith(' and'): short=short[:-4]
             if b.get('power') and z2<=2.5:
-                fill='#3b6ea5' if z2<=1.4 else '#1d1e21';e.append(f'<rect x="{x1+14:.1f}" y="{Z(z2)+5:.1f}" width="{x2-x1-28:.1f}" height="{(z2-z1)*k-10:.1f}" rx="4" fill="{fill}"/>')
-                e.append(f'<text x="{(x1+x2)/2:.1f}" y="{(Z(z1)+Z(z2))/2+4:.1f}" font-size="11" text-anchor="middle" fill="#fff">{"Battery" if z2<=1.4 else "Inverter"}</text>')
+                bat=z2<=1.5;fill='#3b6ea5' if bat else '#1d1e21';bw,bh=(53/30.48,27.5/30.48) if bat else (36/30.48,20/30.48);zb=z1+(0 if bat else 0.04)   # true size, front view
+                cx=(x1+x2)/2;e.append(f'<rect x="{cx-bw*k/2:.1f}" y="{Z(zb+bh):.1f}" width="{bw*k:.1f}" height="{bh*k:.1f}" rx="3" fill="{fill}"/>')
+                e.append(f'<text x="{cx:.1f}" y="{Z(zb+bh/2)+4:.1f}" font-size="10.5" text-anchor="middle" fill="#fff">{"Battery" if bat else "Inverter"}</text>')
             else: e.append(f'<text x="{(x1+x2)/2:.1f}" y="{(Z(z1)+Z(z2))/2+4:.1f}" font-size="10" text-anchor="middle" fill="#3a3b3e">{_h.escape(short)}</text>')
     for z in (0,S['plinth'],2.5,S['loftz'],S['top']):
         lab={0:'floor',S['plinth']:'3" plinth',2.5:"2'6\"",S['loftz']:"7'6\" loft",S['top']:"9'4\""}[z]
