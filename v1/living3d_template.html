@@ -186,7 +186,8 @@ const MAT={
   white:std({color:'#f6f4f0',roughness:0.9,normalMap:T.paint.normalMap,normalScale:paintN}),
   upvc:std({color:'#f2f2f0',roughness:0.35}),
   blackMetal:std({color:'#1d1e21',roughness:0.4,metalness:0.7}),
-  grill:std({color:'#1d1e21',roughness:0.45,metalness:0.6,side:THREE.DoubleSide}),
+  grill:std({color:'#8fc2bc',roughness:0.5,metalness:0.3,side:THREE.DoubleSide}),   // VC-02 mint blue enamel
+  mint:std({color:'#8fc2bc',roughness:0.5,metalness:0.3}),redOxide:std({color:'#9c3a26',roughness:0.6}),brass:std({color:'#b08d57',roughness:0.35,metalness:0.8}),
   glassRaster:std({color:'#dfe9ee',roughness:0.04,metalness:0,transparent:true,opacity:0.14,depthWrite:false}),
   glassPhoto:phys({color:'#ffffff',roughness:0.02,metalness:0,transmission:1,thickness:0.006,ior:1.5}),
   oak:std({map:T.oak.map,normalMap:T.oak.normalMap,normalScale:new THREE.Vector2(0.4,0.4),roughnessMap:T.oak.roughnessMap,roughness:0.8}),
@@ -298,7 +299,7 @@ function grillMesh(o,w,horiz,U1,U2,Z1,Z2,vc){
   const g=mergeGeometries(parts),M=new THREE.Matrix4();
   if(horiz)M.set(-F,0,0,-w.x1*F, 0,F,0,ZOFF*F, 0,0,F,w.y1*F, 0,0,0,1);else M.set(0,0,-F,-w.x1*F, 0,F,0,ZOFF*F, F,0,0,w.y1*F, 0,0,0,1);
   g.applyMatrix4(M);const me=new THREE.Mesh(g,MAT.grill);me.castShadow=true;me.receiveShadow=true;me.userData.keepUV=true;
-  scene.add(me);named(me,`${o.id} grill GR-1 · MS, black powder-coat · plain vertical round bars, 12 mm @ 5", one middle flat`);return me}
+  scene.add(me);named(me,`${o.id} grill GR-1 · MS, mint blue enamel (VC-02) · plain vertical round bars, 12 mm @ 5", one middle flat`);return me}
 // invisible grill: 2 mm stainless-steel wire ropes, horizontal at 2", in a slim frame; keeps the view open
 function invisibleGrill(o,w,horiz,U1,U2,Z1,Z2,vc){const fr=0.06,parts=[],n=Math.floor((Z2-Z1-2*fr)/0.167);
   const bar=(u1,z1,u2,z2,wd)=>new THREE.BoxGeometry(Math.max(u2-u1,wd),Math.max(z2-z1,wd),wd).translate((u1+u2)/2,(z1+z2)/2,vc);
@@ -327,6 +328,9 @@ function buildOpening(o,w,horiz,s0,out=0){
       boxAlong(horiz,w,u1-fw2,u1-0.012,S1[0],S1[1],z1-(big?0.3:0.15),z2+0.012,MAT.extWood,{tip:ft});                   // east/left fin
       boxAlong(horiz,w,u2+0.012,u2+fw2,S1[0],S1[1],z1-(big?0.3:0.15),z2+0.012,MAT.extWood,{tip:ft});                   // right fin
       boxAlong(horiz,w,u1-0.012,u2+0.012,S1[0],S1[1],z1-(big?0.3:0.15),z1-0.06,MAT.extWood,{tip:ft});                  // bottom rail under the sill
+      {const E=vr(hood-0.07,hood),R=vr(0.012,0.07),sc=big?0.42:0.3;   // VD-03: scalloped front edge on the sunshade, red oxide line under it at the wall
+       for(let u=u1-fw2+0.05;u+sc*0.6<=u2+fw2-0.05;u+=sc){boxAlong(horiz,w,u,u+sc*0.6,E[0],E[1],z2+0.012-0.12,z2+0.012,MAT.extTrim,{cast:false,tip:ft+' · VD-03 scalloped edge'});boxAlong(horiz,w,u+sc*0.12,u+sc*0.48,E[0],E[1],z2+0.012-0.18,z2-0.1,MAT.extTrim,{cast:false,tip:ft+' · VD-03 scalloped edge'})}
+       boxAlong(horiz,w,u1-fw2,u2+fw2,R[0],R[1],z2+fw2,z2+fw2+0.1,MAT.redOxide,{cast:false,tip:'VD-03 · red oxide line over the sunshade'});}
       if(big){const L=vr(0.012,0.05);boxAlong(horiz,w,u1-0.012,u2+0.012,L[0],L[1],z2-0.04,z2+0.012,MAT.blackMetal,{cast:false,tip:'Drip edge, black'})}}
   } else if(o.type==='fold'){
     const z1=o.sill,z2=o.sill+o.h,n=4,v0=T*0.4;
@@ -358,8 +362,10 @@ function buildOpening(o,w,horiz,s0,out=0){
         const part=(w,hh,x,z,mt)=>{const q=new THREE.Mesh(new THREE.BoxGeometry(m(w),m(hh),m(mt===MAT.glass?0.03:th)),mt);q.position.set(m(sg*len/2+x),zc+m(z),0);q.castShadow=mt!==MAT.glass;piv.add(q);named(q,tip+(mt===MAT.glass?' · glass upper half':''));return q};
         part(L,H-gz2,0,(gz2+H)/2,mat);part(st,gz2-gz1,-L/2+st/2,(gz1+gz2)/2,mat);part(st,gz2-gz1,L/2-st/2,(gz1+gz2)/2,mat);
         glassMeshes.push(part(L-2*st,gz2-gz1,0,(gz1+gz2)/2,MAT.glass));}
-      if(o.id==='D-01'){for(const zz of [2.2,4.6]) {const pan=new THREE.Mesh(new THREE.BoxGeometry(m(len*0.6),m(1.8),m(0.03)),MAT.oakDark);pan.position.set(m((h==='a'?1:-1)*len/2),m(zz),m(th/2+0.015));piv.add(pan)}}
-      const hd=new THREE.Mesh(new THREE.BoxGeometry(m(0.06),m(0.55),m(0.08)),MAT.blackMetal);hd.position.set(m((h==='a'?1:-1)*(len-0.3)),m(3.3),m(th/2+0.05));hd.castShadow=true;piv.add(hd);
+      if(o.id==='D-01'){const sg=h==='a'?1:-1,pw=len*0.34;   // VD-05: four raised teak panels, both faces, brass knob
+        for(const zz of [1.9,4.7])for(const xx of [-0.21,0.21])for(const f of [1,-1]){const pan=new THREE.Mesh(new THREE.BoxGeometry(m(pw),m(2.3),m(0.04)),MAT.oakDark);pan.position.set(m(sg*len/2+xx*len),m(zz),f*m(th/2+0.02));pan.castShadow=true;piv.add(pan);named(pan,'D-01 · VD-05 raised teak panel')}
+        for(const f of [1,-1]){const kb=new THREE.Mesh(new THREE.SphereGeometry(m(0.13),20,14),MAT.brass);kb.position.set(m(sg*(len-0.35)),m(3.4),f*m(th/2+0.12));piv.add(kb);named(kb,'D-01 · brass door knob')}}
+      if(o.id!=='D-01'){const hd=new THREE.Mesh(new THREE.BoxGeometry(m(0.06),m(0.55),m(0.08)),MAT.blackMetal);hd.position.set(m((h==='a'?1:-1)*(len-0.3)),m(3.3),m(th/2+0.05));hd.castShadow=true;piv.add(hd);}
     }
   }
 }
@@ -1213,7 +1219,7 @@ function gateStep(now){if(gateAnim.open===gateAnim.target)return;const dt=gateAn
    designs[k]=[mergeGeometries(blk),mergeGeometries(wd)]}
   return designs};
  const hang=(designs,ox,parent,label)=>{for(const k in designs) for(const g of designs[k]){metreUV(g);g.translate(-mx(ox),0,-m(gyc))}
-  for(const [i,mt] of [[0,MAT.blackMetal],[1,MAT.extWood]]){const me=new THREE.Mesh(designs['GD-1'][i],mt);me.castShadow=true;me.receiveShadow=true;me.userData.keepUV=true;
+  for(const [i,mt] of [[0,MAT.mint],[1,MAT.extWood]]){const me=new THREE.Mesh(designs['GD-1'][i],mt);me.castShadow=true;me.receiveShadow=true;me.userData.keepUV=true;
     me.userData.designs=Object.fromEntries(Object.keys(GD).map(k=>[k,designs[k][i]]));me.userData.gate=label;parent.add(me);named(me,'');gateMeshes.push(me);wallMeshes.push(me)}};
  for(const o of P.openings.filter(o=>o.type==='gate')){const mid=(o.a+o.b)/2;
   for(const [a,b,h] of [[o.a+0.05,mid-0.03,'a'],[mid+0.03,o.b-0.05,'b']]){const sg=h==='a'?1:-1,hx=h==='a'?a:b,jx=(a+b)/2,far=h==='a'?[jx+0.01,b]:[a,jx-0.01],near=h==='a'?[a,jx-0.01]:[jx+0.01,b];
@@ -1222,7 +1228,7 @@ function gateStep(now){if(gateAnim.open===gateAnim.target)return;const dt=gateAn
    const p2=new THREE.Group();p2.position.set(mx(jx)-mx(hx),0,0);p1.add(p2);
    hang(build(...far),jx,p2,`${o.id} (bi-fold)`);GATES.push({p1,p2,sg})}}
  poseGates(1)}
-function setGate(k){if(!GD[k])k='GD-1';for(const me of gateMeshes){me.geometry=me.userData.designs[k];me.userData.tip=`Gate ${me.userData.gate} · ${k} · MS frame, black powder-coat · ${GD[k]}`}
+function setGate(k){if(!GD[k])k='GD-1';for(const me of gateMeshes){me.geometry=me.userData.designs[k];me.userData.tip=`Gate ${me.userData.gate} · ${k} · MS frame, mint blue enamel (VC-02) · ${GD[k]}`}
   document.querySelectorAll('#gateSeg button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.g===k));try{localStorage.setItem('lr3d-gate',k)}catch(e){};renderer.shadowMap.needsUpdate=true;if(photo&&pt)pt.setScene(scene,camera);invalidate()}
 function setExt(k){if(!EXT[k])k='EX-4';const o=EXT[k];MAT.ext.color.set(o.wall);MAT.extTrim.color.set(o.trim);MAT.extBase.color.set(o.base);MAT.extUp.color.set(o.up);
   if(o.louver==='wood'){MAT.extWood.map=T.oakPanel.map;MAT.extWood.color.set('#c99a6a')}else{MAT.extWood.map=null;MAT.extWood.color.set('#3c3d3e')}MAT.extWood.needsUpdate=true;
