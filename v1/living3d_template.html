@@ -186,7 +186,7 @@ const MAT={
   white:std({color:'#f6f4f0',roughness:0.9,normalMap:T.paint.normalMap,normalScale:paintN}),
   upvc:std({color:'#f2f2f0',roughness:0.35}),
   blackMetal:std({color:'#1d1e21',roughness:0.4,metalness:0.7}),
-  grill:std({color:'#8fc2bc',roughness:0.5,metalness:0.3,side:THREE.DoubleSide}),   // VC-02 mint blue enamel
+  grill:std({color:'#1d1e21',roughness:0.45,metalness:0.6,side:THREE.DoubleSide}),   // GC-1 black powder-coat
   mint:std({color:'#8fc2bc',roughness:0.5,metalness:0.3}),redOxide:std({color:'#9c3a26',roughness:0.6}),brass:std({color:'#b08d57',roughness:0.35,metalness:0.8}),
   glassRaster:std({color:'#dfe9ee',roughness:0.04,metalness:0,transparent:true,opacity:0.14,depthWrite:false}),
   glassPhoto:phys({color:'#ffffff',roughness:0.02,metalness:0,transmission:1,thickness:0.006,ior:1.5}),
@@ -299,7 +299,7 @@ function grillMesh(o,w,horiz,U1,U2,Z1,Z2,vc){
   const g=mergeGeometries(parts),M=new THREE.Matrix4();
   if(horiz)M.set(-F,0,0,-w.x1*F, 0,F,0,ZOFF*F, 0,0,F,w.y1*F, 0,0,0,1);else M.set(0,0,-F,-w.x1*F, 0,F,0,ZOFF*F, F,0,0,w.y1*F, 0,0,0,1);
   g.applyMatrix4(M);const me=new THREE.Mesh(g,MAT.grill);me.castShadow=true;me.receiveShadow=true;me.userData.keepUV=true;
-  scene.add(me);named(me,`${o.id} grill GR-1 · MS, mint blue enamel (VC-02) · plain vertical round bars, 12 mm @ 5", one middle flat`);return me}
+  scene.add(me);named(me,`${o.id} grill GR-1 · MS, black powder-coat (GC-1) · plain vertical round bars, 12 mm @ 5", one middle flat`);return me}
 // invisible grill: 2 mm stainless-steel wire ropes, horizontal at 2", in a slim frame; keeps the view open
 function invisibleGrill(o,w,horiz,U1,U2,Z1,Z2,vc){const fr=0.06,parts=[],n=Math.floor((Z2-Z1-2*fr)/0.167);
   const bar=(u1,z1,u2,z2,wd)=>new THREE.BoxGeometry(Math.max(u2-u1,wd),Math.max(z2-z1,wd),wd).translate((u1+u2)/2,(z1+z2)/2,vc);

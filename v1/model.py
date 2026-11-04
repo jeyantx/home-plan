@@ -179,10 +179,10 @@ BRANCH_NOTES='''<section class="ask"><h2>Areas for the engineer (built-up and pa
 <section class="ask"><h2>Outside windows and colours (branch exterior-v2, for review)</h2>
 <ol>
 <li><b>Window frame WF-1</b> on every outside window: a box frame round the window, 6" wide and 4" out from the wall, with a deeper 1'3" hood on top that works as the sunshade, and a thin black drip edge. Ventilators get a slimmer 4" frame, except V-01 (plain, no frame). RCC fins and hood, clad in the same wood-look brown as the balcony louvers and the gate slats (HPL or aluminium wood finish).</li>
-<li><b>W-01 (study, facing the parking):</b> same box frame WF-1 and scalloped sunshade as the other front windows, mint blue grill.</li>
+<li><b>W-01 (study, facing the parking):</b> same box frame WF-1 and scalloped sunshade as the other front windows, black grill.</li>
 <li><b>Plinth band:</b> the plinth below the floor is in a dark base colour (textured paint, or stone cladding).</li>
 <li><b>Paint plan: Sage and clay</b> (chosen, kept cost-efficient). <b>Inside:</b> one light sage green emulsion on every room wall (one shade, so it is bought in bulk and touch-ups are easy); ceilings in a light clay (soft terracotta) tint like the reference photo, with the ceiling band round the edge in white, so the clay reads as a soft panel and the edges stay bright; the clay tint is the same white ceiling paint with a little stainer added, so it costs about the same; the only accent is clay (terracotta) on the living-room TV niches; bedroom headboard walls keep their oak-look panels; kitchen and toilets are tiled to 7', sage above. Toilets and kitchen above the tiles: washable (anti-fungal) emulsion in the same sage. <b>Outside:</b> sage green weather-proof exterior emulsion on all the walls (a light green, so the walls stay fairly cool), clay (terracotta) only as lining: the slab bands and the parapet and wall copings; a dark brown plinth that hides splash marks; gates and grills stay as they are. Sage and clay are used inside and outside, so it is still only a few paints.</li>
-<li><b>80s Tamil touches (chosen, low cost):</b> <b>VC-02</b> mint blue enamel on all window and ventilator grills (the gates stay black with brown slats); <b>VD-03</b> front and back window sunshades (east and west windows face the neighbours, so they get no outside frame) with a scalloped front edge and a thin red oxide line above; <b>VD-05</b> main door D-01 in teak with four raised panels and a brass knob (other doors stay flush). Costly items such as Athangudi tiles are left out.</li>
+<li><b>80s Tamil touches (chosen, low cost):</b> window and ventilator grills in black powder-coat (GC-1, mint blue was tried and dropped), matching the black gates with brown slats; <b>VD-03</b> front and back window sunshades (east and west windows face the neighbours, so they get no outside frame) with a scalloped front edge and a thin red oxide line above; <b>VD-05</b> main door D-01 in teak with four raised panels and a brass knob (other doors stay flush). Costly items such as Athangudi tiles are left out.</li>
 <li><b>Colours: EX-8</b> (chosen, sage and clay): sage green house, clay bands and copings, dark brown plinth, wood-brown frames. Compound walls and gate pillars in a darker warm grey-beige, so they read apart from the house, with white coping on top. Gates GD-1 (slats) and kitchen finish KT-1 are also fixed; the other options are dropped.</li>
 </ol></section>
 <section class="ask"><h2>Raised site levels (branch levels-v1, sample for review)</h2>
@@ -440,7 +440,7 @@ SPEC = {
  'D-02':'Flush door, hardwood frame', 'D-06':'Flush door, hardwood frame', 'D-07':'Flush door, hardwood frame',
  'D-03':'WPC waterproof door', 'D-04':'WPC waterproof door', 'D-08':'WPC waterproof door',
  'D-05':'Steel or UPVC door, glass upper half, plus MS grill shutter',
- 'W-01':'UPVC sliding window; mint blue grill; outside box frame WF-1 with the scalloped sunshade, same as the other front windows',
+ 'W-01':'UPVC sliding window; black grill; outside box frame WF-1 with the scalloped sunshade, same as the other front windows',
  'D-09':'Steel or UPVC door, glass upper half, plus MS grill shutter',
  'O-01':'Plastered arch opening, no shutter',
  'W-12':'Bi-fold glass window, aluminium or UPVC frame, curtain on the living side',
