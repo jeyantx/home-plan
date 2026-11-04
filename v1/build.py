@@ -295,7 +295,7 @@ def _store_tab():   # Store tab: FU-25 front elevation (looking west, north end 
     for L in S['loft']:
         x1,x2=X(L[3]),X(L[2])
         if L[2]>Y0+0.01: e.append(f'<rect x="{x2-3:.1f}" y="{oy}" width="6" height="{(S["top"]-lz)*k:.1f}" fill="{KAD}"/>')
-        e.append(f'<text x="{(x1+x2)/2:.1f}" y="{(oy+Z(lz))/2-2:.1f}" font-size="13" font-weight="700" text-anchor="middle" fill="#2f6f4f">{L[0]}</text><text x="{(x1+x2)/2:.1f}" y="{(oy+Z(lz))/2+14:.1f}" font-size="10.5" text-anchor="middle" fill="#3a3b3e">{_h.escape(L[1])}</text>')
+        e.append(f'<text x="{(x1+x2)/2:.1f}" y="{(oy+Z(lz))/2-2:.1f}" font-size="13" font-weight="700" text-anchor="middle" fill="#2f6f4f">{L[0]}</text><text x="{(x1+x2)/2:.1f}" y="{(oy+Z(lz))/2+14:.1f}" font-size="10.5" text-anchor="middle" fill="#3a3b3e">{fmt(L[3]-L[2]-t)} x {fmt(S["top"]-lz-0.125)}</text>')
     for c in S['cells']:
         ya,yb,cw=span(c);x1,x2=X(yb),X(ya);cx=(x1+x2)/2;zc=(Z(c['z1'])+Z(c['z2']))/2
         if c['z2']<lz-0.01:
@@ -316,15 +316,14 @@ def _store_tab():   # Store tab: FU-25 front elevation (looking west, north end 
             e.append(f'<text x="{x1+t*k+4:.1f}" y="{Z(c["z2"])+14:.1f}" font-size="10.5" font-weight="700" fill="#2f6f4f">{c["id"]}</text><text x="{cx:.1f}" y="{Z(zb+bh/2)+4:.1f}" font-size="10" text-anchor="middle" fill="#fff">{"Battery" if bat else "Inverter"}</text>')
             continue
         e.append(f'<text x="{x1+t*k+(14 if c.get("slab")=="adjustable" or c["bays"]==("S-3",) else 4):.1f}" y="{Z(c["z2"])+15:.1f}" font-size="11" font-weight="700" fill="#2f6f4f">{c["id"]}</text>')
-        e.append(f'<text x="{cx:.1f}" y="{zc+5:.1f}" font-size="10.5" text-anchor="middle" fill="#3a3b3e">{_h.escape(short)}</text>')
-        e.append(f'<text x="{x2-5:.1f}" y="{Z(c["z1"])-5:.1f}" font-size="9.5" text-anchor="end" fill="#8a6a4a">{fmt(c["z2"]-c["z1"])} h</text>')
+        e.append(f'<text x="{cx:.1f}" y="{zc+5:.1f}" font-size="10.5" text-anchor="middle" fill="#3a3b3e">{fmt(cw)} x {fmt(c["z2"]-c["z1"]-(S["shelf_t"] if c["z2"]<lz-0.01 else 0))}</text>')
     for bb in S['bays']: e.append(f'<text x="{(X(bb["y1"])+X(bb["y2"]))/2:.1f}" y="{Z(0)+18:.1f}" font-size="13" font-weight="700" text-anchor="middle" fill="#2f6f4f">{bb["id"]}</text><text x="{(X(bb["y1"])+X(bb["y2"]))/2:.1f}" y="{Z(0)+32:.1f}" font-size="10" text-anchor="middle" fill="#5d646d">{fmt(bb["y2"]-bb["y1"])}</text>')
     for z in (0,S['plinth'],lz,S['top']):
         lab={0:'floor',S['plinth']:'3" plinth',lz:"7'6\" loft",S['top']:"9'4\""}[z]
         e.append(f'<text x="{ox+W+8:.1f}" y="{Z(z)+4:.1f}" font-size="11" fill="#5d646d">{lab}</text>')
     e.append(f'<text x="{ox}" y="{oy+H+50:.1f}" font-size="11.5" fill="#5d646d">← stair hall (south)</text><text x="{ox+W:.1f}" y="{oy+H+50:.1f}" font-size="11.5" text-anchor="end" fill="#5d646d">fridge FU-18 (north) →</text></svg>')
-    cr=''.join(f'<tr><td class="c">{c["id"]}</td><td>{fmt(span(c)[2])} wide x {fmt(c["z2"]-c["z1"]-(S["shelf_t"] if c["z2"]<lz-0.01 else 0))} high x {fmt(D)} deep</td><td>{_h.escape(c["use"])}</td></tr>' for c in S['cells'])
-    cr+=''.join(f'<tr><td class="c">{L[0]}</td><td>{fmt(L[3]-L[2]-t)} wide x {fmt(S["top"]-lz-0.125)} high x {fmt(D)} deep</td><td>Loft: {_h.escape(L[1])}</td></tr>' for L in S['loft'])
+    cr=''.join(f'<tr><td class="c">{c["id"]}</td><td>{fmt(span(c)[2])} wide x {fmt(c["z2"]-c["z1"]-(S["shelf_t"] if c["z2"]<lz-0.01 else 0))} high x {fmt(D)} deep</td><td>{fmt(c["z1"])} to {fmt(c["z2"])}</td></tr>' for c in S['cells'])
+    cr+=''.join(f'<tr><td class="c">{L[0]}</td><td>{fmt(L[3]-L[2]-t)} wide x {fmt(S["top"]-lz-0.125)} high x {fmt(D)} deep</td><td>{fmt(lz)} to {fmt(S["top"])}</td></tr>' for L in S['loft'])
     # kadappa cutting list: every slab, its place and cut size (shelves go 1" into the uprights and 1" into the back wall)
     kd=[];n=0
     def add(where,L,Dp,th,q=1,note=''):
@@ -343,8 +342,8 @@ def _store_tab():   # Store tab: FU-25 front elevation (looking west, north end 
     for L in S['loft'][1:]: add(f'Loft upright at Y {fmt(L[2])}',S['top']-lz,D+1/12,t)
     sq=sum(r[2]*r[3]*r[5] for r in kd)
     kr=''.join(f'<tr><td class="c">{r[0]}</td><td>{_h.escape(r[1])}</td><td>{fmt(r[2])} x {fmt(r[3])}</td><td>{"40 mm" if r[4]>1.2/12 else "25 mm"}</td><td>{_h.escape(r[6])}</td></tr>' for r in kd)
-    return ('<section><h2>Store cupboard FU-25 (civil work)</h2><p>Built by the mason: 1½" kadappa uprights, 1" kadappa shelves set 1" into the uprights and the back wall, and a 3" brick plinth with a kadappa top. Every cell has its own code (bay, then cell number from the bottom), so you can ask to change any one. Cells have different heights: tall cells for jars and pots, short ones for packs, and one wide low cell S-1.1 under S-1 and S-2 for the drums. UPVC wood-look (oak) shutters with black handles; the loft has its own shutters.</p>'
-            +''.join(e)+'</section><section><h2>Cells</h2><table class="t"><tr><th>Cell</th><th>Clear size</th><th>Use</th></tr>'+cr+'</table></section>'
+    return ('<section><h2>Store cupboard FU-25 (civil work)</h2><p>Built by the mason: 1½" kadappa uprights, 1" kadappa shelves set 1" into the uprights and the back wall, and a 3" brick plinth with a kadappa top. Every cell has its own code (bay, then cell number from the bottom), so you can ask to change any one. Cells have different heights: tall cells for jars and pots, short ones, and one wide low cell S-1.1 under S-1 and S-2. UPVC wood-look (oak) shutters with black handles; the loft has its own shutters.</p>'
+            +''.join(e)+'</section><section><h2>Cells</h2><table class="t"><tr><th>Cell</th><th>Clear size (wide x high x deep)</th><th>From the floor</th></tr>'+cr+'</table></section>'
             +f'<section><h2>Kadappa cutting list (S-1, S-2, S-4 and the loft)</h2><p>Grey Cuddapah stone, polished on the top face, edges rounded on the front. Cut sizes include 1" into each upright groove and 1" into the back wall. About {sq:.0f} sq ft in all.</p><table class="t"><tr><th>Code</th><th>Where</th><th>Cut size (long x deep)</th><th>Thick</th><th>Note</th></tr>'+kr+'</table></section>'
             +(f'<section><h2>Adjustable shelf (S-3)</h2><p>{_h.escape(S["adjust"])}</p></section>' if S.get('adjust') else '')
             +'<section><h2>Inverter and battery (S-4, bottom)</h2><ul>'+''.join(f'<li>{_h.escape(p)}</li>' for p in S['power'])+f'<li>{_h.escape(S["assumed"])}</li></ul></section>'
