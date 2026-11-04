@@ -1721,7 +1721,6 @@ addEventListener('resize',resize);resize();
 if(window.ResizeObserver)new ResizeObserver(()=>resize()).observe(view);   // the toolbar can wrap after load and change the view height
 {let o=false;try{o=localStorage.getItem('lr3d-opts')==='1'}catch(e){};setOpt(o)}   // options row starts closed unless left open
 let so=0,sl='day',sf=75;try{so=0;sl=localStorage.getItem('lr3d-light')||'day';sf=+(localStorage.getItem('lr3d-lens')||75)}catch(e){}
-{const wq=new URLSearchParams(location.search).get("wall");if(wq&&/^[0-9a-f]{6}$/i.test(wq))OPTIONS[so].wall="#"+wq}   // ?wall=hex previews another interior wall colour
 applyOption(so);applyLight(sl);setLens(sf);setView(21);   // open at the gate, outside
 // share: Day or Evening, the last chosen view, the exact camera and the lens go into the link (?light=eve&view=21&cam=x,y,z,yaw,pitch&lens=60), so the same 3D view opens for someone else
 const SHARE3=['light','view','cam','lens'];let lastView=21,shareT=0;
