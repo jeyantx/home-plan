@@ -46,7 +46,7 @@ WALLS = {
   ('FW-08', 2.75,3.125, 73.125,79.875, 'outer', 10.0, 'East wall of toilet 3, on the line of PW-02'),
   ('FW-09', 2.75,9.5, 73.125,73.5, 'outer', 10.0, 'North wall of toilet 3, facing the open terrace'),
   ('PW-01', 2.75,9.625, 15.5,15.875, 'para', 3, 'Front parapet of balcony 2'),
-  ('PW-02', 2.75,3.125, 15.5,73.125, 'para', 3, 'East parapet of balcony and terrace, up to toilet 3 (terrace covers the bore court too)'),
+  ('PW-02', 1.75,2.125, 15.5,73.125, 'para', 3, 'East parapet of balcony and terrace, up to toilet 3; the slab cantilevers 1\' east past GW-01 over the side passage, so a future hall here gets 1\' more width with no new pillar'),
   ('PW-03', 9.625,21.0, 19.75,20.125, 'para', 3, 'Front parapet of terrace, behind staircase 1 (now from the top of ST-1B)'),
   ('PW-04', 20.625,21.0, 20.125,73.125, 'para', 3, 'West parapet of terrace'),
   ('PW-06', 9.5,9.875, 95.125,98.125, 'para', 3, 'East parapet of balcony 3'),
@@ -77,8 +77,8 @@ ROOMS = {
   ('G-15','Back garden',[(9.5,95.125),(21.0,95.125),(21.0,back_y(21)-0.375),(9.5,back_y(9.5)-0.375)],'garden'),
  ],
  'F': [
-  ('F-01','Balcony 2',R(3.125,9.625,15.875,20.125),'terr'),
-  ('F-02','Open terrace',[(3.125,20.125),(20.625,20.125),(20.625,73.125),(3.125,73.125)],'terr'),
+  ('F-01','Balcony 2',R(2.125,9.625,15.875,20.125),'terr'),
+  ('F-02','Open terrace',[(2.125,20.125),(20.625,20.125),(20.625,73.125),(2.125,73.125)],'terr'),
   ('F-04','Stair landing',R(10.25,20.25,73.875,79.875),'in'),
   ('F-05','Bedroom 3',R(10.25,20.25,80.25,94.375),'bed'),
   ('F-07','Toilet 3',R(3.125,9.5,73.5,79.875),'wet'),
@@ -110,7 +110,8 @@ OPENINGS = [
  ('GT-01','G','FRONT', 0.75,12.0,'gate',None,'+', 6.0,0,'Large gate, 11\'3", bi-fold double leaf (4 panels), folds inward over the level crest, east of the planter pillar'),
  ('GT-02','G','FRONT', 13.5,20.25,'gate',None,'+', 6.0,0,'Small gate, 6\'9", bi-fold double leaf (4 panels), folds inward over the level crest, west of the planter pillar'),
  ('D-07','F','FW-05', 10.5,13.5,'door','a','-', 7.0,0,'Bedroom 3 door, from the landing; opens out onto the landing, hinged at its east end so it folds right back against FW-01'),
- ('D-09','F','FW-01', 74.25,76.5,'door','a','-', 7.0,0,'Toilet 3 door, 2\'3", from the landing (outside bedroom 3); opens into the toilet, hinged at its north end'),
+ ('D-09','F','FW-01', 74.25,76.75,'door','a','-', 7.0,0,'Toilet 3 door, 2\'6", from the landing (outside bedroom 3); opens into the toilet, hinged at its north end'),
+ ('V-03','F','FW-07', 5.75,7.25,'vent',None,None, 1.5,6.0,'Toilet 3 ventilator, 1\'6" x 1\'6" at 6\', between the WC and the basin, opening to the side garden; louvred glass'),
  ('D-12','F','FW-02', 10.5,13.25,'door','a','-', 7.0,0,'Landing door to the open terrace, 2\'9" (in place of the old window W-09), east of the spiral stair; opens out onto the terrace, hinged at its east end so it swings out onto the terrace, clear of the toilet door D-09; 1" raised sill against rain'),
  ('W-10','F','FW-01', 88.5,92.5,'window',None,None, 4.0,3.0,'Bedroom 3 side window'),
  ('W-11','F','FW-04', 14.75,18.25,'window',None,None, 4.0,3.0,'Bedroom 3 back window, over the study desk'),
@@ -183,6 +184,7 @@ BRANCH_NOTES='''<section class="ask"><h2>Areas for the engineer (built-up and pa
 <li><b>W-01 (study, facing the parking):</b> same box frame WF-1 and scalloped sunshade as the other front windows, black grill.</li>
 <li><b>Plinth band:</b> the plinth below the floor is in a dark base colour (textured paint, or stone cladding).</li>
 <li><b>Paint plan: Sage and clay</b> (chosen, kept cost-efficient). <b>Inside:</b> one light sage green emulsion on every room wall (one shade, so it is bought in bulk and touch-ups are easy); ceilings in a light clay (soft terracotta) tint like the reference photo, with the ceiling band round the edge in white, so the clay reads as a soft panel and the edges stay bright; the clay tint is the same white ceiling paint with a little stainer added, so it costs about the same; the only accent is clay (terracotta) on the living-room TV niches; bedroom headboard walls keep their oak-look panels; kitchen and toilets are tiled to 7', sage above. Toilets and kitchen above the tiles: washable (anti-fungal) emulsion in the same sage. <b>Outside:</b> sage green weather-proof exterior emulsion on all the walls (a light green, so the walls stay fairly cool), clay (terracotta) only as lining: the slab bands and the parapet and wall copings; a dark brown plinth that hides splash marks; gates and grills stay as they are. Sage and clay are used inside and outside, so it is still only a few paints.</li>
+<li><b>Plan check fixes (chosen):</b> terrace and balcony 2 slab cantilever 1' east over the side passage (parapet PW-02 moved out), so a future first-floor hall gets 1' more width with no new pillar; AU-01 pillar C-22 with beams B-24 and B-25 under the toilet 3 corner (engineer to confirm sizes); AU-02 ventilator V-03 in toilet 3; AU-04 the 2' of fill compacted in 6" layers and anti-termite soil treatment before the floors; AU-08 3'6" x 3'6" granite landing outside the garden door D-05; AU-12 drying rack dropped, so the counter beside the sink is free; AU-14 passage face of BW-01 painted white for more daylight in the living room; AU-16 wardrobes 1'11" deep (hangers fit across), bedroom 2 and 3 wardrobes sliding; AU-17 bedroom 2 bed and side tables 6" south; AU-18 bedroom 3 bed and side tables 9" north (2'7½" for the desk chair); AU-19 every AC bottom at 7'10", above the curtain rods; AU-20 slim black grill on W-08; AU-22 toilet 3 WC 4" west; AU-23 toilet 3 door 2'6"; AU-27 EB meter on the road face of the planter pillar, read from the road; AU-28 smaller palm pot, 3" clear of the steel door; AU-33 bedroom 3 AC outdoor unit on the balcony 3 floor.</li>
 <li><b>Civil touches (chosen, low cost):</b> CD-01 thinnai seat with shoe shelves on the porch (in place of the shoe rack); CD-02 sunken doormat well at the steel door; CD-03 rough granite porch steps with a black edge strip and a black handrail; CD-05 lofts over the toilet 1 and toilet 2 doors at 7'3"; CD-06 arched display niche in the stair hall; CD-07 window seat with storage under W-08 in bedroom 2; CD-08 tiled shower niches in all three toilets (the toilet 2 bath rack is dropped); CD-09 no step at any toilet door, floors sloped to a 2'6" steel linear drain; CD-10 grab rails beside every WC, walls behind them and on both sides of the stair kept solid brick for more rails later; CD-11 all outside wall corners inside the house plastered round (1" radius); CD-19 the rainwater recharge pit UG-04 in the back garden (already planned).</li>
 <li><b>Curtains, window length only:</b> in every room the curtain rod sits 6" above the window (7'6") and the curtain ends 6" below the sill, instead of hanging from the ceiling: about half the cloth, neater, and the ACs above the windows stay clear. Only the balcony door D-11 gets a full-length curtain, from its own rod.</li>
 <li><b>80s Tamil touches (chosen, low cost):</b> window and ventilator grills in black powder-coat (GC-1, mint blue was tried and dropped), matching the black gates with brown slats; <b>VD-03</b> front and back window sunshades (east and west windows face the neighbours, so they get no outside frame) with a scalloped front edge and a thin red oxide line above; <b>VD-05</b> main door D-01 in teak with four raised panels and a brass knob (other doors stay flush). Costly items such as Athangudi tiles are left out.</li>
@@ -291,8 +293,8 @@ PLANT_COL={'malli':'#ffffff','sembaruthi':'#c8102e','nandiyavattai':'#ffffff','v
 #       'path' (segments of stepping stones, w = width)
 # model: which 3D model draws it; 3d/assets/plants/*.glb are CC0 models from Poly Haven, the rest are code-made (3d/models/garden-plants.js, tn-plants.js)
 GARDEN=[
- dict(id='GD-01',name='Areca palm (butterfly palm) in a big pot',kind='pot',x=3.45,y=39.7,r=0.7,z='porch',h=5.0,model='areca',lab=(4.75,39.3),
-      where='Porch, east corner beside the main door',note='Big terracotta pot, 1\'5" across; bright shade under the porch roof suits it; water twice a week, a cup of compost every 2 months'),
+ dict(id='GD-01',name='Areca palm (butterfly palm) in a big pot',kind='pot',x=3.4,y=39.7,r=0.6,z='porch',h=5.0,model='areca',lab=(4.75,39.3),
+      where='Porch, east corner beside the main door',note='Big terracotta pot, 1\'2" across, 3" clear of the steel door; bright shade under the porch roof suits it; water twice a week, a cup of compost every 2 months'),
  dict(id='GD-02',name='Anthurium (red) in a pot',kind='pot',x=3.3,y=37.95,r=0.5,z='porch',h=1.9,model='anthurium',
       where='Porch, east side, clear of the walk to the door',note='Shade plant, red flowers most of the year; water when the top inch is dry; keep out of the afternoon sun'),
  dict(id='GD-03',name='Syngonium (arrowhead plant) in a pot',kind='pot',x=3.3,y=36.6,r=0.55,z='porch',h=2.0,model='syngonium',
@@ -337,7 +339,7 @@ LABELPOS={'G-01':(8.0,24.5),'G-02':(5.6,37.6),'G-03':(6.2,44.6),'G-04':(11.5,53.
           'F-01':(6.4,18.0),'F-02':(11.9,47.0),'F-04':(12.15,78.0),'F-05':(15.9,93.3),'F-07':(7.6,77.3),'F-08':(15.2,96.6)}
 LABELSIZE={'G-14':0.34,'G-16':0.24,'F-07':0.3,'G-09':0.34,'G-11':0.3,'G-05':0.42,'G-12':0.42,'F-05':0.42,'G-09':0.4,'G-13':0.36,'G-06':0.4,'G-07':0.42,'G-11':0.42,'G-03':0.42,'G-02':0.42,'F-06':0.36,'F-07':0.42,'G-10':0.42,'F-04':0.45,'F-03':0.42,'F-01':0.45,'G-09':0.45,'G-01':0.6,'F-02':0.8}
 TAGPOS={'GW-01':(3.125,53.0),'GW-05':(20.625,51.0),'GW-07':(9.875,91.5),'BW-01':(0.19,50.0),'GW-04':(19.0,31.125),'GW-13':(12.62,58.44),'GW-12':(17.6,46.56),
-        'GW-03':(8.875,33.6),'GW-02':(3.6,40.875),'GW-11':(19.0,35.19),'GW-08':(11.0,94.75),'GW-06':(8.0,73.5),'GW-16':(11.94,71.6),'GW-17':(4.4,67.0),'GW-18':(6.375,72.3),'PW-02':(2.94,40.0),'PW-04':(20.81,40.0),
+        'GW-03':(8.875,33.6),'GW-02':(3.6,40.875),'GW-11':(19.0,35.19),'GW-08':(11.0,94.75),'GW-06':(8.0,73.5),'GW-16':(11.94,71.6),'GW-17':(4.4,67.0),'GW-18':(6.375,72.3),'PW-02':(1.94,40.0),'PW-04':(20.81,40.0),
         'FW-01':(9.875,94.0),'FW-03':(20.625,92.0),'FW-02':(18.4,73.5),'FW-04':(19.0,97.0),'FW-05':(18.0,80.06),'PW-03':(19.4,19.94),'PW-01':(5.0,15.69),'PW-05':(6.0,77.69),
         'GW-15':(18.4,80.44),'GW-14':(8.0,66.81),'GW-10':(13.94,34.6),'GW-09':(9.06,43.0),'BW-03':(1.19,98.0),'BW-07':(20.81,25.0),'BW-08':(20.81,100.5),'BW-02':(0.6,89.19)}
 OPENTAGOFF={'W-01':-0.75,'V-01':-0.75,'W-02':0.9,'W-03':-1.0,'W-04':-1.0,'W-05':-1.0,'W-06':-1.0,'V-02':-1.0,'W-07':-1.0,'W-08':0.8,'D-01':1.4,'D-13':-1.9,'D-02':-2.2,'D-03':-1.6,
@@ -379,8 +381,8 @@ FURNITURE = [
  ('FU-04','G','Coffee table',7.0,10.0,50.75,54.25,'table',None,'Living, 3\' x 3\'6", centred in the L'),
  ('FU-05','G','TV, showcase and bookshelf wall unit',18.917,20.25,46.75,58.25,'tvwall',None,'Living, 11\'6" x 1\'4", full height on GW-05, wall to wall: TV in the middle, showcase and book shelves on both sides'),
  ('FU-06','G','Queen bed',13.75,20.25,41.25,46.25,'bed','x2','Bedroom 1, 6\'6" x 5\', head to GW-05 (east-west), side against GW-12'),
- ('FU-09.1','G','Wardrobe, part 1',17.25,20.25,35.375,36.7083,'ward',None,'Bedroom 1, 3\' x 1\'4" on GW-11, with loft'),
- ('FU-09.2','G','Wardrobe, part 2',18.9167,20.25,36.7083,40.125,'ward',None,'Bedroom 1, 3\'5" x 1\'4" on GW-05; L-shape with part 1, total 6\'5"'),
+ ('FU-09.1','G','Wardrobe, part 1',17.25,20.25,35.375,37.2917,'ward',None,'Bedroom 1, 3\' x 1\'11" on GW-11, with loft; deep enough for hangers across (AU-16)'),
+ ('FU-09.2','G','Wardrobe, part 2',18.3333,20.25,37.2917,40.125,'ward',None,'Bedroom 1, 2\'10" x 1\'11" on GW-05; L-shape with part 1 (AU-16)'),
  ('FU-10','G','Study desk',9.5,13.5,30.5,32.5,'desk',None,'Study, 4\' x 2\', under W-01'),
  ('FU-11','G','Bookshelf',12.5,13.75,32.75,35.25,'shelf',None,'Study, on GW-10'),
  ('FU-12','G','Western WC',18.0,20.25,32.9,34.4,'wc','x2','Toilet 1, wall-mounted cistern'),
@@ -404,20 +406,20 @@ FURNITURE = [
  ('FU-27','G','Wash basin, wall-hung',10.3,11.72,71.96,73.125,'basin',None,'Toilet 2, 1\'5" x 1\'2" on GW-06 in the corner by the door, beside the platform (clear of the door swing); mirror above; rim 2\'8"'),
  ('FU-28','G','Shower area',6.75,11.75,67.0,69.625,'shower',None,'Toilet 2, 5\' x 2\'7½" across the whole north end, open (no screen); rose on GW-14 at 6\'9"; floor trap in the middle; floor slopes 1:60; the door folds back over it'),
  ('FU-58','G','Geyser',7.0,8.4,67.0,67.475,'geyser',None,'Toilet 2, on GW-14 above the shower, clear of the rose, bottom at about 6\'3"'),
- ('FU-79','G','Step outside D-05',8.5,9.5,74.0,77.5,'plat',None,'Granite step, 6" up from the garden; D-05 is 1\' above the garden, so it is two 6" risers down to the garden; the door leaf clears the step'),
+ ('FU-79','G','Landing outside D-05 (AU-08)',6.0,9.5,73.875,77.375,'plat',None,'Granite landing 3\'6" x 3\'6", 6" up from the garden; D-05 is 1\' above the garden, so one 6" step down to the landing and one to the garden; the door leaf opens over it, room to stand with a laundry basket'),
  ('FU-77','G','Utility platform',0.375,2.625,82.0,84.75,'plat',None,'Side garden utility, along BW-01 opposite bore BR-01, 4" above the garden, grey anti-skid tiles, floor drain in front of the basin; white tiles on BW-01 behind them'),
  ('FU-29','G','Washing machine, front-load 8 kg',3.5,5.45,67.45,69.45,'wm',None,'Bore court G-16, under the terrace slab (no sun or rain), back to GW-17, front to the south; right below the drying rack FU-75, so you wash and hang in one place; tap, socket and drain come through GW-17 from the kitchen sink line; 60 x 60 x 85 cm; about 2\'8" clear in front, to BR-02; move it out if the bore is ever serviced'),
  ('FU-30','G','Utility wash basin with tap',0.375,1.875,82.5,84.25,'basin',None,'Side garden utility, against the east compound wall BW-01, straight across from its old place on GW-07: granite counter 2\'9" high with a deep steel sink, tall swan-neck tap, a low tap for buckets, white tiles behind'),
- ('FU-31','G','Queen bed',13.75,20.25,85.0,90.0,'bed','x2','Bedroom 2, head to GW-05'),
- ('FU-32','G','Side table',18.75,20.25,83.25,84.75,'cab',None,'Bedroom 2'),
- ('FU-33','G','Side table and dressing shelf',18.85,20.25,90.25,93.65,'cab',None,'Bedroom 2, one long floating oak shelf on GW-05 (3\'5"): side table with a lamp at the bed end, dressing table with a mirror above and a stool at the other end; replaces FU-35'),
- ('FU-34','G','Wardrobe with loft',14.0,20.25,80.625,81.9583,'ward',None,'Bedroom 2, 6\'3" x 1\'4", on GW-15'),
- ('FU-36','F','Queen bed',13.75,20.25,86.0,91.0,'bed','x2','Bedroom 3, head to FW-03'),
- ('FU-37','F','Side table',18.75,20.25,84.25,85.75,'cab',None,'Bedroom 3'),
- ('FU-38','F','Side table',18.75,20.25,91.25,92.75,'cab',None,'Bedroom 3'),
- ('FU-39','F','Sliding wardrobe with loft',14.5,20.25,80.25,81.5833,'ward',None,'Bedroom 3, 5\'9" x 1\'4", on FW-05 (where toilet 3 was)'),
+ ('FU-31','G','Queen bed',13.75,20.25,85.5,90.5,'bed','x2','Bedroom 2, head to GW-05'),
+ ('FU-32','G','Side table',18.75,20.25,83.75,85.25,'cab',None,'Bedroom 2'),
+ ('FU-33','G','Side table and dressing shelf',18.85,20.25,90.75,93.65,'cab',None,'Bedroom 2, one long floating oak shelf on GW-05 (3\'5"): side table with a lamp at the bed end, dressing table with a mirror above and a stool at the other end; replaces FU-35'),
+ ('FU-34','G','Sliding wardrobe with loft',14.0,20.25,80.625,82.5417,'ward',None,'Bedroom 2, 6\'3" x 1\'11", on GW-15; sliding shutters so the side table never blocks a door (AU-16, AU-17)'),
+ ('FU-36','F','Queen bed',13.75,20.25,85.25,90.25,'bed','x2','Bedroom 3, head to FW-03'),
+ ('FU-37','F','Side table',18.75,20.25,83.5,85.0,'cab',None,'Bedroom 3'),
+ ('FU-38','F','Side table',18.75,20.25,90.5,92.0,'cab',None,'Bedroom 3'),
+ ('FU-39','F','Sliding wardrobe with loft',14.5,20.25,80.25,82.1667,'ward',None,'Bedroom 3, 5\'9" x 1\'11" (AU-16), on FW-05 (where toilet 3 was)'),
  ('FU-40','F','Study desk',14.5,18.5,92.875,94.375,'desk',None,'Bedroom 3, on FW-04 under the back window W-11, chair in front; the east side by W-10 is left clear as the way to the balcony door'),
- ('FU-41','F','Western WC',3.125,5.375,78.25,79.875,'wc','y2','Toilet 3, in the south-east corner, cistern on FW-07, faces north; 2\' clear in front'),
+ ('FU-41','F','Western WC',3.458,5.708,78.25,79.875,'wc','y2','Toilet 3, in the south-east corner, cistern on FW-07, faces north; 2\' clear in front'),
  ('FU-42','F','Wash basin, wall-hung',7.4,8.9,78.5,79.875,'basin',None,'Toilet 3, on FW-07 near the door; mirror above'),
  ('FU-43','F','Shower area',3.125,6.0,73.5,76.25,'shower',None,'Toilet 3, 2\'10" x 2\'9" in the north-east corner; floor trap in the middle'),
  ('FU-60','F','Geyser',3.125,3.575,74.0,75.4,'geyser',None,'Toilet 3, on FW-08 above the shower, bottom at about 6\'3"'),
@@ -430,19 +432,18 @@ FURNITURE = [
  ('FU-46','G','AC indoor unit',10.25,10.92,85.5,88.5,'acin',None,'Bedroom 2, on GW-07 centred above window W-07 (about 7\'7"), blows straight across the bed'),
  ('FU-47','G','AC outdoor unit',8.33,9.5,89.6,92.27,'acout',None,'Bedroom 2, on the GW-07 side-garden face, south of window W-07 (moved for the utility)'),
  ('FU-48','F','AC indoor unit',10.25,10.92,91.0,94.0,'acin',None,'Bedroom 3, on FW-01 facing the bed'),
- ('FU-49','F','AC outdoor unit',8.33,9.5,91.25,93.92,'acout',None,'Bedroom 3, wall bracket on FW-01 outside'),
+ ('FU-49','F','AC outdoor unit',18.0,20.625,96.5,97.75,'acout',None,'Bedroom 3, on the balcony 3 floor at the west end on a 6" stand, easy to service (AU-33); pipe along the FW-04 outside face'),
  ('FU-51','G','Kitchen sink',6.5,8.4,64.875,66.375,'sinkbowl',None,'Kitchen, single bowl on the back counter FU-16, against GW-14'),
  ('FU-64','G','Mixer grinder',3.75,4.6,59.0,59.85,'appl',None,'Kitchen, east counter in the GW-13 corner, socket on GW-01'),
  ('FU-65','G','Wet grinder, table-top',10.75,11.95,64.95,66.15,'appl',None,'Kitchen, on the west end of the 2\' low counter FU-16.2 (where the RO purifier was), socket on GW-14'),
  ('FU-66','G','RO water purifier, wall-mounted',8.488,9.637,65.706,66.625,'over',None,'Kitchen, on GW-14 in the place of wall unit K-14 (removed), 558 x 350 x 280 mm (H x W x D), bottom at 5\' from the floor; water pots fill standing on the 2\' low counter below'),
  ('FU-67','G','Microwave oven',11.82,13.33,58.67,59.85,'appl',None,'Kitchen, on the black counter top over the open baskets K-11, at the west end of the breakfast counter FU-17; 20 L solo microwave, 46 x 28 x 36 cm (downloaded model, archibase.net); socket behind it on GW-13'),
  ('FU-52','G','Gas stove, 3 burner, glass top (free-standing)',4.015,5.360,61.500,63.797,'hob',None,'Kitchen, stands on the counter over the cylinder unit K-02, 1\' north of the drying rack (not built in, lift it off to clean), 70 x 41 x 13 cm; gas hose down through a grommet to the cylinder in K-02 below; chimney hood above, just over the window head'),
- ('FU-80','G','Utensil drying rack, steel, 2 tier',4.25,6.25,65.1,66.5,'appl',None,'Kitchen, on the counter right beside the sink: 2\' wide, 2\'4" high, two compartments (1\'6" for vessels and cookers, 8" for plates on top) and a drip tray; the wall units above it start higher, at 5\'3"'),
  ('FU-81','G','Chimney hood, 60 cm, ducted',3.5,5.082,61.666,63.634,'over',None,'Kitchen, over the stove FU-52: wall chimney 60 cm wide, about 41 cm high and 48 cm deep (sloping black glass hood and a short upright body), bottom at 5\'4" (2\'6" above the counter, just over the W-06 head); a 6" (150 mm) round aluminium duct goes straight back from the top of the body through GW-01 at 6\'4" (core-cut hole just above the window lintel), so no pipe shows; needs 61 cm clear between the cabinets (dashed)'),
  ('FU-82','G','Chimney duct outlet with cowl',2.55,2.95,62.35,62.95,'over',None,'Outside on the east face of GW-01, 6\'4" up: a steel cowl with a downward opening and a back-draft flap, so rain and birds cannot come in (dashed)'),
  ('FU-83','G','Slab over the washing machine',2.75,6.0,67.375,70.0,'over',None,'Bore court: 2" RCC (or kadappa stone) slab 4\'9" above the court floor (high enough to open the lid of a top-load machine later), wall to wall between GW-17 and GW-18, with a 3" drip edge at the front, and a 4½" side wall under it on the open side-passage side, so rain cannot reach the machine; its top is a shelf for detergent (dashed)'),
  ('FU-85','G','Sump pump control panel',19.05,19.95,29.25,29.75,'panel',None,'Parking, on GW-04 (west part, beside the EB meter FU-87), 4\'6" to 5\'9" above the parking floor, under the terrace slab; a 6" deep box on the wall, the wiring hidden inside the wall: starter for the 1 HP openwell submersible pump inside the sump UG-03, with automatic float switches (sump low, tank full) and dry-run protection; the pipe runs up to the terrace, along the east parapet PW-02 and up FW-02 by the ladder FU-72 to the overhead tank FU-71'),
- ('FU-87','G','EB meter box and main switch board',17.55,18.85,29.25,29.75,'panel',None,'Parking, on GW-04 west of the car and below the toilet 1 vent V-01, 4\'6" to 6\' above the parking floor; a 6" deep box on the wall (room to fix the meter, switches and the pump starter), wiring hidden inside the wall: TNEB meter in a lockable box with a glass window (read from the parking, close to the gate), main switch and ELCB beside it; the sump pump panel FU-85 is next to it'),
+ ('FU-87','G','EB meter box and main switch board',12.125,13.375,-0.2,0.3,'panel',None,'On the road face of the planter pillar between the two gates, 4\'6" to 6\' up, glass window: the meter reader reads it from the road without coming in (AU-27); cable in a pipe under the ramp to the house'),
  ('FU-88','G','Front wash basin with tap',0.375,1.625,28.25,29.75,'basin',None,'Parking, on the east compound wall BW-01 just in front of the bikes, before the porch steps: granite counter 2\'9" high with a steel sink and swan-neck tap for washing hands and feet when coming in, and a low tap with a hose union for washing the car and bikes; white tiles behind, floor drain in front; 1\'3" deep, so the way into the side passage stays open'),
  ('FU-86','G','Bore pump control panel (BR-02)',5.5,6.0,72.3,73.5,'panel',None,'Bore court, on GW-18 at 4\'6" to 5\'9", a 6" deep box, the wiring hidden inside the wall: starter and capacitor box for the submersible pump in BR-02, with dry-run, voltage and overload protection; no motor unit above ground; the bore head has a non-return valve and a gate valve; bore water goes to the sump UG-03, or straight up to the tank FU-71 by a valve'),
  ('FU-54','G','Garden tap point',1.375,2.2,97.0,98.35,'gtap',None,'Side garden, south-east, on the east compound wall BW-03 between the vegetable bed GD-07 and the drumstick GD-08: a brass wall tap (bib cock with a hose union) 2\' up on white wall tiles, a 4" grey tiled step with a floor drain under it and a wall hose reel beside it; for watering the garden and filling buckets; no sink'),
@@ -467,7 +468,7 @@ SPEC = {
 for _o in OPENINGS:
     if _o[5]=='window' and _o[0] not in SPEC: SPEC[_o[0]]='UPVC 3-track sliding: 2 glass + 1 mosquito mesh, MS safety grill, 1\'6" sunshade outside'
     if _o[5]=='vent' and _o[0] not in SPEC: SPEC[_o[0]]='Louvred glass ventilator with exhaust fan opening'
-SPEC['W-08']='Picture window: fixed glass centre (4\') with a UPVC sliding pane each side (2\'3") with mosquito mesh; invisible grill of 2 mm stainless-steel wire ropes at 2" (no bars, nearly invisible, child-safe); 1\'6" sunshade outside'
+SPEC['W-08']='Picture window: fixed glass centre (4\') with a UPVC sliding pane each side (2\'3") with mosquito mesh; slim black MS grill, the same as the other windows (AU-20; the invisible wire grill is dropped, as it is child-safe but not theft-proof); 1\'6" sunshade outside'
 SPEC['V-03']='Louvred glass ventilator with exhaust fan opening'
 # underground tanks and pits: (code, name, shape, geometry, inside size note, covers, note)
 #   rect geometry = outer (x1,x2,y1,y2); circle geometry = (cx,cy,outer r); covers = list of (x1,x2,y1,y2) or (cx,cy,r)
@@ -562,7 +563,7 @@ KITCHEN_NOTES=[
  'Finish KT-1: oak-look laminate base units, cream wall units and loft, black granite top 40 mm, matte black handles; 18 mm BWP plywood carcass (boiling-water-proof, for a wet kitchen).',
  'Base units: 2\'10" to the top of the counter (865 mm), 4" plinth, 600 mm deep. Low counter for the wet grinder and water: 2\' (610 mm). Breakfast counter: the same 2\'10" as the east run, so the L-shaped corner cupboard K-01A/K-01B has one level top; 375 mm deep.',
  'Hardware: soft-close hinges and full-extension soft-close drawer runners; L-corner (bi-fold) hinges on the two corner doors; L-profile handles in matte black along the bottom edge of the wall units and lofts, easy to pull from below; the two corners are L-shaped cupboards with L-shaped shelves (no carousels, no trolleys) to keep the cost down; a gas strut only on the dish-drainer flap K-13.',
- 'Free-standing 3-burner glass-top stove FU-52 (70 x 41 x 13 cm) on the counter over K-02, with the gas cylinder below it; chimney 60 cm wide above it, its duct going straight back through GW-01 to a vent cowl; utensil drying rack FU-80 on the corner counter beside the sink; sink FU-51 over K-04 with the dish drainer K-13 above it; RO purifier FU-66 (558 x 350 x 280 mm) in the place of wall unit K-14, over the low counter; wet grinder FU-65 on the west end of the low counter; mixer FU-64 on the east run; microwave FU-67 on the breakfast counter.',
+ 'Free-standing 3-burner glass-top stove FU-52 (70 x 41 x 13 cm) on the counter over K-02, with the gas cylinder below it; chimney 60 cm wide above it, its duct going straight back through GW-01 to a vent cowl; sink FU-51 over K-04 with the dish drainer K-13 above it; RO purifier FU-66 (558 x 350 x 280 mm) in the place of wall unit K-14, over the low counter; wet grinder FU-65 on the west end of the low counter; mixer FU-64 on the east run; microwave FU-67 on the breakfast counter.',
 ]
 
 CAR=(11.125,16.875,13.75,28.75)   # VW Virtus size, 14'11" x 5'9" (4561 x 1752 mm), reversed in: nose to the gate, back 1' clear of GW-04; as far west as it can go (3" off the stair line); one short back-and-forth (2'5" forward, 10" back) on the way out
@@ -590,7 +591,8 @@ COLUMNS = [
   ('C-12','G', 20.25,21.0, 66.375,67.375,'West, in GW-05 behind the FU-25 store cupboard, in line with GW-14'),
   ('C-20','G0', 6.0,6.75, 66.625,67.625,'Bore court corner: GW-17, GW-18 and GW-14; footing kept away from bore BR-02. Ground floor only: stops at the roof slab, no stub on the terrace, so the future hall has no pillar in the middle'),
   ('C-21','G0', 6.0,6.75, 72.875,73.875,'Bore court corner: GW-18 and GW-06; eccentric footing needed, it is close to bore BR-02. Ground floor only: stops at the roof slab, no stub on the terrace'),
-  ('C-14','G+F', 9.5,10.25, 73.125,74.125,'Corner of GW-06 and GW-07; runs up in FW-01'),
+  ('C-22','G0', 2.75,3.5, 79.25,80.25,'AU-01: south-east corner of toilet 3, in the side garden; ground floor only, carries toilet 3 (beams B-24, B-25). The side passage stays 2\'4" clear'),
+ ('C-14','G+F', 9.5,10.25, 73.125,74.125,'Corner of GW-06 and GW-07; runs up in FW-01'),
  ('C-15','G+F', 20.25,21.0, 73.0,74.0,'West, in GW-05 under FW-02; runs up in FW-03'),
  ('C-16','G+F', 9.5,10.25, 79.94,80.94,'In GW-07 where GW-15 meets it; runs up in FW-01'),
  ('C-17','G+F', 20.25,21.0, 79.94,80.94,'West, in GW-05 where GW-15 meets it; runs up in FW-03'),
@@ -613,7 +615,9 @@ BEAMS = [
   ('B-11','G', 9.5,10.25, 73.125,95.125, "1'3\"",'East edge beam over GW-07, C-14 to C-18'),
   ('B-18','G', 6.0,6.75, 66.625,73.875, "1'3\"",'Over GW-18 (bore court | toilet 2), C-20 to C-21'),
   ('B-19','G', 2.75,6.75, 66.625,67.375, "1'3\"",'Over GW-17 (kitchen | bore court), C-11 to C-20'),
-  ('B-20','G', 2.75,10.25, 73.125,73.875, "1'3\"",'Over GW-06, C-21 to C-14; cantilevers 3\'3" east, and the terrace corner cantilevers 4\' south of it'),
+  ('B-24','G', 2.75,3.5, 73.875,79.25, "1'3\"",'AU-01: under FW-08 (toilet 3 east wall), B-20 to the new pillar C-22'),
+  ('B-25','G', 3.5,9.5, 79.5,80.25, "1'3\"",'AU-01: under FW-07 (toilet 3 south wall), C-22 to C-16'),
+  ('B-20','G', 2.75,10.25, 73.125,73.875, "1'3\"",'Over GW-06, C-21 to C-14; cantilevers 3\'3" east; toilet 3 above now sits on beams B-24 and B-25 and pillar C-22 (no long cantilever)'),
  ('B-12','G', 20.25,21.0, 19.75,95.125, "1'3\"",'West edge beam over GW-05, C-02 to C-19'),
  ('B-13','F', 9.5,21.0, 73.125,73.875, "1'3\"",'Over FW-02, C-14 to C-15'),
  ('B-14','F', 9.5,21.0, 79.875,80.625, "1'3\"",'Over FW-05, C-16 to C-17'),
