@@ -184,6 +184,8 @@ BRANCH_NOTES='''<section class="ask"><h2>Areas for the engineer (built-up and pa
 <li><b>W-01 (study, facing the parking):</b> same box frame WF-1 and scalloped sunshade as the other front windows, black grill.</li>
 <li><b>Plinth band:</b> the plinth below the floor is in a dark base colour (textured paint, or stone cladding).</li>
 <li><b>Paint plan: Sage and clay</b> (chosen, kept cost-efficient). <b>Inside:</b> one light sage green emulsion on every room wall (one shade, so it is bought in bulk and touch-ups are easy); ceilings in a light clay (soft terracotta) tint like the reference photo, with the ceiling band round the edge in white, so the clay reads as a soft panel and the edges stay bright; the clay tint is the same white ceiling paint with a little stainer added, so it costs about the same; the only accent is clay (terracotta) on the living-room TV niches; bedroom headboard walls keep their oak-look panels; kitchen and toilets are tiled to 7', sage above. Toilets and kitchen above the tiles: washable (anti-fungal) emulsion in the same sage. <b>Outside:</b> sage green weather-proof exterior emulsion on all the walls (a light green, so the walls stay fairly cool), clay (terracotta) only as lining: the slab bands and the parapet and wall copings; a dark brown plinth that hides splash marks; gates and grills stay as they are. Sage and clay are used inside and outside, so it is still only a few paints.</li>
+<li><b>Windows (chosen):</b> all frames black (anthracite) UPVC to match the grills, steel door and gates; plain black bar grills (GR-1). Living W-04, W-05: sliding with a 1' top-hung vent for hot air. Kitchen W-06: fixed glass below, opening top pane (no reaching over the flame). Bedrooms W-07, W-10, W-11 and the sides of W-08: casements that open fully, grill inside, pleated mesh; W-10 heat-cut glass. W-02 frosted lower half (porch privacy). W-01, W-03 stay sliding (tight parking and passage). Toilet ventilators: frosted louvres. Rough cost ₹1.5–1.8 lakh plus grills ₹22–28k.</li>
+<li><b>Store cupboard FU-25 (civil work):</b> five 2' kadappa bays with UPVC wood-look shutters and a loft above 7'6"; inverter and battery at the foot of S-5 behind a louvred shutter, with their own socket and MCB. See the Store tab.</li>
 <li><b>Plan check fixes (chosen):</b> terrace and balcony 2 slab cantilever 1' east over the side passage (parapet PW-02 moved out), so a future first-floor hall gets 1' more width with no new pillar; AU-01 pillar C-22 with beams B-24 and B-25 under the toilet 3 corner (engineer to confirm sizes); AU-02 ventilator V-03 in toilet 3; AU-04 the 2' of fill compacted in 6" layers and anti-termite soil treatment before the floors; AU-08 3'6" x 3'6" granite landing outside the garden door D-05; AU-12 drying rack dropped, so the counter beside the sink is free; AU-16 wardrobes 1'11" deep (hangers fit across), bedroom 2 and 3 wardrobes sliding; AU-17 bedroom 2 bed and side tables 6" south; AU-18 bedroom 3 bed and side tables 9" north (2'7½" for the desk chair); AU-19 every AC bottom at 7'10", above the curtain rods; AU-20 slim black grill on W-08; AU-22 toilet 3 WC 4" west; AU-23 toilet 3 door 2'6"; AU-27 EB meter on the road face of the planter pillar, read from the road; AU-28 smaller palm pot, 3" clear of the steel door; AU-33 bedroom 3 AC outdoor unit on the balcony 3 floor.</li>
 <li><b>Civil touches (chosen, low cost):</b> CD-01 thinnai seat with shoe shelves on the porch (in place of the shoe rack); CD-02 sunken doormat well at the steel door; CD-03 rough granite porch steps with a black edge strip and a black handrail; CD-05 loft over the toilet 1 door at 7'3"; CD-06 arched display niche in the stair hall; CD-07 window seat with storage under W-08 in bedroom 2; CD-08 tiled shower niches in all three toilets (the toilet 2 bath rack is dropped); CD-09 no step at any toilet door, floors sloped to a 2'6" steel linear drain; CD-10 grab rails beside every WC, walls behind them and on both sides of the stair kept solid brick for more rails later; CD-11 all outside wall corners inside the house plastered round (1" radius); CD-19 the rainwater recharge pit UG-04 in the back garden (already planned).</li>
 <li><b>Curtains, window length only:</b> in every room the curtain rod sits 6" above the window (7'6") and the curtain ends 6" below the sill, instead of hanging from the ceiling: about half the cloth, neater, and the ACs above the windows stay clear. Only the balcony door D-11 gets a full-length curtain, from its own rod.</li>
@@ -398,7 +400,7 @@ FURNITURE = [
  ('FU-69','G','Top storage, east',3.5,4.75,58.625,66.625,'over',None,'Kitchen, second row of cabinets on GW-01 from 7\' up to the ceiling, right across above the window and chimney (dashed)'),
  ('FU-19.2','G','Overhead shelves, east',3.5,4.75,65.0,66.625,'over',None,'Kitchen, corner unit above the east counter beside the window (dashed)'),
  ('FU-19.3','G','Overhead shelves, east',3.5,4.75,58.625,61.0,'over',None,'Kitchen, above the east counter beside the window, glass door (dashed)'),
- ('FU-25','G','Store cupboard, full height',17.75,20.25,61.375,71.375,'store2',None,'Open area and stair hall, 10\' x 2\'6", floor to ceiling on GW-05, south of the fridge; its face lines up with the fridge and the GW-13 end stub'),
+ ('FU-25','G','Store cupboard, civil work',17.75,20.25,61.375,71.375,'store2',None,'Open area and stair hall, 10\' x 2\'6", floor to 9\'4" on GW-05: five 2\' kadappa bays S-1 to S-5 with UPVC wood-look shutters and a loft above 7\'6"; inverter and battery at the foot of S-5 (see the Store tab)'),
  ('FU-26.1','G','WC platform, 4" high',6.75,10.25,70.625,73.125,'plat',None,'Toilet 2, tiled platform in the south-east corner (GW-18 and GW-06): 3\'6" front to back (east-west, the way the user faces) x 2\'6" side to side, room to squat comfortably'),
  ('FU-26','G','Indian WC (Orissa pan)',7.05,8.97,71.145,72.605,'iwc',None,'Toilet 2, centred on the 4" platform FU-26.1 against the east wall GW-18, user faces west, V-02 above; health faucet on GW-06 on the left hand'),
  ('FU-57','G','Bucket, tap and health faucet',9.25,10.15,72.15,73.05,'bucket',None,'Toilet 2, on the front of the platform on the user\'s left, bib tap on GW-06; health faucet on GW-06 beside the pan'),
@@ -469,6 +471,54 @@ for _o in OPENINGS:
     if _o[5]=='vent' and _o[0] not in SPEC: SPEC[_o[0]]='Louvred glass ventilator with exhaust fan opening'
 SPEC['W-08']='Picture window: fixed glass centre (4\') with a UPVC sliding pane each side (2\'3") with mosquito mesh; slim black MS grill, the same as the other windows (AU-20; the invisible wire grill is dropped, as it is child-safe but not theft-proof); 1\'6" sunshade outside'
 SPEC['V-03']='Louvred glass ventilator with exhaust fan opening'
+
+# ---------- store cupboard FU-25 as civil work (owner's queue item 3; inverter and battery at the foot of S-5) ----------
+# 10' x 2'6" on GW-05, Y 61'4.5" to 71'4.5", floor to 9'4" (under the band). 1½" kadappa uprights make five 2' bays; 1" kadappa shelves sit 1" into the uprights;
+# a 3" brick plinth with a kadappa top keeps the floor dry when mopping. Shutters: UPVC wood-look (oak film), soft hinges, black J handles; loft shutters separate above 7'6".
+# heights in feet from the floor; contents are a starting plan, to be resized when the owner sends their item list.
+STORE=dict(fu='FU-25',plinth=0.25,loftz=7.5,top=9.33,depth=2.5,inner=2.25,
+ bays=[
+  dict(id='S-1',name='Grains and dry stock',y1=61.375,y2=63.375,shelves=[2.25,3.5,4.75,6.0],
+       items=[(0.25,2.25,'Rice and atta drums, 2 x 25 kg, on the plinth (heaviest at the bottom)'),(2.25,3.5,'Dal, sugar, rava refill packs'),(3.5,4.75,'Spice and masala refills, oil cans'),(4.75,6.0,'Snacks, biscuits, tea and coffee stock'),(6.0,7.5,'Pickles, papad, seasonal stock')]),
+  dict(id='S-2',name='Big vessels and appliances',y1=63.375,y2=65.375,shelves=[2.0,3.5,5.0,6.25],
+       items=[(0.25,2.0,'Big vessels, idli steamer, kadai, pressure cookers (5 L and above)'),(2.0,3.5,'OTG or air fryer, spare mixer jars'),(3.5,5.0,'Serving bowls, plates for guests'),(5.0,6.25,'Tiffin boxes, flasks, water bottles'),(6.25,7.5,'Festival vessels, rarely used')]),
+  dict(id='S-3',name='Home supplies',y1=65.375,y2=67.375,shelves=[1.75,3.0,4.25,5.5,6.5],
+       items=[(0.25,1.75,'Detergent, soap and cleaner stock'),(1.75,3.0,'Toilet rolls, tissues, bin bags'),(3.0,4.25,'First-aid box and medicines (eye level, easy to find)'),(4.25,5.5,'Documents file box, chargers, batteries'),(5.5,6.5,'Bulbs, tube lights, spare switches'),(6.5,7.5,'Gift wrap, candles, rarely used')]),
+  dict(id='S-4',name='Tall cleaning bay',y1=67.375,y2=69.375,shelves=[6.25],
+       items=[(0.25,6.25,'Tall things, no shelves: broom, mop and bucket, vacuum cleaner, ironing board, 5-step folding ladder; hooks on the side walls'),(6.25,7.5,'Floor cleaner and spare mop heads')]),
+  dict(id='S-5',name='Inverter, battery and tools',y1=69.375,y2=71.375,shelves=[1.33,2.5,3.75,5.0,6.25],power=True,
+       items=[(0.25,1.33,'Lithium battery on the plinth'),(1.33,2.5,'Inverter on a kadappa shelf, 4" clear on top; louvred shutter top and bottom for air'),(2.5,3.75,'Tool box, drill, extension boards'),(3.75,5.0,'Emergency lamp, torch, spare fuses'),(5.0,6.25,'Paint, plumbing spares'),(6.25,7.5,'Electrical and plumbing manuals, warranty cards')]),
+ ],
+ loft=[('L-1','Suitcases and travel bags',61.375,64.708),('L-2','Festival and seasonal items',64.708,68.042),('L-3','Spare bedding, blankets, pillows',68.042,71.375)],
+ power=['16 A socket and its own 25 A MCB inside S-5 for the inverter; the inverter output runs to the main board (lights and fans on inverter)','Battery cable under 3\' long, inverter above the battery, both on kadappa (no wood under them)','Louvred UPVC shutter on S-5 below 2\'6" (vents top and bottom); lithium needs little air, but the inverter fan needs a path','The inverter display faces out at about 2\' high; open the S-5 lower shutter to read it or switch modes'],
+ assumed='Assumed sizes until the owner sends real ones: lithium battery about 1\'6" x 10" x 1\'2" high; inverter about 1\'3" x 6" x 1\' high. The S-5 bottom gives 1\'10" x 2\'3" x 1\'1" for the battery and 1\'10" x 2\'3" x 1\'2" for the inverter.',
+ cost='Kadappa uprights and shelves about 200 sq ft at ₹90–115: ₹18–23k; plinth and labour ₹6–8k; UPVC wood-look shutters about 90 sq ft at ₹500–650: ₹45–58k. Total about ₹70–90k (a full carpentry cupboard of this size is about ₹1.3–1.6 lakh).')
+
+# ---------- windows (chosen 2026-11-05 from window-catalogue.html): type, frame, glass, grill, mesh ----------
+# WT-1 3-track sliding, WT-2 casement (side-hung, opens out, grill inside), WT-3 sliding with a 1' top-hung vent, WT-4 fixed glass with an opening top pane, WT-5 louvre
+# WF-B black (anthracite) UPVC; WG-1 clear 5 mm, WG-2 frosted lower half, WG-3 heat-cut (solar control), WG-4 frosted; GR-1 plain black bars; WM-1 sliding mesh pane, WM-2 pleated mesh
+WINDOWS={
+ 'W-01':dict(type='WT-1',frame='WF-B',glass='WG-1',grill='GR-1',mesh='WM-1',why='car parks close by, so nothing swings out'),
+ 'W-02':dict(type='WT-1',frame='WF-B',glass='WG-2',grill='GR-1',mesh='WM-1',why='frosted lower half: no one on the porch sees in'),
+ 'W-03':dict(type='WT-1',frame='WF-B',glass='WG-1',grill='GR-1',mesh='WM-1',why='2\'4" passage: a pane swinging out would block it'),
+ 'W-04':dict(type='WT-3',frame='WF-B',glass='WG-1',grill='GR-1',mesh='WM-1',why='the top vent lets hot air out all day'),
+ 'W-05':dict(type='WT-3',frame='WF-B',glass='WG-1',grill='GR-1',mesh='WM-1',why='the top vent lets hot air out all day'),
+ 'W-06':dict(type='WT-4',frame='WF-B',glass='WG-1',grill='GR-1',mesh='WM-2',why='no reaching over the flame; wind cannot blow out the burner'),
+ 'W-07':dict(type='WT-2',frame='WF-B',glass='WG-1',grill='GR-1',mesh='WM-2',why='opens fully onto the side garden'),
+ 'W-08':dict(type='WT-2',frame='WF-B',glass='WG-1',grill='GR-1',mesh='WM-2',why='fixed 4\' centre for the view, casement sides open fully'),
+ 'W-10':dict(type='WT-2',frame='WF-B',glass='WG-3',grill='GR-1',mesh='WM-2',why='first floor, morning sun: heat-cut glass'),
+ 'W-11':dict(type='WT-2',frame='WF-B',glass='WG-1',grill='GR-1',mesh='WM-2',why='full air over the desk'),
+ 'W-12':dict(type='fold',frame='WF-B',glass='WG-1',grill=None,mesh=None,why='inside window, frame matches the others'),
+ 'V-01':dict(type='WT-5',frame='WF-B',glass='WG-4',grill='GR-1',mesh=None,why='air and privacy, exhaust fan cut-out'),
+ 'V-02':dict(type='WT-5',frame='WF-B',glass='WG-4',grill='GR-1',mesh=None,why='air and privacy, exhaust fan cut-out'),
+ 'V-03':dict(type='WT-5',frame='WF-B',glass='WG-4',grill='GR-1',mesh=None,why='air and privacy, exhaust fan cut-out'),
+}
+WIN_NAMES={'WT-1':'3-track sliding (2 glass + 1 mesh)','WT-2':'casement, side-hung, opens out (grill inside)','WT-3':'3-track sliding with a 1\' top-hung vent above','WT-4':'fixed glass below, top-hung opening pane above','WT-5':'louvre ventilator','fold':'bi-fold glass',
+ 'WF-B':'black (anthracite) UPVC frame','WG-1':'clear 5 mm glass','WG-2':'clear glass, frosted lower half','WG-3':'heat-cut (solar control) glass','WG-4':'frosted glass','GR-1':'plain black MS bars, 12 mm at 5"','WM-1':'sliding mosquito mesh pane','WM-2':'pleated mosquito mesh'}
+for _k,_w in WINDOWS.items():
+    _t=', '.join(WIN_NAMES[v] for v in (_w['type'],_w['frame'],_w['glass'],_w['grill'],_w['mesh']) if v)
+    if _k=='W-08': _t='Picture window: fixed glass centre (4\') with a casement each side (2\'3"), '+', '.join(WIN_NAMES[v] for v in (_w['frame'],_w['glass'],_w['grill'],_w['mesh']))
+    SPEC[_k]=_t+'; '+_w['why']+'; outside: box frame WF-1 and scalloped sunshade on the front and back walls only'*( _k in ('W-01','W-08','W-11'))
 # underground tanks and pits: (code, name, shape, geometry, inside size note, covers, note)
 #   rect geometry = outer (x1,x2,y1,y2); circle geometry = (cx,cy,outer r); covers = list of (x1,x2,y1,y2) or (cx,cy,r)
 UNDERGROUND=[

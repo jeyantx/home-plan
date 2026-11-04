@@ -184,7 +184,7 @@ const MAT={
   otherFloor:std({map:stoneTiles('#e7e2da',5,2,2,2),roughness:0.6}),
   wallOut:std({color:'#ece6dc',roughness:0.95}),
   white:std({color:'#f6f4f0',roughness:0.9,normalMap:T.paint.normalMap,normalScale:paintN}),
-  upvc:std({color:'#f2f2f0',roughness:0.35}),
+  upvc:std({color:'#2a2c2f',roughness:0.4}),   // WF-B black (anthracite) UPVC frames
   blackMetal:std({color:'#1d1e21',roughness:0.4,metalness:0.7}),
   grill:std({color:'#1d1e21',roughness:0.45,metalness:0.6,side:THREE.DoubleSide}),   // GC-1 black powder-coat
   mint:std({color:'#8fc2bc',roughness:0.5,metalness:0.3}),redOxide:std({color:'#9c3a26',roughness:0.6}),brass:std({color:'#b08d57',roughness:0.35,metalness:0.8}),
@@ -317,6 +317,12 @@ function buildOpening(o,w,horiz,s0,out=0){
     boxAlong(horiz,w,u1+e,u2-e,v0,v1,z1+e,z1+fw,MAT.upvc,{tip});boxAlong(horiz,w,u1+e,u2-e,v0,v1,z2-fw,z2-e,MAT.upvc,{tip});
     boxAlong(horiz,w,u1+e,u1+fw,v0,v1,z1+fw,z2-fw,MAT.upvc,{tip});boxAlong(horiz,w,u2-fw,u2-e,v0,v1,z1+fw,z2-fw,MAT.upvc,{tip});
     if(o.type==='window'){const mids=(u2-u1)>6?[u1+2.25,u2-2.25]:[(u1+u2)/2];for(const mid of mids)boxAlong(horiz,w,mid-0.07,mid+0.07,v0+0.02,v1-0.02,z1+fw,z2-fw,MAT.upvc,{tip});}   // wide picture windows: fixed centre, sliding pane each side
+    {const wn=(P.win||{})[o.id]||{},wt=wn.type,hz=(z,t=0.07)=>boxAlong(horiz,w,u1+fw,u2-fw,v0+0.02,v1-0.02,z-t,z+t,MAT.upvc,{tip}),T2=P.win?tip:tip;
+     if(wt==='WT-3')hz(z2-1.0);   // 1' top-hung vent over the sliding panes
+     if(wt==='WT-4')hz(z2-0.75);   // fixed glass below, opening top pane
+     if(wt==='WT-2'){const mids=(u2-u1)>6?[[u1,u1+2.25],[u2-2.25,u2]]:[[u1,(u1+u2)/2],[(u1+u2)/2,u2]];   // casement sashes: a black handle on each, inside face
+       for(const [a,b] of mids){const hu=Math.abs(a-u1)<0.01?b-0.25:a+0.25;boxAlong(horiz,w,hu-0.03,hu+0.03,v1-0.02,v1+0.06,(z1+z2)/2-0.25,(z1+z2)/2+0.25,MAT.blackMetal,{tip:tip+' · casement handle'})}}
+     if(wn.glass==='WG-2'||wn.glass==='WG-4'){const fz=wn.glass==='WG-2'?(z1+z2)/2:z2-fw;boxAlong(horiz,w,u1+fw,u2-fw,v0+0.165,v0+0.18,z1+fw,fz,std({color:'#e9eef0',roughness:0.6,transparent:true,opacity:0.9}),{tip:tip+' · frosted glass',cast:false})}}
     const gl=boxAlong(horiz,w,u1+fw,u2-fw,v0+0.13,v0+0.16,z1+fw,z2-fw,MAT.glass,{tip,cast:false});glassMeshes.push(gl);
     const vo=T-0.04;
     if(/invisible grill/.test(P.spec[o.id]||''))invisibleGrill(o,w,horiz,u1,u2,z1,z2,vo-0.08);else grillMesh(o,w,horiz,u1,u2,z1,z2,vo-0.08);
@@ -857,8 +863,11 @@ function cabRun(id,what,x1,x2,y1,y2,z1,z2,face,segs,mat,plinth){
  box(fr.x1+0.08,fr.x1+0.12,fr.y2-0.35,fr.y2-0.3,2.6,4.6,MAT.blackMetal,{tip:'Fridge handle'});
  cabRun('FU-18','Loft above the fridge',fr.x1,fr.x2-0.012,fr.y1+0.012,fr.y2,6.3,CEIL-0.012,'x-',[[fr.y1+0.012,fr.y2,'door']],MAT.oak,false);
  const cu=fuG['FU-25'],LZ=7.6;
- cabRun('FU-25','Store cupboard',cu.x1,cu.x2-0.012,cu.y1,cu.y2,0,LZ,'x-',[[cu.y1,cu.y1+2,'door'],[cu.y1+2,cu.y1+4,'door'],[cu.y1+4,cu.y1+6,'door'],[cu.y1+6,cu.y1+8,'door'],[cu.y1+8,cu.y2,'door']],MAT.oak,true);
- cabRun('FU-25','Store cupboard, loft',cu.x1,cu.x2-0.012,cu.y1,cu.y2,LZ+0.012,CEIL-0.012,'x-',[[cu.y1,cu.y1+2.5,'door'],[cu.y1+2.5,cu.y1+5,'door'],[cu.y1+5,cu.y1+7.5,'door'],[cu.y1+7.5,cu.y2,'door']],MAT.oak,false);
+ {const S=P.store,bays=S.bays,lz=S.loftz;
+  cabRun('FU-25','Store cupboard, civil work: kadappa shelves, UPVC wood-look shutters',cu.x1,cu.x2-0.012,cu.y1,cu.y2,0,lz,'x-',bays.flatMap(b=>b.power?[[b.y1,b.y2,'door']]:[[b.y1,(b.y1+b.y2)/2,'door'],[(b.y1+b.y2)/2,b.y2,'door']]),MAT.oak,S.plinth);
+  cabRun('FU-25','Store cupboard, loft',cu.x1,cu.x2-0.012,cu.y1,cu.y2,lz+0.012,CEIL-0.012,'x-',S.loft.map(l=>[l[2],l[3],'door']),MAT.oak,false);
+  const p=bays.find(b=>b.power),lv=std({color:'#3b2f25',roughness:0.8});   // louvres on the S-5 shutter below 2'6": air for the inverter
+  for(let z=0.45;z<2.45;z+=0.17)box(cu.x1-0.03,cu.x1-0.005,p.y1+0.2,p.y2-0.2,z,z+0.05,lv,{cast:false,tip:`FU-25 · S-5 · louvred shutter for the inverter and battery · ${S.assumed}`})}
  // ceiling lights
  for(const [x,y] of [[6.6,62.6],[9.6,62.6],[15.6,64.0],[15.0,70.5]]) downlight(x,y,CEIL,'Recessed LED downlight (warm white)');}
 function setFinish(k){if(!KT[k])k='KT-1';const o=KT[k];finishMat(MAT.kLow,o.low);finishMat(MAT.kUp,o.up);MAT.kTop.color.set(o.top);

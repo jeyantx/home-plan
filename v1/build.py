@@ -266,6 +266,49 @@ def _md(md):   # small Markdown to HTML for the credits tab (headings, tables, l
     flush()
     if sec: out.append('<section>'+''.join(sec)+'</section>')
     return ''.join(out)
+
+def _store_tab():   # Store tab: FU-25 front elevation (looking west, north end on the right), bay list, inverter notes
+    S=getattr(_mm,'STORE',None)
+    if not S: return ''
+    import html as _h
+    k=56;W=10*k;H=S['top']*k;ox,oy=40,30;Y0,Y1=S['bays'][0]['y1'],S['bays'][-1]['y2']
+    X=lambda y:ox+(Y1-y)*k; Z=lambda z:oy+(S['top']-z)*k
+    e=[f'<svg viewBox="0 0 {W+ox+150} {H+oy+70}" style="width:100%;max-width:900px;background:#f7f4ee;border:1px solid var(--line);border-radius:10px" font-family="system-ui,sans-serif">']
+    e.append(f'<rect x="{ox}" y="{oy}" width="{W}" height="{H}" fill="#e9ddc8" stroke="#6b5a48" stroke-width="2"/>')
+    e.append(f'<rect x="{ox}" y="{Z(S["plinth"]):.1f}" width="{W}" height="{S["plinth"]*k:.1f}" fill="#8f8b84"/>')
+    e.append(f'<rect x="{ox}" y="{Z(S["loftz"])-3:.1f}" width="{W}" height="6" fill="#a9aca8"/>')
+    for L in S['loft']:
+        x1,x2=X(L[3]),X(L[2]);e.append(f'<line x1="{x2:.1f}" y1="{oy}" x2="{x2:.1f}" y2="{Z(S["loftz"]):.1f}" stroke="#a9aca8" stroke-width="4"/>')
+        e.append(f'<text x="{(x1+x2)/2:.1f}" y="{(oy+Z(S["loftz"]))/2-4:.1f}" font-size="12" font-weight="700" text-anchor="middle" fill="#2f6f4f">{L[0]}</text><text x="{(x1+x2)/2:.1f}" y="{(oy+Z(S["loftz"]))/2+12:.1f}" font-size="10.5" text-anchor="middle" fill="#3a3b3e">{_h.escape(L[1])}</text>')
+    for b in S['bays']:
+        x1,x2=X(b['y2']),X(b['y1'])
+        e.append(f'<line x1="{x2:.1f}" y1="{Z(S["loftz"]):.1f}" x2="{x2:.1f}" y2="{Z(0):.1f}" stroke="#a9aca8" stroke-width="5"/>')
+        for z in b['shelves']: e.append(f'<rect x="{x1+2:.1f}" y="{Z(z)-2.5:.1f}" width="{x2-x1-4:.1f}" height="5" fill="#a9aca8"/>')
+        e.append(f'<text x="{(x1+x2)/2:.1f}" y="{Z(0)+18:.1f}" font-size="13" font-weight="700" text-anchor="middle" fill="#2f6f4f">{b["id"]}</text>')
+        for z1,z2,t in b['items']:
+            tt=t.split(':',1)[1] if ':' in t[:12] else t
+            short='';
+            for wd in tt.split(',')[0].split('(')[0].split():
+                if len(short)+len(wd)>19: break
+                short=(short+' '+wd).strip()
+            if short.endswith(' and'): short=short[:-4]
+            if b.get('power') and z2<=2.5:
+                fill='#3b6ea5' if z2<=1.4 else '#1d1e21';e.append(f'<rect x="{x1+14:.1f}" y="{Z(z2)+5:.1f}" width="{x2-x1-28:.1f}" height="{(z2-z1)*k-10:.1f}" rx="4" fill="{fill}"/>')
+                e.append(f'<text x="{(x1+x2)/2:.1f}" y="{(Z(z1)+Z(z2))/2+4:.1f}" font-size="11" text-anchor="middle" fill="#fff">{"Battery" if z2<=1.4 else "Inverter"}</text>')
+            else: e.append(f'<text x="{(x1+x2)/2:.1f}" y="{(Z(z1)+Z(z2))/2+4:.1f}" font-size="10" text-anchor="middle" fill="#3a3b3e">{_h.escape(short)}</text>')
+    for z in (0,S['plinth'],2.5,S['loftz'],S['top']):
+        lab={0:'floor',S['plinth']:'3" plinth',2.5:"2'6\"",S['loftz']:"7'6\" loft",S['top']:"9'4\""}[z]
+        e.append(f'<text x="{ox+W+8}" y="{Z(z)+4:.1f}" font-size="11" fill="#5d646d">{lab}</text>')
+    e.append(f'<text x="{ox}" y="{oy+H+44:.1f}" font-size="11.5" fill="#5d646d">← stair hall (south)</text><text x="{ox+W}" y="{oy+H+44:.1f}" font-size="11.5" text-anchor="end" fill="#5d646d">fridge side (north) →</text>')
+    e.append(f'<text x="{ox+W/2}" y="{oy-10}" font-size="12" text-anchor="middle" fill="#5d646d">Front view, shutters removed: 10\' long, 2\'6" deep, on GW-05</text></svg>')
+    rows=''.join(f'<tr><td class="c">{b["id"]}</td><td><b>{_h.escape(b["name"])}</b><br><span class="lbl">Y {fmt(b["y1"])} to {fmt(b["y2"])}, 2\' wide, shelves at {", ".join(fmt(z) for z in b["shelves"])}</span></td><td><ul>'+''.join(f'<li>{fmt(z1)}–{fmt(z2)}: {_h.escape(t)}</li>' for z1,z2,t in b['items'])+'</ul></td></tr>' for b in S['bays'])
+    rows+=''.join(f'<tr><td class="c">{L[0]}</td><td><b>Loft</b><br><span class="lbl">7\'6" to 9\'4"</span></td><td>{_h.escape(L[1])}</td></tr>' for L in S['loft'])
+    return ('<section><h2>Store cupboard FU-25 (civil work)</h2><p>Built by the mason: 1½" kadappa uprights make five 2\' bays, 1" kadappa shelves set into them, and a 3" brick plinth with a kadappa top. UPVC wood-look (oak) shutters with black handles; the loft has its own shutters. Heavy things sit low, everyday things at eye level, and rare things in the loft.</p>'
+            +''.join(e)+'</section><section><h2>What goes where</h2><table class="t"><tr><th>Bay</th><th>Use</th><th>From the floor</th></tr>'+rows+'</table></section>'
+            +'<section><h2>Inverter and battery (S-5, bottom)</h2><ul>'+''.join(f'<li>{_h.escape(p)}</li>' for p in S['power'])+f'<li>{_h.escape(S["assumed"])}</li></ul></section>'
+            +f'<section><h2>Cost</h2><p>{_h.escape(S["cost"])}</p></section>')
+_st=_store_tab()
+if _st: _tabs.insert(0,('store','Store',_st))
 _tabs.append(('credits','Credits','<section><h2>Credits</h2><p>Libraries, textures, the sky image and the downloaded 3D models used by this plan, with their sources and licences. Everything else (the plan, the drawings and the code-made models) was made for this house.</p></section>'+_md(open(ROOT+'3d/ASSETS.md').read())))
 def _btn(k,n): return f'<button role="tab" data-tab="{k}" aria-selected="false">{n}</button>'
 app=f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
