@@ -480,17 +480,14 @@ STORE=dict(fu='FU-25',plinth=0.25,loftz=7.5,top=9.33,depth=2.5,inner=2.25,
  bays=[dict(id='S-1',name='Grains and dry stock',y1=61.0,y2=63.375),dict(id='S-2',name='Vessels and appliances',y1=63.375,y2=65.375),
        dict(id='S-3',name='Tall things, adjustable shelf',y1=65.375,y2=69.375,adjustable=True),dict(id='S-4',name='Inverter, battery and supplies',y1=69.375,y2=71.375,power=True)],
  # cells: id, bays it spans, bottom and top (feet from the floor), use. The slab on top of each cell is kadappa unless it is the loft line or the S-3 adjustable shelf.
- # S-1.1 is one wide cell under both S-1 and S-2 (no upright below 2'3"), for the drums and the biggest vessels.
+ # S-1.1 (bottom) and S-1.4 (top) are wide cells across S-1 and S-2: the upright between those bays runs only from 2'3" to 5'6".
  cells=[
   dict(id='S-1.1',bays=('S-1','S-2'),z1=0.25,z2=2.25,use='Wide low cell: rice and atta drums (2 x 25 kg), big vessels, idli steamer, big pressure cookers'),
-  dict(id='S-1.2',bays=('S-1',),z1=2.25,z2=3.75,use='Tall cell: oil cans, tall storage jars'),
-  dict(id='S-1.3',bays=('S-1',),z1=3.75,z2=4.75,use='Dal, sugar, rava refill packs'),
-  dict(id='S-1.4',bays=('S-1',),z1=4.75,z2=5.75,use='Spice and masala refills'),
-  dict(id='S-1.5',bays=('S-1',),z1=5.75,z2=7.5,use='Tall cell: snacks, biscuits, tea and coffee stock, pickle jars'),
-  dict(id='S-2.2',bays=('S-2',),z1=2.25,z2=3.5,use='OTG or air fryer, spare mixer jars'),
-  dict(id='S-2.3',bays=('S-2',),z1=3.5,z2=4.5,use='Serving bowls, plates for guests'),
-  dict(id='S-2.4',bays=('S-2',),z1=4.5,z2=5.5,use='Tiffin boxes, flasks, water bottles'),
-  dict(id='S-2.5',bays=('S-2',),z1=5.5,z2=7.5,use='Tall cell: festival vessels, big serving pots'),
+  dict(id='S-1.2',bays=('S-1',),z1=2.25,z2=4.0,use='Tall cell'),
+  dict(id='S-1.3',bays=('S-1',),z1=4.0,z2=5.5,use='Tall cell'),
+  dict(id='S-2.2',bays=('S-2',),z1=2.25,z2=4.25,use='Tall cell'),
+  dict(id='S-2.3',bays=('S-2',),z1=4.25,z2=5.5,use='Cell'),
+  dict(id='S-1.4',bays=('S-1','S-2'),z1=5.5,z2=7.5,use='Wide tall top cell over S-1 and S-2 (no upright between them here)'),
   dict(id='S-3.1',bays=('S-3',),z1=0.25,z2=5.0,use='Big and tall things (below the shelf): vacuum cleaner, ironing board, 5-step ladder, broom, mop and bucket, folding cot, big suitcase, water cooler, 25 L cans; hooks on the side walls',slab='adjustable'),
   dict(id='S-3.2',bays=('S-3',),z1=5.0,z2=7.5,use='Cleaning stock (above the shelf): detergent, cleaner, toilet rolls, spare mop heads'),
   dict(id='S-4.1',bays=('S-4',),z1=0.25,z2=1.5,use='Battery: lithium, 53 x 18 x 27.5 cm (1\'9" x 7" x 10¾" high), lying along the bay, 3" clear above for the terminals and cables'),

@@ -284,14 +284,17 @@ def _store_tab():   # Store tab: FU-25 front elevation (looking west, north end 
        f'<rect x="{ox}" y="{Z(S["plinth"]):.1f}" width="{W:.1f}" height="{S["plinth"]*k:.1f}" fill="#b5ab9c"/>',
        f'<rect x="{ox}" y="{Z(S["plinth"])-3:.1f}" width="{W:.1f}" height="4" fill="{KAD}"/>',
        f'<rect x="{ox}" y="{Z(lz)-4:.1f}" width="{W:.1f}" height="7" fill="{KAD}"/>']
-    ups=[(Y0,0.25),(Y1,0.25)]+[(bb['y1'],0.25) for bb in S['bays'][1:]]
-    low=[c for c in S['cells'] if len(c['bays'])>1]
-    for c in low:   # no upright inside a wide cell below its top
-        for bb in c['bays'][1:]: ups=[(y,(c['z2'] if abs(y-B[bb]['y1'])<0.01 else z)) for y,z in ups]
-    for y,zb in ups:
+    ups=[]   # upright pieces (y, bottom, top): plinth to loft, broken where a wide cell crosses the line
+    for y in [Y0]+[bb['y1'] for bb in S['bays'][1:]]+[Y1]:
+        segs=[(S['plinth'],lz)]
+        for c in S['cells']:
+            if len(c['bays'])>1 and any(abs(B[bb]['y1']-y)<0.01 for bb in c['bays'][1:]):
+                segs=[q for a_,b_ in segs for q in ((a_,min(b_,c['z1'])),(max(a_,c['z2']),b_)) if q[1]-q[0]>0.01]
+        ups+=[(y,a_,b_) for a_,b_ in segs]
+    for y,zb,zt in ups:
         x=X(y);w_=t*k
         x0=x-w_ if abs(y-Y0)<0.01 else (x if abs(y-Y1)<0.01 else x-w_/2)
-        e.append(f'<rect x="{x0:.1f}" y="{Z(lz):.1f}" width="{w_:.1f}" height="{(lz-zb)*k:.1f}" fill="{KAD}"/>')
+        e.append(f'<rect x="{x0:.1f}" y="{Z(zt):.1f}" width="{w_:.1f}" height="{(zt-zb)*k:.1f}" fill="{KAD}"/>')
     for L in S['loft']:
         x1,x2=X(L[3]),X(L[2])
         if L[2]>Y0+0.01: e.append(f'<rect x="{x2-3:.1f}" y="{oy}" width="6" height="{(S["top"]-lz)*k:.1f}" fill="{KAD}"/>')
@@ -329,20 +332,17 @@ def _store_tab():   # Store tab: FU-25 front elevation (looking west, north end 
     def add(where,L,Dp,th,q=1,note=''):
         nonlocal n;n+=1;kd.append((f'KD-{n:02d}',where,L,Dp,th,q,note))
     add('Plinth top, full length',Y1-Y0,D+1/12,1/12)
-    for y,zb in sorted(ups):
-        h=lz-zb;nm='End upright, fridge side' if abs(y-Y1)<0.01 and False else ('End upright, north (fridge side)' if abs(y-Y0)<0.01 else ('End upright, south (stair hall)' if abs(y-Y1)<0.01 else f'Upright at Y {fmt(y)}'+(' (starts on the S-1.1 top)' if zb>0.3 else '')))
-        add(nm,h,D+1/12,t,1,'stands on the plinth' if zb<0.3 else 'stands on the S-1.1 top slab')
+    for y,zb,zt in sorted(ups):
+        nm='End upright, north (fridge side)' if abs(y-Y0)<0.01 else ('End upright, south (stair hall)' if abs(y-Y1)<0.01 else f'Upright at Y {fmt(y)}, {fmt(zb)} to {fmt(zt)}')
+        add(nm,zt-zb,D+1/12,t,1,'stands on the plinth' if zb<0.3 else 'stands on the slab below it')
     for c in S['cells']:
-        if c['z2']>=lz-0.01 or c.get('slab')=='adjustable': continue
-        cw=span(c)[2];wide=cw>2.6
-        add(f'Top of {c["id"]} at {fmt(c["z2"])}',cw+2/12,D+1/12,1.5/12 if wide else 1/12,1,'40 mm, with a 1½" MS angle under the front edge (long span, carries the upright above)' if wide else '')
-    for bb in S['bays']:
-        ya,yb=bb['y1'],bb['y2'];cw=(yb-ya)-(t if abs(ya-Y0)<0.01 else t/2)-(t if abs(yb-Y1)<0.01 else t/2)
-        add(f'Loft floor over {bb["id"]} at 7\'6"',cw+2/12,D+1/12,1.5/12 if cw>2.6 else 1/12,1,'40 mm with an MS angle at the front' if cw>2.6 else '')
+        if c.get('slab')=='adjustable': continue
+        cw=span(c)[2];wide=cw>2.6;loft=c['z2']>=lz-0.01
+        add(f'Loft floor over {c["id"]} at 7\'6"' if loft else f'Top of {c["id"]} at {fmt(c["z2"])}',cw+2/12,D+1/12,1.5/12 if wide else 1/12,1,'40 mm, with a 1½" MS angle under the front edge (long span)' if wide else '')
     for L in S['loft'][1:]: add(f'Loft upright at Y {fmt(L[2])}',S['top']-lz,D+1/12,t)
     sq=sum(r[2]*r[3]*r[5] for r in kd)
     kr=''.join(f'<tr><td class="c">{r[0]}</td><td>{_h.escape(r[1])}</td><td>{fmt(r[2])} x {fmt(r[3])}</td><td>{"40 mm" if r[4]>1.2/12 else "25 mm"}</td><td>{_h.escape(r[6])}</td></tr>' for r in kd)
-    return ('<section><h2>Store cupboard FU-25 (civil work)</h2><p>Built by the mason: 1½" kadappa uprights, 1" kadappa shelves set 1" into the uprights and the back wall, and a 3" brick plinth with a kadappa top. Every cell has its own code (bay, then cell number from the bottom), so you can ask to change any one. Cells have different heights: tall cells for jars and pots, short ones, and one wide low cell S-1.1 under S-1 and S-2. UPVC wood-look (oak) shutters with black handles; the loft has its own shutters.</p>'
+    return ('<section><h2>Store cupboard FU-25 (civil work)</h2><p>Built by the mason: 1½" kadappa uprights, 1" kadappa shelves set 1" into the uprights and the back wall, and a 3" brick plinth with a kadappa top. Every cell has its own code (bay, then cell number from the bottom), so you can ask to change any one. Cells have different heights: tall cells for jars and pots, short ones, and two wide cells across S-1 and S-2: S-1.1 at the bottom and S-1.4 at the top. UPVC wood-look (oak) shutters with black handles; the loft has its own shutters.</p>'
             +''.join(e)+'</section><section><h2>Cells</h2><table class="t"><tr><th>Cell</th><th>Clear size (wide x high x deep)</th><th>From the floor</th></tr>'+cr+'</table></section>'
             +f'<section><h2>Kadappa cutting list (S-1, S-2, S-4 and the loft)</h2><p>Grey Cuddapah stone, polished on the top face, edges rounded on the front. Cut sizes include 1" into each upright groove and 1" into the back wall. About {sq:.0f} sq ft in all.</p><table class="t"><tr><th>Code</th><th>Where</th><th>Cut size (long x deep)</th><th>Thick</th><th>Note</th></tr>'+kr+'</table></section>'
             +(f'<section><h2>Adjustable shelf (S-3)</h2><p>{_h.escape(S["adjust"])}</p></section>' if S.get('adjust') else '')
