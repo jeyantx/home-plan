@@ -283,10 +283,16 @@ def _store_tab():   # Store tab: FU-25 front elevation (looking west, north end 
     for b in S['bays']:
         x1,x2=X(b['y2']),X(b['y1'])
         e.append(f'<line x1="{x2:.1f}" y1="{Z(S["loftz"]):.1f}" x2="{x2:.1f}" y2="{Z(0):.1f}" stroke="#a9aca8" stroke-width="5"/>')
-        for z in b['shelves']: e.append(f'<rect x="{x1+2:.1f}" y="{Z(z)-2.5:.1f}" width="{x2-x1-4:.1f}" height="5" fill="#a9aca8"/>')
+        if b.get('adjustable'):   # slotted steel strips on both sides, the movable shelf shown at its default height
+            for xx in (x1+5,x2-9):
+                e.append(f'<rect x="{xx:.1f}" y="{Z(7.0):.1f}" width="4" height="{6*k:.1f}" fill="#1d1e21"/>')
+                e.append(''.join(f'<rect x="{xx+1:.1f}" y="{Z(1+i/6):.1f}" width="2" height="3" fill="#e9ddc8"/>' for i in range(0,37)))
+            for z in b['shelves']: e.append(f'<rect x="{x1+2:.1f}" y="{Z(z)-2.5:.1f}" width="{x2-x1-4:.1f}" height="5" fill="#a9aca8"/><text x="{(x1+x2)/2:.1f}" y="{Z(z)-8:.1f}" font-size="10" text-anchor="middle" fill="#2f6f4f">↕ adjustable shelf, 1\' to 7\'</text>')
+        else:
+            for z in b['shelves']: e.append(f'<rect x="{x1+2:.1f}" y="{Z(z)-2.5:.1f}" width="{x2-x1-4:.1f}" height="5" fill="#a9aca8"/>')
         e.append(f'<text x="{(x1+x2)/2:.1f}" y="{Z(0)+18:.1f}" font-size="13" font-weight="700" text-anchor="middle" fill="#2f6f4f">{b["id"]}</text>')
         for z1,z2,t in b['items']:
-            tt=t.split(':',1)[1] if ':' in t[:12] else t
+            tt=t.split(':',1)[0] if ':' in t[:22] else t
             short='';
             for wd in tt.split(',')[0].split('(')[0].split():
                 if len(short)+len(wd)>19: break
@@ -306,7 +312,7 @@ def _store_tab():   # Store tab: FU-25 front elevation (looking west, north end 
     rows+=''.join(f'<tr><td class="c">{L[0]}</td><td><b>Loft</b><br><span class="lbl">7\'6" to 9\'4"</span></td><td>{_h.escape(L[1])}</td></tr>' for L in S['loft'])
     return ('<section><h2>Store cupboard FU-25 (civil work)</h2><p>Built by the mason: 1½" kadappa uprights make five bays (about 2\' each), 1" kadappa shelves set into them, and a 3" brick plinth with a kadappa top. UPVC wood-look (oak) shutters with black handles; the loft has its own shutters. Heavy things sit low, everyday things at eye level, and rare things in the loft.</p>'
             +''.join(e)+'</section><section><h2>What goes where</h2><table class="t"><tr><th>Bay</th><th>Use</th><th>From the floor</th></tr>'+rows+'</table></section>'
-            +'<section><h2>Inverter and battery (S-5, bottom)</h2><ul>'+''.join(f'<li>{_h.escape(p)}</li>' for p in S['power'])+f'<li>{_h.escape(S["assumed"])}</li></ul></section>'
+            +(f'<section><h2>Adjustable shelf (S-3)</h2><p>{_h.escape(S["adjust"])}</p></section>' if S.get('adjust') else '')+'<section><h2>Inverter and battery (S-4, bottom)</h2><ul>'+''.join(f'<li>{_h.escape(p)}</li>' for p in S['power'])+f'<li>{_h.escape(S["assumed"])}</li></ul></section>'
             +f'<section><h2>Cost</h2><p>{_h.escape(S["cost"])}</p></section>')
 _st=_store_tab()
 if _st: _tabs.insert(0,('store','Store',_st))

@@ -866,8 +866,8 @@ function cabRun(id,what,x1,x2,y1,y2,z1,z2,face,segs,mat,plinth){
  {const S=P.store,bays=S.bays,lz=S.loftz;
   cabRun('FU-25','Store cupboard, civil work: kadappa shelves, UPVC wood-look shutters',cu.x1,cu.x2-0.012,cu.y1,cu.y2,0,lz,'x-',bays.flatMap(b=>b.power?[[b.y1,b.y2,'door']]:[[b.y1,(b.y1+b.y2)/2,'door'],[(b.y1+b.y2)/2,b.y2,'door']]),MAT.oak,S.plinth);
   cabRun('FU-25','Store cupboard, loft',cu.x1,cu.x2-0.012,cu.y1,cu.y2,lz+0.012,CEIL-0.012,'x-',S.loft.map(l=>[l[2],l[3],'door']),MAT.oak,false);
-  const p=bays.find(b=>b.power),lv=std({color:'#3b2f25',roughness:0.8});   // louvres on the S-5 shutter below 2'6": air for the inverter
-  for(let z=0.45;z<2.45;z+=0.17)box(cu.x1-0.03,cu.x1-0.005,p.y1+0.2,p.y2-0.2,z,z+0.05,lv,{cast:false,tip:`FU-25 · S-5 · louvred shutter for the inverter and battery · ${S.assumed}`})}
+  const p=bays.find(b=>b.power),lv=std({color:'#3b2f25',roughness:0.8});   // louvres on the S-4 shutter below 2'6": air for the inverter
+  for(let z=0.45;z<2.45;z+=0.17)box(cu.x1-0.03,cu.x1-0.005,p.y1+0.2,p.y2-0.2,z,z+0.05,lv,{cast:false,tip:`FU-25 · S-4 · louvred shutter for the inverter and battery · ${S.assumed}`})}
  // ceiling lights
  for(const [x,y] of [[6.6,62.6],[9.6,62.6],[15.6,64.0],[15.0,70.5]]) downlight(x,y,CEIL,'Recessed LED downlight (warm white)');}
 function setFinish(k){if(!KT[k])k='KT-1';const o=KT[k];finishMat(MAT.kLow,o.low);finishMat(MAT.kUp,o.up);MAT.kTop.color.set(o.top);
