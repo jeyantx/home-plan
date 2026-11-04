@@ -1166,7 +1166,6 @@ for(const w of P.walls.G.filter(w=>w.kind==='comp')){   // stepped down along th
   for(let i=0;i<cuts.length-1;i++){const a=cuts[i],b=cuts[i+1],front=b<=30.76,gnd=front?zF(b):GRD,base=Math.min(NBZ,front?zF(a):GRD)-0.1;
     const me=box(w.x1,w.x2,a,b,base,gnd+w.h,MAT.comp,{tip:`${w.id} · ${w.desc} · ${w.h}' high inside; its foot holds back the filled ground`});wallMeshes.push(me);
     box(w.x1-0.04,w.x2+0.04,a,b,gnd+w.h,gnd+w.h+0.12,MAT.extTrim,{tip:`${w.id} · coping`})}}
-{const w=P.walls.G.find(w=>w.id==='BW-01');if(w)box(w.x2,w.x2+0.012,30.8,w.y2-0.05,GRD,GRD+w.h,std({color:'#f3f1ec',roughness:0.9}),{cast:false,tip:'BW-01 · passage face painted white, so it throws daylight into the living and foyer windows (AU-14)'})}
 const pillarLights=[];
 for(const w of P.walls.G.filter(w=>w.kind==='pillar')){const PT=HUZ+w.h;const me=box(w.x1,w.x2,w.y1,w.y2,RDZ-0.1,PT,MAT.comp,{tip:`${w.id} · ${w.desc}`});wallMeshes.push(me);
   box(w.x1-0.08,w.x2+0.08,w.y1-0.08,w.y2+0.08,PT,PT+0.2,MAT.extTrim,{tip:'Pillar cap'});
@@ -1262,7 +1261,7 @@ const trunkAxis=[];const trunkAxisAt=hf=>{if(hf<0||hf>12)return null;const k=Mat
  for(const [arr,mt,t] of [[blk,MAT.blackMetal,'ST-1 railing · black MS, 4" gaps'],[wd,MAT.extWood,'ST-1 handrail · wood-look, 3\' high']]){const g=mergeGeometries(arr);metreUV(g);const me=new THREE.Mesh(g,mt);me.castShadow=true;me.receiveShadow=true;me.userData.keepUV=true;scene.add(me);named(me,t)}
  const L=new THREE.PointLight('#ffc98a',0,m(12),2);L.position.set(mx(20.5),m(LZ+6),m(17.75));scene.add(L);towerLights.push(L);
  box(20.6,20.625,17.4,18.1,LZ+5.6,LZ+6.3,MAT.paper,{cast:false,tip:'Wall light at the landing'});}
-// spiral stair ST-2: 5'10" across, 18 risers of 7 2/3", 17 oak treads of 30 deg + a 60 deg landing; climbs anticlockwise (plan angle up), handrail on the right
+// spiral stair ST-2: 5'10" across, 21 risers of 6 4/7", 20 oak treads of 25.5 deg + a 60 deg landing; climbs anticlockwise (plan angle up), handrail on the right
 {const S2=P.spiral,cx=S2.c[0],cy=S2.c[1],RO=S2.r,RC=S2.col||0.19,N=S2.n||18,A=S2.ang||30,A0=S2.start??345,LA=S2.land||60,R=FFZ/N,H=3.0;
  const L1=A0+(N-1)*A,L2=L1+LA,d2r=Math.PI/180,pt=(a,r)=>[cx+r*Math.cos(a*d2r),cy+r*Math.sin(a*d2r)];
  const oak=[],blk=[],rail=[];
@@ -1297,7 +1296,7 @@ const trunkAxis=[];const trunkAxisAt=hf=>{if(hf<0||hf>12)return null;const k=Mat
   const [ex,ey]=pt(L2,rr),[px,py]=pt(L2,RC+0.05);rod(P3(px,py,top),P3(ex,ey,top),0.22,rail);
   for(let i=1;i<8;i++){const [x,y]=pt(L2,RC+0.05+(rr-RC-0.05)*i/8);rod(P3(x,y,FFZ),P3(x,y,top-0.06),0.055,blk)}}
  const st2oak=MAT.oakDark.clone();st2oak.roughness=0.85;   // matte oil finish, no glare on the treads
- for(const [arr,mt,t] of [[oak,st2oak,'ST-2 spiral stair · oak tread 1¼" on a black steel pan, 30°, 7⅔" rise'],[blk,MAT.blackMetal,'ST-2 · black MS frame, hub sleeves and balusters, gaps under 4"'],[rail,st2oak,'ST-2 · oak handrail, 3\' high']]){
+ for(const [arr,mt,t] of [[oak,st2oak,'ST-2 spiral stair · oak tread 1¼" on a black steel pan, 25½°, 6½" rise'],[blk,MAT.blackMetal,'ST-2 · black MS frame, hub sleeves and balusters, gaps under 4"'],[rail,st2oak,'ST-2 · oak handrail, 3\' high']]){
    const g=mergeGeometries(arr.map(g=>g.index?g.toNonIndexed():g));metreUV(g);const me=new THREE.Mesh(g,mt);me.castShadow=true;me.receiveShadow=true;me.userData.keepUV=true;scene.add(me);named(me,t)}
 }
 // back boundary: existing wall BW-09 of the houses behind (slanted with the back line), the houses behind it
@@ -1527,7 +1526,7 @@ for(const f of P.furniture){ if(f.fl!=='G'||['FU-03.1','FU-03.2','FU-04','FU-05'
   const a=[x,32.75,zs(32.75)],b=[x,PSY+2.5,zs(PSY+2.5)],c=[x,f.y2,2.75];
   for(const [p,q] of [[a,b],[b,c]]){const L=Math.hypot(q[1]-p[1],q[2]-p[2]),r=new THREE.Mesh(new THREE.CylinderGeometry(m(0.065),m(0.065),m(L),12),MAT.blackMetal);r.position.set(mx(x),m((p[2]+q[2])/2),m((p[1]+q[1])/2));r.rotation.x=Math.PI/2-Math.atan2(q[2]-p[2],q[1]-p[1]);r.castShadow=true;scene.add(r);named(r,T(f))}}
  // CD-05 lofts at 7'3": 3" slab with a thin oak edge
- for(const id of ['FU-92','FU-93']){const f=fuG[id];box(f.x1,f.x2,f.y1,f.y2,7.25,7.5,MAT.white,{tip:T(f)});
+ for(const id of ['FU-92']){const f=fuG[id];box(f.x1,f.x2,f.y1,f.y2,7.25,7.5,MAT.white,{tip:T(f)});
   if(id==='FU-92')box(f.x1,f.x2,f.y2-0.05,f.y2,7.2,7.55,MAT.oak,{tip:T(f)+' · oak edge'});else box(f.x2-0.05,f.x2,f.y1,f.y2,7.2,7.55,MAT.oak,{tip:T(f)+' · oak edge'})}
  // CD-06 arched display niche in GW-07 (inside face x 10.25): shown as a clay-lime recess with a stepped arch, granite base and one shelf, proud of the wall by a hair
  {const f=fuG['FU-94'],xf=10.25,y1=f.y1,y2=f.y2,yc=(y1+y2)/2,R=(y2-y1)/2,z0=3.0,zs=5.0;   // round-top recess: straight to 5', half-round to 6'
