@@ -348,6 +348,61 @@ def _store_tab():   # Store tab: FU-25 front elevation (looking west, north end 
             +(f'<section><h2>Adjustable shelf (S-3)</h2><p>{_h.escape(S["adjust"])}</p></section>' if S.get('adjust') else '')
             +'<section><h2>Inverter and battery (S-4, bottom)</h2><ul>'+''.join(f'<li>{_h.escape(p)}</li>' for p in S['power'])+f'<li>{_h.escape(S["assumed"])}</li></ul></section>'
             +f'<section><h2>Cost</h2><p>{_h.escape(S["cost"])}</p></section>')
+
+def _elec_tab():   # Electrical tab: each floor drawn sideways (road on the left, east side at the top), every point with its code, then the lists
+    P=getattr(_mm,'ELEC_POINTS',None)
+    if not P: return ''
+    import html as _h
+    k=14;ox,oy=26,30
+    SYM={'DB':('#c0392b','rect'),'SB':('#1d1e21','rect'),'BS':('#6b4f32','rect'),'S6':('#2f6fb0','circ'),'S16':('#e8590c','circ'),'AC':('#0b7285','circ'),'GY':('#a61e4d','circ'),'EV':('#2b8a3e','bolt'),'IP':('#2b8a3e','ring'),'LO':('#f2b705','star'),'NT':('#7048e8','diam')}
+    NAME={'DB':'board','SB':'switchboard','BS':'bedside board','S6':'6 A socket (USB where noted)','S16':'16 A socket','AC':'AC socket','GY':'geyser socket','EV':'car charging','IP':'outdoor IP65 socket / isolator','LO':'outdoor light','NT':'bell, data, CCTV, solar'}
+    def floor_svg(fl,y0,y1,title):
+        W=(y1-y0)*k;H=21*k
+        X=lambda y:ox+(y-y0)*k;Yp=lambda x:oy+x*k
+        e=[f'<div class="wide"><svg viewBox="0 0 {W+2*ox:.0f} {H+oy+24:.0f}" style="width:{W+2*ox:.0f}px;max-width:none;background:#f7f4ee;border:1px solid var(--line);border-radius:10px" font-family="system-ui,sans-serif">',
+           f'<text x="{ox}" y="18" font-size="12.5" font-weight="700" fill="#1f2328">{title}</text><text x="{ox+W:.0f}" y="18" font-size="11" text-anchor="end" fill="#5d646d">road on the left · east side passage at the top · back garden on the right</text>']
+        for r in _mm.ROOMS[fl]:
+            pts=' '.join(f'{X(py):.1f},{Yp(px):.1f}' for px,py in r[2])
+            fill={'wet':'#e3eef5','kit':'#f3ead9','bed':'#efe9df','out':'#eceae6','garden':'#e6efdc','terr':'#f1e4d6','porch':'#efe9df'}.get(r[3],'#f4efe6')
+            e.append(f'<polygon points="{pts}" fill="{fill}" stroke="none"/>')
+            xs=[p[0] for p in r[2]];ys=[p[1] for p in r[2]]
+            e.append(f'<text x="{X((min(ys)+max(ys))/2):.1f}" y="{Yp((min(xs)+max(xs))/2)+3:.1f}" font-size="8.5" text-anchor="middle" fill="#9a8f80">{_h.escape(r[1])}</text>')
+        for w in _mm.WALLS[fl]:
+            col='#6b6b6b' if w[5] in ('comp','para') else '#3b3b3b'
+            e.append(f'<rect x="{X(w[3]):.1f}" y="{Yp(w[1]):.1f}" width="{(w[4]-w[3])*k:.1f}" height="{(w[2]-w[1])*k:.1f}" fill="{col}"/>')
+        for o in _mm.OPENINGS:
+            if o[1]!=fl or o[2]=='FRONT': continue
+            w=next((w for w in _mm.WALLS[fl] if w[0]==o[2]),None)
+            if not w: continue
+            horiz=(w[2]-w[1])>(w[4]-w[3])
+            if horiz: e.append(f'<rect x="{X(w[3])-0.5:.1f}" y="{Yp(o[3]):.1f}" width="{(w[4]-w[3])*k+1:.1f}" height="{(o[4]-o[3])*k:.1f}" fill="#fffdf7"/>')
+            else: e.append(f'<rect x="{X(o[3]):.1f}" y="{Yp(w[1])-0.5:.1f}" width="{(o[4]-o[3])*k:.1f}" height="{(w[2]-w[1])*k+1:.1f}" fill="#fffdf7"/>')
+        for p in P:
+            if p[1]!=fl: continue
+            pid,_,px,py,pz,kind,circ,what=p;cx,cy=X(py),Yp(px);col,shape=SYM[kind]
+            tip=_h.escape(f'{pid} · {NAME[kind]} · {fmt(pz)} up · {circ} · {what}')
+            g=f'<g><title>{tip}</title>'
+            if shape=='rect': g+=f'<rect x="{cx-5:.1f}" y="{cy-4:.1f}" width="10" height="8" rx="1.5" fill="{col}"/>'
+            elif shape=='circ': g+=f'<circle cx="{cx:.1f}" cy="{cy:.1f}" r="4.2" fill="{col}"/>'
+            elif shape=='ring': g+=f'<circle cx="{cx:.1f}" cy="{cy:.1f}" r="4.2" fill="#fff" stroke="{col}" stroke-width="2.2"/>'
+            elif shape=='bolt': g+=f'<rect x="{cx-6:.1f}" y="{cy-6:.1f}" width="12" height="12" rx="3" fill="{col}"/><path d="M{cx+1:.1f} {cy-4.5:.1f} L{cx-3:.1f} {cy+0.8:.1f} H{cx:.1f} L{cx-1:.1f} {cy+4.5:.1f} L{cx+3:.1f} {cy-0.8:.1f} H{cx:.1f}Z" fill="#fff"/>'
+            elif shape=='star': g+=f'<circle cx="{cx:.1f}" cy="{cy:.1f}" r="4.5" fill="{col}" stroke="#7a5c00" stroke-width="1"/>'
+            elif shape=='diam': g+=f'<rect x="{cx-3.5:.1f}" y="{cy-3.5:.1f}" width="7" height="7" transform="rotate(45 {cx:.1f} {cy:.1f})" fill="{col}"/>'
+            g+=f'<text x="{cx:.1f}" y="{cy-6.5:.1f}" font-size="8" font-weight="700" text-anchor="middle" fill="{col}" stroke="#f7f4ee" stroke-width="2.2" paint-order="stroke">{pid}</text></g>'
+            e.append(g)
+        e.append('</svg></div>')
+        return ''.join(e)
+    leg=''.join(f'<span style="display:inline-flex;align-items:center;gap:5px;margin:0 12px 4px 0;font-size:12.5px"><svg width="14" height="14"><circle cx="7" cy="7" r="5.5" fill="{c}"/></svg>{NAME[kd]}</span>' for kd,(c,_) in SYM.items())
+    rows=''.join(f'<tr><td class="c">{p[0]}</td><td>{"Ground" if p[1]=="G" else "First"}</td><td>{NAME[p[5]]}</td><td>{fmt(p[4])}</td><td>{p[6]}</td><td>{_h.escape(p[7])}</td></tr>' for p in P)
+    circ=''.join(f'<tr><td class="c">{c[0]}</td><td>{_h.escape(c[1])}</td><td>{c[2]}</td><td>{c[3]}</td><td>{_h.escape(c[4])}</td></tr>' for c in _mm.ELEC_CIRCUITS)
+    return ('<section><h2>Electrical plan (AU-03)</h2><p>Plain modular switches (no smart switches), so any electrician can repair them cheaply. Every point has a code. Hover a symbol for its details, or find it in the list below. Lights inside rooms are listed with the switchboard that controls them.</p>'
+            +f'<div style="margin:6px 0 10px">{leg}</div>'+floor_svg('G',0,106,'Ground floor')+'<div style="height:12px"></div>'+floor_svg('F',14,99,'First floor and terrace')+'</section>'
+            +'<section><h2>Rules used</h2><ul>'+''.join(f'<li>{_h.escape(r)}</li>' for r in _mm.ELEC_RULES)+'</ul></section>'
+            +'<section><h2>Circuits</h2><table class="t"><tr><th>Circuit</th><th>What</th><th>Breaker</th><th>Wire</th><th>Note</th></tr>'+circ+'</table></section>'
+            +'<section><h2>All points</h2><table class="t"><tr><th>Code</th><th>Floor</th><th>Type</th><th>Height</th><th>Circuit</th><th>What</th></tr>'+rows+'</table></section>'
+            +f'<section><h2>Cost</h2><p>{_h.escape(_mm.ELEC_COST)}</p></section>')
+_et=_elec_tab()
+if _et: _tabs.insert(0,('electrical','Electrical',_et))
 _st=_store_tab()
 if _st: _tabs.insert(0,('store','Store',_st))
 _tabs.append(('credits','Credits','<section><h2>Credits</h2><p>Libraries, textures, the sky image and the downloaded 3D models used by this plan, with their sources and licences. Everything else (the plan, the drawings and the code-made models) was made for this house.</p></section>'+_md(open(ROOT+'3d/ASSETS.md').read())))
