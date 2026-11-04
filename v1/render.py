@@ -463,6 +463,11 @@ def draw_furniture(fl,_late=False):
         elif k=='fridge':
             R_(x1,x2,y1,y2,'#eef2f5','#777',0.04); text((x1+x2)/2,(y1+y2)/2,'FRIDGE',0.32,weight=700,fill='#666')
         elif k=='appl': R_(x1,x2,y1,y2,'#e9ecef','#555',0.035,extra='rx="0.12"')
+        elif k=='seat': R_(x1,x2,y1,y2,'#c98a66','#2a2b2e',0.06); line(x1,y1,x2,y2,'#2a2b2e',0.02)
+        elif k=='mat': R_(x1,x2,y1,y2,'#8a6a4a','#2a2b2e',0.06)
+        elif k=='rail': R_(x1,x2,y1,y2,'#1d1e21','#1d1e21',0.03)
+        elif k=='niche': R_(x1,x2,y1,y2,'#e9c9b0','#c98a66',0.04)
+        elif k=='drain': R_(x1,x2,y1,y2,'#9aa0a6','#555',0.02)
         elif k=='over': R_(x1,x2,y1,y2,'none','#555',0.04,extra='stroke-dasharray="0.2 0.12"')
         elif k=='tv':
             R_(x1,x2,y1,y2,'#8b6a45','#5a4128',0.04); R_(x1+0.15,x1+0.35,y1+0.6,y2-0.6,'#222','#111',0.02)
