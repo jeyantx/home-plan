@@ -89,6 +89,7 @@ ROOMS = {
 # type: door, double, window, vent, arch, gate
 OPENINGS = [
  ('D-01','G','GW-02', 4.25,8.25,'double',None,'+', 7.0,0,'Main door, double leaf, opens into foyer'),
+ ('D-13','G','GW-02', 4.25,8.25,'double',None,'-', 7.0,0,'Steel safety door in front of the main door, black, double leaf 2\' + 2\', opens out onto the porch; each leaf folds back to 90 deg against a floor stopper'),
  ('D-02','G','GW-12', 9.5,12.5,'door','a','-', 7.0,0,'Bedroom 1 door, from living room'),
  ('D-03','G','GW-11', 14.5,17.0,'door','a','-', 7.0,0,'Toilet 1 door, from bedroom 1'),
  ('O-01','G','GW-13', 13.75,17.75,'arch',None,None, 7.0,0,'Arch from living room to open area, 4\' wide; ends at the FU-25 cupboard face'),
@@ -288,12 +289,12 @@ PLANT_COL={'malli':'#ffffff','sembaruthi':'#c8102e','nandiyavattai':'#ffffff','v
 #       'path' (segments of stepping stones, w = width)
 # model: which 3D model draws it; 3d/assets/plants/*.glb are CC0 models from Poly Haven, the rest are code-made (3d/models/garden-plants.js, tn-plants.js)
 GARDEN=[
- dict(id='GD-01',name='Areca palm (butterfly palm) in a big pot',kind='pot',x=3.5,y=39.7,r=0.7,z='porch',h=5.0,model='areca',lab=(4.75,39.3),
+ dict(id='GD-01',name='Areca palm (butterfly palm) in a big pot',kind='pot',x=3.45,y=39.7,r=0.7,z='porch',h=5.0,model='areca',lab=(4.75,39.3),
       where='Porch, east corner beside the main door',note='Big terracotta pot, 1\'5" across; bright shade under the porch roof suits it; water twice a week, a cup of compost every 2 months'),
  dict(id='GD-02',name='Anthurium (red) in a pot',kind='pot',x=3.3,y=37.95,r=0.5,z='porch',h=1.9,model='anthurium',
       where='Porch, east side, clear of the walk to the door',note='Shade plant, red flowers most of the year; water when the top inch is dry; keep out of the afternoon sun'),
- dict(id='GD-03',name='Syngonium (arrowhead plant) in a pot',kind='pot',x=7.9,y=36.4,r=0.55,z='porch',h=2.0,model='syngonium',
-      where='Porch, beside the shoe rack FU-01',note='Easy shade plant like a money plant; water once or twice a week'),
+ dict(id='GD-03',name='Syngonium (arrowhead plant) in a pot',kind='pot',x=3.3,y=36.6,r=0.55,z='porch',h=2.0,model='syngonium',
+      where='Porch, east side by the steps',note='Easy shade plant like a money plant; water once or twice a week'),
  dict(id='GD-04',name='Wall pots with ferns',kind='wallpots',x=0.375,ys=[48.5,50.0,51.5,54.5,56.0,57.5],zb=4.75,r=0.3,model='fern',
       where='Side passage, on BW-01 opposite the living-room windows W-04 and W-05',note='Six 7" wall pots on steel brackets, 4\'9" up, only 7" out from the wall (money plant can go in any of them), so the 2\'4" passage stays clear; green view from the sofa; shade-loving, water twice a week'),
  dict(id='GD-05',name='Mullai (climbing jasmine) on a wire trellis',kind='creeper',x1=0.375,x2=1.125,y1=78.0,y2=82.0,h=6.0,model='mullai',
@@ -337,7 +338,7 @@ TAGPOS={'GW-01':(3.125,53.0),'GW-05':(20.625,51.0),'GW-07':(9.875,91.5),'BW-01':
         'GW-03':(8.875,33.6),'GW-02':(3.6,40.875),'GW-11':(19.0,35.19),'GW-08':(11.0,94.75),'GW-06':(8.0,73.5),'GW-16':(11.94,71.6),'GW-17':(4.4,67.0),'GW-18':(6.375,72.3),'PW-02':(2.94,40.0),'PW-04':(20.81,40.0),
         'FW-01':(9.875,94.0),'FW-03':(20.625,92.0),'FW-02':(18.4,73.5),'FW-04':(19.0,97.0),'FW-05':(18.0,80.06),'PW-03':(19.4,19.94),'PW-01':(5.0,15.69),'PW-05':(6.0,77.69),
         'GW-15':(18.4,80.44),'GW-14':(8.0,66.81),'GW-10':(13.94,34.6),'GW-09':(9.06,43.0),'BW-03':(1.19,98.0),'BW-07':(20.81,25.0),'BW-08':(20.81,100.5),'BW-02':(0.6,89.19)}
-OPENTAGOFF={'W-01':-0.75,'V-01':-0.75,'W-02':0.9,'W-03':-1.0,'W-04':-1.0,'W-05':-1.0,'W-06':-1.0,'V-02':-1.0,'W-07':-1.0,'W-08':0.8,'D-01':-1.4,'D-02':-2.2,'D-03':-1.6,
+OPENTAGOFF={'W-01':-0.75,'V-01':-0.75,'W-02':0.9,'W-03':-1.0,'W-04':-1.0,'W-05':-1.0,'W-06':-1.0,'V-02':-1.0,'W-07':-1.0,'W-08':0.8,'D-01':1.4,'D-13':-1.9,'D-02':-2.2,'D-03':-1.6,
             'O-01':-0.8,'D-04':1.6,'D-05':-1.5,'D-06':1.7,'D-07':1.7,'D-08':-1.4,'D-09':-1.6,'D-12':-0.8,'W-10':-1.0,'W-11':0.8,'W-12':-0.85,'D-10':0.9}
 SPC=(17.0,76.875); SPR=35/12   # ST-2 spiral: centre and outer radius (5'10" across)
 # ST-2: 18 risers of 7 2/3" (11'6" floor to floor), 17 oak treads of 30 deg + a 60 deg landing at the first floor.
@@ -354,7 +355,7 @@ CH_F_BACK_Y=98.6
 # id, floor, name, x1, x2, y1, y2, kind, side, note
 # side = which edge is the head (bed) / back (sofa, WC): 'x1','x2','y1','y2'. Y grows toward the back.
 FURNITURE = [
- ('FU-01','G','Shoe rack',7.25,8.5,37.25,40.25,'cab',None,'Porch, 3\' x 1\'3", against GW-03, beside the main door'),
+ ('FU-01','G','Shoe rack',7.25,8.5,35.25,38.25,'cab',None,'Porch, 3\' x 1\'3", against GW-03, 2\' toward the steps so the steel door D-13 opens fully'),
  ('FU-02','G','Console with mirror',8.0,8.875,43.5,46.25,'cab',None,'Foyer, keys and mirror'),
  ('FU-03.1','G','3-seat sofa',3.5,6.0,49.5,55.75,'sofa','x1','Living, 6\'3" x 2\'6", back to GW-01 under the windows, moved toward GW-13'),
  ('FU-03.2','G','2-seat sofa',6.0,10.25,55.75,58.25,'sofa','y2','Living, 4\'3" x 2\'6", back against GW-13 (below the folding glass sill); starts where FU-03.1 ends so every seat is free'),
@@ -436,7 +437,8 @@ FURNITURE = [
 ]
 # door and window types (proposal)
 SPEC = {
- 'D-01':'Teak wood, double leaf, with safety grill door',
+ 'D-01':'Teak wood, double leaf; the steel door D-13 is in front of it',
+ 'D-13':'MS safety door, black powder-coat: 1"x1" box frame, 1/2" square bars at 4", middle rail, 1\'6" sheet panel at the foot; double leaf, centre joint in line with D-01; tower bolts top and bottom, a lock and floor stoppers',
  'D-02':'Flush door, hardwood frame', 'D-06':'Flush door, hardwood frame', 'D-07':'Flush door, hardwood frame',
  'D-03':'WPC waterproof door', 'D-04':'WPC waterproof door', 'D-08':'WPC waterproof door',
  'D-05':'Steel or UPVC door, glass upper half, plus MS grill shutter',

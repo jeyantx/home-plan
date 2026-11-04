@@ -131,12 +131,13 @@ def opening(o,W):
             return
         leaves=[(a,b-a,1),(b,b-a,-1)] if typ=='door' else [(a,(b-a)/2,1),(b,(b-a)/2,-1)]
         if typ=='door': leaves=[leaves[0]] if hinge=='a' else [leaves[1]]
+        dc='#1d1e21' if 'Steel' in note else '#8a4b12'   # black steel safety door
         for hu,L,dirn in leaves:
             h0=P(hu,face); e=P(hu,face+sg*L); o2=P(hu+dirn*L,face)
-            line(h0[0],h0[1],e[0],e[1],'#8a4b12',0.07)
+            line(h0[0],h0[1],e[0],e[1],dc,0.07)
             se,so,sh=S(*e),S(*o2),S(*h0)
             cross=(se[0]-sh[0])*(so[1]-sh[1])-(se[1]-sh[1])*(so[0]-sh[0])
-            E(f'<path d="M{se[0]:.3f},{se[1]:.3f} A{L:.3f},{L:.3f} 0 0 {1 if cross>0 else 0} {so[0]:.3f},{so[1]:.3f}" fill="none" stroke="#8a4b12" stroke-width="0.035" stroke-dasharray="0.15 0.1"/>')
+            E(f'<path d="M{se[0]:.3f},{se[1]:.3f} A{L:.3f},{L:.3f} 0 0 {1 if cross>0 else 0} {so[0]:.3f},{so[1]:.3f}" fill="none" stroke="{dc}" stroke-width="0.035" stroke-dasharray="0.15 0.1"/>')
 def opening_tags(fl,W):
     for o in OPENINGS:
         oid,f,wid,a,b,typ,hinge,swing,h,sill,note=o
