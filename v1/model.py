@@ -400,7 +400,7 @@ FURNITURE = [
  ('FU-69','G','Top storage, east',3.5,4.75,58.625,66.625,'over',None,'Kitchen, second row of cabinets on GW-01 from 7\' up to the ceiling, right across above the window and chimney (dashed)'),
  ('FU-19.2','G','Overhead shelves, east',3.5,4.75,65.0,66.625,'over',None,'Kitchen, corner unit above the east counter beside the window (dashed)'),
  ('FU-19.3','G','Overhead shelves, east',3.5,4.75,58.625,61.0,'over',None,'Kitchen, above the east counter beside the window, glass door (dashed)'),
- ('FU-25','G','Store cupboard, civil work',17.75,20.25,61.375,71.375,'store2',None,'Open area and stair hall, 10\' x 2\'6", floor to 9\'4" on GW-05: five 2\' kadappa bays S-1 to S-5 with UPVC wood-look shutters and a loft above 7\'6"; inverter and battery at the foot of S-5 (see the Store tab)'),
+ ('FU-25','G','Store cupboard, civil work',17.75,20.25,61.0,71.375,'store2',None,'Open area and stair hall, 10\'4½" x 2\'6", joined to the fridge FU-18 (1½" air gap for the fridge side), floor to 9\'4" on GW-05: five 2\' kadappa bays S-1 to S-5 with UPVC wood-look shutters and a loft above 7\'6"; inverter and battery at the foot of S-5 (see the Store tab)'),
  ('FU-26.1','G','WC platform, 4" high',6.75,10.25,70.625,73.125,'plat',None,'Toilet 2, tiled platform in the south-east corner (GW-18 and GW-06): 3\'6" front to back (east-west, the way the user faces) x 2\'6" side to side, room to squat comfortably'),
  ('FU-26','G','Indian WC (Orissa pan)',7.05,8.97,71.145,72.605,'iwc',None,'Toilet 2, centred on the 4" platform FU-26.1 against the east wall GW-18, user faces west, V-02 above; health faucet on GW-06 on the left hand'),
  ('FU-57','G','Bucket, tap and health faucet',9.25,10.15,72.15,73.05,'bucket',None,'Toilet 2, on the front of the platform on the user\'s left, bib tap on GW-06; health faucet on GW-06 beside the pan'),
@@ -473,12 +473,12 @@ SPEC['W-08']='Picture window: fixed glass centre (4\') with a UPVC sliding pane 
 SPEC['V-03']='Louvred glass ventilator with exhaust fan opening'
 
 # ---------- store cupboard FU-25 as civil work (owner's queue item 3; inverter and battery at the foot of S-5) ----------
-# 10' x 2'6" on GW-05, Y 61'4.5" to 71'4.5", floor to 9'4" (under the band). 1½" kadappa uprights make five 2' bays; 1" kadappa shelves sit 1" into the uprights;
+# 10'4.5" x 2'6" on GW-05, Y 61' to 71'4.5" (joined to the fridge FU-18), floor to 9'4" (under the band). 1½" kadappa uprights make five 2' bays; 1" kadappa shelves sit 1" into the uprights;
 # a 3" brick plinth with a kadappa top keeps the floor dry when mopping. Shutters: UPVC wood-look (oak film), soft hinges, black J handles; loft shutters separate above 7'6".
 # heights in feet from the floor; contents are a starting plan, to be resized when the owner sends their item list.
 STORE=dict(fu='FU-25',plinth=0.25,loftz=7.5,top=9.33,depth=2.5,inner=2.25,
  bays=[
-  dict(id='S-1',name='Grains and dry stock',y1=61.375,y2=63.375,shelves=[2.25,3.5,4.75,6.0],
+  dict(id='S-1',name='Grains and dry stock',y1=61.0,y2=63.375,shelves=[2.25,3.5,4.75,6.0],
        items=[(0.25,2.25,'Rice and atta drums, 2 x 25 kg, on the plinth (heaviest at the bottom)'),(2.25,3.5,'Dal, sugar, rava refill packs'),(3.5,4.75,'Spice and masala refills, oil cans'),(4.75,6.0,'Snacks, biscuits, tea and coffee stock'),(6.0,7.5,'Pickles, papad, seasonal stock')]),
   dict(id='S-2',name='Big vessels and appliances',y1=63.375,y2=65.375,shelves=[2.0,3.5,5.0,6.25],
        items=[(0.25,2.0,'Big vessels, idli steamer, kadai, pressure cookers (5 L and above)'),(2.0,3.5,'OTG or air fryer, spare mixer jars'),(3.5,5.0,'Serving bowls, plates for guests'),(5.0,6.25,'Tiffin boxes, flasks, water bottles'),(6.25,7.5,'Festival vessels, rarely used')]),
@@ -489,7 +489,7 @@ STORE=dict(fu='FU-25',plinth=0.25,loftz=7.5,top=9.33,depth=2.5,inner=2.25,
   dict(id='S-5',name='Inverter, battery and tools',y1=69.375,y2=71.375,shelves=[1.5,2.5,3.75,5.0,6.25],power=True,
        items=[(0.25,1.5,'Lithium battery, 53 x 18 x 27.5 cm (1\'9" x 7" x 10¾" high), lying along the bay on the plinth, 3" clear above for the terminals and cables'),(1.5,2.5,'Inverter, 36 x 35 x 20 cm (1\'2" x 1\'1¾" x 8" high), on the kadappa shelf at 1\'6", front to the shutter, 3" clear each side and 3" above for its fan; louvred shutter for air'),(2.5,3.75,'Tool box, drill, extension boards'),(3.75,5.0,'Emergency lamp, torch, spare fuses'),(5.0,6.25,'Paint, plumbing spares'),(6.25,7.5,'Electrical and plumbing manuals, warranty cards')]),
  ],
- loft=[('L-1','Suitcases and travel bags',61.375,64.708),('L-2','Festival and seasonal items',64.708,68.042),('L-3','Spare bedding, blankets, pillows',68.042,71.375)],
+ loft=[('L-1','Suitcases and travel bags',61.0,64.708),('L-2','Festival and seasonal items',64.708,68.042),('L-3','Spare bedding, blankets, pillows',68.042,71.375)],
  power=['16 A socket and its own 25 A MCB inside S-5 for the inverter; the inverter output runs to the main board (lights and fans on inverter)','Battery cable under 3\' long, inverter above the battery, both on kadappa (no wood under them)','Louvred UPVC shutter on S-5 below 2\'6" (vents top and bottom); lithium needs little air, but the inverter fan needs a path','The inverter display faces out at about 2\' high; open the S-5 lower shutter to read it or switch modes'],
  assumed='Owner\'s sizes: inverter 36 x 35 x 20 cm, battery 53 x 18 x 27.5 cm. The S-5 bay is 1\'10½" wide and 2\'3" deep inside. Battery space: plinth to the shelf at 1\'6" gives 1\'2" high, so the 10¾" battery has 3" over it. Inverter space: 1\'6" to 2\'6" gives 11" high for the 8" inverter. Both fit with air round them.',
  cost='Kadappa uprights and shelves about 200 sq ft at ₹90–115: ₹18–23k; plinth and labour ₹6–8k; UPVC wood-look shutters about 90 sq ft at ₹500–650: ₹45–58k. Total about ₹70–90k (a full carpentry cupboard of this size is about ₹1.3–1.6 lakh).')
