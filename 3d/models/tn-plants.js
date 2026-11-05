@@ -31,6 +31,10 @@ export const TN_PLANTS = {
   croton:         { name: 'Croton (red and yellow leaves)', note: 'bright leaves all year, takes full sun', h: 1.1, w: 0.7, leaf: [0.11, 0.045], leafC: '#9a4a22', nLeaf: 170, fl: 'ball', flC: '#d9a62a', flR: 0.05, nFl: 26 },
   bougainvillea:  { name: 'Bougainvillea (pink)', note: 'low water, pink bracts most of the year', h: 1.6, w: 1.0, leaf: [0.06, 0.04], leafC: '#3e6b2c', nLeaf: 260, fl: 'ball', flC: '#d6338a', flR: 0.05, nFl: 40, base: 0.25, trunk: true },
   portulaca:      { name: 'Portulaca (moss rose)', note: 'low, takes full sun, almost no water', h: 0.25, w: 0.4, leaf: [0.025, 0.008], leafC: '#5a8a34', nLeaf: 160, fl: 'star', flC: '#e8456e', flR: 0.025, nFl: 22, cenC: '#f5d142' },
+  sevvanthi:      { name: 'Sevvanthi (Marigold, yellow)', note: 'round yellow flowers, easy from seed', h: 0.7, w: 0.5, leaf: [0.04, 0.02], leafC: '#3f6e2e', nLeaf: 200, fl: 'ball', flC: '#f2b416', flR: 0.04, nFl: 14 },
+  vetchiy:        { name: 'Vetchi (Ixora, yellow)', note: 'ball-shaped yellow flower clusters', h: 0.9, w: 0.7, leaf: [0.08, 0.035], leafC: '#2c5b28', nLeaf: 230, fl: 'ball', flC: '#f0c419', flR: 0.042, nFl: 16 },
+  arali:          { name: 'Arali (Oleander, pink)', note: 'hardy, pink flowers, poisonous leaves so keep from kids and pets', h: 1.4, w: 0.8, leaf: [0.13, 0.025], leafC: '#3a6630', nLeaf: 220, fl: 'pinwheel', flC: '#e26aa0', flR: 0.035, nFl: 20, cenC: '#f3d0e0' },
+  bougainvilleaw: { name: 'Bougainvillea (white)', note: 'low water, white bracts', h: 1.6, w: 1.0, leaf: [0.06, 0.04], leafC: '#3e6b2c', nLeaf: 220, fl: 'ball', flC: '#f6f3ea', flR: 0.05, nFl: 34, base: 0.25, trunk: true },
 };
 
 export function createTNPlant(THREE, mergeGeometries, opts = {}) {

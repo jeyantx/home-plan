@@ -238,7 +238,13 @@ def garden():
         elif k=='gatepot':
             circ(g['x'],g['y'],0.5,'#d6338a','#2c4a20',0.03)
             label(g['x'],g['y']+1.1,g['id'],0.24)
+        elif k=='drip':
+            for run in g['runs']:
+                for (x1,y1,_),(x2,y2,_z) in zip(run,run[1:]): line(x1,y1,x2,y2,'#2a6fc4',0.05)
+            for x,y,_ in g['taps']: circ(x,y,0.18,'#2a6fc4','#123',0.03)
+            label(1.6,6.4,g['id']+' drip',0.22)
         elif k=='potrow':
+            if g.get('chan'): rect(g['x'],g['x']+0.5,g['chan'][0],g['chan'][1],'#8f8c85','#333',0.03,'fill-opacity="0.6"')
             for y in g['ys']: circ(g['x']+g['r']+0.05,y,g['r'],'#c8794a','#7a4326',0.03,'stroke-dasharray="0.12 0.08"' if g['zb'] else ''); circ(g['x']+g['r']+0.05,y,g['r']*0.55,'#4f7d3a','#2c4a20',0.02)
             label(g['x']+(1.4 if g['zb'] else 0.9),(g['ys'][0]+g['ys'][-1])/2+(0 if g['zb'] else 0.6),g['id']+(' (4\'6" up)' if g['zb'] else ' (ground)'),0.24)
         elif k=='winbox':

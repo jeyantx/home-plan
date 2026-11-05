@@ -1449,20 +1449,29 @@ if(P.backwall){const bw=P.backwall,[a,b]=bw.pts,t=bw.t,old=std({color:'#cdc4b3',
    const lm=new THREE.Mesh(mergeGeometries(lv),std({color:'#9a7a45',roughness:1,side:THREE.DoubleSide}));lm.receiveShadow=true;scene.add(lm);named(lm,T(g,'dry neem leaf mulch'));lm.userData.keepUV=true;
    const pg=new THREE.DodecahedronGeometry(m(1),1);[[0.9,1.1],[2.3,1.2],[3.9,1.3],[5.1,1.15],[0.2,1.35]].forEach(([a,rr],i)=>{const sz=0.18+0.05*(i%3),st=new THREE.Mesh(pg,std({color:i%2?'#8d8478':'#a39a8c',roughness:0.8}));
      st.scale.set(m(sz),m(sz*0.55),m(sz*0.8));st.rotation.y=a;st.position.set(mx(g.x+Math.cos(a)*rr),m(zg+sz*0.2),m(g.y+Math.sin(a)*rr));st.castShadow=st.receiveShadow=true;scene.add(st);named(st,T(g,'river stone'))})}
-  else if(g.kind==='gatepot'){const tb=T(g),s=HUZ+4.05,b=tn('bougainvillea',9,g.x,g.y,s,tb);if(b)b.scale.set(1.0,0.7,0.85);
+  else if(g.kind==='gatepot'){const tb=T(g),s=HUZ+4.05,b=tn('bougainvillea',9,g.x,g.y,s,tb);if(b)b.scale.set(1.0,0.7,0.85);if(g.two){const w=tn('bougainvilleaw',14,g.x-0.35,g.y+0.2,s,tb+' · white');if(w)w.scale.set(0.8,0.6,0.7)}
    const r=rng(93),lv=[],fl=[],lg=new THREE.PlaneGeometry(m(0.1),m(0.065)),bg=new THREE.PlaneGeometry(m(0.1),m(0.09));   // a few shoots spilling over the pillar sides
    for(let k=0;k<7;k++){const sx=r()<0.5?-1:1,len=0.6+r()*0.9,ex=g.x+sx*0.7;for(let t=0;t<len;t+=0.08){const q=(r()<0.25?bg:lg).clone();q.rotateX(r()*6);q.rotateY(r()*6);
      q.translate(mx(ex+sx*0.05+(r()-0.5)*0.1),m(s-t),m(g.y+(r()-0.5)*1.2));(q.parameters?lv:lv).push(q);if(r()<0.2)fl.push(q.clone())}}
    const lm=new THREE.Mesh(mergeGeometries(lv),std({color:'#3e6b2c',roughness:0.6,side:THREE.DoubleSide}));lm.castShadow=true;scene.add(lm);named(lm,tb);lm.userData.keepUV=true;
    if(fl.length){const fm=new THREE.Mesh(mergeGeometries(fl),std({color:'#d6338a',roughness:0.6,side:THREE.DoubleSide}));fm.scale.setScalar(1.0);scene.add(fm);named(fm,T(g,'pink bracts'));fm.userData.keepUV=true}}
-  else if(g.kind==='potrow'){g.ys.forEach((y,i)=>{const cx=g.x+g.r+0.05,z=g.zb?PKZ+g.zb:zF(y),tb=`${g.id} · ${TN_PLANTS[g.plants[i]]?.name||g.plants[i]} · ${g.name} · ${g.where}`;
+  else if(g.kind==='potrow'){g.ys.forEach((y,i)=>{const cx=g.x+g.r+0.05,z=g.zb?PKZ+g.zb:(g.zg==='pk'?PKZ:zF(y))+(g.chan?0.05:0),tb=`${g.id} · ${TN_PLANTS[g.plants[i]]?.name||g.plants[i]} · ${g.name} · ${g.where}`;
     if(g.zb){const ring=new THREE.Mesh(new THREE.TorusGeometry(m(g.r*0.85),m(0.02),6,24),bracket);ring.rotation.x=Math.PI/2;ring.position.set(mx(cx),m(z+0.35),m(y));scene.add(ring);named(ring,tb+' · black MS wall ring');
     box(g.x,cx-g.r*0.8,y-0.02,y+0.02,z+0.33,z+0.37,bracket,{tip:tb+' · wall ring arm'});box(g.x,g.x+0.04,y-0.06,y+0.06,z+0.1,z+0.5,bracket,{tip:tb+' · wall plate'})}
-    const s=pot(cx,y,z,g.r,g.zb?0.75:0.65,tb);const o=tn(g.plants[i],30+i+(g.zb?0:20),cx,y,s,tb);if(o)o.scale.setScalar(g.zb?0.85:Math.min(0.9,1.3/(TN_PLANTS[g.plants[i]]?.h||1))*(0.85+0.1*(i%3)))})}
+    if(g.tray){box(cx-g.r*0.8,cx+g.r*0.8,y-g.r*0.8,y+g.r*0.8,z-0.04,z,MAT.steel,{tip:tb+' · steel drip tray'});box(g.x+0.04,g.x+0.07,y+g.r*0.5,y+g.r*0.5+0.03,zF(y),z,std({color:'#1d1e21',roughness:0.5}),{cast:false,tip:tb+' · ¼" drain tube to the channel'})}
+    if(g.chan)for(const dy of [-0.15,0.15])box(g.x+0.02,g.x+0.5,y+dy-0.02,y+dy+0.02,z-0.05,z,bracket,{tip:tb+' · steel bar over the channel'});
+    const s=pot(cx,y,z,g.r,g.zb?0.75:0.65,tb);const o=tn(g.plants[i],30+i+(g.zb?0:20),cx,y,s,tb);if(o)o.scale.setScalar(g.zb?0.85:Math.min(0.9,1.3/(TN_PLANTS[g.plants[i]]?.h||1))*(0.85+0.1*(i%3)))});
+   if(g.chan){const [c1,c2]=g.chan,gz=y=>g.zg==='pk'?PKZ:zF(y),ct=`PG-8 · ${GD.find(q=>q.id==='PG-8')?.note||'plant water channel'}`,cem=std({color:'#8f8c85',roughness:0.95}),grate=std({color:'#1d1e21',roughness:0.5,metalness:0.5});
+    for(let y=c1;y<c2-0.01;y+=1.5){const y2=Math.min(c2,y+1.5),zt=Math.max(gz(y),gz(y2));
+     box(g.x,g.x+0.5,y,y2,Math.min(gz(y),gz(y2))-0.3,zt-0.25,cem,{cast:false,tip:ct});box(g.x+0.42,g.x+0.5,y,y2,zt-0.25,zt,cem,{cast:false,tip:ct});
+     for(let k=y;k<y2-0.01;k+=0.12)box(g.x+0.02,g.x+0.42,k,k+0.04,zt-0.03,zt,grate,{cast:false,tip:ct+' · steel grating'})}}}
   else if(g.kind==='winbox'){const tb=T(g),z1=PKZ+g.zb,z2=z1+g.bh,cem=std({color:'#9b9890',roughness:0.95});
    box(g.x1,g.x2,g.y1,g.y2,z1,z2,cem,{tip:tb+' · cement trough'});box(g.x1+0.06,g.x2-0.06,g.y1+0.06,g.y2-0.04,z2-0.1,z2-0.06,soilG,{tip:tb,cast:false});
    for(const x of [g.x1+0.4,g.x2-0.45])box(x,x+0.05,g.y1+0.1,g.y2,z1-0.5,z1,bracket,{tip:tb+' · bracket'});
    [0.4,1.0,1.6,2.25,2.9].forEach((dx,i)=>{const o=tn('portulaca',40+i,g.x1+dx,(g.y1+g.y2)/2,z2-0.1,`${tb} · ${TN_PLANTS.portulaca.name}`);if(o)o.scale.setScalar(0.8+0.15*(i%2))})}
+  else if(g.kind==='drip'){const tb=T(g),pm=std({color:'#141414',roughness:0.6});
+   for(const run of g.runs){const pts=run.map(([x,y,z])=>new THREE.Vector3(mx(x),m((x>10?PKZ:zF(y))+z),m(y)));const tube=new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts,false,'catmullrom',0),Math.max(8,pts.length*12),m(0.035),6,false),pm);scene.add(tube);named(tube,tb+' · ½" drip pipe')}
+   for(const [x,y,t] of g.taps){const z=(x>10?PKZ:zF(y))+2.0;cyl(x,y,z-0.6,z,0.06,MAT.steel,{tip:`${g.id} · ${t}`});box(x-0.12,x+0.12,y-0.05,y+0.05,z,z+0.08,MAT.steel,{tip:`${g.id} · ${t}`});box(x-0.08,x+0.08,y-0.08,y+0.08,z-0.35,z-0.15,std({color:'#2a6fc4',roughness:0.5}),{tip:`${g.id} · tap timer`})}}
   else if(g.kind==='tree'){basin(g.x,g.y,g.r,T(g,'soil basin for watering'));
    if(g.model==='banana')add(createBanana(THREE,mergeGeometries,{seed:6,height:m(g.h/0.87),avoid:[[1,0],[-1,0]],avoidCos:0.6}),g.x,g.y,GRD,t,0);
    else if(g.model==='moringa')add(createMoringa(THREE,mergeGeometries,{seed:8,height:m(g.h),crown:m(g.cr),avoid:[1,0]}),g.x,g.y,GRD,t,0)}
