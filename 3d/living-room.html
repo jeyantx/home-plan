@@ -73,6 +73,7 @@ canvas{display:block;width:100%;height:100%}
   <div class="seg cams" data-area="6"><button data-c="28">Landing</button><button data-c="30">Bedroom 3</button><button data-c="23">Terrace</button><button data-c="31">Top</button></div>
   <span class="spacer"></span>
   <button class="btn" id="tourBtn" aria-pressed="false" title="Walk through the whole house on a set path: gate, parking, porch, rooms, up the spiral stair, first floor, terrace and down the outside stair. Any key or click stops it.">Home tour</button>
+  <button class="btn" id="manBtn" aria-pressed="false" title="A 6' man walks up the spiral stair ST-2, one foot on each tread, to check head room and step size by eye. Click again to stop.">6' man on stair</button>
   <button class="btn" id="gateBtn" aria-pressed="true" title="Open or close the two front gates GT-01 and GT-02 (bi-fold, they fold inward)">Close gates</button>
   <button class="btn" id="animBtn" aria-pressed="false" title="Watch the car come in from the road, reverse into its spot, wait, and drive out">Animate car parking</button>
   <button class="btn" id="photoBtn" aria-pressed="false" title="Ray-traced photo of the current view. Uses the graphics card heavily for about a minute, then stops by itself.">Photo</button>
@@ -99,13 +100,15 @@ import {EffectComposer} from 'three/addons/postprocessing/EffectComposer.js';
 import {RenderPass} from 'three/addons/postprocessing/RenderPass.js';
 import {GTAOPass} from 'three/addons/postprocessing/GTAOPass.js';
 import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';
-import {createBambooPlant} from './models/bamboo-plant.js?v=1793824028';
-import {createNeemTree} from './models/neem-tree.js?v=1793824028';
-import {createTNPlant,TN_PLANTS} from './models/tn-plants.js?v=1793824028';
-import {createBanana,createArecaPalm,createMoringa} from './models/garden-plants.js?v=1793824028';
-import {createVirtus,createHunter350,createAther450,loadCarGLB,loadGLBVehicle} from './models/vehicles.js?v=1793824028';
+import {LightProbeGridWebGL} from 'three/addons/lighting/LightProbeGridWebGL.js';
+import {createBambooPlant} from './models/bamboo-plant.js?v=1793858234';
+import {createNeemTree} from './models/neem-tree.js?v=1793858234';
+import {createTNPlant,TN_PLANTS} from './models/tn-plants.js?v=1793858234';
+import {createBanana,createArecaPalm,createMoringa} from './models/garden-plants.js?v=1793858234';
+import {createVirtus,createHunter350,createAther450,loadCarGLB,loadGLBVehicle} from './models/vehicles.js?v=1793858234';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
-import {CAR_ROUTE} from './models/car-route.js?v=1793824028';
+import {CAR_ROUTE} from './models/car-route.js?v=1793858234';
+import {loadStairWalker} from './models/person.js?v=1793858234';
 import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
 
 const P=window.PLAN, F=0.3048, CEIL=10.0, EYE=5.25;
@@ -751,7 +754,7 @@ function rackModel(r,Z,B,C){const st=std({color:'#c9ccd0',roughness:0.3,metalnes
   const pot=std({color:'#bfc3c7',roughness:0.25,metalness:0.85});C(r.x1+0.45,cy,Z+s1+0.02,Z+s1+0.9,0.32,pot);C(r.x2-0.45,cy,Z+s1+0.02,Z+s1+0.55,0.36,pot);C(r.x2-0.5,cy,Z+s1+0.6,Z+s1+1.3,0.28,pot);
   for(let k=0;k<5;k++)B(r.x1+0.4+k*0.28,r.x1+0.42+k*0.28,r.y1+0.3,r.y2-0.3,Z+s2+0.03,Z+s2+0.6,std({color:'#f2efe9',roughness:0.3}))}
 // downloaded appliance models (archibase.net, see 3d/ASSETS.md): front faces +z in the file, real size in metres, sitting on y = 0
-function placeAppliance(url,cx,cy,z,rotY,matFn,tip){new GLTFLoader().load(url+'?v=1793824028',g=>{const o=g.scene;o.traverse(n=>{if(n.isMesh){n.castShadow=n.receiveShadow=true;const mt=matFn(n);if(mt)n.material=mt;if(tip)named(n,tip);n.userData.keepUV=true}});
+function placeAppliance(url,cx,cy,z,rotY,matFn,tip){new GLTFLoader().load(url+'?v=1793858234',g=>{const o=g.scene;o.traverse(n=>{if(n.isMesh){n.castShadow=n.receiveShadow=true;const mt=matFn(n);if(mt)n.material=mt;if(tip)named(n,tip);n.userData.keepUV=true}});
   o.rotation.y=rotY;o.position.set(mx(cx),m(z),m(cy));scene.add(o);if(typeof renderer!=='undefined'&&renderer.shadowMap)renderer.shadowMap.needsUpdate=true;if(typeof invalidate==='function')invalidate()},undefined,e=>console.warn('appliance',url,e))}
 const APM={glass:std({color:'#0b0c0d',roughness:0.05,metalness:0.3}),black:std({color:'#161718',roughness:0.45,metalness:0.3}),enamel:std({color:'#2b2c2e',roughness:0.4,metalness:0.4}),
   brass:std({color:'#b08d57',roughness:0.35,metalness:0.8}),steel:std({color:'#c9ccd0',roughness:0.25,metalness:0.9}),white:std({color:'#f3f3f1',roughness:0.32,metalness:0.08}),
@@ -1308,6 +1311,29 @@ const trunkAxis=[];const trunkAxisAt=hf=>{if(hf<0||hf>12)return null;const k=Mat
  for(const [arr,mt,t] of [[oak,st2oak,'ST-2 spiral stair · oak tread 1¼" on a black steel pan, 25½°, 6½" rise'],[blk,MAT.blackMetal,'ST-2 · black MS frame, hub sleeves and balusters, gaps under 4"'],[rail,st2oak,'ST-2 · oak handrail, 3\' high']]){
    const g=mergeGeometries(arr.map(g=>g.index?g.toNonIndexed():g));metreUV(g);const me=new THREE.Mesh(g,mt);me.castShadow=true;me.receiveShadow=true;me.userData.keepUV=true;scene.add(me);named(me,t)}
 }
+// 6' man on ST-2 (models/person.js): climbs step over step; the head room above his head is measured straight up every frame
+const man={o:null,on:false,loading:false,t0:0,low:1e9,hits:[],lastShadow:0};
+{const S2=P.spiral;man.st={c:S2.c,A0:S2.start??345,A:S2.ang||30,N:S2.n||18,R:FFZ/(S2.n||18),rw:((S2.col||0.19)+S2.r)*0.58,stepTime:0.9}}
+const ftIn=f=>{const i=Math.round(f*12);return `${Math.floor(i/12)}'${i%12}"`};
+const manRay=new THREE.Raycaster(),manBtn=document.getElementById('manBtn');
+function manObstacles(){const [cx,cy]=man.st.c,r=P.spiral.r+1.0,bb=new THREE.Box3(new THREE.Vector3(mx(cx+r),m(2),m(cy-r)),new THREE.Vector3(mx(cx-r),m(FFZ+12),m(cy+r))),out=[];
+  scene.updateMatrixWorld(true);scene.traverse(n=>{if(!n.isMesh||!n.visible||n.isSkinnedMesh)return;let o=n,skip=false;while(o){if(o===man.o?.root)skip=true;o=o.parent}if(skip)return;
+    if(new THREE.Box3().setFromObject(n).intersectsBox(bb))out.push(n)});return out}
+function manStep(now){const t=(now-man.t0)/1000,pl=man.o.update(t);
+  const h=man.o.headTop();manRay.set(h,new THREE.Vector3(0,1,0));manRay.far=m(12);const hit=manRay.intersectObjects(man.hits,false)[0];
+  const room=hit?hit.distance/F:null;if(room!=null&&pl.moving)man.low=Math.min(man.low,room);
+  if(!photo){statusEl.style.display='block';statusEl.textContent=`6' man on ST-2 · step ${Math.max(0,Math.min(man.st.N,pl.j-1))} of ${man.st.N} · head room above his head: ${room!=null?ftIn(room):'open'}`+(man.low<1e8?` · lowest so far: ${ftIn(man.low)}`:'')}
+  if(now-man.lastShadow>100){renderer.shadowMap.needsUpdate=true;man.lastShadow=now}invalidate()}
+async function startMan(){if(man.loading)return;
+  if(!man.o){man.loading=true;manBtn.textContent='Loading man…';
+    try{man.o=await loadStairWalker(THREE,GLTFLoader,'assets/people/man.glb?v=1793858234','assets/people/walk-clips.glb?v=1793858234',man.st,m,mx)}catch(e){console.warn('man model',e);man.loading=false;manBtn.textContent="6' man on stair";return}
+    man.loading=false;man.o.root.traverse(n=>{if(n.isMesh)named(n,"6' man (1.83 m, sole to top of head) · walks up ST-2 step over step")});scene.add(man.o.root)}
+  man.o.root.visible=true;man.hits=manObstacles();man.low=1e9;man.on=true;man.t0=performance.now();
+  manBtn.textContent='Stop man';manBtn.setAttribute('aria-pressed',true);if(tour.on)stopTour();
+  if(!man.view){VIEWS.push({p:[12.0,74.0,8.5],t:[17.0,7.0,77.0]});man.view=VIEWS.length-1}setView(man.view);invalidate()}   // from the open area, up at the middle of the climb
+function stopMan(){man.on=false;if(man.o)man.o.root.visible=false;if(!photo)statusEl.style.display='none';manBtn.textContent="6' man on stair";manBtn.setAttribute('aria-pressed',false);renderer.shadowMap.needsUpdate=true;invalidate()}
+manBtn.onclick=()=>man.on?stopMan():startMan();
+window.__manS=man;window.__man=t=>{if(!man.o)return null;man.t0=performance.now()-t*1000;return man.o.update(t)};
 // back boundary: existing wall BW-09 of the houses behind (slanted with the back line), the houses behind it
 function prism(pts,z1,z2,mat,tip){const sh=new THREE.Shape(pts.map(p=>new THREE.Vector2(mx(p[0]),-m(p[1]))));
   const g=new THREE.ExtrudeGeometry(sh,{depth:m(z2-z1),bevelEnabled:false});g.rotateX(-Math.PI/2);const me=new THREE.Mesh(g,mat);me.position.y=m(z1);me.castShadow=true;me.receiveShadow=true;scene.add(me);if(tip)named(me,tip);return me}
@@ -1344,7 +1370,7 @@ if(P.backwall){const bw=P.backwall,[a,b]=bw.pts,t=bw.t,old=std({color:'#cdc4b3',
  const T=(g,extra)=>`${g.id} · ${g.name}${extra?' · '+extra:''} · ${g.where}`;
  const tipAll=(o,t)=>o.traverse(n=>{if(n.isMesh){n.userData.keepUV=true;n.castShadow=true;n.receiveShadow=true;named(n,t)}});
  const refresh=()=>{renderer.shadowMap.needsUpdate=true;if(photo&&pt)pt.setScene(scene,camera);invalidate()};
- const glbCache={},loadGLB=url=>glbCache[url]||(glbCache[url]=new Promise((res,rej)=>new GLTFLoader().load(url+'?v=1793824028',g=>res(g.scene),undefined,rej)));
+ const glbCache={},loadGLB=url=>glbCache[url]||(glbCache[url]=new Promise((res,rej)=>new GLTFLoader().load(url+'?v=1793858234',g=>res(g.scene),undefined,rej)));
  // a downloaded plant, scaled so its height (h, feet) or width (w, feet) fits, standing at plan x, y on height z (feet)
  const placeGLB=(url,x,y,z,size,rot,t)=>loadGLB(url).then(src=>{const o=src.clone(true),sz=new THREE.Box3().setFromObject(o).getSize(new THREE.Vector3());
    o.scale.setScalar(size.h?m(size.h)/sz.y:m(size.w)/Math.max(sz.x,sz.z));o.rotation.y=rot||0;o.position.set(mx(x),m(z),m(y));scene.add(o);tipAll(o,t);refresh();return o}).catch(e=>console.warn('plant model',url,e));
@@ -1494,14 +1520,14 @@ function placeBike(code){const o=bikeObjs[code];if(!o)return;const t=(P.bikes||[
 const SHOW_BIKES=false;   // the old code-made two-wheelers stay off; the downloaded models below are used
 const vehicleMeshes=[];
 if(!LITE){const [cx1,cx2,cy1,cy2]=P.car||[11.25,17.0,14.75,29.75];
- loadCarGLB(THREE,GLTFLoader,'assets/vehicles/compact-car.glb?v=1793824028',{color:'#2f5d8c',length:4.561,bodyWidth:1.752,name:'Car'}).then(car=>{
+ loadCarGLB(THREE,GLTFLoader,'assets/vehicles/compact-car.glb?v=1793858234',{color:'#2f5d8c',length:4.561,bodyWidth:1.752,name:'Car'}).then(car=>{
    scene.add(car);window.__car=car;carAnim.car=car;setCarPose(...CAR_ROUTE.park,0,0);
    const d=car.userData.dims,ft=v=>{const i=Math.round(v/F*12);return `${Math.floor(i/12)}'${i%12}"`};
    car.traverse(o=>{if(o.isMesh){o.userData.keepUV=true;named(o,`Car · compact sedan (Free3D model, scaled to VW Virtus size, 4561 x 1752 mm body) · ${ft(d.length)} x ${ft(d.width)} with mirrors · reversed in, nose to the gate`);vehicleMeshes.push(o)}});
    renderer.shadowMap.needsUpdate=true;if(photo&&pt)pt.setScene(scene,camera);invalidate()}).catch(e=>console.warn('car model',e));
  // two-wheelers from the owner's downloaded models, sized to the real bikes they stand for, front to the gate
  for(const [code,name] of (P.bikes||[])){const moto=/VFR|Hunter/.test(name);
-   loadGLBVehicle(THREE,GLTFLoader,moto?'assets/vehicles/vfr800.glb?v=1793824028':'assets/vehicles/scooter.glb?v=1793824028',moto?{front:'+z',length:2.12,groundMaterial:'rubber',name:code,materials:vfrMats()}:{front:'+z',length:1.837,name:code}).then(b=>{
+   loadGLBVehicle(THREE,GLTFLoader,moto?'assets/vehicles/vfr800.glb?v=1793858234':'assets/vehicles/scooter.glb?v=1793858234',moto?{front:'+z',length:2.12,groundMaterial:'rubber',name:code,materials:vfrMats()}:{front:'+z',length:1.837,name:code}).then(b=>{
      scene.add(b);bikeObjs[code]={b,moto};b.traverse(o=>{if(o.isMesh)o.userData.keepUV=true});placeBike(code);
      renderer.shadowMap.needsUpdate=true;if(photo&&pt)pt.setScene(scene,camera);invalidate()}).catch(e=>console.warn('bike model',e))}
  if(SHOW_BIKES) for(const [code,name,bx,by,bl,bw] of (P.bikes||[])){const b=/Hunter/.test(name)?createHunter350(THREE,mergeGeometries,{}):createAther450(THREE,mergeGeometries,{});
@@ -1579,6 +1605,26 @@ sun.position.set(mx(11)+9,48,m(50)+7);scene.add(sun);   // late-morning sun, hig
 const composer=new EffectComposer(renderer);composer.addPass(new RenderPass(scene,camera));
 const gtao=new GTAOPass(scene,camera,1,1);gtao.output=GTAOPass.OUTPUT.Default;gtao.blendIntensity=0.65;composer.addPass(gtao);composer.addPass(new OutputPass());
 
+// ---------------- daylight bounce (baked global illumination) ----------------
+// A grid of light probes over the whole plot, both floors, every 2'5" across and 2'7" up (no probe inside the slab).
+// Each probe saw the house in daylight and stored the light falling on it from every side, after 2 bounces off walls, floor and ceiling.
+// Baked once (?bakegi=1, saved to assets/gi/gi-day.bin) so the page only reads a small file: soft window light, darker corners, warm ceiling.
+const GI={res:[10,11,46],grid:null,ready:false,bake:/[?&]bakegi=1/.test(location.search)};
+function giGrid(){const g=new LightProbeGridWebGL(m(21.8),m(26),m(110),...GI.res);g.position.set(mx(10.5),m(12.2),m(52));g.updateBoundingBox();return g}
+const giDepth=()=>7*(GI.res[2]+2);
+if(!GI.bake)fetch('assets/gi/gi-day.bin?v=1793858234').then(r=>r.ok?r.arrayBuffer():null).then(b=>{if(!b)return;const [nx,ny]=GI.res,d=new Uint16Array(b);
+  if(d.length!==nx*ny*giDepth()*4){console.warn('gi: size mismatch');return}
+  const t=new THREE.Data3DTexture(d,nx,ny,giDepth());t.format=THREE.RGBAFormat;t.type=THREE.HalfFloatType;t.minFilter=t.magFilter=THREE.LinearFilter;t.unpackAlignment=1;t.needsUpdate=true;
+  const g=giGrid();g.texture=t;scene.add(g);GI.grid=g;GI.ready=true;applyLight(curLight)}).catch(e=>console.warn('gi',e));
+async function bakeGI(){const g=giGrid();scene.add(g);const N=GI.res[0]*GI.res[1]*GI.res[2],step=150,t0=performance.now();
+  for(let pass=0;pass<=2;pass++)for(let i=0;i<N;i+=step){g.bake(renderer,scene,{cubemapSize:16,near:0.05,far:9,pass,start:i,count:Math.min(step,N-i)});
+    statusEl.style.display='block';statusEl.textContent=`Baking daylight bounce: pass ${pass+1} of 3 · ${Math.round(100*i/N)}%`;await new Promise(r=>setTimeout(r,0))}
+  const [nx,ny]=GI.res,D=giDepth(),f=new Float32Array(nx*ny*4),out=new Uint16Array(nx*ny*D*4);
+  for(let z=0;z<D;z++){renderer.readRenderTargetPixels(g._renderTarget,0,0,nx,ny,f,z);for(let i=0;i<f.length;i++)out[z*nx*ny*4+i]=THREE.DataUtils.toHalfFloat(f[i])}
+  const r=await fetch('http://127.0.0.1:8766/gi-day.bin',{method:'POST',body:out.buffer});statusEl.textContent=`Baked in ${((performance.now()-t0)/1000).toFixed(0)} s · ${await r.text()}`;
+  GI.grid=g;GI.ready=true;applyLight(curLight);return statusEl.textContent}
+window.__bakeGI=bakeGI;
+
 // ---------------- options, light, views, lens ----------------
 const OPTIONS=[
  {name:'Warm oak',floor:'oak',wall:'#cdd6c3',accent:'#c98a66',accentWall:'niche',sofa:'#b49a80',rug:'#d8c7a6',curtain:'#b9987a',
@@ -1645,13 +1691,14 @@ function syncPool(force){const c=camera.position;if(!force&&poolAt&&poolAt.dista
       if(k==='spot'){p.angle=o.angle;p.penumbra=o.penumbra;p.target.position.copy(o.userData.wt);p.target.updateMatrixWorld()}
       if(k==='rect'){p.width=o.width;p.height=o.height;p.quaternion.copy(o.getWorldQuaternion(new THREE.Quaternion()))}})}}
 function applyLight(mode){const day=mode==='day';curLight=mode;
-  sun.visible=day;sun.intensity=day?4.0:0;hemi.intensity=day?0.3:0.03;
-  scene.environment=(photo&&day&&skyTex)?skyTex:roomEnv;scene.environmentIntensity=day?(photo?1.0:0.55):0.05;   // raster: neutral fill; photo: real sky, walls occlude it
+  const gi=day&&!photo&&(GI.ready||GI.bake);if(GI.grid)GI.grid.visible=gi&&GI.ready;   // baked bounce light replaces most of the flat fill light
+  sun.visible=day;sun.intensity=day?4.0:0;hemi.intensity=day?(gi?0:0.3):0.03;
+  scene.environment=(photo&&day&&skyTex)?skyTex:roomEnv;scene.environmentIntensity=day?(photo?1.0:gi?0.12:0.55):0.05;   // raster: neutral fill; photo: real sky, walls occlude it
   scene.background=day?(skyTex||new THREE.Color('#cfe3f6')):new THREE.Color('#0b1322');
   coveLights.forEach(l=>{l.visible=!day&&!photo;l.intensity=9});
   towerLights.forEach(l=>{l.visible=!day;l.intensity=photo?1.2:2.2});downs.forEach(s=>{s.visible=!day;s.intensity=22});
   MAT.led.emissiveIntensity=day?0:(photo?14:3);MAT.paper.emissiveIntensity=day?0:(photo?3:1.6);lampLight.visible=!day;lampLight.intensity=photo?6:14;
-  renderer.toneMappingExposure=photo?(day?2.6:1.5):(day?1.0:1.15);
+  renderer.toneMappingExposure=photo?(day?2.6:1.5):(day?(gi?2.3:1.0):1.15);
   for(const l of NIGHT)l.visible=photo&&!day&&!coveLights.includes(l);for(const l of poolAll())l.visible=!day&&!photo;if(!day&&!photo)syncPool(true);   // normal view: the light pool; Photo: the real lights
   document.querySelectorAll('#lightSeg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.l===mode));
   try{localStorage.setItem('lr3d-light',mode)}catch(e){}
@@ -1738,7 +1785,7 @@ async function rebuildPhoto(){if(!photo||!pt||building)return;building=true;stat
   try{pt.setScene(scene,camera)}catch(e){statusEl.textContent='Ray tracer error: '+e.message;console.error(e)}
   building=false}
 async function startPhoto(){
-  photo=true;photoBtn.setAttribute('aria-pressed',true);photoBtn.textContent='Photo: on';statusEl.style.display='block';statusEl.textContent='Loading ray tracer…';
+  sharp(false);photo=true;photoBtn.setAttribute('aria-pressed',true);photoBtn.textContent='Photo: on';statusEl.style.display='block';statusEl.textContent='Loading ray tracer…';
   setPhotoMaterials(true);
   if(!pt){const {WebGLPathTracer}=await import('three-gpu-pathtracer');pt=new WebGLPathTracer(renderer);
     window.__pt=pt;pt.bounces=6;pt.transmissiveBounces=8;pt.filterGlossyFactor=0.4;pt.tiles.set(3,3);pt.renderDelay=0;pt.fadeDuration=0;pt.minSamples=1;pt.renderScale=1;}
@@ -1931,23 +1978,27 @@ const tick=()=>new Promise(r=>setTimeout(r,30));
   ldShow('Preparing day lighting…',0.75);await tick();vis('day');try{await renderer.compileAsync(scene,camera)}catch(e){}
   ldShow('Preparing evening lighting…',0.9);await tick();vis('eve');syncPool(true);try{await renderer.compileAsync(scene,camera)}catch(e){}
   applyLight(mode);ldShow('Ready',1);await tick();preparing=false;ldHide();try{window.focus()}catch(e){}renderer.shadowMap.needsUpdate=true;invalidate()})();
+// still frames at the screen's full pixel density (sharp on high-density laptop screens); moving frames at 1 pixel per point (fast)
+function sharp(on){const r=on?Math.min(devicePixelRatio||1,2):1;if(renderer.getPixelRatio()===r)return;const s=renderer.getSize(new THREE.Vector2());
+  renderer.setPixelRatio(r);renderer.setSize(s.x,s.y,false);composer.setPixelRatio(r);composer.setSize(s.x,s.y)}
 renderer.setAnimationLoop(()=>{
   if(preparing)return;
   walk();
   gateStep(performance.now());
   if(carAnim.on)animStep(performance.now());
   if(tour.on)tourStep(performance.now());
+  if(man.on&&man.o)manStep(performance.now());
   if(photo&&pt){
     if(building||document.hidden) return;            // ray tracing pauses in a hidden tab
     if(pt.samples>=PHOTO_SAMPLES){ if(saveReq){pt.renderSample();doSave();saveReq=false} statusEl.textContent=`Photo done: ${Math.floor(pt.samples)} samples. Save image, or move to start a new one.`; return }   // stop: no GPU use once finished
     pt.renderSample();statusEl.textContent=pt.isCompiling?'Compiling ray tracer…':`Ray tracing: ${Math.floor(pt.samples)} / ${PHOTO_SAMPLES} samples · keep still`;
     if(saveReq){doSave();saveReq=false} return}
   const now=performance.now();
-  if(dirty){if(curLight!=='day')syncPool();renderer.render(scene,camera);dirty=false;lastChange=now;hqDone=false;}
-  else if(!hqDone&&now-lastChange>220){if(!LITE)composer.render();hqDone=true;}
+  if(dirty){sharp(false);if(curLight!=='day')syncPool();renderer.render(scene,camera);dirty=false;lastChange=now;hqDone=false;}
+  else if(!hqDone&&now-lastChange>220){if(!LITE){sharp(true);composer.render()}hqDone=true;}
   if(saveReq&&hqDone){composer.render();doSave();saveReq=false}
 });
-window.__ready=true;window.__nav={cam:camera,scene,step:(n)=>{for(let i=0;i<n;i++)tryMove(fwdVec().multiplyScalar(0.05))}};
+window.__ready=true;window.__nav={cam:camera,scene,renderer,step:(n)=>{for(let i=0;i<n;i++)tryMove(fwdVec().multiplyScalar(0.05))}};
 window.__bench=()=>{const gl=renderer.getContext();const t=(f,n)=>{gl.finish();const a=performance.now();for(let i=0;i<n;i++)f();gl.finish();return ((performance.now()-a)/n).toFixed(1)+' ms'};
   return {fast:t(()=>renderer.render(scene,camera),20),softShadows:t(()=>composer.render(),5),texturesPending:pending}};
 window.__photo=()=>({on:photo,building,samples:pt?Math.floor(pt.samples):0,compiling:pt?.isCompiling});

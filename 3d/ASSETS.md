@@ -67,3 +67,13 @@ All CC0 (public domain) from Poly Haven, https://polyhaven.com, downloaded as 1k
 |---|---|---|---|
 | `favicon.png` | House icon used as the site icon (browser tab) | [Icons8](https://icons8.com) | Free with a link to Icons8 |
 | `og-image-2.png` | Share picture for link previews (WhatsApp and others): the same house icon with the title and James 1:17 | Icons8 icon, made for this site | Free with a link to Icons8 |
+
+## People (`assets/people/`)
+| File | What | Source | Licence |
+|---|---|---|---|
+| `man.glb` | The 6' man on ST-2 ("6' man on stair" button), scaled to exactly 1.83 m; colours of top and trousers changed in `models/person.js` | three.js examples, `examples/models/gltf/readyplayer.me.glb` (a Ready Player Me avatar), https://github.com/mrdoob/three.js | As in the three.js repository (Ready Player Me avatar) |
+| `walk-clips.glb` | Only its Walk, Idle and TPose clips are used, copied onto `man.glb` by `models/person.js` (the legs are placed on the treads by code) | three.js examples, `examples/models/gltf/Soldier.glb` (Mixamo), https://github.com/mrdoob/three.js | Mixamo, as in the three.js repository |
+
+## Baked daylight bounce (`assets/gi/`)
+`gi-day.bin`: light-probe grid (10 x 11 x 46 probes, whole plot, both floors), half-float RGBA, read by the 3D page in day view. Made by the page itself:
+open `3d/living-room.html?bakegi=1`, run `__bakeGI()` in the console with a small local server on port 8766 that saves the POSTed file into `assets/gi/` (takes about 3 minutes). Bake again after big changes to walls, windows or the roof.
