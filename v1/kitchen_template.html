@@ -70,6 +70,8 @@ import * as THREE from 'three';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {CSS2DRenderer,CSS2DObject} from 'three/addons/renderers/CSS2DRenderer.js';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+import {MeshoptDecoder} from 'three/addons/libs/meshopt_decoder.module.js';
+{const parse=GLTFLoader.prototype.parse;GLTFLoader.prototype.parse=function(...a){if(!this.meshoptDecoder)this.setMeshoptDecoder(MeshoptDecoder);return parse.apply(this,a)}}
 const P=window.PLAN,K=P.kitchen,F=0.3048,fu=Object.fromEntries(P.furniture.filter(f=>f.fl==='G').map(f=>[f.id,f]));
 const MM=ft=>Math.round(ft*304.8),FI=ft=>{const i=Math.round(ft*12*2)/2;const f=Math.floor(i/12),r=i-f*12;return `${f}'${r%1?Math.floor(r)+'½':r}"`};
 const W=(X,Y,Z)=>new THREE.Vector3(-X*F,Z*F,Y*F);      // plan feet (X from the east boundary, Y from the road, Z height) to world metres

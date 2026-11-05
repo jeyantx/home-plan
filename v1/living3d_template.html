@@ -100,6 +100,7 @@ import {EffectComposer} from 'three/addons/postprocessing/EffectComposer.js';
 import {RenderPass} from 'three/addons/postprocessing/RenderPass.js';
 import {GTAOPass} from 'three/addons/postprocessing/GTAOPass.js';
 import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';
+import {Reflector} from 'three/addons/objects/Reflector.js';
 import {LightProbeGridWebGL} from 'three/addons/lighting/LightProbeGridWebGL.js';
 import {createBambooPlant} from './models/bamboo-plant.js?v=__BUILD__';
 import {createNeemTree} from './models/neem-tree.js?v=__BUILD__';
@@ -107,6 +108,8 @@ import {createTNPlant,TN_PLANTS} from './models/tn-plants.js?v=__BUILD__';
 import {createBanana,createArecaPalm,createMoringa} from './models/garden-plants.js?v=__BUILD__';
 import {createVirtus,createHunter350,createAther450,loadCarGLB,loadGLBVehicle} from './models/vehicles.js?v=__BUILD__';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+import {MeshoptDecoder} from 'three/addons/libs/meshopt_decoder.module.js';
+{const parse=GLTFLoader.prototype.parse;GLTFLoader.prototype.parse=function(...a){if(!this.meshoptDecoder)this.setMeshoptDecoder(MeshoptDecoder);return parse.apply(this,a)}}   // every model file is meshopt-compressed (see 3d/ASSETS.md)
 import {CAR_ROUTE} from './models/car-route.js?v=__BUILD__';
 import {loadStairWalker} from './models/person.js?v=__BUILD__';
 import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
@@ -635,16 +638,54 @@ box(9.92,9.94,37.4,40.1,7.9,7.98,MAT.blackMetal,{cast:false,tip:'FU-44 · AC air
    const hy=i%2?u1+0.03:u2-0.07;box(x-0.05,x,hy,hy+0.04,3.0,5.6,MAT.blackMetal,{tip:'J-profile handle, black'})}};
  doorsY(a.x1+0.012,b.x1-0.012,a.y2,1,'FU-09.1 · Wardrobe');doorsX(b.y1+0.012,b.y2-0.012,b.x1,2,'FU-09.2 · Wardrobe');}
 
+// full-length mirror on the south shutter of FU-09.2 (faces the room, east): a true reflection in the normal view, a silver mirror in Photo
+const mirrors=[];
+{const b=fuG['FU-09.2'],gap=0.012,w=(b.y2-b.y1-0.024)/2,u1=b.y1+0.012+w+gap,u2=b.y2-0.012-gap,yc=(u1+u2)/2,mw=1.17,z1=1.5,z2=6.5,x=b.x1-0.012,tm='FU-09.2 · full-length mirror, 1\'2" x 5\', on the south shutter';
+ box(x-0.02,x+0.001,yc-mw/2-0.06,yc+mw/2+0.06,z1-0.06,z2+0.06,MAT.blackMetal,{tip:tm+' · thin black frame'});
+ const geo=new THREE.PlaneGeometry(m(mw),m(z2-z1));
+ const rf=new Reflector(geo,{textureWidth:LITE?256:768,textureHeight:LITE?512:1536,color:'#c8ccce',clipBias:0.003});rf.rotation.y=Math.PI/2;rf.position.set(mx(x-0.025),m((z1+z2)/2),m(yc));scene.add(rf);named(rf,tm);
+ const pm=new THREE.Mesh(geo,std({color:'#e8ecee',metalness:1,roughness:0.02}));pm.rotation.y=Math.PI/2;pm.position.copy(rf.position);pm.visible=false;scene.add(pm);named(pm,tm);mirrors.push([rf,pm])}
+// bedside table FU-101 between the bed head and the wardrobe: oak, one drawer, a small lamp
+{const f=fuG['FU-101'],t=`FU-101 · ${f.name} · ${f.note}`,h=1.83;
+ box(f.x1,f.x2,f.y1,f.y2,h-0.1,h,MAT.oak,{round:0.02,tip:t});box(f.x1+0.04,f.x2-0.04,f.y1+0.04,f.y2-0.04,0.35,h-0.1,MAT.oak,{tip:t});
+ box(f.x1+0.06,f.x1+0.08,f.y1+0.08,f.y2-0.08,1.25,h-0.16,MAT.oakDark,{cast:false,tip:t+' · drawer'});box(f.x1+0.03,f.x1+0.06,(f.y1+f.y2)/2-0.15,(f.y1+f.y2)/2+0.15,1.5,1.55,MAT.blackMetal,{cast:false,tip:'Drawer pull'});
+ for(const [x,y] of [[f.x1+0.05,f.y1+0.05],[f.x2-0.12,f.y1+0.05],[f.x1+0.05,f.y2-0.12],[f.x2-0.12,f.y2-0.12]])box(x,x+0.07,y,y+0.07,0,0.35,MAT.blackMetal,{tip:t});
+ const cx=(f.x1+f.x2)/2+0.1,cy=(f.y1+f.y2)/2;cyl(cx,cy,h,h+0.05,0.18,std({color:'#d9cdb8',roughness:0.6}),{tip:'Bedside lamp · ceramic base, linen shade'});
+ cyl(cx,cy,h+0.05,h+0.75,0.06,std({color:'#d9cdb8',roughness:0.6}),{tip:'Bedside lamp'});cyl(cx,cy,h+0.75,h+1.15,0.32,MAT.paper,{tip:'Bedside lamp · linen shade',rTop:0.24})}
+
 // plant by the window: smaller bamboo
 addPlant(10.05,42.3,1.2,3,'Bamboo plant in black pot · 4 ft');
-// --- study corner G-06: floating oak desk FU-10 under W-01, wooden chair, open bookshelf FU-11, linen roman blind
-{const d=fuG['FU-10'],tip=`FU-10 · Study desk · oak top on black steel legs · ${d.note}`;
- box(d.x1+0.012,d.x2,d.y1+0.012,d.y2,2.38,2.5,MAT.oak,{round:0.02,tip});
- box(d.x2-1.6,d.x2-0.1,d.y1+0.1,d.y2-0.15,2.08,2.38,MAT.oak,{tip:'FU-10 · drawer, oak'});box(d.x2-1.0,d.x2-0.7,d.y2-0.15,d.y2-0.13,2.2,2.26,MAT.blackMetal,{cast:false,tip:'Drawer pull'});
- for(const x of [d.x1+0.15,d.x2-0.2]){box(x,x+0.05,d.y1+0.15,d.y1+0.2,0,2.38,MAT.blackMetal,{tip});box(x,x+0.05,d.y2-0.25,d.y2-0.2,0,2.38,MAT.blackMetal,{tip});box(x,x+0.05,d.y1+0.15,d.y2-0.2,0.0,0.06,MAT.blackMetal,{tip})}
- cyl(d.x1+0.6,d.y1+0.5,2.5,2.52,0.25,MAT.blackMetal,{tip:'Desk lamp, black'});cyl(d.x1+0.6,d.y1+0.5,2.52,3.9,0.025,MAT.blackMetal,{tip:'Desk lamp, black'});
- cyl(d.x1+0.6,d.y1+0.85,3.6,3.95,0.2,MAT.blackMetal,{tip:'Desk lamp, black',rTop:0.06});
- box(d.x1+1.5,d.x1+2.6,d.y1+0.6,d.y1+1.35,2.5,2.53,std({color:'#2b2b2b',roughness:0.4}),{tip:'Laptop'});
+const blinds={slats:[],k:1};
+function setBlind(k){blinds.k=k;const ang=[0.12,0.75,1.4][k];for(const sl of blinds.slats)sl.rotation.x=ang;if(typeof renderer!=='undefined'){renderer.shadowMap.needsUpdate=true;invalidate()}}
+// --- study corner G-06: sewing machine table FU-10 under W-01 (like the owner's photo), wooden chair, open bookshelf FU-11, venetian blind
+{const d=fuG['FU-10'],tip=`FU-10 · ${d.name} · ${d.note}`;
+ // built with its back to the window, then turned to face the chair: wheel on the user's right, dial and ruler strip towards the user
+ const fx=v=>d.x1+d.x2-v,fy=v=>d.y1+d.y2-v,B2=(x1,x2,y1,y2,...r)=>box(fx(x2),fx(x1),fy(y2),fy(y1),...r),C2=(x,y,...r)=>cyl(fx(x),fy(y),...r);
+ const wht=std({color:'#f3f1ec',roughness:0.45}),cream=std({color:'#efe9dc',roughness:0.35}),iron=std({color:'#1c1d1f',roughness:0.55,metalness:0.5}),TZ=2.42,TT=2.5;
+ B2(d.x1,d.x2,d.y1,d.y2,TZ,TT,wht,{round:0.015,tip:tip+' · white laminated top'});
+ B2(d.x1+0.3,d.x2-0.3,d.y1+0.012,d.y1+0.1,TT,TT+0.004,std({color:'#f0cf2a',roughness:0.6}),{cast:false,tip:'FU-10 · ruler strip (inch tape) on the front edge'});
+ B2(d.x1+1.2,d.x2-0.9,d.y1+0.15,d.y1+0.8,TZ-0.42,TZ,wht,{tip:'FU-10 · drawer under the top'});B2(d.x1+1.7,d.x2-1.4,d.y1+0.13,d.y1+0.15,TZ-0.26,TZ-0.2,iron,{cast:false,tip:'Drawer pull'});
+ // black iron stand: two side frames of twin uprights, a foot rail each side, a low stretcher across, treadle-style pedal bar
+ for(const x of [d.x1+0.25,d.x2-0.35]){for(const y of [d.y1+0.25,d.y1+0.37,d.y2-0.37,d.y2-0.25])B2(x,x+0.1,y,y+0.06,0.08,TZ,iron,{tip:tip+' · black iron stand'});
+   B2(x-0.05,x+0.15,d.y1+0.15,d.y2-0.15,0,0.12,iron,{tip:tip+' · black iron stand'});B2(x,x+0.1,d.y1+0.25,d.y2-0.25,TZ-0.12,TZ,iron,{tip:tip+' · black iron stand'})}
+ B2(d.x1+0.3,d.x2-0.3,(d.y1+d.y2)/2-0.04,(d.y1+d.y2)/2+0.04,0.55,0.65,iron,{tip:tip+' · stretcher'});
+ B2(d.x1+1.3,d.x1+1.85,d.y1+0.55,d.y1+1.05,0,0.14,std({color:'#222326',roughness:0.6}),{round:0.03,tip:'FU-10 · foot pedal (speed control)'});
+ // machine (about 15" x 7" x 11"): flat bed, pillar on the right, arm, head with the needle on the left, hand wheel, stitch dial
+ const mx0=d.x1+1.0,my=d.y1+0.55,tm='Sewing machine · Singer-type, white, 15" x 7" x 11"',bz=TT;
+ B2(mx0,mx0+1.27,my,my+0.6,bz,bz+0.22,cream,{round:0.04,tip:tm});
+ B2(mx0+0.82,mx0+1.27,my,my+0.6,bz+0.22,bz+0.88,cream,{round:0.06,tip:tm});
+ B2(mx0+0.05,mx0+1.2,my+0.02,my+0.55,bz+0.62,bz+0.92,cream,{round:0.08,tip:tm});
+ B2(mx0,mx0+0.3,my,my+0.6,bz+0.36,bz+0.92,cream,{round:0.05,tip:tm});
+ C2(mx0+0.15,my+0.2,bz+0.22,bz+0.38,0.012,MAT.steel||MAT.blackMetal,{tip:'Needle and presser foot'});
+ B2(mx0+0.1,mx0+0.4,my+0.05,my+0.4,bz+0.22,bz+0.24,std({color:'#b9bcc0',roughness:0.3,metalness:0.8}),{cast:false,tip:'Needle plate'});
+ {const w=new THREE.Mesh(new THREE.CylinderGeometry(m(0.22),m(0.22),m(0.12),28),std({color:'#e4e0d6',roughness:0.4}));w.rotation.z=Math.PI/2;w.position.set(mx(fx(mx0+1.33)),m(bz+0.68),m(fy(my+0.3)));scene.add(w);named(w,tm+' · hand wheel')}
+ {const g=new THREE.Mesh(new THREE.CylinderGeometry(m(0.13),m(0.13),m(0.03),24),std({color:'#9a9da2',roughness:0.4}));g.rotation.x=Math.PI/2;g.position.set(mx(fx(mx0+0.98)),m(bz+0.62),m(fy(my-0.01)));scene.add(g);named(g,tm+' · stitch dial')}
+ B2(mx0+0.62,mx0+0.68,my-0.012,my,bz+0.75,bz+0.81,std({color:'#c8302c',roughness:0.5}),{cast:false,tip:tm+' · logo'});
+ C2(mx0+1.05,my+0.3,bz+0.92,bz+1.05,0.03,MAT.blackMetal,{tip:'Thread spool pin'});C2(mx0+1.05,my+0.3,bz+0.94,bz+1.08,0.07,std({color:'#3d6fb0',roughness:0.7}),{tip:'Thread spool'});
+ B2(d.x1+0.15,d.x1+0.85,d.y1+0.4,d.y1+1.0,TT,TT+0.3,wht,{round:0.03,tip:'Accessory box, white'});
+ // cable: machine to pedal and to the socket S-11
+ {const pts=[[mx0+1.25,my+0.6,bz+0.15],[mx0+1.4,d.y2-0.2,TZ-0.05],[d.x1+1.6,d.y2-0.3,0.3],[d.x1+1.6,d.y1+0.9,0.05]].map(([x,y,z])=>new THREE.Vector3(mx(fx(x)),m(z),m(fy(y))));
+  const c=new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts),40,m(0.012),6),std({color:'#111',roughness:0.6}));scene.add(c);named(c,'Machine cable to the pedal')}
  // chair: oak frame, linen seat, curved backrest
  const cx=11.1,cy=34.4,cw=0.85,W=MAT.sofaWood,tc='Study chair · walnut-tone oak, linen seat';
  for(const [lx,ly] of [[cx-cw,cy-0.75],[cx+cw-0.12,cy-0.75],[cx-cw,cy+0.6],[cx+cw-0.12,cy+0.6]]) box(lx,lx+0.12,ly,ly+0.12,0,1.5,W,{tip:tc});
@@ -656,9 +697,15 @@ addPlant(10.05,42.3,1.2,3,'Bamboo plant in black pot · 4 ft');
  for(const y of [s.y1,s.y2-0.07]) box(s.x1,s.x2-0.1,y,y+0.07,0,6.0,MAT.oak,{tip:ts});
  const r=rng(55);for(const z of [0.0,1.45,2.9,4.35,5.9]){box(s.x1,s.x2-0.1,s.y1+0.07,s.y2-0.07,z,z+0.1,MAT.oak,{tip:ts});
    if(z>5)continue;let y=s.y1+0.15;while(y<s.y2-0.4){if(r()<0.7){const h=0.7+r()*0.5;box(s.x1+0.15,s.x2-0.2,y,y+0.12,z+0.101,z+0.1+h,std({color:['#b5a891','#d9d2c3','#6f6a60','#a2826a','#e8e3d8'][Math.floor(r()*5)],roughness:0.75}),{tip:'Books'});y+=0.13}else{cyl(s.x1+0.6,y+0.25,z+0.101,z+0.5,0.16,std({color:'#cdbfa8',roughness:0.55}),{tip:'Ceramic vase',rTop:0.1});y+=0.55}}}
- // roman blind on W-01, half lowered
- box(9.65,13.35,30.5+0.012,30.6,6.1,7.25,std({color:'#cdb69a',roughness:1,normalMap:T.linen.normalMap}),{tip:'Roman blind · light-brown linen, half lowered'});
- for(const z of [6.3,6.7]) box(9.65,13.35,31.6,31.66,z,z+0.12,std({color:'#c2a98c',roughness:1,normalMap:T.linen.normalMap}),{cast:false,tip:'Roman blind fold'});}
+ // venetian blind on W-01: 2" faux-wood slats on a headrail, two ladder cords, a tilt wand; click it to tilt the slats (open, half, shut)
+ {const w=P.openings.find(o=>o.id==='W-01'),x1=w.a-0.1,x2=w.b+0.1,yb=30.5+0.2,top=w.sill+w.h+0.15,bot=w.sill-0.05,pitch=0.15,n=Math.floor((top-0.2-bot)/pitch);
+  const slatM=std({color:'#e9dcc6',roughness:0.6,normalMap:T.oak.normalMap,normalScale:new THREE.Vector2(0.2,0.2)}),tb='Venetian blind on W-01 · 2" faux-wood slats, tilt with the wand, pull up with the cord · click to tilt';
+  box(x1,x2,yb-0.1,yb+0.1,top-0.15,top,MAT.white,{tip:tb});box(x1,x2,yb-0.09,yb+0.09,bot-0.08,bot,slatM,{tip:tb});
+  const g=new THREE.BoxGeometry(m(x2-x1-0.04),m(0.012),m(0.165));blinds.slats=[];
+  for(let i=0;i<n;i++){const me=new THREE.Mesh(g,slatM);me.position.set(mx((x1+x2)/2),m(top-0.2-i*pitch),m(yb));me.castShadow=me.receiveShadow=true;me.userData.keepUV=true;scene.add(me);named(me,tb);me.userData.blind=true;blinds.slats.push(me)}
+  for(const x of [x1+0.5,x2-0.5])box(x-0.005,x+0.005,yb-0.09,yb+0.09,bot,top-0.15,std({color:'#e6dccb',roughness:1}),{cast:false,tip:tb+' · ladder cord'});
+  cyl(x2-0.15,yb-0.12,top-2.6,top-0.15,0.02,std({color:'#e9dcc6',roughness:0.5}),{tip:tb+' · tilt wand'});
+  setBlind(1)}}
 
 // ---------------- TOILET 1 (G-07): greige matte tiles to 7' (shower walls too), wall-hung WC, floating vanity ----------------
 function tileTex(base,grout,tw,th,seed){const t=canvasTex(1024,Math.round(1024*th/tw),(g,w,h)=>{const r=rng(seed);g.fillStyle=base;g.fillRect(0,0,w,h);
@@ -1560,9 +1607,6 @@ for(const f of P.furniture){ if(f.fl!=='G'||['FU-03.1','FU-03.2','FU-04','FU-05'
   for(const y of ys)cyl(x,y,Math.min(0,PKZ+Math.max(0,(y-PSY))/2.5*(-PKZ)),zs(y),0.06,MAT.blackMetal,{tip:T(f)});
   const a=[x,32.75,zs(32.75)],b=[x,PSY+2.5,zs(PSY+2.5)],c=[x,f.y2,2.75];
   for(const [p,q] of [[a,b],[b,c]]){const L=Math.hypot(q[1]-p[1],q[2]-p[2]),r=new THREE.Mesh(new THREE.CylinderGeometry(m(0.065),m(0.065),m(L),12),MAT.blackMetal);r.position.set(mx(x),m((p[2]+q[2])/2),m((p[1]+q[1])/2));r.rotation.x=Math.PI/2-Math.atan2(q[2]-p[2],q[1]-p[1]);r.castShadow=true;scene.add(r);named(r,T(f))}}
- // CD-05 lofts at 7'3": 3" slab with a thin oak edge
- for(const id of ['FU-92']){const f=fuG[id];box(f.x1,f.x2,f.y1,f.y2,7.25,7.5,MAT.white,{tip:T(f)});
-  if(id==='FU-92')box(f.x1,f.x2,f.y2-0.05,f.y2,7.2,7.55,MAT.oak,{tip:T(f)+' · oak edge'});else box(f.x2-0.05,f.x2,f.y1,f.y2,7.2,7.55,MAT.oak,{tip:T(f)+' · oak edge'})}
  // CD-06 arched display niche in GW-07 (inside face x 10.25): shown as a clay-lime recess with a stepped arch, granite base and one shelf, proud of the wall by a hair
  {const f=fuG['FU-94'],xf=10.25,y1=f.y1,y2=f.y2,yc=(y1+y2)/2,R=(y2-y1)/2,z0=3.0,zs=5.0;   // round-top recess: straight to 5', half-round to 6'
   const arch=(r,ext)=>{const sh=new THREE.Shape();sh.moveTo(m(-r),m(-ext));sh.lineTo(m(r),m(-ext));sh.lineTo(m(r),m(zs-z0));sh.absarc(0,m(zs-z0),m(r),0,Math.PI,false);sh.lineTo(m(-r),m(-ext));return sh};
@@ -1612,7 +1656,8 @@ const gtao=new GTAOPass(scene,camera,1,1);gtao.output=GTAOPass.OUTPUT.Default;gt
 const GI={res:[10,11,46],grid:null,ready:false,bake:/[?&]bakegi=1/.test(location.search)};
 function giGrid(){const g=new LightProbeGridWebGL(m(21.8),m(26),m(110),...GI.res);g.position.set(mx(10.5),m(12.2),m(52));g.updateBoundingBox();return g}
 const giDepth=()=>7*(GI.res[2]+2);
-if(!GI.bake)fetch('assets/gi/gi-day.bin?v=__BUILD__').then(r=>r.ok?r.arrayBuffer():null).then(b=>{if(!b)return;const [nx,ny]=GI.res,d=new Uint16Array(b);
+GI.use=/[?&]gi=1/.test(location.search);   // off by default: the owner prefers the earlier daylight look; ?gi=1 shows the baked bounce
+if(!GI.bake&&GI.use)fetch('assets/gi/gi-day.bin?v=__BUILD__').then(r=>r.ok?r.arrayBuffer():null).then(b=>{if(!b)return;const [nx,ny]=GI.res,d=new Uint16Array(b);
   if(d.length!==nx*ny*giDepth()*4){console.warn('gi: size mismatch');return}
   const t=new THREE.Data3DTexture(d,nx,ny,giDepth());t.format=THREE.RGBAFormat;t.type=THREE.HalfFloatType;t.minFilter=t.magFilter=THREE.LinearFilter;t.unpackAlignment=1;t.needsUpdate=true;
   const g=giGrid();g.texture=t;scene.add(g);GI.grid=g;GI.ready=true;applyLight(curLight)}).catch(e=>console.warn('gi',e));
@@ -1693,6 +1738,7 @@ function syncPool(force){const c=camera.position;if(!force&&poolAt&&poolAt.dista
 function applyLight(mode){const day=mode==='day';curLight=mode;
   const gi=day&&!photo&&(GI.ready||GI.bake);if(GI.grid)GI.grid.visible=gi&&GI.ready;   // baked bounce light replaces most of the flat fill light
   sun.visible=day;sun.intensity=day?4.0:0;hemi.intensity=day?(gi?0:0.3):0.03;
+  MAT.ceiling.emissive.set(MAT.ceiling.color);MAT.ceiling.emissiveIntensity=gi?0.16:0;   // the extra bounces a real light ceiling gets, which the probe grid is too coarse to hold
   scene.environment=(photo&&day&&skyTex)?skyTex:roomEnv;scene.environmentIntensity=day?(photo?1.0:gi?0.12:0.55):0.05;   // raster: neutral fill; photo: real sky, walls occlude it
   scene.background=day?(skyTex||new THREE.Color('#cfe3f6')):new THREE.Color('#0b1322');
   coveLights.forEach(l=>{l.visible=!day&&!photo;l.intensity=9});
@@ -1778,7 +1824,7 @@ const nb=document.getElementById('notesBtn');nb.onclick=()=>{const h=panel.class
 
 // ---------------- photo mode: ray tracing with three-gpu-pathtracer (local copy) ----------------
 const photoBtn=document.getElementById('photoBtn');
-function setPhotoMaterials(on){scene.traverse(n=>{if(!n.isMesh)return;if(n.userData.curtain)n.material=on?MAT.sheerPhoto:MAT.sheerRaster;if(glassMeshes.includes(n))n.material=on?MAT.glassPhoto:MAT.glassRaster})}
+function setPhotoMaterials(on){for(const [rf,pm] of mirrors){rf.visible=!on;pm.visible=on}scene.traverse(n=>{if(!n.isMesh)return;if(n.userData.curtain)n.material=on?MAT.sheerPhoto:MAT.sheerRaster;if(glassMeshes.includes(n))n.material=on?MAT.glassPhoto:MAT.glassRaster})}
 let building=false;
 async function rebuildPhoto(){if(!photo||!pt||building)return;building=true;statusEl.textContent='Preparing ray tracer…';
   await new Promise(r=>setTimeout(r,30));   // let the status message paint before the short blocking build
@@ -1805,6 +1851,10 @@ renderer.domElement.addEventListener('pointermove',e=>{if(hoverPending||e.button
   const s=hit.object.userData.tip,i=s.indexOf(' · ');tipEl.innerHTML=i>0?'<b>'+s.slice(0,i)+'</b> · '+s.slice(i+3).replace(/ · /g,'<br>'):s;
   tipEl.style.display='block';tipEl.style.left=Math.min(e.clientX+14,innerWidth-330)+'px';tipEl.style.top=(e.clientY+14)+'px'});
 renderer.domElement.addEventListener('pointerleave',()=>tipEl.style.display='none');
+{let down=null;renderer.domElement.addEventListener('pointerdown',e=>{down=[e.clientX,e.clientY]});   // a click (not a drag) on the W-01 blind tilts its slats
+ renderer.domElement.addEventListener('pointerup',e=>{if(!down||Math.hypot(e.clientX-down[0],e.clientY-down[1])>5)return;const r=renderer.domElement.getBoundingClientRect();
+  mouse.set((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);ray.setFromCamera(mouse,camera);const hit=ray.intersectObjects(tipTargets,false)[0];
+  if(hit&&hit.object.userData.blind){setBlind((blinds.k+1)%3);if(photo&&pt)pt.setScene(scene,camera)}})}
 
 // ---------------- start ----------------
 let frameRatio='fill';   // width:height of the 3D picture; 'fill' uses the whole window
@@ -1973,7 +2023,8 @@ function ldShow(t,p,over){ld.style.display='grid';ld.classList.toggle('over',!!o
 function ldHide(){ld.style.display='none'}
 const tick=()=>new Promise(r=>setTimeout(r,30));
 (async()=>{const t0=performance.now();
-  while(dl.b&&dl.a<dl.b&&performance.now()-t0<25000){ldShow(`Loading textures and models · ${dl.a} of ${dl.b}`,0.1+0.6*dl.a/dl.b);await new Promise(r=>setTimeout(r,120))}
+  // wait only for the surface textures; the car, bikes, plants and appliances drop in as they arrive
+  while(pending>0&&performance.now()-t0<20000){ldShow(`Loading textures · ${dl.a} of ${dl.b}`,0.1+0.6*Math.min(1,dl.a/Math.max(1,dl.b)));await new Promise(r=>setTimeout(r,100))}
   const mode=curLight,vis=l=>{const d=l==='day';sun.visible=d&&!photo;for(const p of poolAll())p.visible=!d&&!photo};
   ldShow('Preparing day lighting…',0.75);await tick();vis('day');try{await renderer.compileAsync(scene,camera)}catch(e){}
   ldShow('Preparing evening lighting…',0.9);await tick();vis('eve');syncPool(true);try{await renderer.compileAsync(scene,camera)}catch(e){}

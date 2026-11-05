@@ -75,5 +75,8 @@ All CC0 (public domain) from Poly Haven, https://polyhaven.com, downloaded as 1k
 | `walk-clips.glb` | Only its Walk, Idle and TPose clips are used, copied onto `man.glb` by `models/person.js` (the legs are placed on the treads by code) | three.js examples, `examples/models/gltf/Soldier.glb` (Mixamo), https://github.com/mrdoob/three.js | Mixamo, as in the three.js repository |
 
 ## Baked daylight bounce (`assets/gi/`)
-`gi-day.bin`: light-probe grid (10 x 11 x 46 probes, whole plot, both floors), half-float RGBA, read by the 3D page in day view. Made by the page itself:
+`gi-day.bin` (not shown by default since 2026-11-05: the owner prefers the earlier brighter daylight; add `?gi=1` to try it; bake again before using, it holds older wall colours): light-probe grid (10 x 11 x 46 probes, whole plot, both floors), half-float RGBA, read by the 3D page in day view. Made by the page itself:
 open `3d/living-room.html?bakegi=1`, run `__bakeGI()` in the console with a small local server on port 8766 that saves the POSTed file into `assets/gi/` (takes about 3 minutes). Bake again after big changes to walls, windows or the roof.
+
+## Download size (2026-11-05)
+All `.glb` files are meshopt-compressed with gltf-transform 4.1 (`weld`, `simplify` for the car 20 %, VFR800 20 %, scooter 30 % of the triangles, then `meshopt`); the 3D pages set the meshopt decoder on every GLTFLoader. `man.glb` textures resized to 512 px, `walk-clips.glb` to 32 px (only its clips are used). Texture JPGs re-saved at quality 82 (normal maps 88). The `?v=` token is a hash of `3d/models` and `3d/assets`, so a plan-only rebuild keeps the browser's copies. Whole page went from about 44 MB to about 12 MB.
