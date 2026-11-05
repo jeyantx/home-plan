@@ -1964,13 +1964,13 @@ function tryMove(step){const len=step.length();if(!len)return;const dir=step.clo
   camera.position.add(step);
   {const py=camera.position.z/F,px=-camera.position.x/F;   // in front of the house the ground slopes: keep the eye 5'3" above the drive or the road
    const s1=st1Z(px,py),h=camera.position.y/F-EYE;
-   if(s1!=null&&Math.abs(s1-h)<2.0){camera.position.y+=(m(s1+EYE)-camera.position.y)*0.5}
+   if(s1!=null&&Math.abs(s1-h)<2.0){camera.position.y+=(m(s1+EYE)-camera.position.y)*0.3}
    else if((py<30.75||(py<(P.porchY||30.75)&&px>3.5&&px<8.25))&&px>-40&&px<60){const g=py<0?RDZ:py>=30.75?PKZ:hFront(px,py),t=m(g+EYE);if(Math.abs(camera.position.y-t)<m(3.0))camera.position.y=t}}}
 // outside stair ST-1 (same numbers as where it is built): the tread height under plan x, y, or null when off it; balcony 2 at the top of ST-1B
 function st1Z(x,y){const AX1=17.125,AX2=20.625,TD=10/12,LY1=16.0,LY2=19.5,BX2=17.125,NA=17,NB=10,Z0=HUZ,R=(FFZ-Z0)/(NA+NB),A0=LY1-(NA-1)*TD,LZ=Z0+NA*R;
-  if(x>=AX1&&x<=AX2&&y>=A0&&y<LY1)return Z0+(Math.floor((y-A0)/TD)+1)*R;
+  if(x>=AX1&&x<=AX2&&y>=A0-TD&&y<LY1)return Math.max(Z0,Math.min(LZ,Z0+((y-A0)/TD+1.5)*R));   // smooth ramp along the nosings, not a jump per tread
   if(x>=AX1-0.03&&x<=AX2&&y>=LY1&&y<=LY2)return LZ;
-  if(y>=LY1&&y<=LY2&&x<BX2&&x>=BX2-NB*TD){const j=Math.floor((BX2-x)/TD);return j<NB-1?LZ+(j+1)*R:FFZ}
+  if(y>=LY1&&y<=LY2&&x<BX2&&x>=BX2-NB*TD){return Math.min(FFZ,LZ+((BX2-x)/TD+0.5)*R)}
   if(x>=2.125&&x<9.7&&y>=15.5&&y<=20.2)return FFZ;   // balcony 2
   return null}
 // on ST-2 the eye follows the treads: find the tread under you (the stair turns 540°, so pick the turn nearest your height) and ease the eye to 5'3" above it
@@ -1981,7 +1981,8 @@ function stairEye(){const px=-camera.position.x/F,py=camera.position.z/F,dx=px-S
   const rel=(((Math.atan2(dy,dx)*180/Math.PI-SPW.A0)%360)+360)%360,base=Math.floor(rel/SPW.A)+1,per=360/SPW.A;
   let best=null;for(let i=base-per;i<=SPW.N+per;i+=per){const d=Math.abs(i*SPW.R-h);if(i>=1&&i<=SPW.N&&(best==null||d<Math.abs(best*SPW.R-h)))best=i}
   if(best==null||Math.abs(best*SPW.R-h)>SPW.R*2.5)return;   // only from the tread next to the one you are on: no jumping a whole turn
-  const t=m(best*SPW.R+EYE);camera.position.y+=(t-camera.position.y)*0.5}
+  const fr=(rel%SPW.A)/SPW.A,hc=Math.max(0,Math.min(FFZ,(best-1+fr+0.5)*SPW.R)),t=m(hc+EYE);   // smooth ramp through the tread, not a jump per tread
+ camera.position.y+=(t-camera.position.y)*0.3}
 function moveVertical(dz){const y=camera.position.y;   // stay within the floor you are on: ground floor, first floor, or free above the house
   const [lo,hi]=y<=m(CEIL+0.5)?[0.4,m(CEIL)-0.15]:y<=m(FFZ+CEIL)?[m(FFZ)+0.4,m(FFZ+CEIL)-0.15]:[0.4,m(200)];
   camera.position.y=Math.max(lo,Math.min(hi,y+dz))}
