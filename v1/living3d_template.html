@@ -1090,7 +1090,7 @@ X_(()=>{CURFL='F';ZOFF=FFZ;
  {const plant=createBambooPlant(THREE,{seed:7,height:1.3});plant.position.set(mx(10.85),m(FFZ),m(84.1));scene.add(plant);plant.traverse(o=>{if(o.isMesh){o.userData.keepUV=true;named(o,'Bamboo plant in a black pot')}})}
 }
 // TOILET 3 (F-07), 6'4½" x 6'4½", on the terrace corner: greige tiles to 7', WC FU-41 and basin FU-42 on the south wall, shower FU-43 in the north-east with rose and geyser FU-60 on the east wall, door D-09 in FW-01 (west) from the landing
-{const X1=3.125,X2=9.5,Y1=73.5,Y2=79.875,c=0.04,e=0.012,TZ=7.0,tw='Wall tile · greige matte porcelain, 2\' x 1\', to 7\'',f2=id=>fuG2[id],dr=P.openings.find(o=>o.id==='D-09');
+{const X1=2.125,X2=9.5,Y1=73.5,Y2=79.875,c=0.04,e=0.012,TZ=7.0,tw='Wall tile · greige matte porcelain, 2\' x 1\', to 7\'',f2=id=>fuG2[id],dr=P.openings.find(o=>o.id==='D-09');
  tile(X1,X2,Y1,Y1+c,0,TZ,MAT.tWall,tw);tile(X1,X2,Y2-c,Y2,0,TZ,MAT.tWall,tw);tile(X1,X1+c,Y1+c+e,Y2-c-e,0,TZ,MAT.tWall,tw);
  tile(X2-c,X2,Y1+c+e,dr.a,0,TZ,MAT.tWall,tw);tile(X2-c,X2,dr.b,Y2-c-e,0,TZ,MAT.tWall,tw);
  // WC FU-41 on the south wall, facing north: tiled cistern ledge, wall-hung bowl
@@ -1119,7 +1119,7 @@ X_(()=>{CURFL='F';ZOFF=FFZ;
 }
 ZOFF=0;CURFL='G';});
 // roof slab of the ground floor (also the terrace floor) and its edge fascia
-const slabParts=[[1.75,9.625,15.5,19.75],[1.75,21,19.75,67.125],[6.0,21,67.125,73.75],[6.0,9.5,73.75,73.875],[2.75,9.5,73.875,80.25],[1.75,6.0,67.125,73.125],[2.75,6.0,73.125,73.875],[9.5,21,95.125,98.125]];   // full slab, also over the bore court and under the bedroom 3 projection past GW-08
+const slabParts=[[1.75,9.625,15.5,19.75],[1.75,21,19.75,67.125],[6.0,21,67.125,73.75],[6.0,9.5,73.75,73.875],[1.75,9.5,73.875,80.25],[1.75,6.0,67.125,73.125],[1.75,6.0,73.125,73.875],[9.5,21,95.125,98.125]];   // full slab, also over the bore court and under the bedroom 3 projection past GW-08
 function holeSlab(x1,x2,y1,y2,z1,z2,h,mat,tip){   // thick slab with a round hole (extruded upward from z1)
   const sh=new THREE.Shape([[x1,y1],[x2,y1],[x2,y2],[x1,y2]].map(p=>new THREE.Vector2(mx(p[0]),-m(p[1]))));
   const q=new THREE.Path();q.absarc(mx(h.x),-m(h.y),m(h.r),0,Math.PI*2,false);sh.holes.push(q);
@@ -1128,7 +1128,7 @@ function holeSlab(x1,x2,y1,y2,z1,z2,h,mat,tip){   // thick slab with a round hol
 X_(()=>{for(const [a,b,c,d] of slabParts) box(a,b,c,d,SLB,FFZ-0.05,MAT.white,{tip:'RCC roof slab and beams, ground floor (terrace floor above)'});
  holeSlab(9.5,21,73.75,95.125,SLB,FFZ-0.05,WELL,MAT.white,'RCC slab over the stair hall and bedroom 2 · 6\' round hole for ST-2, edge beams round it');
  const fz1=SLB-0.012,fz2=FFZ,ft='Slab edge fascia';
- for(const [a,b,c,d] of [[2.75,9.625,15.5-0.03,15.5-0.012],[9.625,21,19.75-0.03,19.75-0.012],[2.75,9.5,80.25+0.012,80.25+0.03],[9.5,21,98.125+0.012,98.125+0.03]]) box(a,b,c,d,fz1,fz2,MAT.extTrim,{tip:ft});
+ for(const [a,b,c,d] of [[2.75,9.625,15.5-0.03,15.5-0.012],[9.625,21,19.75-0.03,19.75-0.012],[1.75,9.5,80.25+0.012,80.25+0.03],[9.5,21,98.125+0.012,98.125+0.03]]) box(a,b,c,d,fz1,fz2,MAT.extTrim,{tip:ft});
  for(const [a,b,c,d] of [[2.75-0.03,2.75-0.012,15.5,80.25],[9.625+0.012,9.625+0.03,15.5,19.75],[21+0.012,21+0.03,19.75,98.125],[9.5-0.03,9.5-0.012,80.25,98.125]]) box(a,b,c,d,fz1,fz2,MAT.extTrim,{tip:ft});
  // parapets PW-01..05, 3' high, 4½", with a coping; vertical louvers on the balcony front PW-01
  for(const w of P.walls.F.filter(w=>w.kind==='para')){box(w.x1,w.x2,w.y1,w.y2,FFZ-0.05,FFZ+w.h,MAT.ext,{tip:`${w.id} · ${w.desc} · 3' parapet`});
@@ -1136,7 +1136,7 @@ X_(()=>{for(const [a,b,c,d] of slabParts) box(a,b,c,d,SLB,FFZ-0.05,MAT.white,{ti
  for(let x=2.95;x<9.55;x+=0.33) box(x,x+0.12,15.5-0.15,15.5-0.035,FFZ-0.4,FFZ+3.0,MAT.extWood,{tip:'Balcony front louvers, wood-look aluminium'});
  // roof of the first floor (bedroom 3 block), low parapet, overhead tank FU-71 on a stand, cat ladder FU-72
  let RZ,RT;tagAs(ROOF_F,()=>{
- RZ=FFZ+SLB;RT=RZ+1.0;box(9.5,21,73.125,95.125,RZ,RT,MAT.white,{tip:'RCC roof slab, first floor'});box(2.75,9.5,73.125,80.25,RZ,RZ+0.5,MAT.white,{tip:'RCC roof slab over toilet 3'});
+ RZ=FFZ+SLB;RT=RZ+1.0;box(9.5,21,73.125,95.125,RZ,RT,MAT.white,{tip:'RCC roof slab, first floor'});box(1.75,9.5,73.125,80.25,RZ,RZ+0.5,MAT.white,{tip:'RCC roof slab over toilet 3'});
  for(const [a,b,c,d] of [[9.5,21,73.125,73.5],[9.5,21,94.75,95.125],[9.5,9.875,73.5,94.75],[20.625,21,73.5,94.75]]){box(a,b,c,d,RT,RT+1.5,MAT.extUp,{tip:'Roof parapet, 1\'6"'});box(a-0.04,b+0.04,c-0.04,d+0.04,RT+1.5,RT+1.62,MAT.extTrim,{tip:'Roof parapet coping'})}
  slab([[9.875,73.5],[20.625,73.5],[20.625,94.75],[9.875,94.75]],MAT.terrTile,RT+0.005,'Roof of bedroom 3 · pressed clay tiles');
  const tk=fuG2['FU-71'],tx=(tk.x1+tk.x2)/2,ty=(tk.y1+tk.y2)/2;box(tk.x1+0.2,tk.x2-0.2,tk.y1+0.2,tk.y2-0.2,RT,RT+1.0,MAT.white,{tip:'RCC tank stand, 1\''});

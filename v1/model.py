@@ -42,9 +42,9 @@ WALLS = {
   ('FW-03', 20.25,21.0, 73.125,95.125, 'outer', 10.0, 'West wall, on the boundary'),
   ('FW-04', 9.5,21.0, 94.375,95.125, 'outer', 10.0, 'Back wall of bedroom 3, right over GW-08'),
   ('FW-05', 10.25,20.25, 79.875,80.25, 'part', 10.0, 'Landing | bedroom 3'),
-  ('FW-07', 2.75,9.5, 79.875,80.25, 'outer', 10.0, 'South wall of toilet 3 (where the parapet PW-05 was)'),
-  ('FW-08', 2.75,3.125, 73.125,79.875, 'outer', 10.0, 'East wall of toilet 3, on the line of PW-02'),
-  ('FW-09', 2.75,9.5, 73.125,73.5, 'outer', 10.0, 'North wall of toilet 3, facing the open terrace'),
+  ('FW-07', 1.75,9.5, 79.875,80.25, 'outer', 10.0, 'South wall of toilet 3 (where the parapet PW-05 was)'),
+  ('FW-08', 1.75,2.125, 73.125,79.875, 'outer', 10.0, 'East wall of toilet 3, on the line of PW-02 (the slab cantilevers 1\' over the side garden, as under the terrace)'),
+  ('FW-09', 1.75,9.5, 73.125,73.5, 'outer', 10.0, 'North wall of toilet 3, facing the open terrace'),
   ('PW-01', 2.75,9.625, 15.5,15.875, 'para', 3, 'Front parapet of balcony 2'),
   ('PW-02', 1.75,2.125, 15.5,73.125, 'para', 3, 'East parapet of balcony and terrace, up to toilet 3; the slab cantilevers 1\' east past GW-01 over the side passage, so a future hall here gets 1\' more width with no new pillar'),
   ('PW-03', 9.625,21.0, 19.75,20.125, 'para', 3, 'Front parapet of terrace, behind staircase 1 (now from the top of ST-1B)'),
@@ -81,7 +81,7 @@ ROOMS = {
   ('F-02','Open terrace',[(2.125,20.125),(20.625,20.125),(20.625,73.125),(2.125,73.125)],'terr'),
   ('F-04','Stair landing',R(10.25,20.25,73.875,79.875),'in'),
   ('F-05','Bedroom 3',R(10.25,20.25,80.25,94.375),'bed'),
-  ('F-07','Toilet 3',R(3.125,9.5,73.5,79.875),'wet'),
+  ('F-07','Toilet 3',R(2.125,9.5,73.5,79.875),'wet'),
   ('F-08','Balcony 3',R(9.5,21.0,95.125,98.125),'terr'),
  ]}
 
@@ -129,7 +129,7 @@ RAMP=dict(y_hump=1.0,y_crest=3.25,y_top=10.75,ease=1.5,drain=(2.5,3.25))   # gat
 SIDE_PLATFORM=dict(well=(12.75,4.75,2.25),x1=13.5,x2=17.125,steps=(2.667,3.5,4.333),xe=12.5,y_end=10.75)
 BRANCH_NOTES='''<section class="ask"><h2>Areas for the engineer (built-up and parking cover)</h2>
 <ol>
-<li><b>Built-up area: 1,379 sq ft</b> (outside faces of the walls): ground floor rooms with the foyer 967, porch 56, bore court (roofed) 21; first floor bedroom 3, landing and wardrobe area 253, toilet 3 48 (on the terrace corner), balcony 3 34. The open terrace is not counted (it is the ground floor's roof).</li>
+<li><b>Built-up area: 1,386 sq ft</b> (outside faces of the walls): ground floor rooms with the foyer 967, porch 56, bore court (roofed) 21; first floor bedroom 3, landing and wardrobe area 253, toilet 3 55 (on the terrace corner), balcony 3 34. The open terrace is not counted (it is the ground floor's roof).</li>
 <li><b>Car parking cover: 229 sq ft</b>: the parking under the roof slab in front of the house and the porch, including the part under balcony 2 (counted here, not again as built-up).</li>
 </ol></section>
 <section class="ask"><h2>Garden plan (branch garden-v1, for review)</h2>
@@ -387,13 +387,13 @@ FURNITURE = [
  ('FU-95','G','Window seat with storage (CD-07)',10.25,18.75,92.625,94.375,'seat',None,'Bedroom 2, under the picture window W-08: brick seat 1\'6" high x 1\'9" deep, black granite top, three storage bays with shutters below; 2\'7" clear to the bed foot'),
  ('FU-96','G','Shower niche (CD-08)',18.0,19.5,30.5,30.85,'niche',None,'Toilet 1 shower, in GW-04: 1\'6" wide x 1\'2" high x 4" deep, 3\'6" up, tiled, sloped granite base'),
  ('FU-97','G','Shower niche (CD-08)',6.75,7.1,67.6,69.1,'niche',None,'Toilet 2 shower, in GW-18: 1\'6" wide x 1\'2" high x 4" deep, 3\'6" up, tiled, sloped granite base (replaces the bath rack FU-70)'),
- ('FU-98','F','Shower niche (CD-08)',3.125,3.475,74.0,75.5,'niche',None,'Toilet 3 shower, in FW-08 below the geyser: 1\'6" wide x 1\'2" high x 4" deep, 3\'6" up, tiled, sloped granite base'),
+ ('FU-98','F','Shower niche (CD-08)',2.125,2.475,74.0,75.5,'niche',None,'Toilet 3 shower, in FW-08 below the geyser: 1\'6" wide x 1\'2" high x 4" deep, 3\'6" up, tiled, sloped granite base'),
  ('FU-99','G','Linear shower drain (CD-09)',17.5,20.0,32.45,32.6,'drain',None,'Toilet 1: steel channel 2\'6" long at the edge of the shower; whole floor level with the bedroom (no step at D-03), sloped 1 in 50 to it'),
  ('FU-99.2','G','Linear shower drain (CD-09)',7.25,9.75,69.45,69.6,'drain',None,'Toilet 2: steel channel 2\'6" long at the edge of the shower; no step at D-04, floor sloped 1 in 50'),
- ('FU-99.3','F','Linear shower drain (CD-09)',3.3,5.8,76.0,76.15,'drain',None,'Toilet 3: steel channel 2\'6" long under the curtain line; no step at D-09, floor sloped 1 in 50'),
+ ('FU-99.3','F','Linear shower drain (CD-09)',2.3,4.8,76.0,76.15,'drain',None,'Toilet 3: steel channel 2\'6" long under the curtain line; no step at D-09, floor sloped 1 in 50'),
  ('FU-100','G','Grab rail (CD-10)',18.0,19.5,34.85,35.0,'rail',None,'Toilet 1, on GW-11 beside the WC, 1\'6" steel rail at 2\'9"; wall behind kept solid brick'),
  ('FU-100.2','G','Grab rail (CD-10)',7.0,8.5,72.975,73.125,'rail',None,'Toilet 2, on GW-06 beside the Indian WC, 1\'6" steel rail at 2\'3" to help standing up; wall kept solid'),
- ('FU-100.3','F','Grab rail (CD-10)',3.125,3.275,76.9,78.4,'rail',None,'Toilet 3, on FW-08 beside the WC, 1\'6" steel rail at 2\'9"; wall kept solid'),
+ ('FU-100.3','F','Grab rail (CD-10)',2.125,2.275,76.9,78.4,'rail',None,'Toilet 3, on FW-08 beside the WC, 1\'6" steel rail at 2\'9"; wall kept solid'),
  ('FU-02','G','Console with mirror',8.0,8.875,43.5,46.25,'cab',None,'Foyer, keys and mirror'),
  ('FU-03.1','G','3-seat sofa',3.5,6.0,49.5,55.75,'sofa','x1','Living, 6\'3" x 2\'6", back to GW-01 under the windows, moved toward GW-13'),
  ('FU-03.2','G','2-seat sofa',6.0,10.25,55.75,58.25,'sofa','y2','Living, 4\'3" x 2\'6", back against GW-13 (below the folding glass sill); starts where FU-03.1 ends so every seat is free'),
@@ -439,12 +439,12 @@ FURNITURE = [
  ('FU-38','F','Side table',18.75,20.25,90.5,92.0,'cab',None,'Bedroom 3'),
  ('FU-39','F','Sliding wardrobe with loft',14.5,20.25,80.25,82.1667,'ward',None,'Bedroom 3, 5\'9" x 1\'11" (AU-16), on FW-05 (where toilet 3 was)'),
  ('FU-40','F','Study desk',14.5,18.5,92.875,94.375,'desk',None,'Bedroom 3, on FW-04 under the back window W-11, chair in front; the east side by W-10 is left clear as the way to the balcony door'),
- ('FU-41','F','Western WC',3.458,5.708,78.25,79.875,'wc','y2','Toilet 3, in the south-east corner, cistern on FW-07, faces north; 2\' clear in front'),
+ ('FU-41','F','Western WC',2.458,4.708,78.25,79.875,'wc','y2','Toilet 3, in the south-east corner, cistern on FW-07, faces north; 2\' clear in front'),
  ('FU-42','F','Wash basin, wall-hung',7.4,8.9,78.5,79.875,'basin',None,'Toilet 3, on FW-07 near the door; mirror above'),
- ('FU-43','F','Shower area',3.125,6.0,73.5,76.25,'shower',None,'Toilet 3, 2\'10" x 2\'9" in the north-east corner; floor trap in the middle'),
- ('FU-60','F','Geyser',3.125,3.575,74.0,75.4,'geyser',None,'Toilet 3, on FW-08 above the shower, bottom at about 6\'3"'),
- ('FU-61','F','Shower curtain rod',3.125,6.0,76.15,76.25,'curtain',None,'Toilet 3, keeps the WC side dry'),
- ('FU-62','F','Exhaust fan',3.125,3.6,76.75,77.75,'fan',None,'Toilet 3, on the outside wall FW-08, high up, blowing out over the side garden'),
+ ('FU-43','F','Shower area',2.125,6,73.5,76.25,'shower',None,'Toilet 3, 3\'10" x 2\'9" in the north-east corner; floor trap in the middle'),
+ ('FU-60','F','Geyser',2.125,2.575,74.0,75.4,'geyser',None,'Toilet 3, on FW-08 above the shower, bottom at about 6\'3"'),
+ ('FU-61','F','Shower curtain rod',2.125,6,76.15,76.25,'curtain',None,'Toilet 3, keeps the WC side dry'),
+ ('FU-62','F','Exhaust fan',2.125,2.6,76.75,77.75,'fan',None,'Toilet 3, on the outside wall FW-08, high up, blowing out over the side garden'),
  ('FU-71','F','Overhead water tank, 2000 L',15.2,20.2,89.2,94.2,'over',None,'On the bedroom 3 roof (above F-05), 5\' across x 5\' high on a 1\' RCC stand near FW-03; highest point for good pressure, clear of the future hall'),
  ('FU-72','F','Cat ladder to the bedroom 3 roof',18.0,19.5,72.6,73.125,'over',None,'MS ladder on the terrace face of FW-02, for reaching the water tank'),
  ('FU-44','G','AC indoor unit',9.25,9.92,37.25,40.25,'acin',None,'Bedroom 1, on GW-03 above window W-02, about 7\'6" high'),
