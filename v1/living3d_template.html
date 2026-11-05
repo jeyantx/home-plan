@@ -1442,6 +1442,34 @@ if(P.backwall){const bw=P.backwall,[a,b]=bw.pts,t=bw.t,old=std({color:'#cdc4b3',
    for(let k=0;k<4;k++){const y=g.y1+0.4+k*(g.y2-g.y1-0.8)/3;box(g.x1+0.04,g.x1+0.07,y-0.012,y+0.012,zs,GRD+g.h,wire,{cast:false,tip:T(g,'steel trellis wire')})}
    for(const z of [GRD+2.5,GRD+4.0,GRD+5.5])box(g.x1+0.04,g.x1+0.07,g.y1+0.4,g.y2-0.4,z-0.012,z+0.012,wire,{cast:false,tip:T(g,'steel trellis wire')});
    const c=tn('mullai',5,g.x1+0.42,(g.y1+g.y2)/2,zs,t);if(c)c.scale.set(0.28,1,1)}
+  // parking garden PG-1..PG-4
+  else if(g.kind==='treebed'){const r=rng(71),blades=[],peb=[],tw=fuG['FU-76'],tcy=(tw.y1+tw.y2)/2-0.5,zg=RDZ+0.04;   // trunk sits 6" north of the well centre
+   for(let i=0;i<150;i++){const a=r()*Math.PI*2,rr=0.75+r()*(g.r-0.375-0.45-0.75),cx=g.x+Math.cos(a)*rr,cy=g.y+Math.sin(a)*rr;if(Math.hypot(cx-g.x,cy-tcy)<0.75)continue;
+     for(let k=0;k<14;k++){const b=r()*Math.PI*2,L=0.45+r()*0.4,lean=0.25+r()*0.5,w=0.018;const gg=new THREE.PlaneGeometry(m(w),m(L));gg.translate(0,m(L/2),0);gg.rotateX(lean*Math.sin(b));gg.rotateZ(lean*Math.cos(b));gg.rotateY(b);gg.translate(mx(cx),m(zg),m(cy));blades.push(gg)}}
+   const gm=new THREE.Mesh(mergeGeometries(blades),std({color:'#3f6a2e',roughness:0.8,side:THREE.DoubleSide}));gm.castShadow=true;gm.receiveShadow=true;scene.add(gm);named(gm,T(g,'mondo grass tufts'));gm.userData.keepUV=true;
+   const pg=new THREE.SphereGeometry(m(1),8,6);for(let i=0;i<260;i++){const a=r()*Math.PI*2,rr=g.r-0.375-0.42+r()*0.4,sz=0.07+r()*0.07,q=pg.clone();q.scale(m(sz),m(sz*0.5),m(sz*(0.7+r()*0.5)));q.rotateY(r()*3);q.translate(mx(g.x+Math.cos(a)*rr),m(zg+sz*0.2),m(g.y+Math.sin(a)*rr));peb.push(q)}
+   const pm=new THREE.Mesh(mergeGeometries(peb),std({color:'#cfc6b6',roughness:0.55}));pm.receiveShadow=true;pm.castShadow=true;scene.add(pm);named(pm,T(g,'round river pebbles'))}
+  else if(g.kind==='arch'){const tb=T(g),ps=[g.x1+0.09,g.x2-0.09],z0=zF(g.y),top=HUZ+g.h,rise=1.0;
+   for(const x of ps)box(x-0.085,x+0.085,g.y-0.085,g.y+0.085,z0,top,MAT.blackMetal,{tip:tb+' · 2" black MS post'});
+   const pts=[];for(let i=0;i<=24;i++){const u=i/24,x=ps[0]+(ps[1]-ps[0])*u;pts.push(new THREE.Vector3(mx(x),m(top+rise*Math.sin(Math.PI*u)),m(g.y)))}
+   for(const dy of [-0.08,0.08]){const c=new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts.map(p=>p.clone().setZ(m(g.y+dy)))),48,m(0.06),8,false),MAT.blackMetal);c.castShadow=true;scene.add(c);named(c,tb+' · curved top')}
+   // bougainvillea: up from the planter pillar BW-05, up the east post and half over the top; leaves and magenta bracts in clusters
+   const r=rng(88),leaves=[],bracts=[],lg=new THREE.PlaneGeometry(m(0.13),m(0.08)),bg=new THREE.PlaneGeometry(m(0.12),m(0.11));
+   const path=[];const pz=HUZ+4.1;for(let z=pz;z<top;z+=0.25)path.push([ps[0],g.y,z]);for(let i=0;i<=24;i++){const u=i/24;if(u>0.75&&i%2)continue;path.push([ps[0]+(ps[1]-ps[0])*u,g.y,top+rise*Math.sin(Math.PI*u)])}
+   for(const [px,py,pz2] of path){const n=pz2>top-0.5?60:30;for(let k=0;k<n;k++){const fl=r()<0.5&&pz2>pz+0.8,q=(fl?bg:lg).clone(),sp=pz2>top-0.5?0.55:0.4;
+     q.rotateX(r()*6);q.rotateY(r()*6);q.translate(mx(px+(r()-0.5)*sp),m(pz2+(r()-0.5)*sp),m(py+(r()-0.5)*sp));(fl?bracts:leaves).push(q)}}
+   const lm=new THREE.Mesh(mergeGeometries(leaves),std({color:'#3e6b2c',roughness:0.6,side:THREE.DoubleSide}));lm.castShadow=true;scene.add(lm);named(lm,T(g,'bougainvillea leaves'));lm.userData.keepUV=true;
+   if(bracts.length){const bm=new THREE.Mesh(mergeGeometries(bracts),std({color:'#d6338a',roughness:0.6,side:THREE.DoubleSide}));bm.castShadow=true;scene.add(bm);named(bm,T(g,'bougainvillea flowers, pink'));bm.userData.keepUV=true}}
+  else if(g.kind==='wallcreeper'){const tb=T(g),r=rng(41),leaves=[],lg=new THREE.CircleGeometry(m(0.085),7);
+   for(let y=g.y1;y<g.y2-0.01;y+=1.5){const y2=Math.min(g.y2,y+1.5),z1=zF(y)-0.05,z2=Math.max(zF(y),zF(y2))+0.33;
+     box(g.x2-0.08,g.x2,y,y2,z1,z2,brick,{tip:tb+' · brick edge, 4" high'});box(g.x1,g.x2-0.08,y,y2,z1,z2-0.05,soilG,{tip:tb+' · soil bed',cast:false})}
+   const N=Math.round((g.y2-g.y1)*650);for(let i=0;i<N;i++){const y=g.y1+r()*(g.y2-g.y1),zb=zF(y)+0.3,hTop=g.h*(0.75+0.25*Math.sin(y*1.3)+0.1*r()),z=zb+Math.pow(r(),0.6)*hTop;
+     const q=lg.clone();q.scale(1,0.8+r()*0.4,1);q.rotateZ(r()*6);q.rotateY(Math.PI/2+(r()-0.5)*0.6);q.translate(mx(g.x1+0.03+r()*0.06),m(z),m(y));leaves.push(q)}
+   const lm=new THREE.Mesh(mergeGeometries(leaves),std({color:'#3d6e2f',roughness:0.55,side:THREE.DoubleSide}));lm.castShadow=true;lm.receiveShadow=true;scene.add(lm);named(lm,tb);lm.userData.keepUV=true}
+  else if(g.kind==='winbox'){const tb=T(g),z1=PKZ+g.zb,z2=z1+g.bh;
+   box(g.x1,g.x2,g.y1,g.y2,z1,z2,blackPot,{tip:tb+' · black steel box'});box(g.x1+0.05,g.x2-0.05,g.y1+0.05,g.y2-0.02,z2-0.1,z2-0.06,soilG,{tip:tb,cast:false});
+   for(const x of [g.x1+0.4,g.x2-0.45])box(x,x+0.05,g.y1+0.1,g.y2,z1-0.5,z1,bracket,{tip:tb+' · bracket'});
+   [['nithyakalyani',g.x1+0.5],['rose',g.x1+1.25],['nithyakalyani',g.x1+2.0],['nithyakalyani',g.x2-0.5]].forEach(([tp,x],i)=>{const o=tn(tp,20+i,x,(g.y1+g.y2)/2,z2-0.1,`${tb} · ${TN_PLANTS[tp].name}`);if(o)o.scale.setScalar(0.6)})}
   else if(g.kind==='tree'){basin(g.x,g.y,g.r,T(g,'soil basin for watering'));
    if(g.model==='banana')add(createBanana(THREE,mergeGeometries,{seed:6,height:m(g.h/0.87),avoid:[[1,0],[-1,0]],avoidCos:0.6}),g.x,g.y,GRD,t,0);
    else if(g.model==='moringa')add(createMoringa(THREE,mergeGeometries,{seed:8,height:m(g.h),crown:m(g.cr),avoid:[1,0]}),g.x,g.y,GRD,t,0)}

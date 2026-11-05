@@ -232,6 +232,23 @@ def garden():
             for i in range(5):
                 y=g['y1']+0.4+i*(g['y2']-g['y1']-0.8)/4; circ((g['x1']+g['x2'])/2,y,0.3,'#4f7d3a','#2c4a20',0.03); circ((g['x1']+g['x2'])/2,y,0.09,'#ffffff','none',0)
             label(g['x2']+0.55,(g['y1']+g['y2'])/2,g['id'],0.24)
+        elif k=='treebed':
+            for i in range(14):
+                import math as _mt; a=i*2*_mt.pi/14; circ(g['x']+_mt.cos(a)*(g['r']-0.55),g['y']+_mt.sin(a)*(g['r']-0.55),0.18,'#5f8f45','#2c4a20',0.02)
+            label(g['x']-g['r']-0.5,g['y'],g['id'])
+        elif k=='arch':
+            for x in (g['x1']+0.08,g['x2']-0.08): rect(x-0.08,x+0.08,g['y']-0.08,g['y']+0.08,'#1d1e21','#1d1e21',0.02)
+            line(g['x1']+0.08,g['y'],g['x2']-0.08,g['y'],'#d6336c',0.08)
+            label((g['x1']+g['x2'])/2,g['y']+0.45,g['id'])
+        elif k=='wallcreeper':
+            rect(g['x1'],g['x2'],g['y1'],g['y2'],'#8a5a3a','#a8553a',0.03)
+            y=g['y1']+0.3
+            while y<g['y2']: circ((g['x1']+g['x2'])/2,y,0.2,'#4f7d3a','#2c4a20',0.02); y+=0.7
+            label(g['x2']+0.5,(g['y1']+g['y2'])/2,g['id'],0.24)
+        elif k=='winbox':
+            rect(g['x1'],g['x2'],g['y1'],g['y2'],'#2b2d30','#111',0.03)
+            for i in range(5): circ(g['x1']+0.35+i*(g['x2']-g['x1']-0.7)/4,(g['y1']+g['y2'])/2,0.2,'#e2558c','#2c4a20',0.02)
+            label((g['x1']+g['x2'])/2,g['y1']-0.3,g['id'],0.24)
         elif k=='tree':
             circ(g['x'],g['y'],g['cr'],'#4f7d3a','#2c4a20',0.04,'fill-opacity="0.28" stroke-dasharray="0.25 0.15"')
             circ(g['x'],g['y'],g['r'],'#8a5a3a','#777',0.08); circ(g['x'],g['y'],0.28,'#3f6a32','#2c4a20',0.03)
