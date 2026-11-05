@@ -28,6 +28,9 @@ export const TN_PLANTS = {
   vallarai:       { name: 'Vallarai (Gotu kola)', note: 'in the herb bed GD-09, low and spreading', h: 0.15, w: 0.45, leaf: [0.03, 0.03], leafC: '#4c8a36', nLeaf: 120, fl: null },
   mullai:         { name: 'Mullai (Climbing jasmine)', note: 'on the wire trellis GD-05', h: 1.6, w: 1.2, leaf: [0.07, 0.035], leafC: '#2f5e2a', nLeaf: 480, fl: 'star', flC: '#fbfaf3', flR: 0.02, nFl: 90, cenC: '#f1ecc8', base: 0.05 },
   elumichai:      { name: 'Elumichai (Lemon)', note: 'in a big pot GD-11', h: 1.15, w: 0.75, leaf: [0.07, 0.035], leafC: '#2f6b2a', nLeaf: 330, fl: 'ball', flC: '#e3cf2a', flR: 0.03, nFl: 14, base: 0.3, trunk: true },
+  croton:         { name: 'Croton (red and yellow leaves)', note: 'bright leaves all year, takes full sun', h: 1.1, w: 0.7, leaf: [0.11, 0.045], leafC: '#9a4a22', nLeaf: 170, fl: 'ball', flC: '#d9a62a', flR: 0.05, nFl: 26 },
+  bougainvillea:  { name: 'Bougainvillea (pink)', note: 'low water, pink bracts most of the year', h: 1.6, w: 1.0, leaf: [0.06, 0.04], leafC: '#3e6b2c', nLeaf: 260, fl: 'ball', flC: '#d6338a', flR: 0.05, nFl: 40, base: 0.25, trunk: true },
+  portulaca:      { name: 'Portulaca (moss rose)', note: 'low, takes full sun, almost no water', h: 0.25, w: 0.4, leaf: [0.025, 0.008], leafC: '#5a8a34', nLeaf: 160, fl: 'star', flC: '#e8456e', flR: 0.025, nFl: 22, cenC: '#f5d142' },
 };
 
 export function createTNPlant(THREE, mergeGeometries, opts = {}) {
