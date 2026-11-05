@@ -136,12 +136,12 @@ BRANCH_NOTES='''<section class="ask"><h2>Areas for the engineer (built-up and pa
 <ol>
 <li><b>Idea:</b> low-care plants that Tamil Nadu homes use every day (pooja flowers, kitchen greens, herbs), in beds and pots, with the walks, the car route, the bores and the utility kept clear. The existing back bed FU-73 (PL-01 to PL-12) and the neem tree stay as they are.</li>
 <li><b>Porch (shade):</b> areca palm GD-01 in a big pot beside the main door, anthurium GD-02 and syngonium GD-03 in pots on the sides, clear of the walk from the steps to the door.</li>
-<li><b>Side passage:</b> six slim wall pots GD-04 (ferns, or money plant) on BW-01, opposite the living-room windows: a green view from the sofa. They stick out only 7" at 4'9" up, so the 2'4" passage stays clear.</li>
+<li><b>Side passage:</b> kept clear for walking (no wall pots); the pillars C-03 to C-11 stick 7½" into it, leaving 1'9"</li>
 <li><b>Side garden (about 5 hours of midday sun):</b> on the east wall: climbing jasmine (mullai) GD-05 opposite the garden door, dwarf banana GD-06 (fed with rinse water from the utility basin), a raised vegetable bed GD-07 (tomato, brinjal, chilli, keerai) and a drumstick tree GD-08 in the south-east corner. A small herb bed GD-09 (mint, ajwain leaf, coriander, vallarai) and two aloe pots GD-10 south of the house corner.</li>
 <li><b>Back garden:</b> kept open round the wash platform; only a lemon tree in a big pot GD-11 in the open south-west corner, by the wash platform and its tap.</li>
 <li><b>Kept clear:</b> nothing over the septic tank, soak pit or sump (all at the front, under the paving); 3' or more round the bore chambers BR-01 and BR-02 for the rig; the D-05 step, the utility platform, the AC unit FU-47 and the recharge pit UG-04 stay open. No coconut, mango or other big tree: no spot is 10' from the house and the walls, and coconuts falling on the path are dangerous. The drumstick is the only tree; cut it back to about 8' after each crop.</li>
 <li><b>Watering:</b> a hose from the low tap of the utility basin FU-30 and the back tap FU-55; a simple drip line with a timer for the vegetable and herb beds; mulch (dry leaves) on all beds to keep the soil cool in summer. Beds are raised 1' so monsoon rain drains away.</li>
-<li><b>Plant list:</b> GD-01 Areca palm · GD-02 Anthurium · GD-03 Syngonium · GD-04 Ferns (wall pots) · GD-05 Mullai (climbing jasmine) · GD-06 Banana (dwarf) · GD-07 Vegetables: tomato, brinjal, chilli, keerai · GD-08 Drumstick (PKM-1) · GD-09 Herbs: mint, ajwain leaf, coriander, vallarai · GD-10 Aloe vera · GD-11 Lemon.</li>
+<li><b>Plant list:</b> GD-01 Areca palm · GD-02 Anthurium · GD-03 Syngonium · GD-05 Mullai (climbing jasmine) · GD-06 Banana (dwarf) · GD-07 Vegetables: tomato, brinjal, chilli, keerai · GD-08 Drumstick (PKM-1) · GD-09 Herbs: mint, ajwain leaf, coriander, vallarai · GD-10 Aloe vera · GD-11 Lemon.</li>
 <li><b>3D:</b> the porch pots, the wall-pot ferns and the aloe are free CC0 models from Poly Haven; the palm, banana, drumstick, lemon, jasmine and the bed plants are made in code. Hover any plant for its code and name.</li>
 </ol></section>
 <section class="ask"><h2>Modular kitchen (see the Kitchen tab)</h2>
@@ -322,8 +322,6 @@ GARDEN=[
       where='Porch, east side, clear of the walk to the door',note='Shade plant, red flowers most of the year; water when the top inch is dry; keep out of the afternoon sun'),
  dict(id='GD-03',name='Syngonium (arrowhead plant) in a pot',kind='pot',x=3.3,y=36.6,r=0.55,z='porch',h=2.0,model='syngonium',
       where='Porch, east side by the steps',note='Easy shade plant like a money plant; water once or twice a week'),
- dict(id='GD-04',name='Wall pots with ferns',kind='wallpots',x=0.375,ys=[48.5,50.0,51.5,54.5,56.0,57.5],zb=4.75,r=0.3,model='fern',
-      where='Side passage, on BW-01 opposite the living-room windows W-04 and W-05',note='Six 7" wall pots on steel brackets, 4\'9" up, only 7" out from the wall (money plant can go in any of them), so the 2\'4" passage stays clear; green view from the sofa; shade-loving, water twice a week'),
  dict(id='GD-05',name='Mullai (climbing jasmine) on a wire trellis',kind='creeper',x1=0.375,x2=1.125,y1=78.0,y2=82.0,h=6.0,model='mullai',
       where='Side garden, on BW-01 opposite the garden door D-05',note='Planted in a 9" wall bed, trained on 4 steel wires up the wall; scented white flowers at the door; water every 2 days in summer, prune after flowering'),
  dict(id='GD-06',name='Banana (dwarf, Poovan or Grand Naine), a clump of 3',kind='tree',x=2.3,y=86.35,r=1.3,h=7.0,cr=2.5,model='banana',
