@@ -1579,11 +1579,12 @@ function drawBasin(bs,WX,SG,PT,t,withBucket=true){const chrome=std({color:'#e3e6
    cyl(WX+SG*0.02,cu+0.25,PT+1.1,PT+1.18,0.06,chrome,{tip:t+' · low tap (bib cock) for filling buckets'});
    const bucket=new THREE.Mesh(new THREE.CylinderGeometry(m(0.5),m(0.4),m(1.0),28,1,true),std({color:'#2f6fb0',roughness:0.5,side:THREE.DoubleSide}));bucket.position.copy(Pw(cu,0.65,PT+0.5));if(withBucket){scene.add(bucket);named(bucket,t+' · bucket under the low tap')}}
 }
-// front wash basin FU-88 on BW-01 in front of the bikes: hands and feet when coming in, a low tap with a hose for the car and bikes; tiles behind, drain in front
-{const f=fuG['FU-88'];if(f){const t=`${f.id} · ${f.name} · ${f.note}`,WX=0.375;drawBasin(f,WX,1,PKZ,t,false);
-  box(WX,WX+0.025,f.y1-0.25,f.y2+0.25,PKZ,PKZ+4.0,std({color:'#f4f4f1',roughness:0.2}),{tip:t+' · white wall tiles on BW-01'});
-  box(f.x2+0.2,f.x2+0.44,(f.y1+f.y2)/2-0.12,(f.y1+f.y2)/2+0.12,PKZ,PKZ+0.012,MAT.blackMetal,{cast:false,tip:t+' · floor drain'});
-  const reel=new THREE.Mesh(new THREE.TorusGeometry(m(0.32),m(0.07),10,28),std({color:'#3f7a3a',roughness:0.6}));reel.rotation.y=Math.PI/2;reel.position.set(mx(WX+0.12),m(PKZ+3.7),m(f.y1-0.15));scene.add(reel);named(reel,t+' · hose on a wall reel, for washing the car and bikes')}}
+// wall tap FU-88 on BW-01 in front of the bikes: a ½" pipe and brass tap, a hose reel above, a small floor drain
+{const f=fuG['FU-88'];if(f){const t=`${f.id} · ${f.name} · ${f.note}`,WX=0.375,cy=(f.y1+f.y2)/2,brass=std({color:'#b8963e',roughness:0.35,metalness:0.8});
+  box(WX,WX+0.06,cy-0.03,cy+0.03,PKZ,PKZ+2.5,MAT.steel,{tip:t+' · ½" GI pipe'});box(WX,WX+0.2,cy-0.03,cy+0.03,PKZ+2.47,PKZ+2.53,brass,{tip:t+' · brass tap'});
+  box(WX+0.16,WX+0.2,cy-0.03,cy+0.03,PKZ+2.38,PKZ+2.5,brass,{tip:t+' · brass tap'});
+  box(WX+0.05,WX+0.29,cy-0.12,cy+0.12,PKZ,PKZ+0.012,MAT.blackMetal,{cast:false,tip:t+' · floor drain'});
+  const reel=new THREE.Mesh(new THREE.TorusGeometry(m(0.32),m(0.07),10,28),std({color:'#3f7a3a',roughness:0.6}));reel.rotation.y=Math.PI/2;reel.position.set(mx(WX+0.12),m(PKZ+3.7),m(cy));scene.add(reel);named(reel,t+' · hose on a wall reel')}}
 // side-garden utility on BW-01, across from bore BR-01: platform FU-77 and utility basin FU-30 with its back to the compound wall, front to the garden (west)
 {const pf=fuG['FU-77'],bs=fuG['FU-30'];
  if(pf&&bs){const PT=GRD+0.33,T=(f,t)=>`${f.id} · ${f.name} · ${t||f.note}`,WX=0.375,SG=1;   // WX: the garden face of BW-01; SG: plan x grows out from the wall
