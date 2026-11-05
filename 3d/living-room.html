@@ -1963,7 +1963,16 @@ function tryMove(step){const len=step.length();if(!len)return;const dir=step.clo
       const R=a[2]+0.75, dn=Math.hypot(nx-a[0],ny-a[1]), d0=Math.hypot(ox-a[0],oy-a[1]); if(dn<R&&dn<d0)return } }
   camera.position.add(step);
   {const py=camera.position.z/F,px=-camera.position.x/F;   // in front of the house the ground slopes: keep the eye 5'3" above the drive or the road
-   if((py<30.75||(py<(P.porchY||30.75)&&px>3.5&&px<8.25))&&px>-40&&px<60){const g=py<0?RDZ:py>=30.75?PKZ:hFront(px,py),t=m(g+EYE);if(Math.abs(camera.position.y-t)<m(3.0))camera.position.y=t}}}
+   const s1=st1Z(px,py),h=camera.position.y/F-EYE;
+   if(s1!=null&&Math.abs(s1-h)<2.0){camera.position.y+=(m(s1+EYE)-camera.position.y)*0.5}
+   else if((py<30.75||(py<(P.porchY||30.75)&&px>3.5&&px<8.25))&&px>-40&&px<60){const g=py<0?RDZ:py>=30.75?PKZ:hFront(px,py),t=m(g+EYE);if(Math.abs(camera.position.y-t)<m(3.0))camera.position.y=t}}}
+// outside stair ST-1 (same numbers as where it is built): the tread height under plan x, y, or null when off it; balcony 2 at the top of ST-1B
+function st1Z(x,y){const AX1=17.125,AX2=20.625,TD=10/12,LY1=16.0,LY2=19.5,BX2=17.125,NA=17,NB=10,Z0=HUZ,R=(FFZ-Z0)/(NA+NB),A0=LY1-(NA-1)*TD,LZ=Z0+NA*R;
+  if(x>=AX1&&x<=AX2&&y>=A0&&y<LY1)return Z0+(Math.floor((y-A0)/TD)+1)*R;
+  if(x>=AX1-0.03&&x<=AX2&&y>=LY1&&y<=LY2)return LZ;
+  if(y>=LY1&&y<=LY2&&x<BX2&&x>=BX2-NB*TD){const j=Math.floor((BX2-x)/TD);return j<NB-1?LZ+(j+1)*R:FFZ}
+  if(x>=2.125&&x<9.7&&y>=15.5&&y<=20.2)return FFZ;   // balcony 2
+  return null}
 // on ST-2 the eye follows the treads: find the tread under you (the stair turns 540°, so pick the turn nearest your height) and ease the eye to 5'3" above it
 const SPW={c:P.spiral.c,r:P.spiral.r+0.15,N:P.spiral.n||18,A:P.spiral.ang||30,A0:P.spiral.start??345};SPW.R=FFZ/SPW.N;
 function stairEye(){const px=-camera.position.x/F,py=camera.position.z/F,dx=px-SPW.c[0],dy=py-SPW.c[1],h=camera.position.y/F-EYE;
@@ -2106,7 +2115,7 @@ renderer.setAnimationLoop(()=>{
   else if(!hqDone&&now-lastChange>220){if(!LITE){sharp(true);composer.render()}hqDone=true;}
   if(saveReq&&hqDone){composer.render();doSave();saveReq=false}
 });
-window.__ready=true;window.__nav={cam:camera,scene,renderer,step:(n)=>{for(let i=0;i<n;i++){tryMove(fwdVec().multiplyScalar(0.05));stairEye()}},stairEye};
+window.__ready=true;window.__nav={cam:camera,scene,renderer,step:(n)=>{for(let i=0;i<n;i++){tryMove(fwdVec().multiplyScalar(0.05));stairEye()}},stairEye,move:(dx,dy)=>{tryMove(new THREE.Vector3(-dx*F,0,dy*F));stairEye()}};
 window.__bench=()=>{const gl=renderer.getContext();const t=(f,n)=>{gl.finish();const a=performance.now();for(let i=0;i<n;i++)f();gl.finish();return ((performance.now()-a)/n).toFixed(1)+' ms'};
   return {fast:t(()=>renderer.render(scene,camera),20),softShadows:t(()=>composer.render(),5),texturesPending:pending}};
 window.__photo=()=>({on:photo,building,samples:pt?Math.floor(pt.samples):0,compiling:pt?.isCompiling});
