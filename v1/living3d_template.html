@@ -74,6 +74,7 @@ canvas{display:block;width:100%;height:100%}
   <span class="spacer"></span>
   <button class="btn" id="tourBtn" aria-pressed="false" title="Walk through the whole house on a set path: gate, parking, porch, rooms, up the spiral stair, first floor, terrace and down the outside stair. Any key or click stops it.">Home tour</button>
   <button class="btn" id="manBtn" aria-pressed="false" title="A 6' man walks up the spiral stair ST-2, one foot on each tread, to check head room and step size by eye. Click again to stop.">6' man on stair</button>
+  <button class="btn" id="man2Btn" aria-pressed="false" title="A 6' man walks along the east side passage, past the shifted pillars, and back. Click again to stop.">Man in side passage</button>
   <button class="btn" id="gateBtn" aria-pressed="true" title="Open or close the two front gates GT-01 and GT-02 (bi-fold, they fold inward)">Close gates</button>
   <button class="btn" id="animBtn" aria-pressed="false" title="Watch the car come in from the road, reverse into its spot, wait, and drive out">Animate car parking</button>
   <button class="btn" id="photoBtn" aria-pressed="false" title="Ray-traced photo of the current view. Uses the graphics card heavily for about a minute, then stops by itself.">Photo</button>
@@ -111,7 +112,7 @@ import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {MeshoptDecoder} from 'three/addons/libs/meshopt_decoder.module.js';
 {const parse=GLTFLoader.prototype.parse;GLTFLoader.prototype.parse=function(...a){if(!this.meshoptDecoder)this.setMeshoptDecoder(MeshoptDecoder);return parse.apply(this,a)}}   // every model file is meshopt-compressed (see 3d/ASSETS.md)
 import {CAR_ROUTE} from './models/car-route.js?v=__BUILD__';
-import {loadStairWalker} from './models/person.js?v=__BUILD__';
+import {loadStairWalker,loadPathWalker} from './models/person.js?v=__BUILD__';
 import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
 
 const P=window.PLAN, F=0.3048, CEIL=10.0, EYE=5.25;
@@ -1380,6 +1381,16 @@ async function startMan(){if(man.loading)return;
   if(!man.view){VIEWS.push({p:[12.0,74.0,8.5],t:[17.0,7.0,77.0]});man.view=VIEWS.length-1}setView(man.view);invalidate()}   // from the open area, up at the middle of the climb
 function stopMan(){man.on=false;if(man.o)man.o.root.visible=false;if(!photo)statusEl.style.display='none';manBtn.textContent="6' man on stair";manBtn.setAttribute('aria-pressed',false);renderer.shadowMap.needsUpdate=true;invalidate()}
 manBtn.onclick=()=>man.on?stopMan():startMan();
+// 6' man along the east side passage (models/person.js loadPathWalker): narrowest gap is at the shifted pillars C-03..C-11
+const man2={o:null,on:false,t0:0,last:0},man2Btn=document.getElementById('man2Btn');
+async function startMan2(){if(!man2.o){man2Btn.textContent='Loading man…';
+   try{man2.o=await loadPathWalker(THREE,GLTFLoader,'assets/people/man.glb?v=__BUILD__','assets/people/walk-clips.glb?v=__BUILD__',[[1.3,31.6,GRD],[1.25,66.0,GRD],[1.45,72.5,GRD]],m,mx)}catch(e){console.warn('man model',e);man2Btn.textContent='Man in side passage';return}
+   man2.o.root.traverse(n=>{if(n.isMesh)named(n,"6' man (1.83 m) · walking the east side passage; 1'9\" clear at the pillars, 2'4½\" elsewhere")});scene.add(man2.o.root)}
+  man2.o.root.visible=true;man2.on=true;man2.t0=performance.now();man2Btn.textContent='Stop man';man2Btn.setAttribute('aria-pressed',true);if(tour.on)stopTour();setView(VIEWS.findIndex(v=>v.p[0]===1.55&&v.p[2]===29.0));invalidate()}
+function stopMan2(){man2.on=false;if(man2.o)man2.o.root.visible=false;man2Btn.textContent='Man in side passage';man2Btn.setAttribute('aria-pressed',false);renderer.shadowMap.needsUpdate=true;invalidate()}
+function man2Step(now){man2.o.update((now-man2.t0)/1000);if(now-man2.last>100){renderer.shadowMap.needsUpdate=true;man2.last=now}invalidate()}
+man2Btn.onclick=()=>man2.on?stopMan2():startMan2();
+window.__man2=t=>{if(!man2.o)return null;man2.t0=performance.now()-t*1000;return man2.o.update(t)};
 window.__manS=man;window.__man=t=>{if(!man.o)return null;man.t0=performance.now()-t*1000;return man.o.update(t)};
 // back boundary: existing wall BW-09 of the houses behind (slanted with the back line), the houses behind it
 function prism(pts,z1,z2,mat,tip){const sh=new THREE.Shape(pts.map(p=>new THREE.Vector2(mx(p[0]),-m(p[1]))));
@@ -2068,7 +2079,7 @@ renderer.setAnimationLoop(()=>{
   gateStep(performance.now());
   if(carAnim.on)animStep(performance.now());
   if(tour.on)tourStep(performance.now());
-  if(man.on&&man.o)manStep(performance.now());
+  if(man.on&&man.o)manStep(performance.now());if(man2.on&&man2.o)man2Step(performance.now());
   if(photo&&pt){
     if(building||document.hidden) return;            // ray tracing pauses in a hidden tab
     if(pt.samples>=PHOTO_SAMPLES){ if(saveReq){pt.renderSample();doSave();saveReq=false} statusEl.textContent=`Photo done: ${Math.floor(pt.samples)} samples. Save image, or move to start a new one.`; return }   // stop: no GPU use once finished

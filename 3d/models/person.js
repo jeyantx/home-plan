@@ -216,3 +216,36 @@ function build(THREE, gltf, st, m, mx) {
     step: () => last ? Math.max(0, Math.min(N, last.j - 1)) : 0, hipW,
   };
 }
+
+// The same 6' man walking on flat or gently sloped ground along a path of plan points [x, y, z] (feet), there and back.
+// The walk clip drives the whole body (legs included); the body moves along the path at a normal walking pace.
+export async function loadPathWalker(THREE, GLTFLoader, bodyUrl, clipUrl, path, m, mx) {
+  const ld = u => new Promise((res, rej) => new GLTFLoader().load(u, res, undefined, rej));
+  const [body, src] = await Promise.all([ld(bodyUrl), ld(clipUrl)]);
+  const walkClip = retarget(THREE, src, body.scene, src.animations.find(a => a.name === 'Walk'));
+  walkClip.tracks = walkClip.tracks.filter(t => !/Hips\.position/.test(t.name));
+  const model = body.scene, root = new THREE.Group(), V = () => new THREE.Vector3();
+  root.add(model);
+  model.traverse(o => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; o.frustumCulled = false; if (/visor/i.test(o.name)) o.visible = false;
+    if (/Outfit_Top/.test(o.name)) o.material.color.set('#8da0c4'); if (/Outfit_Bottom/.test(o.name)) o.material.color.set('#9a9aa0'); } });
+  const B = n => model.getObjectByName('mixamorig' + n) || model.getObjectByName(n);
+  model.updateMatrixWorld(true);
+  const sole = Math.min(B('LeftToeBase').getWorldPosition(V()).y, B('RightToeBase').getWorldPosition(V()).y);
+  root.scale.setScalar(m(6.0) / (B('HeadTop_End').getWorldPosition(V()).y - sole + 0.012));
+  model.position.y = -sole;
+  const mixer = new THREE.AnimationMixer(model), act = mixer.clipAction(walkClip); act.play();
+  const P = path.map(([x, y, z]) => new THREE.Vector3(mx(x), m(z), m(y)));
+  const seg = [], speed = 1.25; let L = 0;   // metres a second
+  for (let i = 1; i < P.length; i++) { const d = P[i].distanceTo(P[i - 1]); seg.push([L, d]); L += d; }
+  const stride = speed * walkClip.duration, T = 2 * L / speed;
+  function at(s) { let i = seg.findIndex(([a, d]) => s <= a + d); if (i < 0) i = seg.length - 1; const [a, d] = seg[i];
+    return { p: P[i].clone().lerp(P[i + 1], d ? (s - a) / d : 0), f: P[i + 1].clone().sub(P[i]).setY(0).normalize() }; }
+  function update(t) {
+    t %= T; let s = t * speed, back = s > L; if (back) s = 2 * L - s;
+    const { p, f } = at(s); if (back) f.negate();
+    root.position.copy(p); root.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), f);
+    act.time = ((t * speed) % stride) / speed; mixer.update(0); root.updateMatrixWorld(true);
+    return { s, L, back };
+  }
+  return { root, update, duration: T, headTop: () => B('HeadTop_End').getWorldPosition(V()) };
+}
