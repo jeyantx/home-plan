@@ -239,8 +239,8 @@ def garden():
             circ(g['x'],g['y'],0.5,'#d6338a','#2c4a20',0.03)
             label(g['x'],g['y']+1.1,g['id'],0.24)
         elif k=='potrow':
-            for y in g['ys']: circ(g['x']+g['r']+0.05,y,g['r'],'#c8794a','#7a4326',0.03,'stroke-dasharray="0.12 0.08"'); circ(g['x']+g['r']+0.05,y,g['r']*0.55,'#4f7d3a','#2c4a20',0.02)
-            label(g['x']+1.4,(g['ys'][0]+g['ys'][-1])/2,g['id']+' (4\'6" up)',0.24)
+            for y in g['ys']: circ(g['x']+g['r']+0.05,y,g['r'],'#c8794a','#7a4326',0.03,'stroke-dasharray="0.12 0.08"' if g['zb'] else ''); circ(g['x']+g['r']+0.05,y,g['r']*0.55,'#4f7d3a','#2c4a20',0.02)
+            label(g['x']+(1.4 if g['zb'] else 0.9),(g['ys'][0]+g['ys'][-1])/2+(0 if g['zb'] else 0.6),g['id']+(' (4\'6" up)' if g['zb'] else ' (ground)'),0.24)
         elif k=='winbox':
             rect(g['x1'],g['x2'],g['y1'],g['y2'],'#9b9890','#555',0.03)
             for i in range(5): circ(g['x1']+0.35+i*(g['x2']-g['x1']-0.7)/4,(g['y1']+g['y2'])/2,0.2,'#e8456e','#2c4a20',0.02)

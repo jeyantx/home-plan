@@ -1455,10 +1455,10 @@ if(P.backwall){const bw=P.backwall,[a,b]=bw.pts,t=bw.t,old=std({color:'#cdc4b3',
      q.translate(mx(ex+sx*0.05+(r()-0.5)*0.1),m(s-t),m(g.y+(r()-0.5)*1.2));(q.parameters?lv:lv).push(q);if(r()<0.2)fl.push(q.clone())}}
    const lm=new THREE.Mesh(mergeGeometries(lv),std({color:'#3e6b2c',roughness:0.6,side:THREE.DoubleSide}));lm.castShadow=true;scene.add(lm);named(lm,tb);lm.userData.keepUV=true;
    if(fl.length){const fm=new THREE.Mesh(mergeGeometries(fl),std({color:'#d6338a',roughness:0.6,side:THREE.DoubleSide}));fm.scale.setScalar(1.0);scene.add(fm);named(fm,T(g,'pink bracts'));fm.userData.keepUV=true}}
-  else if(g.kind==='potrow'){g.ys.forEach((y,i)=>{const cx=g.x+g.r+0.05,z=PKZ+g.zb,tb=`${g.id} · ${TN_PLANTS[g.plants[i]]?.name||g.plants[i]} · ${g.name} · ${g.where}`;
-    const ring=new THREE.Mesh(new THREE.TorusGeometry(m(g.r*0.85),m(0.02),6,24),bracket);ring.rotation.x=Math.PI/2;ring.position.set(mx(cx),m(z+0.35),m(y));scene.add(ring);named(ring,tb+' · black MS wall ring');
-    box(g.x,cx-g.r*0.8,y-0.02,y+0.02,z+0.33,z+0.37,bracket,{tip:tb+' · wall ring arm'});box(g.x,g.x+0.04,y-0.06,y+0.06,z+0.1,z+0.5,bracket,{tip:tb+' · wall plate'});
-    const s=pot(cx,y,z,g.r,0.75,tb);const o=tn(g.plants[i],30+i,cx,y,s,tb);if(o)o.scale.setScalar(g.plants[i]==='croton'?0.7:0.85)})}
+  else if(g.kind==='potrow'){g.ys.forEach((y,i)=>{const cx=g.x+g.r+0.05,z=g.zb?PKZ+g.zb:zF(y),tb=`${g.id} · ${TN_PLANTS[g.plants[i]]?.name||g.plants[i]} · ${g.name} · ${g.where}`;
+    if(g.zb){const ring=new THREE.Mesh(new THREE.TorusGeometry(m(g.r*0.85),m(0.02),6,24),bracket);ring.rotation.x=Math.PI/2;ring.position.set(mx(cx),m(z+0.35),m(y));scene.add(ring);named(ring,tb+' · black MS wall ring');
+    box(g.x,cx-g.r*0.8,y-0.02,y+0.02,z+0.33,z+0.37,bracket,{tip:tb+' · wall ring arm'});box(g.x,g.x+0.04,y-0.06,y+0.06,z+0.1,z+0.5,bracket,{tip:tb+' · wall plate'})}
+    const s=pot(cx,y,z,g.r,g.zb?0.75:0.65,tb);const o=tn(g.plants[i],30+i+(g.zb?0:20),cx,y,s,tb);if(o)o.scale.setScalar(g.zb?0.85:Math.min(0.9,1.3/(TN_PLANTS[g.plants[i]]?.h||1))*(0.85+0.1*(i%3)))})}
   else if(g.kind==='winbox'){const tb=T(g),z1=PKZ+g.zb,z2=z1+g.bh,cem=std({color:'#9b9890',roughness:0.95});
    box(g.x1,g.x2,g.y1,g.y2,z1,z2,cem,{tip:tb+' · cement trough'});box(g.x1+0.06,g.x2-0.06,g.y1+0.06,g.y2-0.04,z2-0.1,z2-0.06,soilG,{tip:tb,cast:false});
    for(const x of [g.x1+0.4,g.x2-0.45])box(x,x+0.05,g.y1+0.1,g.y2,z1-0.5,z1,bracket,{tip:tb+' · bracket'});
