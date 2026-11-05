@@ -1089,7 +1089,7 @@ X_(()=>{CURFL='F';ZOFF=FFZ;
  // a small bamboo plant in the lobby corner
  {const plant=createBambooPlant(THREE,{seed:7,height:1.3});plant.position.set(mx(10.85),m(FFZ),m(84.1));scene.add(plant);plant.traverse(o=>{if(o.isMesh){o.userData.keepUV=true;named(o,'Bamboo plant in a black pot')}})}
 }
-// TOILET 3 (F-07), 6'4½" x 6'4½", on the terrace corner: greige tiles to 7', WC FU-41 and basin FU-42 on the south wall, shower FU-43 in the north-east with rose and geyser FU-60 on the east wall, door D-09 in FW-01 (west) from the landing
+// TOILET 3 (F-07), 6'4½" x 6'4½", on the terrace corner: greige tiles to 7', WC FU-41 on the south wall, basin FU-42 on the north wall, shower FU-43 in the north-east with rose and geyser FU-60 on the east wall, door D-09 in FW-01 (west) from the landing
 {const X1=2.125,X2=9.5,Y1=73.5,Y2=79.875,c=0.04,e=0.012,TZ=7.0,tw='Wall tile · greige matte porcelain, 2\' x 1\', to 7\'',f2=id=>fuG2[id],dr=P.openings.find(o=>o.id==='D-09');
  tile(X1,X2,Y1,Y1+c,0,TZ,MAT.tWall,tw);tile(X1,X2,Y2-c,Y2,0,TZ,MAT.tWall,tw);tile(X1,X1+c,Y1+c+e,Y2-c-e,0,TZ,MAT.tWall,tw);
  tile(X2-c,X2,Y1+c+e,dr.a,0,TZ,MAT.tWall,tw);tile(X2-c,X2,dr.b,Y2-c-e,0,TZ,MAT.tWall,tw);
@@ -1100,11 +1100,11 @@ X_(()=>{CURFL='F';ZOFF=FFZ;
  const bowl=new THREE.Mesh(new THREE.SphereGeometry(m(0.5),32,20),MAT.ceramic);bowl.scale.set(1.0,0.55,1.75);bowl.position.set(mx(wx),m(FFZ+1.12),m(Y2-1.35));bowl.castShadow=true;scene.add(bowl);named(bowl,`FU-41 · Western WC, wall-hung · ${w.note}`);
  box(wx-0.47,wx+0.47,Y2-2.1,Y2-0.62,1.38,1.46,MAT.ceramic,{round:0.035,tip:'FU-41 · soft-close seat'});
  cyl(w.x2+0.35,Y2-c-0.05,3.0,3.5,0.06,MAT.blackMetal,{tip:'Health faucet, matte black'});
- // basin FU-42 on the south wall by the door, mirror above
- const bs=f2('FU-42'),bxc=(bs.x1+bs.x2)/2;box(bs.x1+0.05,bs.x2-0.05,bs.y1+0.05,Y2-c-e,2.3,2.68,MAT.ceramic,{round:0.1,tip:`FU-42 · Wash basin, wall-hung · ${bs.note}`});
- cyl(bxc,(bs.y1+Y2)/2-0.05,2.6,2.685,0.42,std({color:'#e4e6e7',roughness:0.15}),{tip:'Basin bowl'});
- box(bxc-0.04,bxc+0.04,Y2-c-0.45,Y2-c,3.0,3.07,MAT.blackMetal,{tip:'Basin tap, wall-mounted, matte black'});
- box(bs.x1+0.1,bs.x2-0.1,Y2-c-0.04,Y2-c-e,3.5,5.7,MAT.mirror,{cast:false,tip:'Mirror with warm LED backlight'});ledStrips.push(box(bs.x1+0.05,bs.x2-0.05,Y2-c-0.03,Y2-c-e,3.45,3.5,MAT.led,{cast:false,tip:'Mirror backlight'}));
+ // basin FU-42 on the north wall FW-09 by the door, mirror above
+ const bs=f2('FU-42'),bxc=(bs.x1+bs.x2)/2,W1=Y1+c+e;box(bs.x1+0.05,bs.x2-0.05,W1,bs.y2-0.05,2.3,2.68,MAT.ceramic,{round:0.1,tip:`FU-42 · Wash basin, wall-hung · ${bs.note}`});
+ cyl(bxc,(W1+bs.y2)/2+0.05,2.6,2.685,0.42,std({color:'#e4e6e7',roughness:0.15}),{tip:'Basin bowl'});
+ box(bxc-0.04,bxc+0.04,Y1+c,Y1+c+0.45,3.0,3.07,MAT.blackMetal,{tip:'Basin tap, wall-mounted, matte black'});
+ box(bs.x1+0.1,bs.x2-0.1,Y1+c+e,Y1+c+0.04,3.5,5.7,MAT.mirror,{cast:false,tip:'Mirror with warm LED backlight'});ledStrips.push(box(bs.x1+0.05,bs.x2-0.05,Y1+c+e,Y1+c+0.03,3.45,3.5,MAT.led,{cast:false,tip:'Mirror backlight'}));
  // shower FU-43: rose and mixer on the east wall, geyser FU-60, floor trap, curtain rod FU-61 with a waffle curtain drawn back
  const sh=f2('FU-43'),sy=(sh.y1+sh.y2)/2;
  box(X1+c,X1+c+0.9,sy-0.03,sy+0.03,6.95,7.0,MAT.blackMetal,{tip:'Shower arm, matte black'});cyl(X1+c+0.9,sy,6.75,6.8,0.3,MAT.blackMetal,{tip:'Shower rose, 8", matte black'});
@@ -1128,8 +1128,11 @@ function holeSlab(x1,x2,y1,y2,z1,z2,h,mat,tip){   // thick slab with a round hol
 X_(()=>{for(const [a,b,c,d] of slabParts) box(a,b,c,d,SLB,FFZ-0.05,MAT.white,{tip:'RCC roof slab and beams, ground floor (terrace floor above)'});
  holeSlab(9.5,21,73.75,95.125,SLB,FFZ-0.05,WELL,MAT.white,'RCC slab over the stair hall and bedroom 2 · 6\' round hole for ST-2, edge beams round it');
  const fz1=SLB-0.012,fz2=FFZ,ft='Slab edge fascia';
- for(const [a,b,c,d] of [[2.75,9.625,15.5-0.03,15.5-0.012],[9.625,21,19.75-0.03,19.75-0.012],[1.75,9.5,80.25+0.012,80.25+0.03],[9.5,21,98.125+0.012,98.125+0.03]]) box(a,b,c,d,fz1,fz2,MAT.extTrim,{tip:ft});
- for(const [a,b,c,d] of [[2.75-0.03,2.75-0.012,15.5,80.25],[9.625+0.012,9.625+0.03,15.5,19.75],[21+0.012,21+0.03,19.75,98.125],[9.5-0.03,9.5-0.012,80.25,98.125]]) box(a,b,c,d,fz1,fz2,MAT.extTrim,{tip:ft});
+ // floor band (civil, design A, stepped cornice): terracotta fascia over the slab edge, a cream lip on top (3" out) and a cream drip line under it (2½" out) that throws rain off the wall below
+ const cream=std({color:'#e8e2d6',roughness:0.85});
+ for(const [ax,k,u1,u2,o] of [['y',15.5,1.75,9.625,-1],['y',19.75,9.625,21,-1],['y',80.25,1.75,9.5,1],['y',98.125,9.5,21,1],['x',1.75,15.5,80.25,-1],['x',9.625,15.5,19.75,1],['x',21,19.75,98.125,1],['x',9.5,80.25,98.125,-1]]){
+   const P=(d1,d2,z1,z2,mat,t)=>{const A=k+o*d1,B=k+o*d2,lo=Math.min(A,B),hi=Math.max(A,B),e1=u1-d2,e2=u2+d2;ax==='y'?box(e1,e2,lo,hi,z1,z2,mat,{tip:t}):box(lo,hi,e1,e2,z1,z2,mat,{tip:t})};
+   P(0.012,0.08,fz1,fz2,MAT.extTrim,ft+' · floor band A, terracotta');P(0.012,0.25,fz2-0.18,fz2+0.02,cream,ft+' · floor band A, cream lip on top, 3" out');P(0.012,0.2,fz1-0.1,fz1+0.02,cream,ft+' · floor band A, cream drip line, 2½" out')}
  // parapets PW-01..05, 3' high, 4½", with a coping; vertical louvers on the balcony front PW-01
  for(const w of P.walls.F.filter(w=>w.kind==='para')){box(w.x1,w.x2,w.y1,w.y2,FFZ-0.05,FFZ+w.h,MAT.ext,{tip:`${w.id} · ${w.desc} · 3' parapet`});
    box(w.x1-0.06,w.x2+0.06,w.y1-0.06,w.y2+0.06,FFZ+w.h,FFZ+w.h+0.15,MAT.extTrim,{tip:`${w.id} · parapet coping`});wallMeshes.push(scene.children[scene.children.length-2])}
