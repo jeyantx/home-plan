@@ -1878,12 +1878,18 @@ document.querySelectorAll('#lensSeg button').forEach(b=>b.onclick=()=>setLens(+b
 const animBtn=document.getElementById('animBtn');animBtn.onclick=()=>carAnim.on?stopAnim():startAnim();
 document.getElementById('gateBtn').onclick=()=>setGatesOpen(gateAnim.target?0:1);
 // floor tile choice: oak planks (as the option) or one of the two 2' x 2' vitrified tiles from photos, laid with thin grey joints
+// the product photos are lit unevenly (one side darker); take out the slow light-to-dark shift so repeated tiles look even, keep the fine speckle and grain
+function flattenTile(g,w,h){const n=6,c=document.createElement('canvas');c.width=c.height=n;const q=c.getContext('2d');q.imageSmoothingQuality='high';q.drawImage(g.canvas,0,0,n,n);
+  const b=document.createElement('canvas');b.width=w;b.height=h;const bg=b.getContext('2d');bg.imageSmoothingEnabled=true;bg.imageSmoothingQuality='high';bg.filter='blur(60px)';bg.drawImage(c,-w/n,-h/n,w+2*w/n,h+2*h/n);
+  const im=g.getImageData(0,0,w,h),bl=bg.getImageData(0,0,w,h).data,d=im.data,mean=[0,0,0];
+  for(let i=0;i<d.length;i+=4)for(let k=0;k<3;k++)mean[k]+=bl[i+k];for(let k=0;k<3;k++)mean[k]/=d.length/4;
+  for(let i=0;i<d.length;i+=4)for(let k=0;k<3;k++)d[i+k]=d[i+k]-bl[i+k]+mean[k];g.putImageData(im,0,0)}
 const TILEIMG={ft1:'assets/textures/tiles/ft-1-white-speckle.jpg',ft2:'assets/textures/tiles/ft-2-beige-sand.jpg',ft3:'assets/textures/tiles/ft-3-khaki-cement.jpg',ft4:'assets/textures/tiles/ft-4-grey-cement.jpg',ft5:'assets/textures/tiles/ft-5-ivory-matt.jpg'},tileCache={};
 function setTile(k){document.getElementById('tileSel').value=TILEIMG[k]?k:'oak';try{localStorage.setItem('lr3d-tile',k)}catch(e){}
   if(k==='oak'||!TILEIMG[k]){applyOption(curOpt);invalidate();return}
   const use=t=>{Object.assign(MAT.floor,{map:t,normalMap:null,roughnessMap:null,roughness:0.35});MAT.floor.color.set('#ffffff');MAT.floor.needsUpdate=true;MAT.skirt.color.set({ft1:'#d9d7d2',ft2:'#c9bba5',ft3:'#bfb39c',ft4:'#a9a39b',ft5:'#e0d4c2'}[k]);renderer.shadowMap.needsUpdate=true;invalidate()};
   if(tileCache[k])return use(tileCache[k]);
-  const im=new Image();im.onload=()=>{tileCache[k]=canvasTex(1024,1024,(g,w,h)=>{g.drawImage(im,0,0,w,h);g.fillStyle='rgba(120,115,108,0.55)';g.fillRect(0,0,w,3);g.fillRect(0,0,3,h)},m(2));use(tileCache[k])};im.src=TILEIMG[k]}
+  const im=new Image();im.onload=()=>{tileCache[k]=canvasTex(1024,1024,(g,w,h)=>{g.drawImage(im,0,0,w,h);flattenTile(g,w,h);g.fillStyle='rgba(120,115,108,0.55)';g.fillRect(0,0,w,3);g.fillRect(0,0,3,h)},m(2));use(tileCache[k])};im.src=TILEIMG[k]}
 document.getElementById('tileSel').onchange=e=>setTile(e.target.value);
 {let t='oak';try{t=localStorage.getItem('lr3d-tile')||'oak'}catch(e){}setTile(t)}
 document.getElementById('doorBtn').onclick=()=>setDoorOpen(doorAnim.target?0:1);
