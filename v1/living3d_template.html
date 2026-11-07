@@ -75,8 +75,7 @@ canvas{display:block;width:100%;height:100%}
   <button class="btn" id="tourBtn" aria-pressed="false" title="Walk through the whole house on a set path: gate, parking, porch, rooms, up the spiral stair, first floor, terrace and down the outside stair. Any key or click stops it.">Home tour</button>
   <button class="btn" id="manBtn" aria-pressed="false" title="A 6' man walks up the spiral stair ST-2, one foot on each tread, to check head room and step size by eye. Click again to stop.">6' man on stair</button>
   <button class="btn" id="man2Btn" aria-pressed="false" title="A 6' man walks along the east side passage, past the shifted pillars, and back. Click again to stop.">Man in side passage</button>
-  <button class="btn" id="gateBtn" aria-pressed="true" title="Open or close the two front gates GT-01 and GT-02 (bi-fold, they fold inward)">Close gates</button>
-  <button class="btn" id="doorBtn" aria-pressed="true" title="Open or close the teak main door D-01">Close main door</button>
+  <button class="btn" id="allBtn" aria-pressed="true" title="Open or close every door, window and gate together">Close all</button>
   <button class="btn" id="animBtn" aria-pressed="false" title="Watch the car come in from the road, reverse into its spot, wait, and drive out">Animate car parking</button>
   <button class="btn" id="photoBtn" aria-pressed="false" title="Ray-traced photo of the current view. Uses the graphics card heavily for about a minute, then stops by itself.">Photo</button>
   <button class="btn" id="saveBtn" title="Save the current image as PNG">Save</button>
@@ -308,7 +307,7 @@ function along(horiz,w,u,v){return horiz?[w.x1+u,w.y1+v]:[w.x1+v,w.y1+u]}
 function boxAlong(horiz,w,u1,u2,v1,v2,z1,z2,mat,o){
   if(horiz) return box(w.x1+u1,w.x1+u2,w.y1+v1,w.y1+v2,z1,z2,mat,o);
   return box(w.x1+v1,w.x1+v2,w.y1+u1,w.y1+u2,z1,z2,mat,o)}
-const glassMeshes=[],mirrors=[];
+const glassMeshes=[],mirrors=[],WINS=[];
 // ---------------- window grill GR-1 (final): plain vertical round bars 12 mm @ 5", one middle flat, flat frame ----------------
 function grillMesh(o,w,horiz,U1,U2,Z1,Z2,vc){
   const fr=0.08,a=U1+fr,b=U2-fr,c=Z1+fr,d=Z2-fr;   // members in the window plane: u along the wall, z height, centred at depth vc (feet)
@@ -343,11 +342,23 @@ function buildOpening(o,w,horiz,s0,out=0){
      if(wt==='WT-4')hz(z2-0.75);   // fixed glass below, opening top pane
      if(wt==='WT-2'){const mids=(u2-u1)>6?[[u1,u1+2.25],[u2-2.25,u2]]:[[u1,(u1+u2)/2],[(u1+u2)/2,u2]];   // casement sashes: a black handle on each, inside face
        for(const [a,b] of mids){const hu=Math.abs(a-u1)<0.01?b-0.25:a+0.25;boxAlong(horiz,w,hu-0.03,hu+0.03,v1-0.02,v1+0.06,(z1+z2)/2-0.25,(z1+z2)/2+0.25,MAT.blackMetal,{tip:tip+' · casement handle'})}}
-     {const fz=z2-fw;   // every window: frosted glass over the full pane (privacy and safety)
-boxAlong(horiz,w,u1+fw,u2-fw,v0+0.165,v0+0.18,z1+fw,fz,MAT.frost,{tip:tip+' · frosted glass',cast:false})}}
-    const gl=boxAlong(horiz,w,u1+fw,u2-fw,v0+0.13,v0+0.16,z1+fw,z2-fw,MAT.glass,{tip,cast:false});glassMeshes.push(gl);
+     // sashes (frosted glass in a black UPVC frame) that open with the 'Open all' button: casements WT-2 swing out 90°, sliders WT-1 / WT-3 slide one pane over the other
+     const sashT=(sa,sb,za,zb,va,vb)=>{const ms=[],sf=0.12;ms.push(boxAlong(horiz,w,sa,sb,va,vb,za,za+sf,MAT.upvc,{tip}),boxAlong(horiz,w,sa,sb,va,vb,zb-sf,zb,MAT.upvc,{tip}),boxAlong(horiz,w,sa,sa+sf,va,vb,za+sf,zb-sf,MAT.upvc,{tip}),boxAlong(horiz,w,sb-sf,sb,va,vb,za+sf,zb-sf,MAT.upvc,{tip}));
+       ms.push(boxAlong(horiz,w,sa+sf,sb-sf,va+0.01,vb-0.01,za+sf,zb-sf,MAT.frost,{tip:tip+' · frosted glass',cast:false}));return ms};
+     const grp=(ms,hu,hv)=>{const g=new THREE.Group(),h=along(horiz,w,hu,hv),hp=new THREE.Vector3(mx(h[0]),0,m(h[1]));g.position.copy(hp);for(const q of ms){q.position.sub(hp);g.add(q)}scene.add(g);return g};
+     const osgn=out>0?1:-1,nW=horiz?new THREE.Vector3(0,0,osgn):new THREE.Vector3(-osgn,0,0);
+     if(wt==='WT-2'){const vf=out>0?T-0.1:0.05,halves=[[u1+fw,(u1+u2)/2-0.01,u1+fw],[(u1+u2)/2+0.01,u2-fw,u2-fw]];
+       for(const [sa,sb,hu] of halves){const hv=out>0?vf+0.05:vf,g=grp(sashT(sa,sb,z1+fw,z2-fw,vf,vf+0.05),hu,hv),fe=along(horiz,w,hu===sa?sb:sa,hv),e=new THREE.Vector3(mx(fe[0])-g.position.x,0,m(fe[1])-g.position.z);
+         const th=e.clone().applyAxisAngle(new THREE.Vector3(0,1,0),Math.PI/2).dot(nW)>0?Math.PI/2:-Math.PI/2;WINS.push({g,kind:'swing',a:th*0.95})}}
+     else if(wt==='WT-1'||wt==='WT-3'){const zt=wt==='WT-3'?z2-1.07:z2-fw,mid=(u1+u2)/2,sw=mid-u1-fw+0.05;
+       const gA=grp(sashT(u1+fw,mid+0.05,z1+fw,zt,v0+0.1,v0+0.14),u1,0),gB=grp(sashT(mid-0.05,u2-fw,z1+fw,zt,v0+0.16,v0+0.2),u2,0);
+       const d=along(horiz,w,-sw,0),d0=along(horiz,w,0,0);WINS.push({g:gB,kind:'slide',v:new THREE.Vector3(mx(d[0])-mx(d0[0]),0,m(d[1])-m(d0[1]))})
+       if(wt==='WT-3'){const fz=z2-fw;boxAlong(horiz,w,u1+fw,u2-fw,v0+0.165,v0+0.18,zt+0.14,fz,MAT.frost,{tip:tip+' · frosted top vent',cast:false})}}
+     else{const fz=z2-fw;   // fixed and top-hung panes: frosted glass over the full pane
+       boxAlong(horiz,w,u1+fw,u2-fw,v0+0.165,v0+0.18,z1+fw,fz,MAT.frost,{tip:tip+' · frosted glass',cast:false})}}
     const vo=T-0.04;
-    if(/invisible grill/.test(P.spec[o.id]||''))invisibleGrill(o,w,horiz,u1,u2,z1,z2,vo-0.08);else grillMesh(o,w,horiz,u1,u2,z1,z2,vo-0.08);
+    const gv=((P.win||{})[o.id]||{}).type==='WT-2'?(out>0?0.12:T-0.12):vo-0.08;   // casements open out, so their grill sits on the inside face
+    if(/invisible grill/.test(P.spec[o.id]||''))invisibleGrill(o,w,horiz,u1,u2,z1,z2,gv);else grillMesh(o,w,horiz,u1,u2,z1,z2,gv);
     boxAlong(horiz,w,u1-0.12,u2+0.12,-0.1,T*0.35-0.012,z1-0.06,z1+0.012,MAT.granite,{tip:'Granite window sill'});
     if(out&&!horiz&&['W-04','W-05'].includes(o.id)){   // side passage: a plain slim RCC sunshade only (9" out, 3" thick, drip groove), so the 1'9" passage keeps its head room
       const vr=(a,b)=>out<0?[-b,-a]:[T+a,T+b],S=vr(0.012,0.75),D=vr(0.6,0.65),ft=`${o.id} · sunshade (chajja) · plain RCC, 9" out, 3" thick, sloped top, drip groove under; painted with the outside walls`;
@@ -377,7 +388,7 @@ boxAlong(horiz,w,u1+fw,u2-fw,v0+0.165,v0+0.18,z1+fw,fz,MAT.frost,{tip:tip+' · f
       bx(0.08,L-0.08,0.1,1.5,0.02);   // sheet panel at the foot
       const n=Math.round((L-0.16)/0.33);for(let i=1;i<n;i++){const x=0.08+(L-0.16)*i/n;bx(x-0.021,x+0.021,1.5,H-0.08,0.042)}   // 1/2" square bars at about 4"
       if(sg<0||one){const lk=bx(one?L-0.35:0.1,one?L-0.1:0.35,3.1,3.6,0.14);lk.position.z=m(0.03)}   // lock box on the west leaf (D-14: at its free end)
-      piv.rotation.y=(horiz?Math.PI:-Math.PI/2)-sg*Math.PI/2*0.97;scene.add(piv)}
+      piv.rotation.y=(horiz?Math.PI:-Math.PI/2)-sg*Math.PI/2*0.97;scene.add(piv);D01.push({piv,base:(horiz?Math.PI:-Math.PI/2),sgn:-sg,open:Math.PI/2*0.97})}
   } else if(o.type==='door'||o.type==='double'){
     const fr=0.25,th=0.13;
     if(o.id!=='D-01'){const q=horiz?[[o.a,w.y1],[o.b,w.y1],[o.b,w.y2],[o.a,w.y2]]:[[w.x1,o.a],[w.x2,o.a],[w.x2,o.b],[w.x1,o.b]];slab(q,MAT.floor,0,o.id+' · floor under the door')}
@@ -395,7 +406,7 @@ boxAlong(horiz,w,u1+fw,u2-fw,v0+0.165,v0+0.18,z1+fw,fz,MAT.frost,{tip:tip+' · f
       leaf.position.set(m((h==='a'?1:-1)*(len/2)),m((o.h-0.14)/2+0.02),0);piv.add(leaf);
       piv.rotation.y=horiz?Math.PI:-Math.PI/2;
       const sgn=-(o.swing==='+'?1:-1)*(h==='a'?-1:1)*(horiz?1:-1);piv.rotation.y+=sgn*open;   // side walls (along Y) turn the other way round
-      scene.add(piv);named(leaf,tip);if(o.id==='D-01'){D01.push({piv,base:piv.rotation.y-sgn*open,sgn,open})}   // double doors meet in the middle with a hairline gap
+      scene.add(piv);named(leaf,tip);if(open){D01.push({piv,base:piv.rotation.y-sgn*open,sgn,open})}   // double doors meet in the middle with a hairline gap
       if(glassTop){   // cut the upper half out of the leaf: solid lower half, rails and stiles round a glass pane
         const L=len-0.24,H=o.h-0.14,sg=h==='a'?1:-1,zc=m(0.02),st=0.3,gz1=H*0.5,gz2=H-0.3;
         leaf.geometry.dispose();leaf.geometry=new THREE.BoxGeometry(m(L),m(gz1),m(th));leaf.position.set(m(sg*len/2),zc+m(gz1/2),0);
@@ -1283,11 +1294,14 @@ function poseGates(t){for(const g of GATES){g.p1.rotation.y=g.sg*FOLD*t;g.p2.rot
 const gateAnim={open:1,target:1,last:0};
 // main door D-01: both teak leaves swing between shut (0) and the open pose (1)
 const doorAnim={open:1,target:1,last:0};
-function setDoorOpen(v){doorAnim.target=v?1:0;doorAnim.last=0;const b=document.getElementById('doorBtn');if(b){b.textContent=v?'Close main door':'Open main door';b.setAttribute('aria-pressed',!!v)}invalidate()}
+// every door leaf, steel door, grill door and window sash: e = 0 shut, 1 open
+function poseOpen(e){for(const l of D01)l.piv.rotation.y=l.base+l.sgn*l.open*e;for(const q of WINS){if(q.kind==='swing')q.g.rotation.y=q.a*e;else q.g.position.copy(q.g.userData.p0||(q.g.userData.p0=q.g.position.clone())).addScaledVector(q.v,e)}}
+poseOpen(1);
+function setDoorOpen(v){doorAnim.target=v?1:0;doorAnim.last=0;const b=document.getElementById('allBtn');if(b){b.textContent=v?'Close all':'Open all';b.setAttribute('aria-pressed',!!v)}invalidate()}
 function doorStep(now){if(doorAnim.open===doorAnim.target)return;const dt=doorAnim.last?Math.min(0.1,(now-doorAnim.last)/1000):0;doorAnim.last=now;
   const d=dt/1.4;doorAnim.open=doorAnim.target>doorAnim.open?Math.min(doorAnim.target,doorAnim.open+d):Math.max(doorAnim.target,doorAnim.open-d);
-  const e=doorAnim.open*doorAnim.open*(3-2*doorAnim.open);for(const l of D01)l.piv.rotation.y=l.base+l.sgn*l.open*e;renderer.shadowMap.needsUpdate=true;if(doorAnim.open===doorAnim.target&&photo&&pt)pt.setScene(scene,camera);invalidate()}
-function setGatesOpen(v){gateAnim.target=v?1:0;gateAnim.last=0;const b=document.getElementById('gateBtn');if(b){b.textContent=v?'Close gates':'Open gates';b.setAttribute('aria-pressed',!!v)}invalidate()}
+  const e=doorAnim.open*doorAnim.open*(3-2*doorAnim.open);poseOpen(e);renderer.shadowMap.needsUpdate=true;if(doorAnim.open===doorAnim.target&&photo&&pt)pt.setScene(scene,camera);invalidate()}
+function setGatesOpen(v){gateAnim.target=v?1:0;gateAnim.last=0;invalidate()}
 function gateStep(now){if(gateAnim.open===gateAnim.target)return;const dt=gateAnim.last?Math.min(0.1,(now-gateAnim.last)/1000):0;gateAnim.last=now;
   const d=dt/1.6;gateAnim.open=gateAnim.target>gateAnim.open?Math.min(gateAnim.target,gateAnim.open+d):Math.max(gateAnim.target,gateAnim.open-d);
   const e=gateAnim.open*gateAnim.open*(3-2*gateAnim.open);poseGates(e);renderer.shadowMap.needsUpdate=true;if(gateAnim.open===gateAnim.target&&photo&&pt)pt.setScene(scene,camera);invalidate()}
@@ -1905,7 +1919,6 @@ function setOpt(o){optRow.classList.toggle('hidden',!o);optBtn.setAttribute('ari
 optBtn.onclick=()=>setOpt(optRow.classList.contains('hidden'));
 document.querySelectorAll('#lensSeg button').forEach(b=>b.onclick=()=>setLens(+b.dataset.f));
 const animBtn=document.getElementById('animBtn');animBtn.onclick=()=>carAnim.on?stopAnim():startAnim();
-document.getElementById('gateBtn').onclick=()=>setGatesOpen(gateAnim.target?0:1);
 // floor: FT-5 ivory matt vitrified tile, 2' x 2', from the product photo, laid with thin grey joints
 // the product photos are lit unevenly (one side darker); take out the slow light-to-dark shift so repeated tiles look even, keep the fine speckle and grain
 function flattenTile(g,w,h){const n=6,c=document.createElement('canvas');c.width=c.height=n;const q=c.getContext('2d');q.imageSmoothingQuality='high';q.drawImage(g.canvas,0,0,n,n);
@@ -1919,7 +1932,7 @@ function setTile(k){
   if(tileCache[k])return use(tileCache[k]);
   const im=new Image();im.onload=()=>{tileCache[k]=canvasTex(1024,1024,(g,w,h)=>{g.drawImage(im,0,0,w,h);flattenTile(g,w,h);g.fillStyle='rgba(120,115,108,0.55)';g.fillRect(0,0,w,3);g.fillRect(0,0,3,h)},m(2));use(tileCache[k])};im.src=TILEIMG[k]}
 setTile('ft5');   // chosen floor: FT-5 ivory matt vitrified tile, 2' x 2'
-document.getElementById('doorBtn').onclick=()=>setDoorOpen(doorAnim.target?0:1);
+document.getElementById('allBtn').onclick=()=>{const v=doorAnim.target?0:1;setDoorOpen(v);setGatesOpen(v)};
 const nb=document.getElementById('notesBtn');nb.onclick=()=>{const h=panel.classList.toggle('hidden');nb.setAttribute('aria-pressed',!h)};
 
 // ---------------- photo mode: ray tracing with three-gpu-pathtracer (local copy) ----------------
