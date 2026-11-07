@@ -76,6 +76,7 @@ canvas{display:block;width:100%;height:100%}
   <button class="btn" id="manBtn" aria-pressed="false" title="A 6' man walks up the spiral stair ST-2, one foot on each tread, to check head room and step size by eye. Click again to stop.">6' man on stair</button>
   <button class="btn" id="man2Btn" aria-pressed="false" title="A 6' man walks along the east side passage, past the shifted pillars, and back. Click again to stop.">Man in side passage</button>
   <button class="btn" id="allBtn" aria-pressed="true" title="Open or close every door, window and gate together">Close all</button>
+  <button class="btn" id="curtBtn" aria-pressed="true" title="Draw every window curtain shut or open">Close curtains</button>
   <button class="btn" id="animBtn" aria-pressed="false" title="Watch the car come in from the road, reverse into its spot, wait, and drive out">Animate car parking</button>
   <button class="btn" id="photoBtn" aria-pressed="false" title="Ray-traced photo of the current view. Uses the graphics card heavily for about a minute, then stops by itself.">Photo</button>
   <button class="btn" id="saveBtn" title="Save the current image as PNG">Save</button>
@@ -616,10 +617,11 @@ function curtain(y1,y2,xp=LX1+0.42,top=BZ,trackTip='Curtain track',axis='y',mat=
   me.castShadow=true;me.receiveShadow=true;scene.add(me);
   if(mat){named(me,ctip||'Curtain');me.userData.keepUV=true}else{named(me,'Sheer curtain · crepe georgette, window length: rod 6" above the window, ends 6" below the sill');me.userData.curtain=true}
   if(mat){if(axis==='y')box(xp-0.06,xp+0.06,y1,y2,top-0.08,top-0.012,MAT.blackMetal,{tip:trackTip});else box(y1,y2,xp-0.06,xp+0.06,top-0.08,top-0.012,MAT.blackMetal,{tip:trackTip});return}
-  const k=[axis,xp.toFixed(2),top.toFixed(2),ZOFF].join('|');(RAILS[k]=RAILS[k]||{axis,xp,top,z:ZOFF,tip:trackTip,segs:[]}).segs.push([y1,y2])}
+  const k=[axis,xp.toFixed(2),top.toFixed(2),ZOFF].join('|');(RAILS[k]=RAILS[k]||{axis,xp,top,z:ZOFF,tip:trackTip,segs:[]}).segs.push([y1,y2,me])}
 // one continuous black curtain rail per window: joins the curtain stacks on the same line (gaps up to 9'), with wall brackets and round end caps, so the curtains can be drawn shut
-const RAILS={};
+const RAILS={},CURT=[];   // CURT: each curtain's open stack and its drawn-shut span (the two stacks of a window meet in the middle)
 function buildRails(){for(const R of Object.values(RAILS)){const sg=R.segs.sort((a,b)=>a[0]-b[0]),runs=[];
+  for(let i=0;i+1<sg.length;i+=2){const L=sg[i],Rr=sg[i+1],mid=(L[1]+Rr[0])/2;CURT.push({me:L[2],axis:R.axis,o:[L[0],L[1]],c:[L[0],mid+0.05]},{me:Rr[2],axis:R.axis,o:[Rr[0],Rr[1]],c:[mid-0.05,Rr[1]]})}
   for(const q of sg){const l=runs[runs.length-1];if(l&&q[0]-l[1]<9)l[1]=Math.max(l[1],q[1]);else runs.push([...q])}
   const z0=ZOFF;ZOFF=R.z;const zr=R.top-0.06,tip=R.tip+' · continuous rail, curtains slide fully open or shut';
   for(const [a,b] of runs){const L=b-a+0.2,c=(a+b)/2,rod=new THREE.Mesh(new THREE.CylinderGeometry(m(0.04),m(0.04),m(L),16),MAT.blackMetal);rod.rotation[R.axis==='y'?'x':'z']=Math.PI/2;
@@ -1295,9 +1297,16 @@ const gateAnim={open:1,target:1,last:0};
 // main door D-01: both teak leaves swing between shut (0) and the open pose (1)
 const doorAnim={open:1,target:1,last:0};
 // every door leaf, steel door, grill door and window sash: e = 0 shut, 1 open
+function poseCurt(e){for(const c of CURT){const a=c.c[0]+(c.o[0]-c.c[0])*e,b=c.c[1]+(c.o[1]-c.c[1])*e;c.me.scale.x=(b-a)/(c.o[1]-c.o[0]);if(c.axis==='y')c.me.position.z=m((a+b)/2);else c.me.position.x=mx((a+b)/2)}}
 function poseOpen(e){for(const l of D01)l.piv.rotation.y=l.base+l.sgn*l.open*e;for(const q of WINS){if(q.kind==='swing')q.g.rotation.y=q.a*e;else q.g.position.copy(q.g.userData.p0||(q.g.userData.p0=q.g.position.clone())).addScaledVector(q.v,e)}}
 poseOpen(1);
 function setDoorOpen(v){doorAnim.target=v?1:0;doorAnim.last=0;const b=document.getElementById('allBtn');if(b){b.textContent=v?'Close all':'Open all';b.setAttribute('aria-pressed',!!v)}invalidate()}
+// curtains: drawn open (1) or shut (0), both stacks of a window meet in the middle
+const curtAnim={open:1,target:1,last:0};
+function setCurtOpen(v){curtAnim.target=v?1:0;curtAnim.last=0;const b=document.getElementById('curtBtn');if(b){b.textContent=v?'Close curtains':'Open curtains';b.setAttribute('aria-pressed',!!v)}invalidate()}
+function curtStep(now){if(curtAnim.open===curtAnim.target)return;const dt=curtAnim.last?Math.min(0.1,(now-curtAnim.last)/1000):0;curtAnim.last=now;
+  const d=dt/1.6;curtAnim.open=curtAnim.target>curtAnim.open?Math.min(curtAnim.target,curtAnim.open+d):Math.max(curtAnim.target,curtAnim.open-d);
+  const e=curtAnim.open*curtAnim.open*(3-2*curtAnim.open);poseCurt(e);renderer.shadowMap.needsUpdate=true;invalidate()}
 function doorStep(now){if(doorAnim.open===doorAnim.target)return;const dt=doorAnim.last?Math.min(0.1,(now-doorAnim.last)/1000):0;doorAnim.last=now;
   const d=dt/1.4;doorAnim.open=doorAnim.target>doorAnim.open?Math.min(doorAnim.target,doorAnim.open+d):Math.max(doorAnim.target,doorAnim.open-d);
   const e=doorAnim.open*doorAnim.open*(3-2*doorAnim.open);poseOpen(e);renderer.shadowMap.needsUpdate=true;if(doorAnim.open===doorAnim.target&&photo&&pt)pt.setScene(scene,camera);invalidate()}
@@ -1932,6 +1941,7 @@ function setTile(k){
   if(tileCache[k])return use(tileCache[k]);
   const im=new Image();im.onload=()=>{tileCache[k]=canvasTex(1024,1024,(g,w,h)=>{g.drawImage(im,0,0,w,h);flattenTile(g,w,h);g.fillStyle='rgba(120,115,108,0.55)';g.fillRect(0,0,w,3);g.fillRect(0,0,3,h)},m(2));use(tileCache[k])};im.src=TILEIMG[k]}
 setTile('ft5');   // chosen floor: FT-5 ivory matt vitrified tile, 2' x 2'
+document.getElementById('curtBtn').onclick=()=>setCurtOpen(curtAnim.target?0:1);
 document.getElementById('allBtn').onclick=()=>{const v=doorAnim.target?0:1;setDoorOpen(v);setGatesOpen(v)};
 const nb=document.getElementById('notesBtn');nb.onclick=()=>{const h=panel.classList.toggle('hidden');nb.setAttribute('aria-pressed',!h)};
 
@@ -2167,7 +2177,7 @@ function sharp(on){const r=on?Math.min(devicePixelRatio||1,2):1;if(renderer.getP
 renderer.setAnimationLoop(()=>{
   if(preparing)return;
   walk();
-  gateStep(performance.now());doorStep(performance.now());
+  gateStep(performance.now());doorStep(performance.now());curtStep(performance.now());
   if(carAnim.on)animStep(performance.now());
   if(tour.on)tourStep(performance.now());
   if(man.on&&man.o)manStep(performance.now());if(man2.on&&man2.o)man2Step(performance.now());
