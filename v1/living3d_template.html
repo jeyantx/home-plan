@@ -76,6 +76,7 @@ canvas{display:block;width:100%;height:100%}
   <button class="btn" id="manBtn" aria-pressed="false" title="A 6' man walks up the spiral stair ST-2, one foot on each tread, to check head room and step size by eye. Click again to stop.">6' man on stair</button>
   <button class="btn" id="man2Btn" aria-pressed="false" title="A 6' man walks along the east side passage, past the shifted pillars, and back. Click again to stop.">Man in side passage</button>
   <button class="btn" id="gateBtn" aria-pressed="true" title="Open or close the two front gates GT-01 and GT-02 (bi-fold, they fold inward)">Close gates</button>
+  <button class="btn" id="doorBtn" aria-pressed="true" title="Open or close the teak main door D-01">Close main door</button>
   <button class="btn" id="animBtn" aria-pressed="false" title="Watch the car come in from the road, reverse into its spot, wait, and drive out">Animate car parking</button>
   <button class="btn" id="photoBtn" aria-pressed="false" title="Ray-traced photo of the current view. Uses the graphics card heavily for about a minute, then stops by itself.">Photo</button>
   <button class="btn" id="saveBtn" title="Save the current image as PNG">Save</button>
@@ -115,7 +116,7 @@ import {CAR_ROUTE} from './models/car-route.js?v=__BUILD__';
 import {loadStairWalker,loadPathWalker} from './models/person.js?v=__BUILD__';
 import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
 
-const P=window.PLAN, F=0.3048, CEIL=10.0, EYE=5.25;
+const D01=[];const P=window.PLAN, F=0.3048, CEIL=10.0, EYE=5.25;
 // site levels (feet, relative to the house floor): road, gate crest, parking, neighbours' ground; the gardens stay at GRD (1' below the floor)
 const LV=P.levels||{road:2.5,hump:2.5,parking:2.5,garden:2.5,floor:3.5},RP=P.ramp||{y_hump:0,y_crest:0,y_top:0,drain:[0,0]};
 const GRD=LV.garden-LV.floor,RDZ=LV.road-LV.floor,HUZ=LV.hump-LV.floor,PKZ=LV.parking-LV.floor,NBZ=Math.min(RDZ+1.0,LV.garden-LV.floor);
@@ -334,7 +335,7 @@ function buildOpening(o,w,horiz,s0,out=0){
     const vo=T-0.04;
     if(/invisible grill/.test(P.spec[o.id]||''))invisibleGrill(o,w,horiz,u1,u2,z1,z2,vo-0.08);else grillMesh(o,w,horiz,u1,u2,z1,z2,vo-0.08);
     boxAlong(horiz,w,u1-0.12,u2+0.12,-0.1,T*0.35-0.012,z1-0.06,z1+0.012,MAT.granite,{tip:'Granite window sill'});
-    if(out&&!horiz&&['W-03','W-04','W-05'].includes(o.id)){   // side passage: a plain slim RCC sunshade only (9" out, 3" thick, drip groove), so the 1'9" passage keeps its head room
+    if(out&&!horiz&&['W-04','W-05'].includes(o.id)){   // side passage: a plain slim RCC sunshade only (9" out, 3" thick, drip groove), so the 1'9" passage keeps its head room
       const vr=(a,b)=>out<0?[-b,-a]:[T+a,T+b],S=vr(0.012,0.75),D=vr(0.6,0.65),ft=`${o.id} · sunshade (chajja) · plain RCC, 9" out, 3" thick, sloped top, drip groove under; painted with the outside walls`;
       boxAlong(horiz,w,u1-0.33,u2+0.33,S[0],S[1],z2+0.25,z2+0.5,MAT.ext,{tip:ft});boxAlong(horiz,w,u1-0.33,u2+0.33,D[0],D[1],z2+0.22,z2+0.25,MAT.extTrim,{cast:false,tip:ft+' · drip groove'})}
     if(out&&(horiz||o.id==='W-07')&&o.id!=='V-01'){   // outside box frame WF-1 on the front and back (north/south) walls and on W-07 facing the side garden; the other east and west windows face the neighbours and get none (none on V-01): wood-look brown cladding (same as the balcony louvers and the gate slats) round the window, deeper hood on top as the sunshade
@@ -380,7 +381,7 @@ function buildOpening(o,w,horiz,s0,out=0){
       leaf.position.set(m((h==='a'?1:-1)*(len/2)),m((o.h-0.14)/2+0.02),0);piv.add(leaf);
       piv.rotation.y=horiz?Math.PI:-Math.PI/2;
       const sgn=-(o.swing==='+'?1:-1)*(h==='a'?-1:1)*(horiz?1:-1);piv.rotation.y+=sgn*open;   // side walls (along Y) turn the other way round
-      scene.add(piv);named(leaf,tip);
+      scene.add(piv);named(leaf,tip);if(o.id==='D-01')D01.push({piv,base:piv.rotation.y-sgn*open,sgn,open});
       if(glassTop){   // cut the upper half out of the leaf: solid lower half, rails and stiles round a glass pane
         const L=len-0.24,H=o.h-0.14,sg=h==='a'?1:-1,zc=m(0.02),st=0.3,gz1=H*0.5,gz2=H-0.3;
         leaf.geometry.dispose();leaf.geometry=new THREE.BoxGeometry(m(L),m(gz1),m(th));leaf.position.set(m(sg*len/2),zc+m(gz1/2),0);
@@ -1246,6 +1247,12 @@ const GD={'GD-1':'horizontal wood-look slats with 1" gaps','GD-2':'black vertica
 const gateMeshes=[],GATES=[],FOLD=1.45;   // GATES: each leaf's hinge panel p1 and folding panel p2; open 1 = folded back, 0 = shut across the opening
 function poseGates(t){for(const g of GATES){g.p1.rotation.y=g.sg*FOLD*t;g.p2.rotation.y=-g.sg*2*FOLD*t}}
 const gateAnim={open:1,target:1,last:0};
+// main door D-01: both teak leaves swing between shut (0) and the open pose (1)
+const doorAnim={open:1,target:1,last:0};
+function setDoorOpen(v){doorAnim.target=v?1:0;doorAnim.last=0;const b=document.getElementById('doorBtn');if(b){b.textContent=v?'Close main door':'Open main door';b.setAttribute('aria-pressed',!!v)}invalidate()}
+function doorStep(now){if(doorAnim.open===doorAnim.target)return;const dt=doorAnim.last?Math.min(0.1,(now-doorAnim.last)/1000):0;doorAnim.last=now;
+  const d=dt/1.4;doorAnim.open=doorAnim.target>doorAnim.open?Math.min(doorAnim.target,doorAnim.open+d):Math.max(doorAnim.target,doorAnim.open-d);
+  const e=doorAnim.open*doorAnim.open*(3-2*doorAnim.open);for(const l of D01)l.piv.rotation.y=l.base+l.sgn*l.open*e;renderer.shadowMap.needsUpdate=true;if(doorAnim.open===doorAnim.target&&photo&&pt)pt.setScene(scene,camera);invalidate()}
 function setGatesOpen(v){gateAnim.target=v?1:0;gateAnim.last=0;const b=document.getElementById('gateBtn');if(b){b.textContent=v?'Close gates':'Open gates';b.setAttribute('aria-pressed',!!v)}invalidate()}
 function gateStep(now){if(gateAnim.open===gateAnim.target)return;const dt=gateAnim.last?Math.min(0.1,(now-gateAnim.last)/1000):0;gateAnim.last=now;
   const d=dt/1.6;gateAnim.open=gateAnim.target>gateAnim.open?Math.min(gateAnim.target,gateAnim.open+d):Math.max(gateAnim.target,gateAnim.open-d);
@@ -1868,6 +1875,7 @@ optBtn.onclick=()=>setOpt(optRow.classList.contains('hidden'));
 document.querySelectorAll('#lensSeg button').forEach(b=>b.onclick=()=>setLens(+b.dataset.f));
 const animBtn=document.getElementById('animBtn');animBtn.onclick=()=>carAnim.on?stopAnim():startAnim();
 document.getElementById('gateBtn').onclick=()=>setGatesOpen(gateAnim.target?0:1);
+document.getElementById('doorBtn').onclick=()=>setDoorOpen(doorAnim.target?0:1);
 const nb=document.getElementById('notesBtn');nb.onclick=()=>{const h=panel.classList.toggle('hidden');nb.setAttribute('aria-pressed',!h)};
 
 // ---------------- photo mode: ray tracing with three-gpu-pathtracer (local copy) ----------------
@@ -2102,7 +2110,7 @@ function sharp(on){const r=on?Math.min(devicePixelRatio||1,2):1;if(renderer.getP
 renderer.setAnimationLoop(()=>{
   if(preparing)return;
   walk();
-  gateStep(performance.now());
+  gateStep(performance.now());doorStep(performance.now());
   if(carAnim.on)animStep(performance.now());
   if(tour.on)tourStep(performance.now());
   if(man.on&&man.o)manStep(performance.now());if(man2.on&&man2.o)man2Step(performance.now());
