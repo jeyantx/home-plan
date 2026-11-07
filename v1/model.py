@@ -163,7 +163,7 @@ BRANCH_NOTES='''<section class="ask"><h2>Areas for the engineer (built-up and pa
 <li><b>Septic tank UG-01: the tank already on the plot</b> (2" from the west boundary, 1' in from the road, 7'3" x 10' outside), about 8,000 L assumed (6'3" x 9' inside, 5'3" of liquid, two chambers) until it is checked on site. 18.8 m from borewell BR-02 (guideline at least 15 m). Openings raised about 2' to the new ground with tile-in covers on the small-gate platform and the gate crest; the cleaning truck reaches it from the road. The engineer must support the foot of the outside stair ST-1A, which stands over it, and check its roof under the small-gate steps and the fill.</li>
 <li><b>Soak pit UG-02</b>, new, just inside the car gate on the east side: 19.5 m from BR-02 (guideline at least 18 m). If the town has an underground sewer on this road, connect to it instead and drop the soak pit.</li>
 <li><b>Sump UG-03, 6,000 L, now at the front</b> under the east walkway beside the bikes (inside 5' x 7'6", 6'5" deep), so a water lorry fills it from the road with a short hose; 10' from the septic tank and 12' from the soak pit. Tile-in lockable cover in the walkway; bores and the town supply feed it, a pump lifts water to the overhead tank FU-71.</li>
-<li><b>Pumps:</b> no motor room or surface motor is needed. Both pumps are submersible: an openwell submersible pump (1 HP) sits inside the sump UG-03, and the bore pump sits down in BR-02. Above ground there are only two wall control panels, both under cover: FU-85 on GW-04 in the parking beside the EB meter FU-87 (sump pump, with automatic float switches for sump low and tank full) and FU-86 in the bore court (bore pump). The sump pipe goes up the porch wall to the terrace, along PW-02 and up FW-02 by the ladder FU-72 to the tank FU-71; bore water goes to the sump, or straight to the tank by a valve.</li>
+<li><b>Pumps:</b> no motor room or surface motor is needed. Both pumps are submersible: an openwell submersible pump (1 HP) sits inside the sump UG-03, and the bore pump sits down in BR-02. Above ground there are only two wall control panels, both under cover: the sump pump control inside the EB meter box FU-87 on GW-04 in the parking ( with automatic float switches for sump low and tank full) and FU-86 in the bore court (bore pump). The sump pipe goes up the porch wall to the terrace, along PW-02 and up FW-02 by the ladder FU-72 to the tank FU-71; bore water goes to the sump, or straight to the tank by a valve.</li>
 <li><b>Rainwater recharge pit UG-04</b> in the back garden: roof water through a filter into a 3' x 6' pebble pit, for the bores.</li>
 <li><b>To check on site:</b> the existing tank's depth, walls, partition and outlet; any neighbour's well near the soak pit (keep 18 m); the soil for the soak pit.</li>
 </ol></section>
@@ -718,7 +718,7 @@ PORCH_STEPS_Y=32.75   # porch 2' shorter: the steps start 2' in from the front l
 
 # ---------- electrical plan AU-03 (2026-11-05): plain modular one-way switches (no smart switches: cheap to repair), every point on a wall face ----------
 # point: id, floor, x, y (wall face, plan feet), height from that floor (feet), kind, circuit, what it has
-# kinds: DB board, SB switchboard, BS bedside board, S6 6 A socket (+ USB-A/C where noted), S16 16 A socket, AC 16 A AC socket, GY geyser socket,
+# kinds: DB board, SB switchboard, BS bedside board, S6 6 A socket (plain 3-pin, with its own switch), S16 16 A socket, AC 16 A AC socket, GY geyser socket,
 #        EV car charging, IP outdoor IP65 socket or isolator, LO outdoor light, NT data / CCTV / bell
 ELEC_POINTS=[
  # boards
@@ -726,59 +726,54 @@ ELEC_POINTS=[
  ('DB-2', 'F', 14.92, 73.875, 5.0, 'DB', 'C11', 'First-floor sub-board, 8 ways, on the landing north wall FW-02 just west of SB-10, clear of the spiral stair and of the terrace door D-12 swing: its own 30 mA RCCB'),
  # entrance, foyer, living
  ('NT-1', 'G', 3.9, 40.5, 4.5, 'NT', 'C3', 'Door bell push on the porch face of GW-02, just east of the main door D-01/D-13 (the west side has no wall left beside W-02); chime in the foyer; video door phone can use the same conduit'),
- ('SB-1','G',8.875,41.6,4.0,'SB','C1','Foyer, beside the main door: foyer light, porch light, parking lights (2), gate pillar lamps, side passage lights (3, two-way with SB-4); all outside lights are switched here, inside, never outside'),
- ('S-1','G',8.875,45.0,3.0,'S6','C3','Foyer console FU-02: 6 A socket with USB-A + USB-C phone charging, 6" above the console top'),
+ ('SB-1', 'G', 8.875, 41.6, 4.0, 'SB', 'C1', 'Foyer, beside the main door, one 2-row plate: foyer light, porch light, parking lights, gate pillar lamps, side passage lights (two-way with SB-4), spare; 6 A socket with switch (lamp, vacuum)'),
  ('SB-2','G',13.0,46.75,4.0,'SB','C1','Living, on GW-12 east of the bedroom 1 door: 2 downlight groups, band LED strip, fan 1 and fan 2 with plain step regulators, open-area light (two-way with SB-4)'),
- ('S-2','G',3.5,49.0,1.25,'S6','C3','Living, beside the 3-seat sofa arm: 6 A socket with USB-A + USB-C'),
- ('S-3','G',3.5,56.2,1.0,'S6','C3','Living, sofa corner: 6 A socket for the floor lamp'),
- ('S-4','G',10.6,58.25,1.25,'S6','C3','Living, beside the 2-seat sofa: 6 A socket with USB-A + USB-C'),
- ('S-5','G',18.917,52.5,1.5,'S6','C3','TV wall FU-05, behind the TV console: 3 x 6 A (TV, set-top box, sound bar) on the inverter; HDMI and TV cable conduit to the TV at 4\''),
- ('NT-2','G',18.917,52.5,6.75,'NT','C3','TV wall, top: Wi-Fi router point (6 A socket + fibre/data conduit from the road), central, so the signal covers the ground floor'),
+ ('S-2', 'G', 3.5, 49.0, 1.25, 'S6', 'C3', 'Living, beside the 3-seat sofa arm: 6 A socket with switch (lamp, phone charger on the sofa side table)'),
+ ('S-3', 'G', 3.5, 56.2, 1.0, 'S6', 'C3', 'Living, sofa corner: 6 A socket with switch for the floor lamp'),
+ ('S-4', 'G', 10.6, 58.25, 1.25, 'S6', 'C3', 'Living, beside the 2-seat sofa: 6 A socket with switch'),
+ ('S-5', 'G', 20.13, 52.5, 1.35, 'S6', 'C3', 'TV wall FU-05, on the centre panel behind the floating TV console (hidden): 3 x 6 A sockets with switches (TV, set-top box, sound bar) on the inverter; HDMI and TV cable conduit up to the TV'),
+ ('NT-2', 'G', 20.15, 56.75, 7.4, 'NT', 'C3', 'Wi-Fi router point inside the closed top cupboard of the FU-05 right tower (hidden behind the shutter): 6 A socket with switch + fibre/data conduit from the road; central, the wood does not block the signal'),
+ ('S-17', 'G', 20.15, 56.75, 3.75, 'S6', 'C3', 'FU-05 right tower, open LED shelf (3\'5" to 5\'): 2 x 6 A sockets with switches on the back panel, for a lamp, speaker or a phone charging on the shelf'),
  ('AC-0', 'G', 18.4, 58.25, 7.5, 'AC', 'C10', 'Living, spare AC point high on GW-13 (south wall) between the arch O-01 and the TV unit, for a future split AC blowing down the hall (16 A socket and its own 4 mm² line pulled now)'),
  # kitchen: 4 mm² lines, 16 A sockets 10" above the counter, none within 2' of the sink or beside the gas hob
- ('SB-3','G',12.0,66.625,4.25,'SB','C1','Kitchen, on GW-14 above the low counter: kitchen downlights, under-cabinet LED strip, open-area light'),
- ('K-1','G',3.5,59.4,3.67,'S16','C5','Kitchen, east counter by the mixer FU-64: 16 A + 6 A twin'),
+ ('SB-3', 'G', 12.05, 58.625, 4.3, 'SB', 'C1', 'Kitchen, one plate on GW-13 just inside the arch side, west of the W-12 frame and above the microwave: kitchen downlights, under-cabinet LED strip, open-area light; 16 A socket with switch for the microwave FU-67 (old K-6)'),
+ ('K-1', 'G', 3.5, 60.3, 3.67, 'S16', 'C5', 'Kitchen, east counter on GW-01 between the mixer FU-64 and the W-06 frame, one plate: 16 A + 2 x 6 A sockets with switches (mixer, kettle, phone/small appliance; old K-7 joined here)'),
  ('K-2','G',3.5,62.65,6.75,'S16','C5','Kitchen, chimney FU-81: 6 A socket hidden behind the hood top'),
- ('K-3','G',3.5,65.6,3.67,'S16','C5','Kitchen, east counter, south corner: 16 A + 6 A twin for the kettle or a future induction plate'),
- ('K-4','G',10.4,66.625,2.75,'S16','C5','Kitchen, low counter by the wet grinder FU-65: 16 A'),
- ('K-5','G',9.9,66.625,5.0,'S6','C5','Kitchen, beside the RO purifier FU-66: 6 A'),
- ('K-6', 'G', 11.95, 58.625, 4.4, 'S16', 'C5', 'Kitchen, on GW-13 just west of the W-12 frame, above the microwave FU-67 on the breakfast counter: 16 A socket with switch'),
- ('K-7', 'G', 5.05, 58.625, 3.5, 'S6', 'C3', 'Kitchen, on GW-13 above the breakfast counter just east of the W-12 frame: 6 A socket with switch (mixie, phone)'),
+ ('K-3', 'G', 3.5, 65.6, 3.67, 'S16', 'C5', 'Kitchen, east counter south corner on GW-01: 16 A + 6 A sockets with switches (kettle or a future induction plate)'),
+ ('K-4', 'G', 10.2, 66.625, 3.4, 'S16', 'C5', 'Kitchen, one plate on GW-14 above the low counter and the water pots, between the RO purifier and the wet grinder: 16 A for the wet grinder FU-65 and 6 A for the RO purifier FU-66, each with its switch (old K-5 joined here)'),
  ('K-8','G',20.25,59.75,6.0,'S16','C5','Fridge FU-18: 16 A socket on GW-05 just above the fridge top, easy to reach, not behind its hot back'),
  # open area, stair hall, toilet 2, store cupboard
  ('SB-4', 'G', 12.125, 70.65, 4.0, 'SB', 'C1', 'Stair hall, on GW-16 just south of the toilet 2 door D-04 frame: toilet 2 light and exhaust, geyser (20 A switch with red light), stair hall light, spiral stair light'),
- ('S-6','G',12.125,72.9,1.0,'S6','C4','Stair hall: 6 A socket for the vacuum and mopping machine'),
- ('S-7','G',17.75,70.4,0.9,'S16','C2','FU-25 cell S-4.1/S-4.2: inverter input, 16 A socket on its own MCB, inside the cupboard; inverter output cable back to DB-1'),
+ ('S-6', 'G', 11.0, 73.5, 1.0, 'S6', 'C4', 'Stair hall, on GW-19 (south end wall of toilet 2), low and out of sight from the hall: 6 A socket with switch for the vacuum and mopping machine'),
+ ('S-7', 'G', 20.25, 70.4, 0.9, 'S16', 'C2', 'FU-25 cell S-4.1/S-4.2: inverter input, 16 A socket with switch on its own MCB, on the back wall GW-05 inside the cupboard (hidden by the shutter); inverter output cable back to DB-1'),
  ('SB-5','G',10.25,73.9,4.0,'SB','C1','Stair hall, beside the garden door D-05: side-garden lights (2), back-garden lights (2), bore-court and clothes-rack light, utility light'),
  ('GY-2','G',8.7,67.0,6.75,'GY','C8','Toilet 2 geyser FU-58: 16 A socket with a splash cover, 6\'9" up, out of the shower spray'),
  ('S-8', 'G', 10.0, 73.125, 4.5, 'S6', 'C4', 'Toilet 2, beside the mirror over the basin FU-27: 6 A socket with switch and a splash cover (IP44)'),
  # bedroom 1, study, toilet 1
  ('SB-6','G',13.3,46.375,4.0,'SB','C1','Bedroom 1, inside at the D-02 latch: light, fan with step regulator, AC (20 A switch with red light)'),
- ('BS-1','G',20.25,40.2,2.25,'BS','C1','Bedroom 1, inside the bedside cut-out of FU-09.2: two-way switch for the room light, fan on/off, 6 A with USB-A + USB-C'),
- ('BS-2','G',19.7,46.375,2.25,'BS','C1','Bedroom 1, bed head (wall side): two-way switch for the light, 6 A with USB-A + USB-C'),
+ ('BS-1', 'G', 20.25, 40.2, 2.25, 'BS', 'C1', 'Bedroom 1, inside the bedside cut-out of FU-09.2 (the phone rests on the cut-out shelf): two-way switch for the room light, fan on/off, 6 A socket with switch'),
+ ('BS-2', 'G', 20.13, 45.85, 3.75, 'BS', 'C1', 'Bedroom 1, bed head (wall side), on the oak headboard panel just above its 4" ledge (the phone rests on the ledge): two-way switch for the light, 6 A socket with switch'),
  ('AC-1','G',9.25,40.6,7.5,'AC','C6','Bedroom 1 AC FU-44: 16 A socket beside the indoor unit, own 4 mm² line'),
  ('S-9','G',9.25,42.0,1.0,'S6','C4','Bedroom 1: 6 A socket for the iron, by the wardrobe side'),
  ('SB-7', 'G', 14.05, 35.375, 4.0, 'SB', 'C1', 'Bedroom 1, between the study wall and the toilet 1 door D-03 frame: 3-module plate: toilet 1 light and exhaust (in V-01), geyser (20 A switch with red light)'),
  ('GY-1','G',20.0,30.5,6.75,'GY','C7','Toilet 1 geyser: 16 A socket with a splash cover, 6\'9" up on GW-04, out of the spray'),
  ('S-10', 'G', 14.125, 32.2, 4.5, 'S6', 'C4', 'Toilet 1, beside the mirror (south of it): 6 A socket with switch and a splash cover (IP44)'),
  ('SB-8','G',9.25,34.9,4.0,'SB','C1','Study, at its open side: study light, fan with step regulator'),
- ('S-11','G',9.25,31.2,2.75,'S6','C3','Sewing table FU-10: 2 x 6 A with USB-A + USB-C, for the machine and a lamp, and a data point (LAN), 3" above the table'),
+ ('S-11', 'G', 9.25, 31.2, 2.75, 'S6', 'C3', 'Sewing table FU-10: 2 x 6 A sockets with switches for the machine and a lamp, and a data point (LAN), 3" above the table'),
  # bedroom 2
  ('SB-9', 'G', 13.83, 80.625, 4.0, 'SB', 'C1', 'Bedroom 2, inside at the D-06 latch, in the 4" strip between the door frame and the wardrobe FU-34: vertical plate: light, fan with step regulator, AC (20 A switch with red light), window-seat reading light'),
- ('BS-3', 'G', 20.25, 85.36, 2.5, 'BS', 'C1', 'Bedroom 2, bed head (north), in the gap between the mirror unit and the bed: vertical plate: two-way light switch, fan on/off, 6 A with USB-A + USB-C'),
- ('BS-4','G',20.25,91.3,2.5,'BS','C1','Bedroom 2, bed head (south): two-way light switch, 6 A with USB-A + USB-C'),
- ('S-12','G',20.25,93.2,3.5,'S6','C4','Bedroom 2, dressing end of FU-33: 6 A for a hair dryer'),
- ('S-13','G',10.25,93.8,2.25,'S6','C4','Bedroom 2, window-seat end: 6 A with USB-A + USB-C'),
+ ('BS-3', 'G', 20.25, 85.36, 2.5, 'BS', 'C1', 'Bedroom 2, bed head (north), in the gap between the mirror unit and the bed, vertical plate (the phone rests on the drawer unit top beside it): two-way light switch, fan on/off, 6 A socket with switch'),
+ ('BS-4', 'G', 20.25, 90.95, 2.5, 'BS', 'C1', 'Bedroom 2, bed head (south), above the side table FU-33 (phone on the table), clear of its lamp: two-way light switch, 6 A socket with switch'),
  ('AC-2','G',10.25,88.9,7.5,'AC','C9','Bedroom 2 AC FU-46: 16 A socket beside the indoor unit, own 4 mm² line'),
  # utility, bore court
- ('S-14','G',5.3,67.375,3.5,'S16','C4','Bore court, washing machine FU-29: 16 A socket with a splash cover (IP44) on GW-17, under the slab FU-83'),
+ ('S-14', 'G', 4.475, 67.375, 3.6, 'S16', 'C4', 'Bore court, centred over the washing machine FU-29 on GW-17, under the slab FU-83, so machine and socket read as one: 16 A socket with switch and a splash cover (IP44)'),
  # outside: IP65 boxes with spring flaps, under a roof or overhang, 3'6" up, cables enter from below with a drip loop
  ('PS-1','G',14.3,29.75,4.6,'S16','C13','Parking board PB-1 on GW-04 (one modular 12-module plate, 1\'2" x 9", in a grey IP65 cover), just west of the study window W-01 (clear of its frame), nearest the bikes for charging, 4\'4" to 5\'3" above the parking for safety, with the EB meter and sump box FU-87 beside it: 16 A IP65 socket with a flap, for a pressure washer, vacuum or a portable car charger (3.3 kW, no separate EV point)'),
  ('PS-2','G',15.1,29.75,4.6,'S16','C13','Parking board PB-1 on GW-04 (one modular 12-module plate, 1\'2" x 9", in a grey IP65 cover): second 16 A IP65 socket, for tools or a pump'),
  ('PS-3','G',14.7,29.75,4.6,'S6','C13','Parking board PB-1 on GW-04 (one modular 12-module plate, 1\'2" x 9", in a grey IP65 cover): 6 A IP65 socket, for a phone charger or a small light'),
  ('SB-14','G',14.7,29.75,5.05,'SB','C1','Parking board PB-1 on GW-04 (one modular 12-module plate, 1\'2" x 9", in a grey IP65 cover) behind the car: switches for the parking ceiling lights LO-1 and the gate pillar lamps, two-way with SB-1 in the foyer'),
  ('IP-1', 'G', 0.375, 26.0, 4.5, 'IP', 'C13', 'Two-wheeler charging on BW-01 by the bikes: 16 A IP65 socket with a hood (scooter charger), own 30 mA RCBO'),
- ('IP-2','G',12.0,95.125,3.5,'IP','C13','Back garden, on GW-08 under the balcony 3 slab: 16 A IP65 socket with a hood, for a garden tool or pump'),
+ ('IP-2', 'G', 12.0, 95.125, 3.5, 'IP', 'C13', 'Back garden, on GW-08 under the balcony 3 slab: IP65 box with a hood: 2 x 16 A + 1 x 6 A sockets with switches (garden tools, pump, a lamp)'),
  ('LO-1','G',14.0,24.0,9.0,'LO','C1','Parking: 2 ceiling lights under the slab (Y 24\' and 28\'), switched at SB-1'),
  ('LO-2','G',5.5,36.5,9.0,'LO','C1','Porch ceiling light, switched at SB-1'),
  ('LO-3','G',2.75,50.0,7.0,'LO','C1','Side passage: 3 bulkhead lights IP65 on GW-01 (Y 36\', 50\', 64\'), switched at SB-1 and SB-4'),
@@ -791,16 +786,26 @@ ELEC_POINTS=[
  ('GY-3','F',2.125,75.7,6.75,'GY','C15','Toilet 3 geyser FU-60: 16 A socket with a splash cover, beside the geyser, out of the spray'),
  ('S-15', 'F', 6.95, 73.5, 4.5, 'S6', 'C11', 'Toilet 3, on FW-09 beside the mirror over the basin FU-42: 6 A socket with switch and a splash cover (IP44)'),
  ('SB-12', 'F', 14.0, 80.25, 4.0, 'SB', 'C11', 'Bedroom 3, inside at the D-07 latch, between the door frame and the wardrobe FU-39: light, fan with step regulator, AC (20 A switch with red light), balcony light'),
- ('BS-5', 'F', 20.25, 85.05, 2.5, 'BS', 'C11', 'Bedroom 3, bed head (north), in the gap between the mirror unit and the bed: vertical plate: two-way light switch, fan on/off, 6 A with USB-A + USB-C'),
- ('BS-6', 'F', 20.25, 90.6, 2.5, 'BS', 'C11', 'Bedroom 3, bed head (south), beside the side table FU-38 and clear of its lamp: two-way light switch, 6 A with USB-A + USB-C'),
- ('S-16', 'F', 16.5, 94.375, 2.75, 'S6', 'C11', 'Bedroom 3 desk FU-40: 2 x 6 A with USB-A + USB-C, and a data point'),
+ ('BS-5', 'F', 20.25, 85.05, 2.5, 'BS', 'C11', 'Bedroom 3, bed head (north), in the gap between the mirror unit and the bed, vertical plate (the phone rests on the drawer unit top beside it): two-way light switch, fan on/off, 6 A socket with switch'),
+ ('BS-6', 'F', 20.25, 90.6, 2.5, 'BS', 'C11', 'Bedroom 3, bed head (south), above the side table FU-38 (phone on the table), clear of its lamp: two-way light switch, 6 A socket with switch'),
+ ('S-16', 'F', 16.5, 94.375, 2.75, 'S6', 'C11', 'Bedroom 3 desk FU-40: 2 x 6 A sockets with switches and a data point, just above the desk top'),
  ('AC-3','F',10.25,90.6,7.5,'AC','C14','Bedroom 3 AC FU-48: 16 A socket beside the indoor unit, own 4 mm² line from DB-1'),
  ('IP-3', 'F', 19.3, 95.125, 3.0, 'IP', 'C14', 'Balcony 3: IP65 isolator for the AC outdoor unit FU-49'),
- ('LO-6','F',15.0,95.125,7.0,'LO','C11','Balcony 3 light, IP65, switched at SB-13'),
+ ('LO-6','F',15.0,95.125,7.0,'LO','C11','Balcony 3 light, IP65, switched at SB-12'),
  ('LO-7','F',17.0,73.125,7.0,'LO','C11','Terrace: 2 bulkhead lights IP65 on FW-02 (X 15\', 19\'), switched at SB-10'),
  ('IP-4','F',19.0,73.125,3.0,'IP','C11','Terrace: 16 A IP65 socket with a hood, on FW-02 (washing, tools)'),
  ('NT-4','F',18.0,73.125,8.0,'NT','-','Solar provision: an empty 1" conduit from the terrace to DB-1 for future rooftop solar'),
 ]
+# plate layout (3D and the electrician): modules left to right, rows split by '|'; sw switch, ind indicator, reg fan regulator, s6 6 A socket, s16 16 A socket, data RJ45/TV/fibre, bell push; 'v' = vertical plate
+# face: (axis, side, coordinate) when the plate sits on furniture or a panel instead of the wall face
+ELEC_MODS={
+ 'SB-1':'sw,sw,sw,sw|sw,sw,sw,s6','SB-2':'sw,sw,sw,sw,reg,reg','S-2':'sw,s6','S-3':'sw,s6','S-4':'sw,s6','S-5':'sw,s6,sw,s6,sw,s6','NT-2':'sw,s6,data','S-17':'sw,s6,sw,s6',
+ 'AC-0':'ind,sw,s16','SB-3':'sw,sw,sw|sw,s16','K-1':'sw,s16,sw,s6,sw,s6','K-2':'sw,s6','K-3':'sw,s16,sw,s6','K-4':'sw,s16,sw,s6','K-8':'sw,s16',
+ 'SB-4':'sw,sw,ind,sw|sw,sw','S-6':'sw,s6','S-7':'sw,s16','SB-5':'sw,sw,sw,sw,sw','GY-2':'ind,sw,s16','S-8':'sw,s6','SB-6':'sw,reg,ind,sw','BS-1':'sw,sw,s6','BS-2':'sw,sw,s6',
+ 'AC-1':'ind,sw,s16','S-9':'sw,s6','SB-7':'sw,sw,ind,sw','GY-1':'ind,sw,s16','S-10':'sw,s6','SB-8':'sw,reg','S-11':'sw,s6,sw,s6,data','SB-9':'v:sw,sw,ind,sw,reg','BS-3':'v:sw,sw,s6',
+ 'BS-4':'sw,sw,s6','AC-2':'ind,sw,s16','S-14':'sw,s16','SB-10':'sw,sw,sw,sw','SB-11':'sw,sw,ind,sw','GY-3':'ind,sw,s16','S-15':'sw,s6','SB-12':'sw,reg,ind,sw,sw','BS-5':'v:sw,sw,s6',
+ 'BS-6':'sw,sw,s6','S-16':'sw,s6,sw,s6,data','AC-3':'ind,sw,s16','NT-1':'bell','NT-4':'data','IP-1':'sw,s16','IP-2':'sw,s16,sw,s16|sw,s6','IP-3':'ind,sw','IP-4':'sw,s16'}
+ELEC_FACE={'S-5':('x',-1,20.13),'NT-2':('x',-1,20.15),'S-17':('x',-1,20.15),'BS-2':('x',-1,20.13)}
 ELEC_CIRCUITS=[
  ('C1','Ground-floor lights and fans, outside lights','6 A MCB','1.5 mm²','on inverter'),
  ('C2','Inverter input (S-7)','16 A MCB','2.5 mm²',''),
@@ -821,8 +826,9 @@ ELEC_CIRCUITS=[
 ELEC_RULES=[
  'Switches: plain modular one-way and two-way rockers (any standard brand), 4\' from the floor, at the latch side of each door. Fans on plain step regulators. Any electrician can change a part in minutes.',
  'Sockets: 1\' from the floor in rooms, 10" above counters in the kitchen, 2\'3" to 2\'6" at bedsides, 7\'6" beside each AC, 6\'9" for geysers. No socket within 2\' of the sink or beside the gas hob.',
- 'Phone charging: 6 A sockets with built-in USB-A + USB-C at every bedside, both sofas, the foyer console, the breakfast counter, the study desk and the bedroom 3 desk.',
- 'Outside water safety: no switch outside at all; every outside light is switched from inside (SB-1, SB-4, SB-5, SB-10, SB-13). Outside sockets are IP65 boxes with a spring flap and a small hood, 3\'6" up, under a roof or overhang where possible; cables come in from below with a drip loop, so water runs away from the box. Bulkhead lights are IP65.',
+ 'Every socket is a plain 3-pin socket with its own switch on the same plate (6 A for small loads, 16 A for heavy ones); no USB sockets. Phone charging only where the phone has a place to rest: bedside cut-out or ledge, side tables, drawer tops, desks and the TV-unit shelf.',
+ 'Grouping: points close to each other share one modular plate (two rows when large), so there are fewer boxes on the walls and they are easier to fit and repair.',
+ 'Outside water safety: no switch outside at all; every outside light is switched from inside (SB-1, SB-4, SB-5, SB-10, SB-12). Outside sockets are IP65 boxes with a spring flap and a small hood, 3\'6" up, under a roof or overhang where possible; cables come in from below with a drip loop, so water runs away from the box. Bulkhead lights are IP65.',
  'Wet areas: toilet sockets and the washing machine socket have splash covers (IP44) and sit out of the shower spray; geysers have a 20 A switch with a red light outside the toilet door.',
  'Safety: 30 mA RCCB on all sockets, wet areas and outside; earth pit beside the EB meter, plus the earth wire in every point; ISI-marked copper wire in PVC conduit; separate line for each AC and geyser.',
  'Inverter: lights, fans, phone charging, TV and router (C1, C3) run on the inverter; ACs, geysers, kitchen power and pumps do not, so the battery lasts.',

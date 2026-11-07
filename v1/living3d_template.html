@@ -608,7 +608,7 @@ function addPlant(px,py,hM,seed,tip){
   const mat=c.material.clone();mat.vertexColors=true;const lm=new THREE.Mesh(g,mat);lm.name=c.name;lm.userData.tip=c.userData.tip;lm.castShadow=lm.receiveShadow=true;
   plant.remove(c);plant.add(lm)});
  scene.add(plant);plant.traverse(o=>{if(o.isMesh){o.userData.keepUV=true;named(o,tip)}})}
-addPlant(11.3,56.95,1.5,1,'Bamboo plant in black pot · 5 ft');
+addPlant(12.7,56.2,1.5,1,'Bamboo plant in black pot · 5 ft');   // clear of socket S-4
 // sheer curtains, window length only (cheaper, neater, clear of the ACs): rod 6" above the 7' window head, curtain ends 6" below the 3' sill
 const WT=7.2,WB=2.5,WROD='Curtain rod, 2" above the window';
 function curtain(y1,y2,xp=LX1+0.42,top=BZ,trackTip='Curtain track',axis='y',mat=null,ctip=null,bot=0.04){   // axis 'y': wall along plan y at x=xp; 'x': wall along plan x at y=xp
@@ -726,7 +726,7 @@ box(9.92,9.94,37.4,40.1,7.9,7.98,MAT.blackMetal,{cast:false,tip:'FU-44 · AC air
  softMirror(x-0.025,yc-mw/2,yc+mw/2,z1,z2,tm)}
 
 // plant by the window: smaller bamboo
-addPlant(10.05,42.3,1.2,3,'Bamboo plant in black pot · 4 ft');
+addPlant(10.1,44.7,1.2,3,'Bamboo plant in black pot · 4 ft');   // clear of socket S-9
 const blinds={slats:[],k:1,all:[]};
 function setBlind(k){blinds.k=k;const ang=[0.12,0.75,1.4][k];for(const sl of blinds.slats)sl.rotation.x=ang;if(typeof renderer!=='undefined'){renderer.shadowMap.needsUpdate=true;invalidate()}}
 // --- study corner G-06: sewing machine table FU-10 under W-01 (like the owner's photo), wooden chair, venetian blind
@@ -1628,7 +1628,7 @@ function vfrMats(){const P=(c,o={})=>new THREE.MeshPhysicalMaterial({color:c,rou
 {const wm=fuG['FU-29'];if(wm){const t=`${wm.id} · ${wm.name} · ${wm.note}`,CZ=-0.97,cx=(wm.x1+wm.x2)/2,cy=(wm.y1+wm.y2)/2,Y0=67.375,chrome=std({color:'#e3e6e9',roughness:0.12,metalness:1});
   placeAppliance('assets/appliances/washing-machine.glb',cx,cy,CZ,0,wmMat,t);   // front to the south, toward BR-02
   box(wm.x2-0.45,wm.x2-0.33,Y0,Y0+0.14,CZ+3.55,CZ+3.62,chrome,{tip:`${wm.id} · washing machine tap (angle valve) on GW-17`});
-  box(wm.x1+0.1,wm.x1+0.45,Y0,Y0+0.1,CZ+3.4,CZ+3.75,std({color:'#e4e4e0',roughness:0.5}),{tip:`${wm.id} · switch socket with a flip cover`});
+  // its socket is S-14 (Electrical plan), drawn with the other points
   box(cx-0.15,cx+0.15,wm.y2+0.25,wm.y2+0.5,CZ,CZ+0.012,MAT.blackMetal,{cast:false,tip:`${wm.id} · floor drain (trap) for the washing machine`})}}
 // bore court: slab over the washing machine FU-83 (high enough for a top-load machine) with a side wall on the passage side, bore pump panel FU-86; sump pump panel FU-85 and EB meter FU-87 on GW-04
 {const T=id=>{const f=fuG[id];return `${id} · ${f.name} · ${f.note}`},CZ=-0.97,SZ=CEIL+0.02,pg=std({color:'#c9ccd0',roughness:0.45,metalness:0.3});
@@ -1760,39 +1760,39 @@ for(const f of P.furniture){ if(f.fl!=='G'||['FU-01','FU-03.1','FU-03.2','FU-04'
 scene.traverse(n=>{if(n.isMesh&&!n.userData.curtain&&!n.userData.keepUV) metreUV(n.geometry)});
 scene.updateMatrixWorld(true);   // wall positions ready for collision before the first frame
 buildRails();
-// every switch board, socket, bedside board, AC and geyser point, DB and outdoor socket from the Electrical plan (model.py ELEC_POINTS), as white modular plates on the wall face they sit on, at their height; the parking board PB-1 is drawn below
-{const plate=std({color:'#f4f4f1',roughness:0.35}),modM=std({color:'#e6e6e1',roughness:0.4}),holeM=std({color:'#2b2b2b',roughness:0.6}),redM=std({color:'#c8203a',emissive:'#c8203a',emissiveIntensity:0.5}),greyM=std({color:'#9aa0a3',roughness:0.5});
- const SZ={S6:[0.45,0.27],S16:[0.52,0.32],SB:[0.62,0.36],BS:[0.5,0.32],AC:[0.52,0.32],GY:[0.27,0.27],NT:[0.22,0.22],IP:[0.36,0.36],DB:[1.25,1.45]},   // every socket plate carries its own switch (Indian practice)
-  SZX={'SB-4':[0.4,0.36],'SB-7':[0.4,0.36],'SB-11':[0.4,0.36],'SB-9':[0.3,0.62],'BS-3':[0.26,0.5],'BS-5':[0.26,0.5]};   // narrow plates where the wall between a door frame and a wardrobe is short
+// every switch board and socket from the Electrical plan (model.py ELEC_POINTS), drawn as the real modular plate: ELEC_MODS lists its modules left to right
+// (sw switch, ind indicator, reg fan regulator, s6 6 A socket, s16 16 A socket, data, bell; rows split by '|', 'v:' = vertical plate); ELEC_FACE puts a plate on a panel or furniture face
+{const plate=std({color:'#f4f4f1',roughness:0.35}),modM=std({color:'#e9e9e4',roughness:0.4}),holeM=std({color:'#2b2b2b',roughness:0.6}),redM=std({color:'#c8203a',emissive:'#c8203a',emissiveIntensity:0.5}),greyM=std({color:'#9aa0a3',roughness:0.5}),knobM=std({color:'#dcdcd6',roughness:0.4});
+ const MW={sw:0.075,ind:0.075,reg:0.15,s6:0.15,s16:0.225,data:0.1,bell:0.12},MODS=P.elecMods||{},FACE=P.elecFace||{};
+ const defMods={S6:'sw,s6',S16:'sw,s16',SB:'sw,sw,sw,sw',BS:'sw,sw,s6',AC:'ind,sw,s16',GY:'ind,sw,s16',NT:'data',IP:'sw,s16'};
  const onWall=(e,fl)=>{const T=0.07;for(const w of P.walls[fl]){if(e.y>w.y1-0.05&&e.y<w.y2+0.05){if(Math.abs(e.x-w.x1)<T)return['x',-1,w.x1];if(Math.abs(e.x-w.x2)<T)return['x',1,w.x2]}
    if(e.x>w.x1-0.05&&e.x<w.x2+0.05){if(Math.abs(e.y-w.y1)<T)return['y',-1,w.y1];if(Math.abs(e.y-w.y2)<T)return['y',1,w.y2]}}return null};
- let missed=[];
- for(const e of (P.elec||[])){if(!SZ[e.type]||/^(PS|SB-14)/.test(e.id))continue;CURFL=e.fl;
-  let f=onWall(e,e.fl);if(f){const d=f[0]==='x'?[f[1]*0.4,0]:[0,f[1]*0.4];const pin=inRoom(e.x+d[0],e.y+d[1]),pout=inRoom(e.x-d[0],e.y-d[1]);if(!pin&&pout)f=[f[0],-f[1],f[2]]}
-  else{for(const [ax,sg] of [['x',-1],['x',1],['y',-1],['y',1]]){const d=ax==='x'?[sg*0.4,0]:[0,sg*0.4];if(inRoom(e.x+d[0],e.y+d[1])&&!inRoom(e.x-d[0],e.y-d[1])){f=[ax,sg,ax==='x'?e.x:e.y];break}}}
-  if(!f){const T=0.07;for(const u of P.furniture.filter(u=>u.fl===e.fl)){   // on a furniture front (TV unit FU-05): face away from the unit
-    if(e.y>u.y1&&e.y<u.y2){if(Math.abs(e.x-u.x1)<T){f=['x',-1,u.x1];break}if(Math.abs(e.x-u.x2)<T){f=['x',1,u.x2];break}}
-    if(e.x>u.x1&&e.x<u.x2){if(Math.abs(e.y-u.y1)<T){f=['y',-1,u.y1];break}if(Math.abs(e.y-u.y2)<T){f=['y',1,u.y2];break}}}}
+ const missed=[];window.__elecPlates=[];
+ for(const e of (P.elec||[])){if(e.type==='LO'||/^(PS|SB-14)/.test(e.id))continue;CURFL=e.fl;
+  let f=FACE[e.id]?[...FACE[e.id]]:onWall(e,e.fl);
+  if(f&&!FACE[e.id]){const d=f[0]==='x'?[f[1]*0.4,0]:[0,f[1]*0.4];if(!inRoom(e.x+d[0],e.y+d[1])&&inRoom(e.x-d[0],e.y-d[1]))f=[f[0],-f[1],f[2]];
+   const px=e.x+(f[0]==='x'?f[1]*0.4:0),py=e.y+(f[0]==='y'?f[1]*0.4:0),wet=P.rooms[e.fl].some(r=>r.kind==='wet'&&(()=>{const xs=r.pts.map(p=>p[0]),ys=r.pts.map(p=>p[1]);return px>Math.min(...xs)&&px<Math.max(...xs)&&py>Math.min(...ys)&&py<Math.max(...ys)})());
+   if(wet)f=[f[0],f[1],f[2]+f[1]*0.065];if(e.id==='BS-1')f=[f[0],f[1],f[2]+f[1]*0.05]}   // toilets: on the tiles; BS-1 on the back panel of the bedside cut-out
   if(!f){missed.push(e.id);continue}
-  {const px=e.x+(f[0]==='x'?f[1]*0.4:0),py=e.y+(f[0]==='y'?f[1]*0.4:0),rk=P.rooms[e.fl].find(r=>r.kind==='wet'&&(()=>{const xs=r.pts.map(p=>p[0]),ys=r.pts.map(p=>p[1]);return px>Math.min(...xs)&&px<Math.max(...xs)&&py>Math.min(...ys)&&py<Math.max(...ys)})());
-   if(rk&&rk.kind==='wet')f=[f[0],f[1],f[2]+f[1]*0.065];if(e.id==='BS-1')f=[f[0],f[1],f[2]+f[1]*0.05]}   // BS-1 sits on the back panel of the wardrobe's bedside opening   // toilets: the plate sits on the wall tiles, not under them
-  const [ax,sg,fc]=f,[W,H]=SZX[e.id]||SZ[e.type],base=e.fl==='F'?FFZ:(inRoom(e.x+(ax==='x'?sg*0.4:0),e.y+(ax==='y'?sg*0.4:0))?0:(e.y<30.75?PKZ:GRD)),z=base+e.h,tip=`${e.id} · ${e.note}`;
-  // local helper: a box on the face, u along the wall, out = distance from the face, zz height
-  const B=(u1,u2,o1,o2,z1,z2,mt,t)=>ax==='x'?box(fc+sg*o1<fc+sg*o2?fc+sg*o1:fc+sg*o2,fc+sg*o1<fc+sg*o2?fc+sg*o2:fc+sg*o1,e.y+u1,e.y+u2,z1,z2,mt,{cast:false,tip:t}):box(e.x+u1,e.x+u2,fc+sg*o1<fc+sg*o2?fc+sg*o1:fc+sg*o2,fc+sg*o1<fc+sg*o2?fc+sg*o2:fc+sg*o1,z1,z2,mt,{cast:false,tip:t});
-  const pin=(u,zz,r)=>{const c=new THREE.Mesh(new THREE.CylinderGeometry(m(r),m(r),m(0.01),14),holeM);if(ax==='x'){c.rotation.z=Math.PI/2;c.position.set(mx(fc+sg*0.052),m(zz),m(e.y+u))}else{c.rotation.x=Math.PI/2;c.position.set(mx(e.x+u),m(zz),m(fc+sg*0.052))}scene.add(c);named(c,tip)};
-  const sw=(u,zz,w)=>B(u-w/2,u+w/2,0.045,0.06,zz-0.09,zz+0.09,plate,tip+' · switch');
-  if(e.type==='DB'){B(-W/2,W/2,0,0.1,z-H/2,z+H/2,greyM,tip);B(-W/2+0.06,W/2-0.06,0.1,0.11,z-H/2+0.06,z+H/2-0.06,std({color:'#b9bec0',roughness:0.4}),tip+' · door');continue}
-  if(e.type==='IP'){B(-W/2,W/2,0,0.1,z-H/2,z+H/2,greyM,tip);B(-W/2+0.04,W/2-0.04,0.1,0.11,z-H/2+0.04,z+H/2-0.04,std({color:'#8f9497',roughness:0.5}),tip+' · IP65 flap');continue}
-  B(-W/2,W/2,0,0.04,z-H/2,z+H/2,plate,tip);
-  if(e.type==='SB'){const fan=/fan/.test(e.note),vert=H>W;
-    if(vert){for(let i=0;i<3;i++)B(-0.08,0.08,0.045,0.06,z+H/2-0.14-i*0.17,z+H/2-0.02-i*0.17,plate,tip+' · switch');if(fan){const k=new THREE.Mesh(new THREE.CylinderGeometry(m(0.055),m(0.055),m(0.04),20),std({color:'#dcdcd6',roughness:0.4}));k.rotation[ax==='x'?'z':'x']=Math.PI/2;k.position.set(ax==='x'?mx(fc+sg*0.07):mx(e.x),m(z-H/2+0.1),ax==='x'?m(e.y):m(fc+sg*0.07));scene.add(k);named(k,tip+' · fan regulator')}}
-    else{const n=Math.max(2,Math.round((W-0.1)/0.13))-(fan?1:0);for(let i=0;i<n;i++)sw(-W/2+0.08+i*0.13,z,0.1);
-      if(fan){const k=new THREE.Mesh(new THREE.CylinderGeometry(m(0.055),m(0.055),m(0.04),20),std({color:'#dcdcd6',roughness:0.4}));k.rotation[ax==='x'?'z':'x']=Math.PI/2;const u=W/2-0.1;k.position.set(ax==='x'?mx(fc+sg*0.07):mx(e.x+u),m(z),ax==='x'?m(e.y+u):m(fc+sg*0.07));scene.add(k);named(k,tip+' · fan regulator')}}}
-  else if(e.type==='BS'&&H>W){for(const zz of [z+0.16,z+0.03])B(-0.08,0.08,0.045,0.06,zz-0.055,zz+0.055,plate,tip+' · switch');for(const [u,zz,rr] of [[0,z-0.09,0.02],[-0.05,z-0.16,0.016],[0.05,z-0.16,0.016]])pin(u,zz,rr)}
-  else if(e.type==='BS'){sw(-W/2+0.08,z,0.08);sw(-W/2+0.19,z,0.08);for(const [u,zz,r] of [[0.12,z+0.05,0.022],[0.07,z-0.04,0.018],[0.17,z-0.04,0.018]])pin(u,zz,r)}
-  else if(e.type==='GY'){sw(-0.05,z,0.09);const c=new THREE.Mesh(new THREE.SphereGeometry(m(0.025),10,8),redM);c.position.set(ax==='x'?mx(fc+sg*0.05):mx(e.x+0.07),m(z),ax==='x'?m(e.y+0.07):m(fc+sg*0.05));scene.add(c)}
-  else if(e.type==='NT'){pin(0,z,0.03)}
-  else{const big=e.type!=='S6',r=big?0.03:0.02,d=big?0.075:0.055,c=W/2-0.15;sw(-W/2+0.09,z,0.1);pin(c,z+d,r*1.3);pin(c-d,z-d*0.6,r);pin(c+d,z-d*0.6,r);if(e.type==='AC'){const c=new THREE.Mesh(new THREE.SphereGeometry(m(0.022),10,8),redM);c.position.set(ax==='x'?mx(fc+sg*0.05):mx(e.x+W/2-0.06),m(z+H/2-0.06),ax==='x'?m(e.y+W/2-0.06):m(fc+sg*0.05));scene.add(c)}}}
+  const [ax,sg,fc]=f,inside=inRoom(e.x+(ax==='x'?sg*0.4:0),e.y+(ax==='y'?sg*0.4:0)),base=e.fl==='F'?FFZ:(inside?0:(e.y<30.75?PKZ:GRD)),z=base+e.h,tip=`${e.id} · ${e.note}`;
+  const B=(u1,u2,o1,o2,z1,z2,mt,t)=>{const a=fc+sg*o1,b=fc+sg*o2;return ax==='x'?box(Math.min(a,b),Math.max(a,b),e.y+u1,e.y+u2,z1,z2,mt,{cast:false,tip:t}):box(e.x+u1,e.x+u2,Math.min(a,b),Math.max(a,b),z1,z2,mt,{cast:false,tip:t})};
+  const disc=(u,zz,r,o,mt,t)=>{const c=new THREE.Mesh(new THREE.CylinderGeometry(m(r),m(r),m(0.012),18),mt);if(ax==='x'){c.rotation.z=Math.PI/2;c.position.set(mx(fc+sg*o),m(zz),m(e.y+u))}else{c.rotation.x=Math.PI/2;c.position.set(mx(e.x+u),m(zz),m(fc+sg*o))}scene.add(c);named(c,t);return c};
+  if(e.type==='DB'){const W=1.25,H=1.45;B(-W/2,W/2,0,0.1,z-H/2,z+H/2,greyM,tip);B(-W/2+0.06,W/2-0.06,0.1,0.11,z-H/2+0.06,z+H/2-0.06,std({color:'#b9bec0',roughness:0.4}),tip+' · door');continue}
+  let spec=MODS[e.id]||defMods[e.type]||'sw',vert=spec.startsWith('v:');if(vert)spec=spec.slice(2);
+  const rows=spec.split('|').map(r=>r.split(',')),RH=0.3,pad=0.05;
+  let W,H;if(vert){W=0.26;H=rows[0].reduce((a,k)=>a+(k==='s6'?0.2:k==='s16'?0.26:k==='reg'?0.16:0.12),0)+2*pad}else{W=Math.max(...rows.map(r=>r.reduce((a,k)=>a+MW[k],0)))+2*pad;H=rows.length*RH+2*pad-0.02}
+  const out=e.type==='IP'?0.12:0.035;
+  if(e.type==='IP'){B(-W/2-0.03,W/2+0.03,0,out,z-H/2-0.03,z+H/2+0.03,greyM,tip+' · IP65 box');B(-W/2-0.05,W/2+0.05,0,out+0.08,z+H/2+0.03,z+H/2+0.06,greyM,tip+' · hood')}
+  B(-W/2,W/2,out-0.035,out,z-H/2,z+H/2,plate,tip);window.__elecPlates.push(e.id);
+  const o1=out,o2=out+0.015,mod=(k,u,zz,w,h)=>{   // one module, centred at u (along the wall) and zz
+    if(k==='sw'){B(u-w/2+0.008,u+w/2-0.008,o1,o2,zz-h/2,zz+h/2,std({color:'#d6d6d0',roughness:0.4}),tip+' · switch');B(u-w/2+0.016,u+w/2-0.016,o2,o2+0.01,zz-h/2+0.025,zz+h/2-0.025,plate,tip+' · switch rocker');B(u-0.012,u+0.012,o2+0.01,o2+0.013,zz+h/2-0.07,zz+h/2-0.045,std({color:'#8a8a86',roughness:0.5}),tip+' · switch mark')}
+    else if(k==='ind'){B(u-w/2+0.008,u+w/2-0.008,o1,o2,zz-h/2,zz+h/2,modM,tip);disc(u,zz,0.022,o2+0.004,redM,tip+' · indicator')}
+    else if(k==='reg'){B(u-w/2+0.008,u+w/2-0.008,o1,o2,zz-h/2,zz+h/2,modM,tip);disc(u,zz,0.05,o2+0.015,knobM,tip+' · fan regulator').scale.y=3}
+    else if(k==='s6'||k==='s16'){B(u-w/2+0.008,u+w/2-0.008,o1,o2,zz-h/2,zz+h/2,modM,tip+(k==='s6'?' · 6 A socket':' · 16 A socket'));const big=k==='s16',r=big?0.026:0.018,d=big?0.06:0.042;disc(u,zz+d,r*1.3,o2+0.002,holeM,tip);disc(u-d,zz-d*0.6,r,o2+0.002,holeM,tip);disc(u+d,zz-d*0.6,r,o2+0.002,holeM,tip)}
+    else if(k==='data'){B(u-w/2+0.008,u+w/2-0.008,o1,o2,zz-h/2,zz+h/2,modM,tip+' · data');B(u-0.022,u+0.022,o2,o2+0.004,zz-0.03,zz+0.02,holeM,tip+' · data')}
+    else if(k==='bell'){B(u-w/2,u+w/2,o1,o2,zz-h/2,zz+h/2,modM,tip);disc(u,zz,0.03,o2+0.006,std({color:'#c9a96a',metalness:0.6,roughness:0.3}),tip+' · bell push')}};
+  if(vert){let zt=z+H/2-pad;for(const k of rows[0]){const h=k==='s6'?0.2:k==='s16'?0.26:k==='reg'?0.16:0.12;mod(k,0,zt-h/2,W-2*pad,h-0.02);zt-=h}}
+  else rows.forEach((r,ri)=>{const rw=r.reduce((a,k)=>a+MW[k],0);let u=-rw/2;const zz=z+H/2-pad-RH/2-ri*RH;for(const k of r){mod(k,u+MW[k]/2,zz,MW[k],RH-0.06);u+=MW[k]}})}
  CURFL='G';if(missed.length)console.info('electrical points not placed:',missed.join(','))}
 // parking board PB-1 on GW-04 (parking face, Y 29'9"), behind the car: one modular plate (switch row over a socket row, like a 12-module board) in a grey IP65 cover; EV-1 on its own; heights above the parking floor
 {const pts=(P.elec||[]).filter(e=>e.fl==='G'&&Math.abs(e.y-29.75)<0.05),y=29.75,wh=std({color:'#f4f4f1',roughness:0.35}),mod=std({color:'#ebebe7',roughness:0.4}),blk=std({color:'#2b2b2b',roughness:0.6});

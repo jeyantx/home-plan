@@ -9,6 +9,7 @@ data=dict(walls=dict(G=walls('G'),F=walls('F')),rooms=dict(G=rooms('G'),F=rooms(
           columns=[dict(id=c[0],floors=c[1],x1=c[2],x2=c[3],y1=c[4],y2=c[5],note=c[6]) for c in getattr(M,'COLUMNS',[])],
           beams=[dict(id=b[0],level=b[1],x1=b[2],x2=b[3],y1=b[4],y2=b[5],depth=b[6],note=b[7]) for b in getattr(M,'BEAMS',[])],ff=M.FF_LEVEL,backwall=getattr(M,'BACK_WALL',None),platform=getattr(M,'SIDE_PLATFORM',None),levels=getattr(M,'LEVELS',None),ramp=getattr(M,'RAMP',None),plants=[dict(id=c,type=t,x=x,y=y) for c,t,x,y in getattr(M,'PLANTS',[])],
           garden=[dict(g,stones=M.garden_stones(g)) if g['kind']=='path' else g for g in getattr(M,'GARDEN',[])],gardenNames=getattr(M,'GARDEN_NAMES',{}),win=getattr(M,'WINDOWS',{}),store=getattr(M,'STORE',None),
-          elec=[dict(id=e[0],fl=e[1],x=e[2],y=e[3],h=e[4],type=e[5],circuit=e[6],note=e[7]) for e in getattr(M,'ELEC_POINTS',[])])
+          elec=[dict(id=e[0],fl=e[1],x=e[2],y=e[3],h=e[4],type=e[5],circuit=e[6],note=e[7]) for e in getattr(M,'ELEC_POINTS',[])],
+          elecMods=getattr(M,'ELEC_MODS',{}),elecFace=getattr(M,'ELEC_FACE',{}))
 if __name__=='__main__':
     print(json.dumps(data))

@@ -355,7 +355,7 @@ def _elec_tab():   # Electrical tab: each floor drawn sideways (road on the left
     import html as _h
     k=14;ox,oy=26,30
     SYM={'DB':('#c0392b','rect'),'SB':('#1d1e21','rect'),'BS':('#6b4f32','rect'),'S6':('#2f6fb0','circ'),'S16':('#e8590c','circ'),'AC':('#0b7285','circ'),'GY':('#a61e4d','circ'),'EV':('#2b8a3e','bolt'),'IP':('#2b8a3e','ring'),'LO':('#f2b705','star'),'NT':('#7048e8','diam')}
-    NAME={'DB':'board','SB':'switchboard','BS':'bedside board','S6':'6 A socket (USB where noted)','S16':'16 A socket','AC':'AC socket','GY':'geyser socket','EV':'car charging','IP':'outdoor IP65 socket / isolator','LO':'outdoor light','NT':'bell, data, CCTV, solar'}
+    NAME={'DB':'board','SB':'switchboard','BS':'bedside board','S6':'6 A socket with switch','S16':'16 A socket','AC':'AC socket','GY':'geyser socket','EV':'car charging','IP':'outdoor IP65 socket / isolator','LO':'outdoor light','NT':'bell, data, CCTV, solar'}
     def floor_svg(fl,y0,y1,title):
         W=(y1-y0)*k;H=21*k
         X=lambda y:ox+(y-y0)*k;Yp=lambda x:oy+x*k
