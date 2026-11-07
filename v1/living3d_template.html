@@ -247,6 +247,13 @@ function box(x1,x2,y1,y2,z1,z2,mat,o={}){ // plan x, plan y, height z (feet)
   const g=o.round?new RoundedBoxGeometry(m(x2-x1),m(z2-z1),m(y2-y1),3,m(o.round)):new THREE.BoxGeometry(m(x2-x1),m(z2-z1),m(y2-y1));
   const me=new THREE.Mesh(g,mat);me.position.set(mx((x1+x2)/2),m((z1+z2)/2+ZOFF),m((y1+y2)/2));
   me.castShadow=o.cast!==false;me.receiveShadow=true;scene.add(me);if(o.tip)named(me,o.tip);return me}
+// flat slab with one big rounded plan corner (front corner on the bed side), for shelves you may brush past: corner at (cx,cy) of the rect x1..x2, y1..y2, radius R
+function roundSlab(x1,x2,y1,y2,z1,z2,cx,cy,R,mat,tip){const sh=new THREE.Shape(),P=(x,y)=>[mx(x),-m(y)];
+  const pts=[[x1,y1],[x2,y1],[x2,y2],[x1,y2]],k=pts.findIndex(p=>p[0]===cx&&p[1]===cy);
+  for(let i=0;i<4;i++){const p=pts[(k+1+i)%4];if(i===3){const pr=pts[(k+3)%4],nx=pts[(k+1)%4],d1=[Math.sign(pr[0]-cx),Math.sign(pr[1]-cy)],d2=[Math.sign(nx[0]-cx),Math.sign(nx[1]-cy)];
+    const a=P(cx+d1[0]*R,cy+d1[1]*R),c=P(cx,cy),b=P(cx+d2[0]*R,cy+d2[1]*R);sh.lineTo(...a);sh.quadraticCurveTo(c[0],c[1],b[0],b[1])}else (i===0?sh.moveTo(...P(...p)):sh.lineTo(...P(...p)))}
+  const g=new THREE.ExtrudeGeometry(sh,{depth:m(z2-z1),bevelEnabled:true,bevelThickness:m(0.012),bevelSize:m(0.012),bevelSegments:2,curveSegments:16});
+  const me=new THREE.Mesh(g,mat);me.rotation.x=-Math.PI/2;me.position.y=m(z1+ZOFF+0.012);me.castShadow=true;me.receiveShadow=true;scene.add(me);if(tip)named(me,tip);return me}
 function cyl(x,y,z1,z2,r,mat,o={}){const g=new THREE.CylinderGeometry(m(o.rTop??r),m(r),m(z2-z1),o.seg||32);const me=new THREE.Mesh(g,mat);me.position.set(mx(x),m((z1+z2)/2+ZOFF),m(y));me.castShadow=true;me.receiveShadow=true;scene.add(me);if(o.tip)named(me,o.tip);return me}
 // world-size UVs: every surface gets UVs in metres, so a texture's repeat = 1 / its real size
 function metreUV(geo){const p=geo.attributes.position,n=geo.attributes.normal;if(!p||!n)return;const uv=new Float32Array(p.count*2);
@@ -668,10 +675,10 @@ box(9.92,9.94,37.4,40.1,7.9,7.98,MAT.blackMetal,{cast:false,tip:'FU-44 · AC air
  for(const [z1,z2] of [[0,1.69],[6.46,BZ-0.005]])box(x,b.x2,y2-T,y2,z1,z2,MAT.oak,{round:0.025,tip:t2+' · side panel, rounded edges'});
  for(const [z1,z2] of solid){box(x+sh,b.x2,y1,y2-T,z1,z2,MAT.oak,{tip:t2});box(x,x+sh,y1+gap,y2-T-gap,z1+gap,z2-gap,MAT.oak,{tip:t2+' · shutter'});
   if(z2<=lz&&z2-z1>0.5)box(x-0.05,x,y1+0.06,y1+0.1,(z1+z2)/2-0.25,(z1+z2)/2+0.25,MAT.blackMetal,{tip:'J-profile handle, black'})}
- for(const [z1,z2,tp] of cut){box(x,b.x2,y1,y2,z1-0.06,z1,MAT.oak,{round:0.025,tip:t2+' · '+tp+' · rounded edge'});box(x,b.x2,y1,y2,z2,z2+0.06,MAT.oak,{round:0.025,tip:t2+' · '+tp+' · rounded edge'});box(b.x2-0.04,b.x2,y1,y2,z1,z2,MAT.oakDark,{cast:false,tip:t2+' · back'});
+ for(const [z1,z2,tp] of cut){roundSlab(x,b.x2,y1,y2,z1-0.085,z1-0.025,x,y2,0.4,MAT.oak,t2+' · '+tp+' · curved corner');roundSlab(x,b.x2,y1,y2,z2+0.0,z2+0.06,x,y2,0.4,MAT.oak,t2+' · '+tp+' · curved corner');box(b.x2-0.04,b.x2,y1,y2,z1,z2,MAT.oakDark,{cast:false,tip:t2+' · back'});
   ledStrips.push(box(x+0.08,x+0.14,y1+0.06,y2-T-0.06,z2-0.03,z2,MAT.led,{cast:false,tip:'LED strip, warm white'}))}
  // two small floating shelves, set back from the front and the bed side, rounded corners
- for(const z of [3.4,5.0])box(x+0.35,b.x2-0.04,y1,y2-0.3,z,z+0.06,MAT.oak,{round:0.025,tip:t2+' · small shelf, set back, rounded'});
+ for(const z of [3.4,5.0])roundSlab(x+0.35,b.x2-0.04,y1,y2-0.3,z-0.012,z+0.036,x+0.35,y2-0.3,0.35,MAT.oak,t2+' · small shelf, set back, curved corner');
  box(x+0.35,x+0.42,y1+0.35,y1+0.75,1.75,2.05,MAT.screen,{tip:'Phone, charging'});cyl(x+0.6,y2-0.4,1.75,2.15,0.1,std({color:'#e9e4da',roughness:0.1,transparent:true,opacity:0.6}),{tip:'Water glass'});
  cyl(x+0.6,y1+0.3,3.46,3.8,0.11,std({color:'#e9e4da',roughness:0.4}),{tip:'Powder box'});box(x+0.5,x+0.9,y1+0.55,y2-0.4,3.46,3.54,std({color:'#b49a80',roughness:0.7}),{tip:'Make-up tray'});
  cyl(x+0.6,y1+0.35,5.06,5.4,0.1,std({color:'#cdbfa8',roughness:0.5}),{tip:'Perfume bottle'});cyl(x+0.7,y1+0.75,5.06,5.25,0.16,std({color:'#c9a96a',roughness:0.3,metalness:0.6}),{tip:'Jewellery bowl, brass'});}
