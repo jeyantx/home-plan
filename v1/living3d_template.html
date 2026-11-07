@@ -614,10 +614,10 @@ function buildRails(){for(const R of Object.values(RAILS)){const sg=R.segs.sort(
   for(const [a,b] of runs){const L=b-a+0.2,c=(a+b)/2,rod=new THREE.Mesh(new THREE.CylinderGeometry(m(0.04),m(0.04),m(L),16),MAT.blackMetal);rod.rotation[R.axis==='y'?'x':'z']=Math.PI/2;
     rod.position.set(mx(R.axis==='y'?R.xp:c),m(zr+ZOFF),m(R.axis==='y'?c:R.xp));rod.castShadow=true;scene.add(rod);named(rod,tip);
     for(const e of [a-0.1,b+0.1]){const ball=new THREE.Mesh(new THREE.SphereGeometry(m(0.07),16,12),MAT.blackMetal);ball.position.set(mx(R.axis==='y'?R.xp:e),m(zr+ZOFF),m(R.axis==='y'?e:R.xp));scene.add(ball);named(ball,'Rail end cap')}
-    const n=Math.max(2,Math.ceil((b-a)/4)+1);for(let i=0;i<n;i++){const u=a+0.15+(b-a-0.3)*i/(n-1),d=R.axis==='y'?Math.sign(R.xp-12):Math.sign(R.xp-60);
-      if(R.axis==='y')box(Math.min(R.xp,R.xp-d*0.42),Math.max(R.xp,R.xp-d*0.42),u-0.03,u+0.03,zr-0.03,zr+0.03,MAT.blackMetal,{tip:'Rail bracket'});else box(u-0.03,u+0.03,Math.min(R.xp,R.xp+0.42*(R.xp>60?1:-1)),Math.max(R.xp,R.xp+0.42*(R.xp>60?1:-1)),zr-0.03,zr+0.03,MAT.blackMetal,{tip:'Rail bracket'})}}
+    // ceiling-free, bracket-free look: the rail is held by its two end fixings only (slim wall plates hidden behind the end caps)
+  }
   ZOFF=z0}}
-for(const o of P.openings.filter(o=>o.wall==='GW-01'&&o.type==='window'&&o.b<LY2&&o.a>LY1)){for(const [a,b] of [[o.a-1.3,o.a+0.25],[o.b-0.25,o.b+1.3]])curtain(a,b,LX1+0.42,WT,WROD,'y',null,null,WB)}
+for(const o of P.openings.filter(o=>o.wall==='GW-01'&&o.type==='window'&&o.b<LY2&&o.a>LY1)){for(const [a,b] of [[o.a-1.3,o.a+0.25],[o.b-0.25,o.b+1.3]])curtain(a,b,LX1+0.22,WT,WROD,'y',null,null,WB)}
 function ceilingFan(cx,cy,rot){const hub=8.6;cyl(cx,cy,hub+0.3,CEIL,0.045,MAT.blackMetal,{tip:'Ceiling fan, 48", wood-finish blades'});cyl(cx,cy,hub,hub+0.35,0.3,MAT.blackMetal,{tip:'Ceiling fan'});
   const fan=new THREE.Group();fan.position.set(mx(cx),m(hub+0.1+ZOFF),m(cy));scene.add(fan);
   for(let i=0;i<3;i++){const bl=new THREE.Mesh(new THREE.BoxGeometry(m(1.9),m(0.035),m(0.4)),MAT.oak);bl.position.set(m(1.25),0,0);const g=new THREE.Group();g.rotation.y=i*Math.PI*2/3+rot;g.add(bl);bl.castShadow=true;fan.add(g);named(bl,'Ceiling fan blade')}}
@@ -648,9 +648,9 @@ ceilingFan(14.6,41.4,0.3);
  box(13.75,14.5,BY1,BY1+d,0,hS,MAT.skirt,{tip:t});box(17.0,17.25,BY1,BY1+d,0,hS,MAT.skirt,{tip:t});box(BX1+d,12.5,30.5,30.5+d,0,hS,MAT.skirt,{tip:t});
  box(13.75-d,13.75,30.5+d,32.75,0,hS,MAT.skirt,{tip:t});}
 // curtains on W-02: wall-mounted track at 7'4", between the window head (7') and the AC (7'7"), so the AC stays clear
-for(const [a,b] of [[36.45,37.6],[39.65,41.2]]) curtain(a,b,9.55,WT,'Curtain rod, 6" above the window, below the AC (AC bottom at 7\'10")','y',null,null,WB);
+for(const [a,b] of [[35.6,36.85],[40.35,41.6]]) curtain(a,b,9.4,WT,'Curtain rod, 6" above the window, below the AC (AC bottom at 7\'10")','y',null,null,WB);
 // AC indoor unit FU-44 above W-02
-box(9.262,9.92,37.25,40.25,7.83,8.78,std({color:'#f4f4f2',roughness:0.35}),{round:0.08,tip:'FU-44 · AC indoor unit, 1.5 ton split · above W-02, bottom at 7\'10"'});
+box(9.262,9.92,37.1,40.1,7.83,8.78,std({color:'#f4f4f2',roughness:0.35}),{round:0.08,tip:'FU-44 · AC indoor unit, 1.5 ton split · above W-02, bottom at 7\'10"'});
 box(9.92,9.94,37.4,40.1,7.9,7.98,MAT.blackMetal,{cast:false,tip:'FU-44 · AC air outlet'});
 // --- queen bed FU-06: low oak platform, upholstered headboard pad on an oak-veneer wall panel with a ledge
 {const f=fuG['FU-06'],tip=`FU-06 · Queen bed · oak platform, 6'6" x 5' · ${f.note}`;
@@ -833,10 +833,10 @@ Object.assign(MAT,{
   blackGlass:std({color:'#0d0e10',roughness:0.08,metalness:0.2}),
 });
 const KT={
- 'KT-1':{name:'Oak + cream',low:'oak',up:'cream',top:'#2a2c2f',topName:'black granite'},
+ 'KT-1':{name:'Oak + sage',low:'oak',up:'sage',top:'#2a2c2f',topName:'black granite'},
  'KT-2':{name:'Cream + oak',low:'cream',up:'oak',top:'#e9e7e2',topName:'white quartz'},
  'KT-3':{name:'Walnut + cream',low:'walnut',up:'cream',top:'#e9e7e2',topName:'white quartz'}};
-function finishMat(mt,kind){if(kind==='oak'){mt.map=T.oak.map;mt.color.set('#ffffff')}else if(kind==='walnut'){mt.map=T.oakPanel.map;mt.color.setRGB(0.52,0.36,0.24)}else{mt.map=null;mt.color.set('#efe9df')}mt.needsUpdate=true}
+function finishMat(mt,kind){if(kind==='oak'){mt.map=T.oak.map;mt.color.set('#ffffff')}else if(kind==='walnut'){mt.map=T.oakPanel.map;mt.color.setRGB(0.52,0.36,0.24)}else if(kind==='sage'){mt.map=null;mt.color.set('#a3b292')}else{mt.map=null;mt.color.set('#efe9df')}mt.needsUpdate=true}
 const KCH=2.83, KTOP=0.13, KPL=0.33, SH=0.06, UPZ1=4.9, UPZ2=7.0;   // counter 2'10", 40 mm top, 4" plinth; wall cabinets 4'11" to 7'
 const kTip=(id,what)=>{const f=fuG[id];return `${id} · ${what} · ${f?f.note:''}`};
 // one run of base or wall cabinets. face: 'x+' / 'x-' / 'y+' / 'y-' = the side the front faces. segs: [a,b,type] along the front;
@@ -1015,8 +1015,8 @@ function setFinish(k){if(!KT[k])k='KT-1';const o=KT[k];finishMat(MAT.kLow,o.low)
  // AC FU-46 on GW-07; W-07 curtains on a wall track below it; W-08 curtains from the band
  {const ac=fuG['FU-46'];box(10.262,ac.x2,ac.y1,ac.y2,7.83,8.78,std({color:'#f4f4f2',roughness:0.35}),{round:0.08,tip:`FU-46 · AC indoor unit, 1.5 ton split · ${ac.note}`});
   box(ac.x2,ac.x2+0.02,ac.y1+0.15,ac.y2-0.15,7.9,7.98,MAT.blackMetal,{cast:false,tip:'FU-46 · AC air outlet'});}
- for(const [a,b] of [[83.8,85.2],[88.8,90.2]]) curtain(a,b,10.6,WT,'Curtain rod, 6" above the window, below the AC (AC bottom at 7\'10")','y',null,null,WB);
- for(const [a,b] of [[11.9,12.9],[17.1,18.1]]) curtain(a,b,Y2-0.42,WT,WROD,'x',null,null,1.52);   // picture window W-08: curtains rest on the window seat FU-95: curtains stack at its ends; west stack kept short, clear of the dressing table
+ for(const [a,b] of [[83.8,85.2],[88.8,90.2]]) curtain(a,b,10.45,WT,'Curtain rod, 6" above the window, below the AC (AC bottom at 7\'10")','y',null,null,WB);
+ for(const [a,b] of [[11.9,12.9],[17.1,18.1]]) curtain(a,b,Y2-0.22,WT,WROD,'x',null,null,1.52);   // picture window W-08: curtains rest on the window seat FU-95: curtains stack at its ends; west stack kept short, clear of the dressing table
  // queen bed FU-31, headboard wall panel across both side tables, linen pad, ledge over the bed, art above
  const f=fuG['FU-31'],tip=`FU-31 · Queen bed · oak platform, 6'6" x 5' · ${f.note}`;
  box(f.x1+0.35,f.x2-0.2,f.y1+0.3,f.y2-0.3,0,0.32,MAT.plinth,{tip});
@@ -1080,8 +1080,8 @@ X_(()=>{CURFL='F';ZOFF=FFZ;
  {const ac=f2('FU-48');box(X1+0.012,ac.x2,ac.y1,ac.y2,7.83,8.78,std({color:'#f4f4f2',roughness:0.35}),{round:0.08,tip:`FU-48 · AC indoor unit, 1.5 ton split · ${ac.note}`});
   box(ac.x2,ac.x2+0.02,ac.y1+0.15,ac.y2-0.15,7.9,7.98,MAT.blackMetal,{cast:false,tip:'FU-48 · AC air outlet'});}
  // curtains: W-10 (FW-01) from the band, kept clear of the AC; beside the balcony door D-11 (FW-04)
- for(const [a,b] of [[87.2,88.6],[92.45,92.95]]) curtain(a,b,X1+0.42,WT,WROD,'y',null,null,WB);
- for(const [a,b] of [[13.9,14.7],[18.3,19.1]]) curtain(a,b,Y2-0.42,WT,'Curtain rod over the balcony door','x');   // door: full length, but from the rod, not the ceiling
+ for(const [a,b] of [[87.2,88.6],[92.45,92.95]]) curtain(a,b,X1+0.22,WT,WROD,'y',null,null,WB);
+ for(const [a,b] of [[13.9,14.7],[18.3,19.1]]) curtain(a,b,Y2-0.22,WT,'Curtain rod over the balcony door','x');   // door: full length, but from the rod, not the ceiling
  // queen bed FU-36, head to FW-03
  const f=f2('FU-36'),tip=`FU-36 · Queen bed · oak platform, 6'6" x 5' · ${f.note}`;
  box(f.x1+0.35,f.x2-0.2,f.y1+0.3,f.y2-0.3,0,0.32,MAT.plinth,{tip});

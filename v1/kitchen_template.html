@@ -97,7 +97,7 @@ const granTex=canvasTex(512,512,(g,w,h)=>{const r=rng(5);g.fillStyle='#26282b';g
 const tileTex=canvasTex(256,256,(g,w,h)=>{g.fillStyle='#efe7d6';g.fillRect(0,0,w,h);g.fillStyle='#d9cfbc';for(let i=0;i<=4;i++)g.fillRect(0,i*h/4-1,w,2);for(let j=0;j<4;j++)for(let i=0;i<=1;i++)g.fillRect(((i+(j%2)*0.5)%1)*w-1,j*h/4,2,h/4)},3);
 const floorTex=canvasTex(512,512,(g,w,h)=>{const r=rng(9);g.fillStyle='#d8d2c6';g.fillRect(0,0,w,h);for(let i=0;i<3000;i++){g.fillStyle=`rgba(${r()<.5?'255,255,255':'120,110,95'},0.06)`;g.fillRect(r()*w,r()*h,3,3)}g.fillStyle='#bdb5a6';g.fillRect(0,0,w,3);g.fillRect(0,0,3,h)},6);
 const std=o=>new THREE.MeshStandardMaterial(o);
-const M={oak:std({map:oakTex,roughness:0.55}),oakIn:std({color:'#d8c29f',roughness:0.7}),cream:std({color:'#efe9df',roughness:0.5}),creamIn:std({color:'#f4f0e8',roughness:0.7}),
+const M={oak:std({map:oakTex,roughness:0.55}),oakIn:std({color:'#d8c29f',roughness:0.7}),cream:std({color:'#a3b292',roughness:0.5})   /* wall cabinets: deeper sage, a shade darker than the walls */,creamIn:std({color:'#f4f0e8',roughness:0.7}),
  granite:std({map:granTex,roughness:0.28,metalness:0.1}),plinth:std({color:'#2a2b2d',roughness:0.6}),handle:std({color:'#1c1d1f',roughness:0.4,metalness:0.6}),
  steel:std({color:'#c9ccd0',roughness:0.25,metalness:0.9}),wire:std({color:'#b9bdc1',roughness:0.3,metalness:0.9}),wall:std({color:'#cdd6c3',roughness:0.95}),
  tile:std({map:tileTex,roughness:0.3}),floor:std({map:floorTex,roughness:0.6}),glass:std({color:'#cfe3ea',roughness:0.05,metalness:0,transparent:true,opacity:0.3}),
