@@ -695,7 +695,7 @@ const mirrors=[];
 addPlant(10.05,42.3,1.2,3,'Bamboo plant in black pot · 4 ft');
 const blinds={slats:[],k:1};
 function setBlind(k){blinds.k=k;const ang=[0.12,0.75,1.4][k];for(const sl of blinds.slats)sl.rotation.x=ang;if(typeof renderer!=='undefined'){renderer.shadowMap.needsUpdate=true;invalidate()}}
-// --- study corner G-06: sewing machine table FU-10 under W-01 (like the owner's photo), wooden chair, open bookshelf FU-11, venetian blind
+// --- study corner G-06: sewing machine table FU-10 under W-01 (like the owner's photo), wooden chair, venetian blind
 {const d=fuG['FU-10'],tip=`FU-10 · ${d.name} · ${d.note}`;
  // built with its back to the window, then turned to face the chair: wheel on the user's right, dial and ruler strip towards the user
  const fx=v=>d.x1+d.x2-v,fy=v=>d.y1+d.y2-v,B2=(x1,x2,y1,y2,...r)=>box(fx(x2),fx(x1),fy(y2),fy(y1),...r),C2=(x,y,...r)=>cyl(fx(x),fy(y),...r);
@@ -729,12 +729,6 @@ function setBlind(k){blinds.k=k;const ang=[0.12,0.75,1.4][k];for(const sl of bli
  for(const [lx,ly] of [[cx-cw,cy-0.75],[cx+cw-0.12,cy-0.75],[cx-cw,cy+0.6],[cx+cw-0.12,cy+0.6]]) box(lx,lx+0.12,ly,ly+0.12,0,1.5,W,{tip:tc});
  box(cx-cw,cx+cw,cy-0.8,cy+0.75,1.5,1.62,W,{tip:tc});box(cx-cw+0.04,cx+cw-0.04,cy-0.76,cy+0.7,1.62,1.75,MAT.sofa,{round:0.05,tip:tc});
  for(const lx of [cx-cw,cx+cw-0.12]) box(lx,lx+0.12,cy+0.6,cy+0.72,1.5,2.9,W,{tip:tc});box(cx-cw,cx+cw,cy+0.6,cy+0.72,2.35,2.85,W,{round:0.03,tip:tc});
- // bookshelf FU-11 on GW-10, open towards the study
- const s=fuG['FU-11'],ts=`FU-11 · Bookshelf · open oak shelves, 6' high · ${s.note}`;
- box(s.x2-0.1,s.x2-0.012,s.y1,s.y2,0,6.0,MAT.oakDark,{tip:ts});
- for(const y of [s.y1,s.y2-0.07]) box(s.x1,s.x2-0.1,y,y+0.07,0,6.0,MAT.oak,{tip:ts});
- const r=rng(55);for(const z of [0.0,1.45,2.9,4.35,5.9]){box(s.x1,s.x2-0.1,s.y1+0.07,s.y2-0.07,z,z+0.1,MAT.oak,{tip:ts});
-   if(z>5)continue;let y=s.y1+0.15;while(y<s.y2-0.4){if(r()<0.7){const h=0.7+r()*0.5;box(s.x1+0.15,s.x2-0.2,y,y+0.12,z+0.101,z+0.1+h,std({color:['#b5a891','#d9d2c3','#6f6a60','#a2826a','#e8e3d8'][Math.floor(r()*5)],roughness:0.75}),{tip:'Books'});y+=0.13}else{cyl(s.x1+0.6,y+0.25,z+0.101,z+0.5,0.16,std({color:'#cdbfa8',roughness:0.55}),{tip:'Ceramic vase',rTop:0.1});y+=0.55}}}
  // venetian blind on W-01: 2" faux-wood slats on a headrail, two ladder cords, a tilt wand; click it to tilt the slats (open, half, shut)
  {const w=P.openings.find(o=>o.id==='W-01'),x1=w.a-0.1,x2=w.b+0.1,yb=30.5+0.2,top=w.sill+w.h+0.15,bot=w.sill-0.05,pitch=0.15,n=Math.floor((top-0.2-bot)/pitch);
   const slatM=std({color:'#e9dcc6',roughness:0.6,normalMap:T.oak.normalMap,normalScale:new THREE.Vector2(0.2,0.2)}),tb='Venetian blind on W-01 · 2" faux-wood slats, tilt with the wand, pull up with the cord · click to tilt';
@@ -1769,7 +1763,7 @@ function applyOption(i){const o=OPTIONS[i];curOpt=i;
   <li><b>Bed FU-06:</b> low oak platform with a shadow-gap base. Headboard wall: oak-veneer panel with grooves to 3'4", a 4" oak ledge with an LED strip under it, a mild-brown linen pad. One framed canvas above.</li>
   <li><b>Wardrobe FU-09.1 + FU-09.2:</b> one straight rectangle on the west wall, floor to band, oak shutters with loft, black J-profile handles; by the bed head a column with a bedside cut-out (phone, BS-1 charging) and an accessory and make-up cut-out with one shelf, both lit by warm LED strips.</li>
   <li><b>Window W-02:</b> light-brown sheer curtains; AC FU-44 above it. Small bamboo plant by the window.</li>
-  <li><b>Study:</b> floating oak desk FU-10 on black steel legs, walnut-tone chair with a linen seat, open oak bookshelf FU-11, linen roman blind on W-01.</li>
+  <li><b>Study:</b> floating oak desk FU-10 on black steel legs, walnut-tone chair with a linen seat, linen roman blind on W-01.</li>
   </ul><h2>Kitchen (G-08) and open area (G-09)</h2><ul>
   <li><b>Cabinet finish:</b> pick with the Finish buttons. KT-1 oak base and cream wall cabinets, black granite top. KT-2 cream base and oak wall cabinets, white quartz top. KT-3 walnut base and cream wall cabinets, white quartz top. All with slim black handles and a dark shadow-gap plinth.</li>
   <li><b>Layout:</b> hob FU-52 under W-06 (window lowered to 4' x 2', head at 5'3") with the chimney hood at the standard 2'6" above the counter; sink FU-51 on the back counter against GW-14; wall cabinets on GW-14 and GW-01 (glass doors on the unit above the sink and the one left of the window), plus a top row FU-68 and FU-69 up to the ceiling; cream 3" x 12" backsplash tiles; LED strips under the wall cabinets.</li>

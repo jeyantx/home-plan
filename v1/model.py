@@ -402,7 +402,6 @@ FURNITURE = [
   ('FU-09.1','G','Wardrobe',18.3333,20.25,35.375,39.6,'ward',None,'Bedroom 1, one straight rectangle on GW-05 (no L): 4\'3" x 1\'11", three oak shutters with loft, full-length mirror 1\'2" x 5\' on the south shutter'),
   ('FU-09.2','G','Bedside and accessory niche column',18.3333,20.25,39.6,40.875,'ward',None,'Bedroom 1, south end of the wardrobe by the bed head, same depth and loft: closed cupboard to 1\'9", then one tall open cut-out to 6\'5" (open on the front and the bed side, rounded edges) for the phone at night (charging point BS-1 inside), make-up and accessories on two small set-back shelves with rounded corners; closed above'),
  ('FU-10','G','Sewing machine table',10.0,13.25,30.6,32.25,'desk',None,'Study, under W-01: white top 3\'3" x 1\'8" at 2\'6" with a ruler strip on the front edge, black iron stand, foot pedal; Singer-type machine'),
-  ('FU-11','G','Bookshelf',12.5,13.75,32.75,35.25,'shelf',None,'Study, on GW-10'),
  ('FU-12','G','Western WC',18.0,20.25,32.9,34.4,'wc','x2','Toilet 1, wall-mounted cistern'),
  ('FU-13','G','Wash basin',14.125,15.5,30.5,31.9,'basin',None,'Toilet 1'),
  ('FU-14','G','Shower area',17.25,20.25,30.5,32.6,'shower',None,'Toilet 1, open (no screen), floor slopes to a 5" square floor trap, geyser above'),
