@@ -1303,7 +1303,8 @@ poseOpen(1);
 function setDoorOpen(v){doorAnim.target=v?1:0;doorAnim.last=0;const b=document.getElementById('allBtn');if(b){b.textContent=v?'Close all':'Open all';b.setAttribute('aria-pressed',!!v)}invalidate()}
 // curtains: drawn open (1) or shut (0), both stacks of a window meet in the middle
 const curtAnim={open:1,target:1,last:0};
-function setCurtOpen(v){curtAnim.target=v?1:0;curtAnim.last=0;const b=document.getElementById('curtBtn');if(b){b.textContent=v?'Close curtains':'Open curtains';b.setAttribute('aria-pressed',!!v)}invalidate()}
+function setCurtOpen(v){curtAnim.target=v?1:0;curtAnim.last=0;setBlind(v?0:2);   // the W-01 venetian blind follows: slats open or shut
+  const b=document.getElementById('curtBtn');if(b){b.textContent=v?'Close curtains':'Open curtains';b.setAttribute('aria-pressed',!!v)}invalidate()}
 function curtStep(now){if(curtAnim.open===curtAnim.target)return;const dt=curtAnim.last?Math.min(0.1,(now-curtAnim.last)/1000):0;curtAnim.last=now;
   const d=dt/1.6;curtAnim.open=curtAnim.target>curtAnim.open?Math.min(curtAnim.target,curtAnim.open+d):Math.max(curtAnim.target,curtAnim.open-d);
   const e=curtAnim.open*curtAnim.open*(3-2*curtAnim.open);poseCurt(e);renderer.shadowMap.needsUpdate=true;invalidate()}
