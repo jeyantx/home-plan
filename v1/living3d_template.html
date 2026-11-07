@@ -851,7 +851,7 @@ Object.assign(MAT,{
   blackGlass:std({color:'#0d0e10',roughness:0.08,metalness:0.2}),
 });
 const KT={
- 'KT-1':{name:'Oak + sage',low:'oak',up:'sage',top:'#2a2c2f',topName:'black granite'},
+ 'KT-1':{name:'Oak + black',low:'oak',up:'oak',top:'#2a2c2f',topName:'black granite'},
  'KT-2':{name:'Cream + oak',low:'cream',up:'oak',top:'#e9e7e2',topName:'white quartz'},
  'KT-3':{name:'Walnut + cream',low:'walnut',up:'cream',top:'#e9e7e2',topName:'white quartz'}};
 function finishMat(mt,kind){if(kind==='oak'){mt.map=T.oak.map;mt.color.set('#ffffff')}else if(kind==='walnut'){mt.map=T.oakPanel.map;mt.color.setRGB(0.52,0.36,0.24)}else if(kind==='sage'){mt.map=null;mt.color.set('#a3b292')}else{mt.map=null;mt.color.set('#efe9df')}mt.needsUpdate=true}
