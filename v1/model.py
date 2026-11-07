@@ -88,7 +88,7 @@ ROOMS = {
 # ---------- openings: id, floor, wall, a, b (along wall), type, hinge('a'|'b'), swing(+/-), height, sill, note ----------
 # type: door, double, window, vent, arch, gate
 OPENINGS = [
- ('D-01','G','GW-02', 4.25,8.25,'double',None,'+', 7.0,0,'Main door, double leaf, opens into foyer'),
+ ('D-01','G','GW-02', 4.25,8.25,'door','a','+', 7.0,0,'Main door, one 4\' teak leaf hinged on the east side, opens into foyer'),
  ('D-13','G','GW-02', 4.25,8.25,'double',None,'-', 7.0,0,'Steel safety door in front of the main door, black, double leaf 2\' + 2\', opens out onto the porch; each leaf folds back to 90 deg against a floor stopper'),
  ('D-02','G','GW-12', 9.5,12.5,'door','a','-', 7.0,0,'Bedroom 1 door, from living room'),
  ('D-03','G','GW-11', 14.5,17.0,'door','a','-', 7.0,0,'Toilet 1 door, from bedroom 1'),
@@ -473,7 +473,7 @@ FURNITURE = [
 ]
 # door and window types (proposal)
 SPEC = {
- 'D-01':'Teak wood, double leaf; the steel door D-13 is in front of it',
+ 'D-01':'Teak wood, one 4\' leaf hinged on the east side; the steel door D-13 is in front of it',
  'D-13':'MS safety door, black powder-coat: 1"x1" box frame, 1/2" square bars at 4", middle rail, 1\'6" sheet panel at the foot; double leaf, centre joint in line with D-01; tower bolts top and bottom, a lock and floor stoppers',
  'D-02':'Flush door, hardwood frame', 'D-06':'Flush door, hardwood frame', 'D-07':'Flush door, hardwood frame',
  'D-03':'WPC waterproof door', 'D-04':'WPC waterproof door', 'D-08':'WPC waterproof door',

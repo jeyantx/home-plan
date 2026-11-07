@@ -85,6 +85,7 @@ canvas{display:block;width:100%;height:100%}
  </div>
  <div class="row hidden" id="optRow">
   <span class="lbl">Frame</span><div class="seg" id="ratioSeg"><button data-r="fill" title="Use the whole window">Fill</button><button data-r="16:9" title="Show the 3D view at 16:9">16:9</button><button data-r="4:3" title="Show the 3D view at 4:3">4:3</button><button data-r="1:1" title="Show the 3D view at 1:1">1:1</button><button data-r="4:5" title="Show the 3D view at 4:5 (portrait)">4:5</button><button data-r="3:4" title="Show the 3D view at 3:4 (portrait)">3:4</button><button data-r="9:16" title="Show the 3D view at 9:16 (portrait)">9:16</button></div>
+  <span class="lbl">Floor</span><div class="seg" id="tileSeg"><button data-t="oak" title="Light-oak wood-look planks, 8&quot; x 48&quot;">Oak</button><button data-t="ft1" title="FT-1: white speckled vitrified tile, 2' x 2'">FT-1 white</button><button data-t="ft2" title="FT-2: beige sand-texture vitrified tile, 2' x 2'">FT-2 beige</button></div>
   <span class="lbl">Lens</span><div class="seg" id="lensSeg"><button data-f="60" title="Eye-like lens">60°</button><button data-f="75" title="Wide lens">75°</button><button data-f="90" title="Extra-wide lens, like a phone 0.5x camera">90°</button></div>
  </div>
 </header>
@@ -375,20 +376,20 @@ function buildOpening(o,w,horiz,s0,out=0){
     const mat=o.id==='D-01'?MAT.teak:(['D-03','D-04','D-09'].includes(o.id)||glassTop?MAT.white:MAT.oak);
     const leaves=o.type==='double'?[[u1,(u1+u2)/2,'a'],[(u1+u2)/2,u2,'b']]:[[u1,u2,o.hinge||'a']];
     const open={'D-01':1.15,'D-02':1.2,'D-03':1.2,'D-04':1.47,'D-05':1.45,'D-06':1.5,'D-07':1.57,'D-09':1.57,'D-12':1.57,'D-11':1.57}[o.id]||0;   // first-floor doors shown open too   // main door, bedroom 1 and toilet 1 doors shown open
-    for(const [a,b,h] of leaves){const len=b-a, hingeU=h==='a'?a:b;
-      const leaf=new THREE.Mesh(new THREE.BoxGeometry(m(len-(o.type==='double'?0.03:0.24)),m(o.h-0.14),m(th)),mat);   // double doors meet in the middle with a hairline gapleaf.castShadow=true;leaf.receiveShadow=true;
+    for(const [a,b,h,kind] of leaves){const len=b-a, hingeU=h==='a'?a:b, dbl=o.type==='double'&&kind!=='s';
+      const leaf=new THREE.Mesh(new THREE.BoxGeometry(m(len-(dbl?0.03:0.24)),m(o.h-0.14),m(th)),mat);leaf.castShadow=true;leaf.receiveShadow=true;
       const piv=new THREE.Group();const p=along(horiz,w,hingeU,T/2);piv.position.set(mx(p[0]),m(ZOFF),m(p[1]));
       leaf.position.set(m((h==='a'?1:-1)*(len/2)),m((o.h-0.14)/2+0.02),0);piv.add(leaf);
       piv.rotation.y=horiz?Math.PI:-Math.PI/2;
       const sgn=-(o.swing==='+'?1:-1)*(h==='a'?-1:1)*(horiz?1:-1);piv.rotation.y+=sgn*open;   // side walls (along Y) turn the other way round
-      scene.add(piv);named(leaf,tip);if(o.id==='D-01')D01.push({piv,base:piv.rotation.y-sgn*open,sgn,open});
+      scene.add(piv);named(leaf,tip);if(o.id==='D-01'){D01.push({piv,base:piv.rotation.y-sgn*open,sgn,open})}   // double doors meet in the middle with a hairline gap
       if(glassTop){   // cut the upper half out of the leaf: solid lower half, rails and stiles round a glass pane
         const L=len-0.24,H=o.h-0.14,sg=h==='a'?1:-1,zc=m(0.02),st=0.3,gz1=H*0.5,gz2=H-0.3;
         leaf.geometry.dispose();leaf.geometry=new THREE.BoxGeometry(m(L),m(gz1),m(th));leaf.position.set(m(sg*len/2),zc+m(gz1/2),0);
         const part=(w,hh,x,z,mt)=>{const q=new THREE.Mesh(new THREE.BoxGeometry(m(w),m(hh),m(mt===MAT.glass?0.03:th)),mt);q.position.set(m(sg*len/2+x),zc+m(z),0);q.castShadow=mt!==MAT.glass;piv.add(q);named(q,tip+(mt===MAT.glass?' · glass upper half':''));return q};
         part(L,H-gz2,0,(gz2+H)/2,mat);part(st,gz2-gz1,-L/2+st/2,(gz1+gz2)/2,mat);part(st,gz2-gz1,L/2-st/2,(gz1+gz2)/2,mat);
         glassMeshes.push(part(L-2*st,gz2-gz1,0,(gz1+gz2)/2,MAT.glass));}
-      if(o.type==='double'&&h==='a')for(const f of [1,-1]){const as=new THREE.Mesh(new THREE.BoxGeometry(m(0.16),m(o.h-0.14),m(0.03)),mat);as.position.set(m(len),m((o.h-0.14)/2+0.02),f*m(th/2+0.015));piv.add(as);named(as,o.id+' · meeting strip (covers the joint)')}   // astragal: a strip on one leaf laps over the joint, so no light shows through
+      if(dbl&&h==='a')for(const f of [1,-1]){const as=new THREE.Mesh(new THREE.BoxGeometry(m(0.16),m(o.h-0.14),m(0.03)),mat);as.position.set(m(len),m((o.h-0.14)/2+0.02),f*m(th/2+0.015));piv.add(as);named(as,o.id+' · meeting strip (covers the joint)')}   // astragal: a strip on one leaf laps over the joint, so no light shows through
       if(o.id==='D-01'){const sg=h==='a'?1:-1,pw=len*0.34;   // VD-05: four raised teak panels, both faces, brass knob
         for(const zz of [1.9,4.7])for(const xx of [-0.21,0.21])for(const f of [1,-1]){const pan=new THREE.Mesh(new THREE.BoxGeometry(m(pw),m(2.3),m(0.04)),MAT.oakDark);pan.position.set(m(sg*len/2+xx*len),m(zz),f*m(th/2+0.02));pan.castShadow=true;piv.add(pan);named(pan,'D-01 · VD-05 raised teak panel')}
         for(const f of [1,-1]){const kb=new THREE.Mesh(new THREE.SphereGeometry(m(0.13),20,14),MAT.brass);kb.position.set(m(sg*(len-0.35)),m(3.4),f*m(th/2+0.12));piv.add(kb);named(kb,'D-01 · brass door knob')}}
@@ -1876,6 +1877,15 @@ optBtn.onclick=()=>setOpt(optRow.classList.contains('hidden'));
 document.querySelectorAll('#lensSeg button').forEach(b=>b.onclick=()=>setLens(+b.dataset.f));
 const animBtn=document.getElementById('animBtn');animBtn.onclick=()=>carAnim.on?stopAnim():startAnim();
 document.getElementById('gateBtn').onclick=()=>setGatesOpen(gateAnim.target?0:1);
+// floor tile choice: oak planks (as the option) or one of the two 2' x 2' vitrified tiles from photos, laid with thin grey joints
+const TILEIMG={ft1:'assets/textures/tiles/ft-1-white-speckle.jpg',ft2:'assets/textures/tiles/ft-2-beige-sand.jpg'},tileCache={};
+function setTile(k){document.querySelectorAll('#tileSeg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.t===k));try{localStorage.setItem('lr3d-tile',k)}catch(e){}
+  if(k==='oak'||!TILEIMG[k]){applyOption(curOpt);invalidate();return}
+  const use=t=>{Object.assign(MAT.floor,{map:t,normalMap:null,roughnessMap:null,roughness:0.35});MAT.floor.color.set('#ffffff');MAT.floor.needsUpdate=true;MAT.skirt.color.set(k==='ft1'?'#d9d7d2':'#c9bba5');renderer.shadowMap.needsUpdate=true;invalidate()};
+  if(tileCache[k])return use(tileCache[k]);
+  const im=new Image();im.onload=()=>{tileCache[k]=canvasTex(1024,1024,(g,w,h)=>{g.drawImage(im,0,0,w,h);g.fillStyle='rgba(120,115,108,0.55)';g.fillRect(0,0,w,3);g.fillRect(0,0,3,h)},m(2));use(tileCache[k])};im.src=TILEIMG[k]}
+document.querySelectorAll('#tileSeg button').forEach(b=>b.onclick=()=>setTile(b.dataset.t));
+{let t='oak';try{t=localStorage.getItem('lr3d-tile')||'oak'}catch(e){}setTile(t)}
 document.getElementById('doorBtn').onclick=()=>setDoorOpen(doorAnim.target?0:1);
 const nb=document.getElementById('notesBtn');nb.onclick=()=>{const h=panel.classList.toggle('hidden');nb.setAttribute('aria-pressed',!h)};
 
