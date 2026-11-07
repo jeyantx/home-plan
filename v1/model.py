@@ -774,11 +774,10 @@ ELEC_POINTS=[
  # utility, bore court
  ('S-14','G',5.3,67.375,3.5,'S16','C4','Bore court, washing machine FU-29: 16 A socket with a splash cover (IP44) on GW-17, under the slab FU-83'),
  # outside: IP65 boxes with spring flaps, under a roof or overhang, 3'6" up, cables enter from below with a drip loop
- ('EV-1','G',17.2,29.75,3.5,'EV','C12','Car charging on GW-04 (parking face, under the roof slab), between the car\'s west side and the EB meter, where you can stand to plug in: 16 A IP65 socket now for a portable 3.3 kW charger; a 6 mm² line and a 40 A MCB laid now, so a 7.4 kW wall charger (Type 2, needs a Type A/B 30 mA RCD) can be fixed later without breaking walls'),
- ('PS-1','G',13.85,29.75,3.55,'S16','C13','Parking board PB-1 on GW-04 (one modular 12-module plate, 1\'2" x 9", in a grey IP65 cover), behind the car and just west of W-01 (under the slab): 16 A IP65 socket with a flap, for a pressure washer or vacuum'),
- ('PS-2','G',14.65,29.75,3.55,'S16','C13','Parking board PB-1 on GW-04 (one modular 12-module plate, 1\'2" x 9", in a grey IP65 cover): second 16 A IP65 socket, for tools or a pump'),
- ('PS-3','G',14.25,29.75,3.55,'S6','C13','Parking board PB-1 on GW-04 (one modular 12-module plate, 1\'2" x 9", in a grey IP65 cover): 6 A IP65 socket, for a phone charger or a small light'),
- ('SB-14','G',14.25,29.75,4.0,'SB','C1','Parking board PB-1 on GW-04 (one modular 12-module plate, 1\'2" x 9", in a grey IP65 cover) behind the car: switches for the parking ceiling lights LO-1 and the gate pillar lamps, two-way with SB-1 in the foyer'),
+ ('PS-1','G',16.29,29.75,3.3,'S16','C13','Parking board PB-1 on GW-04 (one modular 12-module plate, 1\'2" x 9", in a grey IP65 cover), right beside the EB meter box FU-87 (east of it, same height band), clear of W-01 and its frame: 16 A IP65 socket with a flap, for a pressure washer, vacuum or a portable car charger (3.3 kW, no separate EV point)'),
+ ('PS-2','G',17.09,29.75,3.3,'S16','C13','Parking board PB-1 on GW-04 (one modular 12-module plate, 1\'2" x 9", in a grey IP65 cover): second 16 A IP65 socket, for tools or a pump'),
+ ('PS-3','G',16.69,29.75,3.3,'S6','C13','Parking board PB-1 on GW-04 (one modular 12-module plate, 1\'2" x 9", in a grey IP65 cover): 6 A IP65 socket, for a phone charger or a small light'),
+ ('SB-14','G',16.69,29.75,3.75,'SB','C1','Parking board PB-1 on GW-04 (one modular 12-module plate, 1\'2" x 9", in a grey IP65 cover) behind the car: switches for the parking ceiling lights LO-1 and the gate pillar lamps, two-way with SB-1 in the foyer'),
  ('IP-1','G',0.375,26.0,3.5,'IP','C13','Two-wheeler charging on BW-01 by the bikes: 16 A IP65 socket with a hood (scooter charger), own 30 mA RCBO'),
  ('IP-2','G',12.0,95.125,3.5,'IP','C13','Back garden, on GW-08 under the balcony 3 slab: 16 A IP65 socket with a hood, for a garden tool or pump'),
  ('LO-1','G',14.0,24.0,9.0,'LO','C1','Parking: 2 ceiling lights under the slab (Y 24\' and 28\'), switched at SB-1'),
@@ -816,7 +815,6 @@ ELEC_CIRCUITS=[
  ('C9','AC bedroom 2','20 A MCB','4 mm²',''),
  ('C10','Spare AC point, living','20 A MCB','4 mm²','pulled now, used later'),
  ('C11','First-floor sub-board DB-2 (lights, fans, sockets, toilet 3)','32 A MCB','6 mm²','30 mA RCCB at DB-2'),
- ('C12','Car charging EV-1','40 A MCB (16 A socket now)','6 mm²','own RCD'),
  ('C13','Outside sockets IP-1, IP-2','16 A RCBO','2.5 mm²','30 mA'),
  ('C14','AC bedroom 3 with its balcony isolator','20 A MCB','4 mm²',''),
  ('C15','Geyser toilet 3 (from DB-2)','16 A MCB','2.5 mm²','30 mA'),
