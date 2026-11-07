@@ -464,6 +464,22 @@ for(const [x,y] of [[LX1+0.5,51.0],[LX1+0.5,55.8],[LX2-0.45,49.2],[LX2-0.45,56.3
   cyl(x,y,BZ-0.01,BZ+0.005,0.2,MAT.led,{tip:'Recessed LED downlight in the band (warm white)'}).castShadow=false;
   const s=new THREE.SpotLight('#ffd7a3',0,m(16),0.75,0.6,2);s.position.set(mx(x),m(BZ-0.05),m(y));s.target.position.set(mx(x),0,m(y));s.castShadow=true;s.shadow.mapSize.set(512,512);s.shadow.bias=-0.0005;s.shadow.radius=4;scene.add(s,s.target);downs.push(s)}
 
+// slim (6") mirror unit beside a wardrobe: racks rk (closed base, two open racks), drawers dr under the full-length mirror mr, loft on the wardrobe line; shutters and drawer fronts in the wardrobe oak
+function mirrorUnit(box,cyl,rk,dr,mr,X2,BZ){const x1=rk.x1,yA=rk.y1,yB=rk.y2,yC=dr.y2,T=0.06,tp=rk.id+'/'+mr.id+' · slim mirror unit, oak veneer, joined to the wardrobe';
+  box(x1,X2-0.012,yC-T,yC,0,BZ-0.005,MAT.oak,{tip:tp+' · side panel'});box(x1,X2-0.012,yB-T/2,yB+T/2,0,7.55,MAT.oak,{tip:tp+' · divider'});
+  box(x1,X2-0.012,yA,yC-T,7.55,BZ-0.005,MAT.oak,{tip:tp+' · loft, same line as the wardrobe loft'});box(x1-0.012,x1,yA+0.03,yC-T-0.03,7.6,BZ-0.05,MAT.oak,{cast:false,tip:'Loft shutter line'});
+  box(x1-0.05,x1-0.004,(yA+yC)/2-0.2,(yA+yC)/2+0.2,7.75,7.79,MAT.blackMetal,{cast:false,tip:'Black handle'});
+  box(x1,X2-0.012,yA,yB-T/2,0,2.0,MAT.oak,{tip:rk.id+' · closed base, oak shutter'});box(x1-0.012,x1,yA+0.03,yB-T/2-0.03,0.1,1.95,MAT.oak,{cast:false,tip:'Shutter line'});
+  box(x1-0.05,x1-0.004,yB-0.3,yB-0.26,1.4,1.8,MAT.blackMetal,{cast:false,tip:'Black handle'});
+  box(X2-0.06,X2-0.012,yA,yB-T/2,2.0,7.55,MAT.oakDark,{cast:false,tip:rk.id+' · rack back, dark oak'});
+  for(const z of [3.6,5.15])box(x1+0.03,X2-0.06,yA,yB-T/2,z,z+0.06,MAT.oak,{tip:rk.id+' · accessory rack, oak'});
+  cyl(x1+0.22,yA+0.35,2.0,2.3,0.11,std({color:'#e9e4da',roughness:0.4}),{tip:'Jewellery box'});box(x1+0.08,x1+0.38,yA+0.6,yB-0.15,3.66,3.74,std({color:'#b49a80',roughness:0.7}),{tip:'Watch tray'});
+  cyl(x1+0.22,yA+0.6,5.21,5.55,0.09,std({color:'#cdbfa8',roughness:0.5}),{tip:'Perfume bottle'});
+  box(x1+0.04,X2-0.012,yB+T/2,yC-T,0,0.2,MAT.oakDark,{tip:dr.id+' · recessed plinth'});box(x1,X2-0.012,yB+T/2,yC-T,0.2,2.0,MAT.oak,{tip:dr.id+' · Drawer unit, oak veneer · '+dr.note});
+  const d=1.8/3;for(let i=0;i<3;i++){const z1=0.2+i*d;box(x1-0.012,x1,yB+0.06,yC-T-0.03,z1+0.02,z1+d-0.02,MAT.oak,{cast:false,tip:'Drawer front'});
+   box(x1-0.05,x1-0.004,(yB+yC)/2-0.2,(yB+yC)/2+0.2,z1+d-0.14,z1+d-0.1,MAT.blackMetal,{cast:false,tip:'Drawer pull, black'})}
+  cyl(x1+0.22,yB+0.35,2.0,2.3,0.09,std({color:'#e9e4da',roughness:0.4}),{tip:'Powder box'});box(x1+0.1,x1+0.17,yB+0.7,yC-0.2,2.0,2.03,MAT.blackMetal,{cast:false,tip:'Comb'});
+  box(X2-0.04,X2-0.012,mr.y1,mr.y2,2.0,7.55,MAT.oakDark,{cast:false,tip:'Mirror backing'});box(X2-0.05,X2-0.04,mr.y1+0.02,mr.y2-0.02,2.02,7.0,MAT.mirror,{cast:false,tip:mr.id+' · Full-length mirror, 1\'4" x 5\' (2\' to 7\' up)'})}
 // ---------------- TV, showcase and book wall unit FU-05 (pieces butt together; no overlapping faces) ----------------
 const tv={x1:18.917,x2:20.25,y1:LY1,y2:LY2}, towerW=3.0, sideT=0.25, backT=0.1, baseH=1.6;   // wall to wall, 12'
 const towerLights=[];
@@ -1014,22 +1030,8 @@ function setFinish(k){if(!KT[k])k='KT-1';const o=KT[k];finishMat(MAT.kLow,o.low)
  const wd=fuG['FU-34'],wy2=wd.y2,wl=7.55;
  cabRun('FU-34','Wardrobe with loft, oak veneer',wd.x1,X2-0.012,Y1+0.012,wy2,0,wl,'y+',[[14.0,16.08,'door'],[16.08,18.16,'door'],[18.16,20.238,'door']],MAT.oak,true);
  cabRun('FU-34','Wardrobe loft, oak veneer',wd.x1,X2-0.012,Y1+0.012,wy2,wl+0.012,BZ-0.005,'y+',[[14.0,16.08,'door'],[16.08,18.16,'door'],[18.16,20.238,'door']],MAT.oak,false);
- // slim mirror unit (6" deep) on GW-05, joined to the wardrobe FU-34 (same oak, same loft line): racks FU-103 on the north side, drawers FU-32 under the mirror FU-102, one side panel by the bed
- {const r3=fuG['FU-103'],c2=fuG['FU-32'],mr=fuG['FU-102'],x1=r3.x1,yA=r3.y1,yB=r3.y2,yC=c2.y2,T=0.06,tp='FU-102/103 · slim mirror unit, oak veneer, joined to the wardrobe';
-  box(x1,X2-0.012,yC-T,yC,0,BZ-0.005,MAT.oak,{tip:tp+' · side panel'});box(x1,X2-0.012,yB-T/2,yB+T/2,0,7.55,MAT.oak,{tip:tp+' · divider'});
-  box(x1,X2-0.012,yA,yC-T,7.55,BZ-0.005,MAT.oak,{tip:tp+' · loft, same line as the wardrobe loft'});box(x1-0.004,x1,yA+0.03,yC-T-0.03,7.6,BZ-0.05,MAT.oakDark,{cast:false,tip:'Loft shutter line'});
-  box(x1-0.05,x1-0.004,(yA+yC)/2-0.2,(yA+yC)/2+0.2,7.75,7.79,MAT.blackMetal,{cast:false,tip:'Black handle'});
-  box(x1,X2-0.012,yA,yB-T/2,0,2.0,MAT.oak,{tip:'FU-103 · closed base, oak shutter'});box(x1-0.004,x1,yA+0.03,yB-T/2-0.03,0.1,1.95,MAT.oakDark,{cast:false,tip:'Shutter line'});
-  box(x1-0.05,x1-0.004,yB-0.3,yB-0.26,1.4,1.8,MAT.blackMetal,{cast:false,tip:'Black handle'});
-  box(X2-0.06,X2-0.012,yA,yB-T/2,2.0,7.55,MAT.oakDark,{cast:false,tip:'FU-103 · rack back, dark oak'});
-  for(const z of [3.6,5.15])box(x1+0.03,X2-0.06,yA,yB-T/2,z,z+0.06,MAT.oak,{tip:'FU-103 · accessory rack, oak'});
-  cyl(x1+0.22,yA+0.35,2.0,2.3,0.11,std({color:'#e9e4da',roughness:0.4}),{tip:'Jewellery box'});box(x1+0.08,x1+0.38,yA+0.6,yB-0.15,3.66,3.74,std({color:'#b49a80',roughness:0.7}),{tip:'Watch tray'});
-  cyl(x1+0.22,yA+0.6,5.21,5.55,0.09,std({color:'#cdbfa8',roughness:0.5}),{tip:'Perfume bottle'});
-  box(x1+0.04,X2-0.012,yB+T/2,yC-T,0,0.2,MAT.oakDark,{tip:'FU-32 · recessed plinth'});box(x1,X2-0.012,yB+T/2,yC-T,0.2,2.0,MAT.oak,{tip:'FU-32 · Drawer unit, oak veneer · '+c2.note});
-  const d=1.8/3;for(let i=0;i<3;i++){const z1=0.2+i*d;box(x1-0.004,x1,yB+0.06,yC-T-0.03,z1+0.02,z1+d-0.02,MAT.oakDark,{cast:false,tip:'Drawer front'});
-   box(x1-0.05,x1-0.004,(yB+yC)/2-0.2,(yB+yC)/2+0.2,z1+d-0.14,z1+d-0.1,MAT.blackMetal,{cast:false,tip:'Drawer pull, black'})}
-  cyl(x1+0.22,yB+0.35,2.0,2.3,0.09,std({color:'#e9e4da',roughness:0.4}),{tip:'Powder box'});box(x1+0.1,x1+0.17,yB+0.7,yC-0.2,2.0,2.03,MAT.blackMetal,{cast:false,tip:'Comb'});
-  box(X2-0.04,X2-0.012,mr.y1,mr.y2,2.0,7.55,MAT.oakDark,{cast:false,tip:'Mirror backing'});box(X2-0.05,X2-0.04,mr.y1+0.02,mr.y2-0.02,2.02,7.0,MAT.mirror,{cast:false,tip:'FU-102 · Full-length mirror, 1\'4" x 5\' (2\' to 7\' up)'})}
+ // slim mirror unit (6" deep) beside the wardrobe FU-34: racks FU-103, drawers FU-32, mirror FU-102
+ mirrorUnit(box,cyl,fuG['FU-103'],fuG['FU-32'],fuG['FU-102'],X2,BZ);
 }
 
 
@@ -1063,7 +1065,7 @@ X_(()=>{CURFL='F';ZOFF=FFZ;
  // curtains: W-10 (FW-01) from the band, kept clear of the AC; beside the balcony door D-11 (FW-04)
  for(const [a,b] of [[87.2,88.6],[92.45,92.95]]) curtain(a,b,X1+0.42,WT,WROD,'y',null,null,WB);
  for(const [a,b] of [[13.9,14.7],[18.3,19.1]]) curtain(a,b,Y2-0.42,WT,'Curtain rod over the balcony door','x');   // door: full length, but from the rod, not the ceiling
- // queen bed FU-36, head to FW-03, headboard wall panel across both side tables
+ // queen bed FU-36, head to FW-03
  const f=f2('FU-36'),tip=`FU-36 · Queen bed · oak platform, 6'6" x 5' · ${f.note}`;
  box(f.x1+0.35,f.x2-0.2,f.y1+0.3,f.y2-0.3,0,0.32,MAT.plinth,{tip});
  box(f.x1,f.x2-0.15,f.y1,f.y2,0.32,1.02,MAT.oak,{round:0.04,tip});
@@ -1072,13 +1074,11 @@ X_(()=>{CURFL='F';ZOFF=FFZ;
  box(f.x1+0.3,f.x1+1.6,f.y1,f.y2,1.79,1.88,std({color:'#6e4a32',roughness:1,normalMap:T.linen.normalMap}),{round:0.04,tip:'Throw, dark brown'});
  for(const [a,b] of [[f.y1+0.35,f.y1+2.35],[f.y2-2.35,f.y2-0.35]]) box(f.x2-1.45,f.x2-0.45,a,b,1.72,2.2,std({color:'#f6f3ee',roughness:1,normalMap:T.linen.normalMap}),{round:0.2,tip:'Pillow, white cotton'});
  box(f.x2-1.85,f.x2-1.35,f.y1+1.9,f.y1+3.1,1.75,2.5,cushMat('#b49a80'),{round:0.16,tip:'Cushion, mild brown linen'});
- const hy1=f2('FU-37').y1-0.25,hy2=f2('FU-38').y2+0.25,ht=0.12,lz=3.35;
- box(X2-ht,X2,hy1,hy2,0,lz,MAT.tvPanel,{tip:'Headboard wall panel · oak veneer with 3 mm grooves, across both side tables'});
- for(let y=hy1+0.5;y<hy2-0.1;y+=0.5) box(X2-ht-0.005,X2-ht,y-0.008,y+0.008,0.05,lz-0.05,MAT.oakDark,{cast:false,tip:'Groove in the oak panel'});
- box(X2-0.42,X2-ht,hy1,hy2,lz,lz+0.1,MAT.oak,{tip:'Headboard ledge, oak, 4" deep'});
- ledStrips.push(box(X2-0.4,X2-0.34,hy1+0.15,hy2-0.15,lz-0.03,lz,MAT.led,{cast:false,tip:'LED strip under the ledge'}));
+ const ht=0.012;   // no headboard wall panel (as bedroom 2)
  box(X2-0.3,X2-ht,f.y1+0.25,f.y2-0.25,1.7,3.15,MAT.sofa,{round:0.08,tip:'Upholstered headboard pad, mild-brown linen'});
- for(const id of ['FU-37','FU-38']){const s0=f2(id),ts=`${id} · Side table, floating oak · ${s0.note}`;
+ // slim mirror unit beside the wardrobe FU-39 (as bedroom 2): racks FU-105, drawers FU-37, mirror FU-104
+ mirrorUnit(box,cyl,f2('FU-105'),f2('FU-37'),f2('FU-104'),X2,BZ);
+ for(const id of ['FU-38']){const s0=f2(id),ts=`${id} · Side table, floating oak · ${s0.note}`;
   box(s0.x1+0.1,X2-ht,s0.y1+0.05,s0.y2-0.05,1.3,2.05,MAT.oak,{tip:ts});box(s0.x1+0.098,s0.x1+0.1,s0.y1+0.1,s0.y2-0.1,1.66,1.68,MAT.oakDark,{cast:false,tip:'Drawer line'});
   box(s0.x1+0.06,s0.x1+0.1,(s0.y1+s0.y2)/2-0.25,(s0.y1+s0.y2)/2+0.25,1.86,1.9,MAT.blackMetal,{cast:false,tip:'Drawer pull'});
   const lx=s0.x1+0.75,ly=(s0.y1+s0.y2)/2;cyl(lx,ly,2.05,2.7,0.16,std({color:'#cdbfa8',roughness:0.5}),{tip:'Table lamp, ceramic base',rTop:0.12});
@@ -1659,7 +1659,7 @@ for(const [x,y] of [[5.6,36.5],[7.5,22.0],[15.0,24.0]]) downlight(x,y,SLB,'LED d
 // ---------------- other rooms: simple blocks so the views through openings look right ----------------
 const simpleH={bed:1.8,cab:2.3,desk:2.5,ward:7.5,store2:9.4,shelf:6,counter:2.8,counter2:3.0,fridge:5.6,wc:1.3,basin:2.7,wm:2.8,store:3.5,table:2.4,chair:1.5};
 const kmat={counter:MAT.granite,counter2:MAT.granite,fridge:std({color:'#d9dcdf',roughness:0.3,metalness:0.5}),ward:MAT.oak,store2:std({color:'#ebe5da',roughness:0.55}),bed:std({color:'#e9e4da',roughness:0.9}),cab:MAT.oak,desk:MAT.oak,shelf:MAT.oak};
-for(const f of P.furniture){ if(f.fl!=='G'||['FU-03.1','FU-03.2','FU-04','FU-05','FU-06','FU-09.1','FU-09.2','FU-10','FU-11','FU-12','FU-13','FU-14','FU-15','FU-16','FU-16.2','FU-17','FU-18','FU-25','FU-27','FU-31','FU-32','FU-102','FU-103','FU-33','FU-34','FU-35','FU-29','FU-30','FU-77','FU-79','FU-80','FU-81','FU-82','FU-88'].includes(f.id)) continue;
+for(const f of P.furniture){ if(f.fl!=='G'||['FU-03.1','FU-03.2','FU-04','FU-05','FU-06','FU-09.1','FU-09.2','FU-10','FU-11','FU-12','FU-13','FU-14','FU-15','FU-16','FU-16.2','FU-17','FU-18','FU-25','FU-27','FU-31','FU-32','FU-102','FU-103','FU-104','FU-105','FU-33','FU-34','FU-35','FU-29','FU-30','FU-77','FU-79','FU-80','FU-81','FU-82','FU-88'].includes(f.id)) continue;
   const h=simpleH[f.kind]; if(!h) continue;
   if(f.kind==='counter'||f.kind==='counter2'){box(f.x1,f.x2,f.y1,f.y2,0.3,h-0.12,MAT.cabinet,{tip:`${f.id} · ${f.name}`});box(f.x1,f.x2,f.y1,f.y2,h-0.12,h,MAT.granite,{tip:`${f.id} · ${f.name} · granite top`});continue}
   box(f.x1,f.x2,f.y1,f.y2,0,h,kmat[f.kind]||std({color:'#e6e2da',roughness:0.8}),{tip:`${f.id} · ${f.name}`});
