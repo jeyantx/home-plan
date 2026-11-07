@@ -631,7 +631,7 @@ box(9.92,9.94,37.4,40.1,7.9,7.98,MAT.blackMetal,{cast:false,tip:'FU-44 · AC air
  box(BX2-0.3,BX2-ht,f.y1+0.25,f.y2-0.25,1.7,3.15,MAT.sofa,{round:0.08,tip:'Upholstered headboard pad, mild-brown linen'});
  cyl(BX2-0.27,f.y1+0.45,lz+0.1,lz+0.65,0.13,std({color:'#e9e4da',roughness:0.55}),{tip:'Ceramic vase',rTop:0.08});
  box(BX2-0.36,BX2-0.16,f.y2-1.4,f.y2-0.5,lz+0.1,lz+0.22,std({color:'#6f6a60',roughness:0.8}),{tip:'Books'});
- // art above the ledge: one wide Japandi canvas, earthy sun and horizon
+ // art above the bed: one wide Japandi canvas, earthy sun and horizon
  const ay1=42.3,ay2=45.3,az1=4.7,az2=6.7;
  box(BX2-0.11,BX2-0.012,ay1,ay2,az1,az2,MAT.oakDark,{tip:'Photo frame, oak, 1" profile'});
  const t=canvasTex(768,Math.round(768*(az2-az1)/(ay2-ay1)),(g,w,h)=>{const r=rng(91);const grd=g.createLinearGradient(0,0,0,h);grd.addColorStop(0,'#efe5d6');grd.addColorStop(1,'#dccbb3');g.fillStyle=grd;g.fillRect(0,0,w,h);
@@ -993,11 +993,7 @@ function setFinish(k){if(!KT[k])k='KT-1';const o=KT[k];finishMat(MAT.kLow,o.low)
  box(f.x1+0.3,f.x1+1.6,f.y1,f.y2,1.79,1.88,std({color:'#6e4a32',roughness:1,normalMap:T.linen.normalMap}),{round:0.04,tip:'Throw, dark brown (same as the rug border)'});
  for(const [a,b] of [[f.y1+0.35,f.y1+2.35],[f.y2-2.35,f.y2-0.35]]) box(f.x2-1.45,f.x2-0.45,a,b,1.72,2.2,std({color:'#f6f3ee',roughness:1,normalMap:T.linen.normalMap}),{round:0.2,tip:'Pillow, white cotton'});
  box(f.x2-1.85,f.x2-1.35,f.y1+1.9,f.y1+3.1,1.75,2.5,cushMat('#b49a80'),{round:0.16,tip:'Cushion, mild brown linen'});
- const hy1=84.0,hy2=Y2-0.012,ly2=92.5,ht=0.12,lz=3.35;   // panel starts after the full-length mirror FU-102   // panel runs to the GW-08 corner behind the long shelf FU-33
- box(X2-ht,X2,hy1,hy2,0,lz,MAT.tvPanel,{tip:'Headboard wall panel · oak veneer with 3 mm grooves, across both side tables'});
- for(let y=hy1+0.5;y<hy2-0.1;y+=0.5) box(X2-ht-0.005,X2-ht,y-0.008,y+0.008,0.05,lz-0.05,MAT.oakDark,{cast:false,tip:'Groove in the oak panel'});
- box(X2-0.42,X2-ht,hy1,ly2,lz,lz+0.1,MAT.oak,{tip:'Headboard ledge, oak, 4" deep'});
- ledStrips.push(box(X2-0.4,X2-0.34,hy1+0.15,ly2-0.15,lz-0.03,lz,MAT.led,{cast:false,tip:'LED strip under the ledge'}));
+ const ht=0.012;   // no headboard wall panel: things stand on the plain wall
  box(X2-0.3,X2-ht,f.y1+0.25,f.y2-0.25,1.7,3.15,MAT.sofa,{round:0.08,tip:'Upholstered headboard pad, mild-brown linen'});
  // floating side table FU-33 with a table lamp
  // FU-32: small oak chest of 3 drawers on the floor, 2'6" high, under the mirror: powder, comb and such on top and in the drawers
@@ -1012,8 +1008,8 @@ function setFinish(k){if(!KT[k])k='KT-1';const o=KT[k];finishMat(MAT.kLow,o.low)
   const lx=s.x1+0.75,ly=(s.y1+s.y2)/2;cyl(lx,ly,2.05,2.7,0.16,std({color:'#cdbfa8',roughness:0.5}),{tip:'Table lamp, ceramic base',rTop:0.12});
   cyl(lx,ly,2.7,3.28,0.42,MAT.paper,{tip:'Table lamp, linen shade',rTop:0.33}).castShadow=false;
   const ll=new THREE.PointLight('#ffc98a',0,m(8),2);ll.position.set(mx(lx),m(3.05),m(ly));scene.add(ll);towerLights.push(ll);}
- // art above the ledge
- const ay1=86.0,ay2=89.0,az1=4.7,az2=6.7;
+ // art above the bed
+ const ay1=86.5,ay2=89.5,az1=4.7,az2=6.7;   // centred over the bed
  box(X2-0.11,X2-0.012,ay1,ay2,az1,az2,MAT.oakDark,{tip:'Photo frame, oak, 1" profile'});
  const t=canvasTex(768,Math.round(768*(az2-az1)/(ay2-ay1)),(g,w,h)=>{const r=rng(93);g.fillStyle='#e9dfcf';g.fillRect(0,0,w,h);
    g.fillStyle='#8a6a4f';for(let i=0;i<3;i++){g.beginPath();g.moveTo(0,h*(0.55+i*0.12));g.bezierCurveTo(w*0.3,h*(0.45+i*0.12),w*0.6,h*(0.68+i*0.1),w,h*(0.5+i*0.12));g.lineTo(w,h);g.lineTo(0,h);g.globalAlpha=0.35+i*0.2;g.fill()}
@@ -1024,11 +1020,8 @@ function setFinish(k){if(!KT[k])k='KT-1';const o=KT[k];finishMat(MAT.kLow,o.low)
  const wd=fuG['FU-34'],wy2=wd.y2,wl=7.55;
  cabRun('FU-34','Wardrobe with loft, oak veneer',wd.x1,X2-0.012,Y1+0.012,wy2,0,wl,'y+',[[14.0,16.08,'door'],[16.08,18.16,'door'],[18.16,20.238,'door']],MAT.oak,true);
  cabRun('FU-34','Wardrobe loft, oak veneer',wd.x1,X2-0.012,Y1+0.012,wy2,wl+0.012,BZ-0.005,'y+',[[14.0,16.08,'door'],[16.08,18.16,'door'],[18.16,20.238,'door']],MAT.oak,false);
- // dressing end of the long shelf FU-33: second drawer, linen stool; the full-length mirror FU-102 is beside chest FU-32
- {const f3=fuG['FU-33'],d1=f3.y1+1.75,d2=f3.y2;
-  box(f3.x1+0.098,f3.x1+0.1,d1,d2-0.1,1.66,1.68,MAT.oakDark,{cast:false,tip:'Drawer line'});box(f3.x1+0.06,f3.x1+0.1,(d1+d2)/2-0.25,(d1+d2)/2+0.25,1.86,1.9,MAT.blackMetal,{cast:false,tip:'Drawer pull'});
+ // full-length mirror FU-102, centred between the wardrobe and the bed
   {const f2=fuG['FU-102'],t2='FU-102 · Full-length mirror, 1\'4" x 5\' (2\' to 7\' up), slim oak frame';box(X2-0.1,X2-0.012,f2.y1,f2.y2,2.0,7.0,MAT.oakDark,{tip:t2});box(X2-0.11,X2-0.1,f2.y1+0.08,f2.y2-0.08,2.08,6.92,MAT.mirror,{cast:false,tip:t2})}
-  cyl(f3.x1-0.6,(d1+d2)/2,0,1.45,0.45,MAT.sofa,{tip:'Stool, mild-brown linen',rTop:0.45});}
 }
 
 
@@ -1083,7 +1076,7 @@ X_(()=>{CURFL='F';ZOFF=FFZ;
   const lx=s0.x1+0.75,ly=(s0.y1+s0.y2)/2;cyl(lx,ly,2.05,2.7,0.16,std({color:'#cdbfa8',roughness:0.5}),{tip:'Table lamp, ceramic base',rTop:0.12});
   cyl(lx,ly,2.7,3.28,0.42,MAT.paper,{tip:'Table lamp, linen shade',rTop:0.33}).castShadow=false;
   const ll=new THREE.PointLight('#ffc98a',0,m(8),2);ll.position.set(mx(lx),m(FFZ+3.05),m(ly));scene.add(ll);towerLights.push(ll);}
- // art above the ledge
+ // art above the bed
  {const ay1=f.y1+1.0,ay2=f.y2-1.0,az1=4.7,az2=6.5;
   box(X2-0.11,X2-0.012,ay1,ay2,az1,az2,MAT.oakDark,{tip:'Photo frame, oak, 1" profile'});
   const t=canvasTex(768,Math.round(768*(az2-az1)/(ay2-ay1)),(g,w,h)=>{const r=rng(117);g.fillStyle='#ece3d3';g.fillRect(0,0,w,h);
