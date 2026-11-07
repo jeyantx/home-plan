@@ -382,7 +382,7 @@ CH_F_BACK_Y=98.6
 FURNITURE = [
  ('FU-01','G','Shoe rack',7.25,8.5,35.25,38.25,'shelf',None,'Porch, on GW-03: open wooden shoe rack in walnut tone, 3\' long x 1\'3" deep x 2\'11" high, 4 open shelves and a top (keys, a small plant), open back (as the owner\'s photo); under the W-02 sill'),
  ('FU-90','G','Sunken doormat well (CD-02)',4.5,8.0,38.5,40.5,'mat',None,'Porch floor in front of D-13: 3\'6" x 2\', 3/4" deep, black granite edge, coir mat flush with the floor; nothing to trip on'),
- ('FU-91','G','Porch step handrail (CD-03)',8.0,8.15,32.75,35.9,'rail',None,'Black MS pipe 1 1/2" on posts, 2\'9" above the step noses, along the west side of the 3 porch steps (by the study wall, where the dark plinth band was); the steps get flamed (rough) granite treads with a 2" black granite edge strip'),
+ ('FU-91','G','Porch step handrail (CD-03)',3.05,3.2,32.75,35.9,'rail',None,'Black MS pipe 1 1/2" on posts, 2\'9" above the step noses, along the east side of the 3 porch steps, on the strip where the dark plinth band was; the steps get flamed (rough) granite treads with a 2" black granite edge strip'),
  ('FU-95','G','Window seat with storage (CD-07)',10.25,18.75,92.625,94.375,'seat',None,'Bedroom 2, under the picture window W-08: brick seat 1\'6" high x 1\'9" deep, black granite top, three storage bays with shutters below; 2\'7" clear to the bed foot'),
  ('FU-96','G','Shower niche (CD-08)',18.0,19.5,30.5,30.85,'niche',None,'Toilet 1 shower, in GW-04: 1\'6" wide x 1\'2" high x 4" deep, 3\'6" up, tiled, sloped granite base'),
  ('FU-97','G','Shower niche (CD-08)',6.75,7.1,67.6,69.1,'niche',None,'Toilet 2 shower, in GW-18: 1\'6" wide x 1\'2" high x 4" deep, 3\'6" up, tiled, sloped granite base (replaces the bath rack FU-70)'),
