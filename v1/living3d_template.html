@@ -993,7 +993,7 @@ function setFinish(k){if(!KT[k])k='KT-1';const o=KT[k];finishMat(MAT.kLow,o.low)
  box(f.x1+0.3,f.x1+1.6,f.y1,f.y2,1.79,1.88,std({color:'#6e4a32',roughness:1,normalMap:T.linen.normalMap}),{round:0.04,tip:'Throw, dark brown (same as the rug border)'});
  for(const [a,b] of [[f.y1+0.35,f.y1+2.35],[f.y2-2.35,f.y2-0.35]]) box(f.x2-1.45,f.x2-0.45,a,b,1.72,2.2,std({color:'#f6f3ee',roughness:1,normalMap:T.linen.normalMap}),{round:0.2,tip:'Pillow, white cotton'});
  box(f.x2-1.85,f.x2-1.35,f.y1+1.9,f.y1+3.1,1.75,2.5,cushMat('#b49a80'),{round:0.16,tip:'Cushion, mild brown linen'});
- const hy1=83.5,hy2=Y2-0.012,ly2=92.5,ht=0.12,lz=3.35;   // panel runs to the GW-08 corner behind the long shelf FU-33
+ const hy1=84.0,hy2=Y2-0.012,ly2=92.5,ht=0.12,lz=3.35;   // panel starts after the full-length mirror FU-102   // panel runs to the GW-08 corner behind the long shelf FU-33
  box(X2-ht,X2,hy1,hy2,0,lz,MAT.tvPanel,{tip:'Headboard wall panel · oak veneer with 3 mm grooves, across both side tables'});
  for(let y=hy1+0.5;y<hy2-0.1;y+=0.5) box(X2-ht-0.005,X2-ht,y-0.008,y+0.008,0.05,lz-0.05,MAT.oakDark,{cast:false,tip:'Groove in the oak panel'});
  box(X2-0.42,X2-ht,hy1,ly2,lz,lz+0.1,MAT.oak,{tip:'Headboard ledge, oak, 4" deep'});
@@ -1001,7 +1001,7 @@ function setFinish(k){if(!KT[k])k='KT-1';const o=KT[k];finishMat(MAT.kLow,o.low)
  box(X2-0.3,X2-ht,f.y1+0.25,f.y2-0.25,1.7,3.15,MAT.sofa,{round:0.08,tip:'Upholstered headboard pad, mild-brown linen'});
  // floating side table FU-33 with a table lamp
  // FU-32: small oak chest of 3 drawers on the floor, 2'6" high, under the mirror: powder, comb and such on top and in the drawers
- {const c=fuG['FU-32'],cx1=c.x1+0.1,cx2=X2-ht,H=2.5,ts=`FU-32 · Chest of 3 drawers, oak veneer, 1'6" x 1'6" x 2'6" high · ${c.note}`;
+ {const c=fuG['FU-32'],cx1=c.x1+0.1,cx2=X2-ht,H=2.5,ts=`FU-32 · Chest of 3 drawers, oak veneer, 1'3½" x 1'6" x 2'6" high · ${c.note}`;
   box(cx1+0.05,cx2,c.y1+0.1,c.y2-0.1,0,0.25,MAT.oakDark,{tip:ts+' · recessed plinth'});box(cx1,cx2,c.y1+0.05,c.y2-0.05,0.25,H-0.08,MAT.oak,{tip:ts});box(cx1-0.03,cx2,c.y1+0.02,c.y2-0.02,H-0.08,H,MAT.oak,{tip:ts+' · top'});
   const d=(H-0.08-0.25)/3;for(let i=0;i<3;i++){const z1=0.25+i*d;box(cx1-0.004,cx1,c.y1+0.08,c.y2-0.08,z1+0.02,z1+d-0.02,MAT.oakDark,{cast:false,tip:'Drawer front'});
    box(cx1-0.05,cx1-0.004,(c.y1+c.y2)/2-0.2,(c.y1+c.y2)/2+0.2,z1+d-0.17,z1+d-0.13,MAT.blackMetal,{cast:false,tip:'Drawer pull, black'})}
@@ -1024,10 +1024,10 @@ function setFinish(k){if(!KT[k])k='KT-1';const o=KT[k];finishMat(MAT.kLow,o.low)
  const wd=fuG['FU-34'],wy2=wd.y2,wl=7.55;
  cabRun('FU-34','Wardrobe with loft, oak veneer',wd.x1,X2-0.012,Y1+0.012,wy2,0,wl,'y+',[[14.0,16.08,'door'],[16.08,18.16,'door'],[18.16,20.238,'door']],MAT.oak,true);
  cabRun('FU-34','Wardrobe loft, oak veneer',wd.x1,X2-0.012,Y1+0.012,wy2,wl+0.012,BZ-0.005,'y+',[[14.0,16.08,'door'],[16.08,18.16,'door'],[18.16,20.238,'door']],MAT.oak,false);
- // dressing end of the long shelf FU-33: second drawer, linen stool; the framed mirror hangs above side table FU-32
+ // dressing end of the long shelf FU-33: second drawer, linen stool; the full-length mirror FU-102 is beside chest FU-32
  {const f3=fuG['FU-33'],d1=f3.y1+1.75,d2=f3.y2;
   box(f3.x1+0.098,f3.x1+0.1,d1,d2-0.1,1.66,1.68,MAT.oakDark,{cast:false,tip:'Drawer line'});box(f3.x1+0.06,f3.x1+0.1,(d1+d2)/2-0.25,(d1+d2)/2+0.25,1.86,1.9,MAT.blackMetal,{cast:false,tip:'Drawer pull'});
-  {const f2=fuG['FU-32'];box(X2-ht-0.09,X2-0.012,f2.y1+0.05,f2.y2-0.05,3.55,6.4,MAT.oakDark,{tip:'Mirror frame, oak, above side table FU-32'});box(X2-ht-0.1,X2-ht-0.09,f2.y1+0.15,f2.y2-0.15,3.65,6.3,MAT.mirror,{cast:false,tip:'Mirror above side table FU-32'})}
+  {const f2=fuG['FU-102'],t2='FU-102 · Full-length mirror, 1\'4" x 5\' (2\' to 7\' up), slim oak frame';box(X2-0.1,X2-0.012,f2.y1,f2.y2,2.0,7.0,MAT.oakDark,{tip:t2});box(X2-0.11,X2-0.1,f2.y1+0.08,f2.y2-0.08,2.08,6.92,MAT.mirror,{cast:false,tip:t2})}
   cyl(f3.x1-0.6,(d1+d2)/2,0,1.45,0.45,MAT.sofa,{tip:'Stool, mild-brown linen',rTop:0.45});}
 }
 
@@ -1658,7 +1658,7 @@ for(const [x,y] of [[5.6,36.5],[7.5,22.0],[15.0,24.0]]) downlight(x,y,SLB,'LED d
 // ---------------- other rooms: simple blocks so the views through openings look right ----------------
 const simpleH={bed:1.8,cab:2.3,desk:2.5,ward:7.5,store2:9.4,shelf:6,counter:2.8,counter2:3.0,fridge:5.6,wc:1.3,basin:2.7,wm:2.8,store:3.5,table:2.4,chair:1.5};
 const kmat={counter:MAT.granite,counter2:MAT.granite,fridge:std({color:'#d9dcdf',roughness:0.3,metalness:0.5}),ward:MAT.oak,store2:std({color:'#ebe5da',roughness:0.55}),bed:std({color:'#e9e4da',roughness:0.9}),cab:MAT.oak,desk:MAT.oak,shelf:MAT.oak};
-for(const f of P.furniture){ if(f.fl!=='G'||['FU-03.1','FU-03.2','FU-04','FU-05','FU-06','FU-09.1','FU-09.2','FU-10','FU-11','FU-12','FU-13','FU-14','FU-15','FU-16','FU-16.2','FU-17','FU-18','FU-25','FU-27','FU-31','FU-32','FU-33','FU-34','FU-35','FU-29','FU-30','FU-77','FU-79','FU-80','FU-81','FU-82','FU-88'].includes(f.id)) continue;
+for(const f of P.furniture){ if(f.fl!=='G'||['FU-03.1','FU-03.2','FU-04','FU-05','FU-06','FU-09.1','FU-09.2','FU-10','FU-11','FU-12','FU-13','FU-14','FU-15','FU-16','FU-16.2','FU-17','FU-18','FU-25','FU-27','FU-31','FU-32','FU-102','FU-33','FU-34','FU-35','FU-29','FU-30','FU-77','FU-79','FU-80','FU-81','FU-82','FU-88'].includes(f.id)) continue;
   const h=simpleH[f.kind]; if(!h) continue;
   if(f.kind==='counter'||f.kind==='counter2'){box(f.x1,f.x2,f.y1,f.y2,0.3,h-0.12,MAT.cabinet,{tip:`${f.id} · ${f.name}`});box(f.x1,f.x2,f.y1,f.y2,h-0.12,h,MAT.granite,{tip:`${f.id} · ${f.name} · granite top`});continue}
   box(f.x1,f.x2,f.y1,f.y2,0,h,kmat[f.kind]||std({color:'#e6e2da',roughness:0.8}),{tip:`${f.id} · ${f.name}`});
@@ -1775,7 +1775,7 @@ function applyOption(i){const o=OPTIONS[i];curOpt=i;
   <li><b>Appliances:</b> mixer grinder FU-64 in the GW-13 corner, wet grinder FU-65 on its own 2' low counter FU-16.2 beside the sink, RO purifier FU-66 on GW-14 above the west end of the low counter (pots fill straight from it), microwave FU-67 on the breakfast counter FU-17 (now 8' long, joined to the east counter). Fridge FU-18 on GW-05 at the north end of the store cupboard FU-25, with a loft above.</li>
   </ul><h2>Bedroom 2 (G-12)</h2><ul>
   <li>Same design as bedroom 1: oak-look floor, light sage green walls, ceiling band with LED cove, 4 downlights, ceiling fan.</li>
-  <li><b>Bed FU-31:</b> oak platform; headboard wall panel in grooved oak veneer runs behind the 3-drawer chest FU-32 (with the mirror above) and the floating side table FU-33 (drawer and linen-shade lamp); linen pad, LED ledge, framed canvas.</li>
+  <li><b>Bed FU-31:</b> oak platform; headboard wall panel in grooved oak veneer runs behind the 3-drawer chest FU-32 (full-length mirror FU-102 beside it) and the floating side table FU-33 (drawer and linen-shade lamp); linen pad, LED ledge, framed canvas.</li>
   <li><b>Wardrobe FU-34</b> on GW-15 with loft, oak veneer, black handles. <b>FU-33</b> is one long floating oak shelf: side table with a lamp at the bed end, dressing table with a linen stool at the other end; framed mirror above side table FU-32 (FU-35 merged into it).</li>
   <li><b>Windows:</b> AC FU-46 centred above W-07, blowing across the bed; W-07 curtains on a wall track below it; W-08 is a 4' x 5' window (low sill) with curtains that stack at its sides.</li>
   </ul><h2>Toilet 2 (G-11)</h2><ul>
