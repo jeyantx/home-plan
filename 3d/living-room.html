@@ -85,7 +85,6 @@ canvas{display:block;width:100%;height:100%}
  </div>
  <div class="row hidden" id="optRow">
   <span class="lbl">Frame</span><div class="seg" id="ratioSeg"><button data-r="fill" title="Use the whole window">Fill</button><button data-r="16:9" title="Show the 3D view at 16:9">16:9</button><button data-r="4:3" title="Show the 3D view at 4:3">4:3</button><button data-r="1:1" title="Show the 3D view at 1:1">1:1</button><button data-r="4:5" title="Show the 3D view at 4:5 (portrait)">4:5</button><button data-r="3:4" title="Show the 3D view at 3:4 (portrait)">3:4</button><button data-r="9:16" title="Show the 3D view at 9:16 (portrait)">9:16</button></div>
-  <span class="lbl">Floor</span><select id="tileSel" title="Floor finish"><option value="oak">Oak planks</option><option value="ft1">FT-1 white speckle</option><option value="ft2">FT-2 beige sand</option><option value="ft3">FT-3 khaki cement</option><option value="ft4">FT-4 grey cement</option><option value="ft5">FT-5 ivory matt</option></select>
   <span class="lbl">Lens</span><div class="seg" id="lensSeg"><button data-f="60" title="Eye-like lens">60°</button><button data-f="75" title="Wide lens">75°</button><button data-f="90" title="Extra-wide lens, like a phone 0.5x camera">90°</button></div>
  </div>
 </header>
@@ -105,16 +104,16 @@ import {GTAOPass} from 'three/addons/postprocessing/GTAOPass.js';
 import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';
 import {Reflector} from 'three/addons/objects/Reflector.js';
 import {LightProbeGridWebGL} from 'three/addons/lighting/LightProbeGridWebGL.js';
-import {createBambooPlant} from './models/bamboo-plant.js?v=c329c97bf2';
-import {createNeemTree} from './models/neem-tree.js?v=c329c97bf2';
-import {createTNPlant,TN_PLANTS} from './models/tn-plants.js?v=c329c97bf2';
-import {createBanana,createArecaPalm,createMoringa} from './models/garden-plants.js?v=c329c97bf2';
-import {createVirtus,createHunter350,createAther450,loadCarGLB,loadGLBVehicle} from './models/vehicles.js?v=c329c97bf2';
+import {createBambooPlant} from './models/bamboo-plant.js?v=f75c0a0d3f';
+import {createNeemTree} from './models/neem-tree.js?v=f75c0a0d3f';
+import {createTNPlant,TN_PLANTS} from './models/tn-plants.js?v=f75c0a0d3f';
+import {createBanana,createArecaPalm,createMoringa} from './models/garden-plants.js?v=f75c0a0d3f';
+import {createVirtus,createHunter350,createAther450,loadCarGLB,loadGLBVehicle} from './models/vehicles.js?v=f75c0a0d3f';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {MeshoptDecoder} from 'three/addons/libs/meshopt_decoder.module.js';
 {const parse=GLTFLoader.prototype.parse;GLTFLoader.prototype.parse=function(...a){if(!this.meshoptDecoder)this.setMeshoptDecoder(MeshoptDecoder);return parse.apply(this,a)}}   // every model file is meshopt-compressed (see 3d/ASSETS.md)
-import {CAR_ROUTE} from './models/car-route.js?v=c329c97bf2';
-import {loadStairWalker,loadPathWalker} from './models/person.js?v=c329c97bf2';
+import {CAR_ROUTE} from './models/car-route.js?v=f75c0a0d3f';
+import {loadStairWalker,loadPathWalker} from './models/person.js?v=f75c0a0d3f';
 import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
 
 const D01=[];const P=window.PLAN, F=0.3048, CEIL=10.0, EYE=5.25;
@@ -808,7 +807,7 @@ function rackModel(r,Z,B,C){const st=std({color:'#c9ccd0',roughness:0.3,metalnes
   const pot=std({color:'#bfc3c7',roughness:0.25,metalness:0.85});C(r.x1+0.45,cy,Z+s1+0.02,Z+s1+0.9,0.32,pot);C(r.x2-0.45,cy,Z+s1+0.02,Z+s1+0.55,0.36,pot);C(r.x2-0.5,cy,Z+s1+0.6,Z+s1+1.3,0.28,pot);
   for(let k=0;k<5;k++)B(r.x1+0.4+k*0.28,r.x1+0.42+k*0.28,r.y1+0.3,r.y2-0.3,Z+s2+0.03,Z+s2+0.6,std({color:'#f2efe9',roughness:0.3}))}
 // downloaded appliance models (archibase.net, see 3d/ASSETS.md): front faces +z in the file, real size in metres, sitting on y = 0
-function placeAppliance(url,cx,cy,z,rotY,matFn,tip){new GLTFLoader().load(url+'?v=c329c97bf2',g=>{const o=g.scene;o.traverse(n=>{if(n.isMesh){n.castShadow=n.receiveShadow=true;const mt=matFn(n);if(mt)n.material=mt;if(tip)named(n,tip);n.userData.keepUV=true}});
+function placeAppliance(url,cx,cy,z,rotY,matFn,tip){new GLTFLoader().load(url+'?v=f75c0a0d3f',g=>{const o=g.scene;o.traverse(n=>{if(n.isMesh){n.castShadow=n.receiveShadow=true;const mt=matFn(n);if(mt)n.material=mt;if(tip)named(n,tip);n.userData.keepUV=true}});
   o.rotation.y=rotY;o.position.set(mx(cx),m(z),m(cy));scene.add(o);if(typeof renderer!=='undefined'&&renderer.shadowMap)renderer.shadowMap.needsUpdate=true;if(typeof invalidate==='function')invalidate()},undefined,e=>console.warn('appliance',url,e))}
 const APM={glass:std({color:'#0b0c0d',roughness:0.05,metalness:0.3}),black:std({color:'#161718',roughness:0.45,metalness:0.3}),enamel:std({color:'#2b2c2e',roughness:0.4,metalness:0.4}),
   brass:std({color:'#b08d57',roughness:0.35,metalness:0.8}),steel:std({color:'#c9ccd0',roughness:0.25,metalness:0.9}),white:std({color:'#f3f3f1',roughness:0.32,metalness:0.08}),
@@ -1389,7 +1388,7 @@ function manStep(now){const t=(now-man.t0)/1000,pl=man.o.update(t);
   if(now-man.lastShadow>100){renderer.shadowMap.needsUpdate=true;man.lastShadow=now}invalidate()}
 async function startMan(){if(man.loading)return;
   if(!man.o){man.loading=true;manBtn.textContent='Loading man…';
-    try{man.o=await loadStairWalker(THREE,GLTFLoader,'assets/people/man.glb?v=c329c97bf2','assets/people/walk-clips.glb?v=c329c97bf2',man.st,m,mx)}catch(e){console.warn('man model',e);man.loading=false;manBtn.textContent="6' man on stair";return}
+    try{man.o=await loadStairWalker(THREE,GLTFLoader,'assets/people/man.glb?v=f75c0a0d3f','assets/people/walk-clips.glb?v=f75c0a0d3f',man.st,m,mx)}catch(e){console.warn('man model',e);man.loading=false;manBtn.textContent="6' man on stair";return}
     man.loading=false;man.o.root.traverse(n=>{if(n.isMesh)named(n,"6' man (1.83 m, sole to top of head) · walks up ST-2 step over step")});scene.add(man.o.root)}
   man.o.root.visible=true;man.hits=manObstacles();man.low=1e9;man.on=true;man.t0=performance.now();
   manBtn.textContent='Stop man';manBtn.setAttribute('aria-pressed',true);if(tour.on)stopTour();
@@ -1399,7 +1398,7 @@ manBtn.onclick=()=>man.on?stopMan():startMan();
 // 6' man along the east side passage (models/person.js loadPathWalker): narrowest gap is at the shifted pillars C-03..C-11
 const man2={o:null,on:false,t0:0,last:0},man2Btn=document.getElementById('man2Btn');
 async function startMan2(){if(!man2.o){man2Btn.textContent='Loading man…';
-   try{man2.o=await loadPathWalker(THREE,GLTFLoader,'assets/people/man.glb?v=c329c97bf2','assets/people/walk-clips.glb?v=c329c97bf2',[[1.3,31.6,GRD],[1.25,66.0,GRD],[1.45,72.5,GRD]],m,mx)}catch(e){console.warn('man model',e);man2Btn.textContent='Man in side passage';return}
+   try{man2.o=await loadPathWalker(THREE,GLTFLoader,'assets/people/man.glb?v=f75c0a0d3f','assets/people/walk-clips.glb?v=f75c0a0d3f',[[1.3,31.6,GRD],[1.25,66.0,GRD],[1.45,72.5,GRD]],m,mx)}catch(e){console.warn('man model',e);man2Btn.textContent='Man in side passage';return}
    man2.o.root.traverse(n=>{if(n.isMesh)named(n,"6' man (1.83 m) · walking the east side passage; 1'9\" clear at the pillars, 2'4½\" elsewhere")});scene.add(man2.o.root)}
   man2.o.root.visible=true;man2.on=true;man2.t0=performance.now();man2Btn.textContent='Stop man';man2Btn.setAttribute('aria-pressed',true);if(tour.on)stopTour();setView(VIEWS.findIndex(v=>v.p[0]===1.55&&v.p[2]===29.0));invalidate()}
 function stopMan2(){man2.on=false;if(man2.o)man2.o.root.visible=false;man2Btn.textContent='Man in side passage';man2Btn.setAttribute('aria-pressed',false);renderer.shadowMap.needsUpdate=true;invalidate()}
@@ -1443,7 +1442,7 @@ if(P.backwall){const bw=P.backwall,[a,b]=bw.pts,t=bw.t,old=std({color:'#cdc4b3',
  const T=(g,extra)=>`${g.id} · ${g.name}${extra?' · '+extra:''} · ${g.where}`;
  const tipAll=(o,t)=>o.traverse(n=>{if(n.isMesh){n.userData.keepUV=true;n.castShadow=true;n.receiveShadow=true;named(n,t)}});
  const refresh=()=>{renderer.shadowMap.needsUpdate=true;if(photo&&pt)pt.setScene(scene,camera);invalidate()};
- const glbCache={},loadGLB=url=>glbCache[url]||(glbCache[url]=new Promise((res,rej)=>new GLTFLoader().load(url+'?v=c329c97bf2',g=>res(g.scene),undefined,rej)));
+ const glbCache={},loadGLB=url=>glbCache[url]||(glbCache[url]=new Promise((res,rej)=>new GLTFLoader().load(url+'?v=f75c0a0d3f',g=>res(g.scene),undefined,rej)));
  // a downloaded plant, scaled so its height (h, feet) or width (w, feet) fits, standing at plan x, y on height z (feet)
  const placeGLB=(url,x,y,z,size,rot,t)=>loadGLB(url).then(src=>{const o=src.clone(true),sz=new THREE.Box3().setFromObject(o).getSize(new THREE.Vector3());
    o.scale.setScalar(size.h?m(size.h)/sz.y:m(size.w)/Math.max(sz.x,sz.z));o.rotation.y=rot||0;o.position.set(mx(x),m(z),m(y));scene.add(o);tipAll(o,t);refresh();return o}).catch(e=>console.warn('plant model',url,e));
@@ -1624,14 +1623,14 @@ function placeBike(code){const o=bikeObjs[code];if(!o)return;const t=(P.bikes||[
 const SHOW_BIKES=false;   // the old code-made two-wheelers stay off; the downloaded models below are used
 const vehicleMeshes=[];
 if(!LITE){const [cx1,cx2,cy1,cy2]=P.car||[11.25,17.0,14.75,29.75];
- loadCarGLB(THREE,GLTFLoader,'assets/vehicles/compact-car.glb?v=c329c97bf2',{color:'#2f5d8c',length:4.561,bodyWidth:1.752,name:'Car'}).then(car=>{
+ loadCarGLB(THREE,GLTFLoader,'assets/vehicles/compact-car.glb?v=f75c0a0d3f',{color:'#2f5d8c',length:4.561,bodyWidth:1.752,name:'Car'}).then(car=>{
    scene.add(car);window.__car=car;carAnim.car=car;setCarPose(...CAR_ROUTE.park,0,0);
    const d=car.userData.dims,ft=v=>{const i=Math.round(v/F*12);return `${Math.floor(i/12)}'${i%12}"`};
    car.traverse(o=>{if(o.isMesh){o.userData.keepUV=true;named(o,`Car · compact sedan (Free3D model, scaled to VW Virtus size, 4561 x 1752 mm body) · ${ft(d.length)} x ${ft(d.width)} with mirrors · reversed in, nose to the gate`);vehicleMeshes.push(o)}});
    renderer.shadowMap.needsUpdate=true;if(photo&&pt)pt.setScene(scene,camera);invalidate()}).catch(e=>console.warn('car model',e));
  // two-wheelers from the owner's downloaded models, sized to the real bikes they stand for, front to the gate
  for(const [code,name] of (P.bikes||[])){const moto=/VFR|Hunter/.test(name);
-   loadGLBVehicle(THREE,GLTFLoader,moto?'assets/vehicles/vfr800.glb?v=c329c97bf2':'assets/vehicles/scooter.glb?v=c329c97bf2',moto?{front:'+z',length:2.12,groundMaterial:'rubber',name:code,materials:vfrMats()}:{front:'+z',length:1.837,name:code}).then(b=>{
+   loadGLBVehicle(THREE,GLTFLoader,moto?'assets/vehicles/vfr800.glb?v=f75c0a0d3f':'assets/vehicles/scooter.glb?v=f75c0a0d3f',moto?{front:'+z',length:2.12,groundMaterial:'rubber',name:code,materials:vfrMats()}:{front:'+z',length:1.837,name:code}).then(b=>{
      scene.add(b);bikeObjs[code]={b,moto};b.traverse(o=>{if(o.isMesh)o.userData.keepUV=true});placeBike(code);
      renderer.shadowMap.needsUpdate=true;if(photo&&pt)pt.setScene(scene,camera);invalidate()}).catch(e=>console.warn('bike model',e))}
  if(SHOW_BIKES) for(const [code,name,bx,by,bl,bw] of (P.bikes||[])){const b=/Hunter/.test(name)?createHunter350(THREE,mergeGeometries,{}):createAther450(THREE,mergeGeometries,{});
@@ -1714,7 +1713,7 @@ const GI={res:[10,11,46],grid:null,ready:false,bake:/[?&]bakegi=1/.test(location
 function giGrid(){const g=new LightProbeGridWebGL(m(21.8),m(26),m(110),...GI.res);g.position.set(mx(10.5),m(12.2),m(52));g.updateBoundingBox();return g}
 const giDepth=()=>7*(GI.res[2]+2);
 GI.use=/[?&]gi=1/.test(location.search);   // off by default: the owner prefers the earlier daylight look; ?gi=1 shows the baked bounce
-if(!GI.bake&&GI.use)fetch('assets/gi/gi-day.bin?v=c329c97bf2').then(r=>r.ok?r.arrayBuffer():null).then(b=>{if(!b)return;const [nx,ny]=GI.res,d=new Uint16Array(b);
+if(!GI.bake&&GI.use)fetch('assets/gi/gi-day.bin?v=f75c0a0d3f').then(r=>r.ok?r.arrayBuffer():null).then(b=>{if(!b)return;const [nx,ny]=GI.res,d=new Uint16Array(b);
   if(d.length!==nx*ny*giDepth()*4){console.warn('gi: size mismatch');return}
   const t=new THREE.Data3DTexture(d,nx,ny,giDepth());t.format=THREE.RGBAFormat;t.type=THREE.HalfFloatType;t.minFilter=t.magFilter=THREE.LinearFilter;t.unpackAlignment=1;t.needsUpdate=true;
   const g=giGrid();g.texture=t;scene.add(g);GI.grid=g;GI.ready=true;applyLight(curLight)}).catch(e=>console.warn('gi',e));
@@ -1730,13 +1729,13 @@ window.__bakeGI=bakeGI;
 // ---------------- options, light, views, lens ----------------
 const OPTIONS=[
  {name:'Warm oak',floor:'oak',wall:'#cdd6c3',accent:'#c98a66',accentWall:'niche',sofa:'#b49a80',rug:'#d8c7a6',curtain:'#b9987a',
-  notes:['Floor: light-oak wood-look porcelain planks, 8" x 48" (shown with a real oak-floor scan)','Walls: light sage green emulsion, one shade in every room (one bulk order, cheaper); TV niches in clay (terracotta) as the only accent; ceiling in a light clay tint (like the photo), the band round it in white','TV wall: civil-work niches, oak-veneer centre wall and console (mid-range)','Sofa: wooden frame in walnut-tone stain with mild-brown cushions; terracotta and cream throw cushions','Rug: two-tone, sofa-seat brown centre with a narrow dark-brown border','Curtains: light-brown sheer (latte); dark brown would make this low-daylight room gloomy','Art: two framed textured canvases on GW-12'],sw:['#cfae86','#f2ede4','#d9cfc0','#c49a6c']},
+  notes:['Floor: FT-5 ivory matt vitrified tile, 2\' x 2\', thin grey joints','Walls: light sage green emulsion, one shade in every room (one bulk order, cheaper); TV niches in clay (terracotta) as the only accent; ceiling in a light clay tint (like the photo), the band round it in white','TV wall: civil-work niches, oak-veneer centre wall and console (mid-range)','Sofa: wooden frame in walnut-tone stain with mild-brown cushions; terracotta and cream throw cushions','Rug: two-tone, sofa-seat brown centre with a narrow dark-brown border','Curtains: light-brown sheer (latte); dark brown would make this low-daylight room gloomy','Art: two framed textured canvases on GW-12'],sw:['#cfae86','#f2ede4','#d9cfc0','#c49a6c']},
 ];
 const panel=document.getElementById('panel');let curOpt=0,curLight='day';
 function applyOption(i){const o=OPTIONS[i];curOpt=i;
   if(o.floor==='oak'){Object.assign(MAT.floor,{map:T.floorOak.map,normalMap:T.floorOak.normalMap,roughnessMap:T.floorOak.roughnessMap,roughness:0.85});MAT.floor.color.setRGB(1.45,1.36,1.25)}
   else{Object.assign(MAT.floor,{map:stoneTiles(o.floorCol,22,o.tx,o.ty,o.tileFt),normalMap:null,roughnessMap:null,roughness:0.6});MAT.floor.color.set('#ffffff')}
-  MAT.floor.needsUpdate=true;
+  MAT.floor.needsUpdate=true;if(tileCache&&tileCache.ft5)setTile('ft5');   // the chosen tile floor stays after any option change
   MAT.wall.color.set(o.wall);MAT.sheerRaster.color.set(o.curtain);MAT.sheerPhoto.color.set(o.curtain);MAT.accent.color.set(o.accent);MAT.sofa.color.set(o.sofa);MAT.rug.color.set(o.rug);
   MAT.skirt.color.set(o.floor==='oak'?'#b8946b':shade(o.floorCol,-0.06));
   if(o.accentWall==='tv'){Object.assign(MAT.tvPanel,{map:null,normalMap:T.paint.normalMap,roughnessMap:null,roughness:0.95});MAT.tvPanel.color.set(o.accent)}
@@ -1750,7 +1749,7 @@ function applyOption(i){const o=OPTIONS[i];curOpt=i;
   <li><b>Windows:</b> UPVC sliding, MS grill GR-1 (plain vertical round bars, 12 mm @ 5", one middle flat) on every window and ventilator, granite sill. Sheer crepe-georgette curtains, window length only: a rod 6" above each window, ending 6" below the sill (less cloth, neater, clear of the ACs).</li>
   <li><b>Kitchen glass W-12:</b> black bi-fold frames with an oak ledge. <b>Arch O-01:</b> round-top plastered arch.</li>
   </ul><h2>Bedroom 1 (G-05) and study corner (G-06)</h2><ul>
-  <li><b>Floor, walls, ceiling:</b> same oak-look planks, light sage green walls and civil-work band with LED cove as the living room; 4 downlights in the band, one in the study corner; one ceiling fan.</li>
+  <li><b>Floor, walls, ceiling:</b> same FT-5 ivory matt tile floor, light sage green walls and civil-work band with LED cove as the living room; 4 downlights in the band, one in the study corner; one ceiling fan.</li>
   <li><b>Bed FU-06:</b> low oak platform with a shadow-gap base. Headboard wall: oak-veneer panel with grooves to 3'4", a 4" oak ledge with an LED strip under it, a mild-brown linen pad. One framed canvas above.</li>
   <li><b>Wardrobe FU-09.1 + FU-09.2:</b> L-shaped, floor to band, oak-veneer shutters with lofts, black J-profile handles, shadow-gap plinth.</li>
   <li><b>Window W-02:</b> light-brown sheer curtains; AC FU-44 above it. Small bamboo plant by the window.</li>
@@ -1877,21 +1876,19 @@ optBtn.onclick=()=>setOpt(optRow.classList.contains('hidden'));
 document.querySelectorAll('#lensSeg button').forEach(b=>b.onclick=()=>setLens(+b.dataset.f));
 const animBtn=document.getElementById('animBtn');animBtn.onclick=()=>carAnim.on?stopAnim():startAnim();
 document.getElementById('gateBtn').onclick=()=>setGatesOpen(gateAnim.target?0:1);
-// floor tile choice: oak planks (as the option) or one of the two 2' x 2' vitrified tiles from photos, laid with thin grey joints
+// floor: FT-5 ivory matt vitrified tile, 2' x 2', from the product photo, laid with thin grey joints
 // the product photos are lit unevenly (one side darker); take out the slow light-to-dark shift so repeated tiles look even, keep the fine speckle and grain
 function flattenTile(g,w,h){const n=6,c=document.createElement('canvas');c.width=c.height=n;const q=c.getContext('2d');q.imageSmoothingQuality='high';q.drawImage(g.canvas,0,0,n,n);
   const b=document.createElement('canvas');b.width=w;b.height=h;const bg=b.getContext('2d');bg.imageSmoothingEnabled=true;bg.imageSmoothingQuality='high';bg.filter='blur(60px)';bg.drawImage(c,-w/n,-h/n,w+2*w/n,h+2*h/n);
   const im=g.getImageData(0,0,w,h),bl=bg.getImageData(0,0,w,h).data,d=im.data,mean=[0,0,0];
   for(let i=0;i<d.length;i+=4)for(let k=0;k<3;k++)mean[k]+=bl[i+k];for(let k=0;k<3;k++)mean[k]/=d.length/4;
   for(let i=0;i<d.length;i+=4)for(let k=0;k<3;k++)d[i+k]=d[i+k]-bl[i+k]+mean[k];g.putImageData(im,0,0)}
-const TILEIMG={ft1:'assets/textures/tiles/ft-1-white-speckle.jpg',ft2:'assets/textures/tiles/ft-2-beige-sand.jpg',ft3:'assets/textures/tiles/ft-3-khaki-cement.jpg',ft4:'assets/textures/tiles/ft-4-grey-cement.jpg',ft5:'assets/textures/tiles/ft-5-ivory-matt.jpg'},tileCache={};
-function setTile(k){document.getElementById('tileSel').value=TILEIMG[k]?k:'oak';try{localStorage.setItem('lr3d-tile',k)}catch(e){}
-  if(k==='oak'||!TILEIMG[k]){applyOption(curOpt);invalidate();return}
+const TILEIMG={ft5:'assets/textures/tiles/ft-5-ivory-matt.jpg'};var tileCache={};
+function setTile(k){
   const use=t=>{Object.assign(MAT.floor,{map:t,normalMap:null,roughnessMap:null,roughness:0.35});MAT.floor.color.set('#ffffff');MAT.floor.needsUpdate=true;MAT.skirt.color.set({ft1:'#d9d7d2',ft2:'#c9bba5',ft3:'#bfb39c',ft4:'#a9a39b',ft5:'#e0d4c2'}[k]);renderer.shadowMap.needsUpdate=true;invalidate()};
   if(tileCache[k])return use(tileCache[k]);
   const im=new Image();im.onload=()=>{tileCache[k]=canvasTex(1024,1024,(g,w,h)=>{g.drawImage(im,0,0,w,h);flattenTile(g,w,h);g.fillStyle='rgba(120,115,108,0.55)';g.fillRect(0,0,w,3);g.fillRect(0,0,3,h)},m(2));use(tileCache[k])};im.src=TILEIMG[k]}
-document.getElementById('tileSel').onchange=e=>setTile(e.target.value);
-{let t='oak';try{t=localStorage.getItem('lr3d-tile')||'oak'}catch(e){}setTile(t)}
+setTile('ft5');   // chosen floor: FT-5 ivory matt vitrified tile, 2' x 2'
 document.getElementById('doorBtn').onclick=()=>setDoorOpen(doorAnim.target?0:1);
 const nb=document.getElementById('notesBtn');nb.onclick=()=>{const h=panel.classList.toggle('hidden');nb.setAttribute('aria-pressed',!h)};
 

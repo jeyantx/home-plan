@@ -85,7 +85,6 @@ canvas{display:block;width:100%;height:100%}
  </div>
  <div class="row hidden" id="optRow">
   <span class="lbl">Frame</span><div class="seg" id="ratioSeg"><button data-r="fill" title="Use the whole window">Fill</button><button data-r="16:9" title="Show the 3D view at 16:9">16:9</button><button data-r="4:3" title="Show the 3D view at 4:3">4:3</button><button data-r="1:1" title="Show the 3D view at 1:1">1:1</button><button data-r="4:5" title="Show the 3D view at 4:5 (portrait)">4:5</button><button data-r="3:4" title="Show the 3D view at 3:4 (portrait)">3:4</button><button data-r="9:16" title="Show the 3D view at 9:16 (portrait)">9:16</button></div>
-  <span class="lbl">Floor</span><select id="tileSel" title="Floor finish"><option value="oak">Oak planks</option><option value="ft1">FT-1 white speckle</option><option value="ft2">FT-2 beige sand</option><option value="ft3">FT-3 khaki cement</option><option value="ft4">FT-4 grey cement</option><option value="ft5">FT-5 ivory matt</option></select>
   <span class="lbl">Lens</span><div class="seg" id="lensSeg"><button data-f="60" title="Eye-like lens">60°</button><button data-f="75" title="Wide lens">75°</button><button data-f="90" title="Extra-wide lens, like a phone 0.5x camera">90°</button></div>
  </div>
 </header>
@@ -1730,13 +1729,13 @@ window.__bakeGI=bakeGI;
 // ---------------- options, light, views, lens ----------------
 const OPTIONS=[
  {name:'Warm oak',floor:'oak',wall:'#cdd6c3',accent:'#c98a66',accentWall:'niche',sofa:'#b49a80',rug:'#d8c7a6',curtain:'#b9987a',
-  notes:['Floor: light-oak wood-look porcelain planks, 8" x 48" (shown with a real oak-floor scan)','Walls: light sage green emulsion, one shade in every room (one bulk order, cheaper); TV niches in clay (terracotta) as the only accent; ceiling in a light clay tint (like the photo), the band round it in white','TV wall: civil-work niches, oak-veneer centre wall and console (mid-range)','Sofa: wooden frame in walnut-tone stain with mild-brown cushions; terracotta and cream throw cushions','Rug: two-tone, sofa-seat brown centre with a narrow dark-brown border','Curtains: light-brown sheer (latte); dark brown would make this low-daylight room gloomy','Art: two framed textured canvases on GW-12'],sw:['#cfae86','#f2ede4','#d9cfc0','#c49a6c']},
+  notes:['Floor: FT-5 ivory matt vitrified tile, 2\' x 2\', thin grey joints','Walls: light sage green emulsion, one shade in every room (one bulk order, cheaper); TV niches in clay (terracotta) as the only accent; ceiling in a light clay tint (like the photo), the band round it in white','TV wall: civil-work niches, oak-veneer centre wall and console (mid-range)','Sofa: wooden frame in walnut-tone stain with mild-brown cushions; terracotta and cream throw cushions','Rug: two-tone, sofa-seat brown centre with a narrow dark-brown border','Curtains: light-brown sheer (latte); dark brown would make this low-daylight room gloomy','Art: two framed textured canvases on GW-12'],sw:['#cfae86','#f2ede4','#d9cfc0','#c49a6c']},
 ];
 const panel=document.getElementById('panel');let curOpt=0,curLight='day';
 function applyOption(i){const o=OPTIONS[i];curOpt=i;
   if(o.floor==='oak'){Object.assign(MAT.floor,{map:T.floorOak.map,normalMap:T.floorOak.normalMap,roughnessMap:T.floorOak.roughnessMap,roughness:0.85});MAT.floor.color.setRGB(1.45,1.36,1.25)}
   else{Object.assign(MAT.floor,{map:stoneTiles(o.floorCol,22,o.tx,o.ty,o.tileFt),normalMap:null,roughnessMap:null,roughness:0.6});MAT.floor.color.set('#ffffff')}
-  MAT.floor.needsUpdate=true;
+  MAT.floor.needsUpdate=true;if(tileCache&&tileCache.ft5)setTile('ft5');   // the chosen tile floor stays after any option change
   MAT.wall.color.set(o.wall);MAT.sheerRaster.color.set(o.curtain);MAT.sheerPhoto.color.set(o.curtain);MAT.accent.color.set(o.accent);MAT.sofa.color.set(o.sofa);MAT.rug.color.set(o.rug);
   MAT.skirt.color.set(o.floor==='oak'?'#b8946b':shade(o.floorCol,-0.06));
   if(o.accentWall==='tv'){Object.assign(MAT.tvPanel,{map:null,normalMap:T.paint.normalMap,roughnessMap:null,roughness:0.95});MAT.tvPanel.color.set(o.accent)}
@@ -1750,7 +1749,7 @@ function applyOption(i){const o=OPTIONS[i];curOpt=i;
   <li><b>Windows:</b> UPVC sliding, MS grill GR-1 (plain vertical round bars, 12 mm @ 5", one middle flat) on every window and ventilator, granite sill. Sheer crepe-georgette curtains, window length only: a rod 6" above each window, ending 6" below the sill (less cloth, neater, clear of the ACs).</li>
   <li><b>Kitchen glass W-12:</b> black bi-fold frames with an oak ledge. <b>Arch O-01:</b> round-top plastered arch.</li>
   </ul><h2>Bedroom 1 (G-05) and study corner (G-06)</h2><ul>
-  <li><b>Floor, walls, ceiling:</b> same oak-look planks, light sage green walls and civil-work band with LED cove as the living room; 4 downlights in the band, one in the study corner; one ceiling fan.</li>
+  <li><b>Floor, walls, ceiling:</b> same FT-5 ivory matt tile floor, light sage green walls and civil-work band with LED cove as the living room; 4 downlights in the band, one in the study corner; one ceiling fan.</li>
   <li><b>Bed FU-06:</b> low oak platform with a shadow-gap base. Headboard wall: oak-veneer panel with grooves to 3'4", a 4" oak ledge with an LED strip under it, a mild-brown linen pad. One framed canvas above.</li>
   <li><b>Wardrobe FU-09.1 + FU-09.2:</b> L-shaped, floor to band, oak-veneer shutters with lofts, black J-profile handles, shadow-gap plinth.</li>
   <li><b>Window W-02:</b> light-brown sheer curtains; AC FU-44 above it. Small bamboo plant by the window.</li>
@@ -1877,21 +1876,19 @@ optBtn.onclick=()=>setOpt(optRow.classList.contains('hidden'));
 document.querySelectorAll('#lensSeg button').forEach(b=>b.onclick=()=>setLens(+b.dataset.f));
 const animBtn=document.getElementById('animBtn');animBtn.onclick=()=>carAnim.on?stopAnim():startAnim();
 document.getElementById('gateBtn').onclick=()=>setGatesOpen(gateAnim.target?0:1);
-// floor tile choice: oak planks (as the option) or one of the two 2' x 2' vitrified tiles from photos, laid with thin grey joints
+// floor: FT-5 ivory matt vitrified tile, 2' x 2', from the product photo, laid with thin grey joints
 // the product photos are lit unevenly (one side darker); take out the slow light-to-dark shift so repeated tiles look even, keep the fine speckle and grain
 function flattenTile(g,w,h){const n=6,c=document.createElement('canvas');c.width=c.height=n;const q=c.getContext('2d');q.imageSmoothingQuality='high';q.drawImage(g.canvas,0,0,n,n);
   const b=document.createElement('canvas');b.width=w;b.height=h;const bg=b.getContext('2d');bg.imageSmoothingEnabled=true;bg.imageSmoothingQuality='high';bg.filter='blur(60px)';bg.drawImage(c,-w/n,-h/n,w+2*w/n,h+2*h/n);
   const im=g.getImageData(0,0,w,h),bl=bg.getImageData(0,0,w,h).data,d=im.data,mean=[0,0,0];
   for(let i=0;i<d.length;i+=4)for(let k=0;k<3;k++)mean[k]+=bl[i+k];for(let k=0;k<3;k++)mean[k]/=d.length/4;
   for(let i=0;i<d.length;i+=4)for(let k=0;k<3;k++)d[i+k]=d[i+k]-bl[i+k]+mean[k];g.putImageData(im,0,0)}
-const TILEIMG={ft1:'assets/textures/tiles/ft-1-white-speckle.jpg',ft2:'assets/textures/tiles/ft-2-beige-sand.jpg',ft3:'assets/textures/tiles/ft-3-khaki-cement.jpg',ft4:'assets/textures/tiles/ft-4-grey-cement.jpg',ft5:'assets/textures/tiles/ft-5-ivory-matt.jpg'},tileCache={};
-function setTile(k){document.getElementById('tileSel').value=TILEIMG[k]?k:'oak';try{localStorage.setItem('lr3d-tile',k)}catch(e){}
-  if(k==='oak'||!TILEIMG[k]){applyOption(curOpt);invalidate();return}
+const TILEIMG={ft5:'assets/textures/tiles/ft-5-ivory-matt.jpg'};var tileCache={};
+function setTile(k){
   const use=t=>{Object.assign(MAT.floor,{map:t,normalMap:null,roughnessMap:null,roughness:0.35});MAT.floor.color.set('#ffffff');MAT.floor.needsUpdate=true;MAT.skirt.color.set({ft1:'#d9d7d2',ft2:'#c9bba5',ft3:'#bfb39c',ft4:'#a9a39b',ft5:'#e0d4c2'}[k]);renderer.shadowMap.needsUpdate=true;invalidate()};
   if(tileCache[k])return use(tileCache[k]);
   const im=new Image();im.onload=()=>{tileCache[k]=canvasTex(1024,1024,(g,w,h)=>{g.drawImage(im,0,0,w,h);flattenTile(g,w,h);g.fillStyle='rgba(120,115,108,0.55)';g.fillRect(0,0,w,3);g.fillRect(0,0,3,h)},m(2));use(tileCache[k])};im.src=TILEIMG[k]}
-document.getElementById('tileSel').onchange=e=>setTile(e.target.value);
-{let t='oak';try{t=localStorage.getItem('lr3d-tile')||'oak'}catch(e){}setTile(t)}
+setTile('ft5');   // chosen floor: FT-5 ivory matt vitrified tile, 2' x 2'
 document.getElementById('doorBtn').onclick=()=>setDoorOpen(doorAnim.target?0:1);
 const nb=document.getElementById('notesBtn');nb.onclick=()=>{const h=panel.classList.toggle('hidden');nb.setAttribute('aria-pressed',!h)};
 
