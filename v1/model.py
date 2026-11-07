@@ -788,7 +788,7 @@ ELEC_POINTS=[
  # first floor
  ('SB-10','F',13.6,73.875,4.0,'SB','C11','Landing, east of the terrace door D-12: landing light, spiral stair light (two-way with SB-4), terrace lights (2)'),
  ('SB-11','F',10.25,77.1,4.0,'SB','C11','Landing, at the toilet 3 door latch: toilet 3 light and exhaust FU-62, geyser (20 A switch with red light)'),
- ('GY-3','F',3.125,75.7,6.75,'GY','C15','Toilet 3 geyser FU-60: 16 A socket with a splash cover, beside the geyser, out of the spray'),
+ ('GY-3','F',2.125,75.7,6.75,'GY','C15','Toilet 3 geyser FU-60: 16 A socket with a splash cover, beside the geyser, out of the spray'),
  ('S-15','F',9.2,79.875,4.5,'S6','C11','Toilet 3, by the mirror: 6 A with a splash cover (IP44)'),
  ('SB-12','F',13.9,80.625,4.0,'SB','C11','Bedroom 3, inside at the D-07 latch: light, fan with step regulator, AC (20 A switch with red light)'),
  ('BS-5','F',20.25,85.05,2.5,'BS','C11','Bedroom 3, bed head (north): two-way light switch, fan on/off, 6 A with USB-A + USB-C'),
