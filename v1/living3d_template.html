@@ -647,8 +647,8 @@ function art(x1,x2,z1,z2,seed,palette){
     for(let i=0;i<260;i++){g.strokeStyle=`rgba(${r()<.5?'255,235,215':'110,55,30'},${0.05+r()*0.12})`;g.lineWidth=3+r()*14;g.beginPath();const x=r()*w,y=r()*h;g.moveTo(x,y);g.bezierCurveTo(x+r()*80-40,y+r()*80-40,x+r()*120-60,y+r()*120-60,x+r()*160-80,y+r()*160-80);g.stroke()}},1);
   t.repeat.set(1,1);
   const pl=new THREE.Mesh(new THREE.PlaneGeometry(m(x2-x1-0.2),m(z2-z1-0.2)),std({map:t,roughness:0.9}));pl.position.set(mx((x1+x2)/2),m((z1+z2)/2),m(fy+0.115));scene.add(pl);named(pl,'Framed art · textured canvas');pl.userData.keepUV=true}
-art(12.9,15.3,3.4,6.6,41,['#c8734a','#a6522f']);art(15.7,18.1,3.4,6.6,42,['#b9603b','#d08a5f']);
-box(LX2-0.02,LX2,47.6,48.1,4.0,4.4,MAT.white,{tip:'Switch board'});box(9.3,9.8,LY1,LY1+0.02,4.0,4.4,MAT.white,{tip:'Switch board'});
+art(13.7,15.9,3.4,6.6,41,['#c8734a','#a6522f']);art(16.3,18.5,3.4,6.6,42,['#b9603b','#d08a5f']);   // clear of the switch board SB-2 at the D-02 latch
+
 
 
 // ================= BEDROOM 1 (G-05), its study corner (G-06) and TOILET 1 (G-07): same Japandi warm-oak style =================
@@ -1762,7 +1762,8 @@ scene.updateMatrixWorld(true);   // wall positions ready for collision before th
 buildRails();
 // every switch board, socket, bedside board, AC and geyser point, DB and outdoor socket from the Electrical plan (model.py ELEC_POINTS), as white modular plates on the wall face they sit on, at their height; the parking board PB-1 is drawn below
 {const plate=std({color:'#f4f4f1',roughness:0.35}),modM=std({color:'#e6e6e1',roughness:0.4}),holeM=std({color:'#2b2b2b',roughness:0.6}),redM=std({color:'#c8203a',emissive:'#c8203a',emissiveIntensity:0.5}),greyM=std({color:'#9aa0a3',roughness:0.5});
- const SZ={S6:[0.27,0.27],S16:[0.32,0.32],SB:[0.62,0.36],BS:[0.5,0.32],AC:[0.32,0.32],GY:[0.27,0.27],NT:[0.22,0.22],IP:[0.36,0.36],DB:[1.25,1.45]};
+ const SZ={S6:[0.45,0.27],S16:[0.52,0.32],SB:[0.62,0.36],BS:[0.5,0.32],AC:[0.52,0.32],GY:[0.27,0.27],NT:[0.22,0.22],IP:[0.36,0.36],DB:[1.25,1.45]},   // every socket plate carries its own switch (Indian practice)
+  SZX={'SB-4':[0.4,0.36],'SB-7':[0.4,0.36],'SB-11':[0.4,0.36],'SB-9':[0.3,0.62],'BS-3':[0.26,0.5],'BS-5':[0.26,0.5]};   // narrow plates where the wall between a door frame and a wardrobe is short
  const onWall=(e,fl)=>{const T=0.07;for(const w of P.walls[fl]){if(e.y>w.y1-0.05&&e.y<w.y2+0.05){if(Math.abs(e.x-w.x1)<T)return['x',-1,w.x1];if(Math.abs(e.x-w.x2)<T)return['x',1,w.x2]}
    if(e.x>w.x1-0.05&&e.x<w.x2+0.05){if(Math.abs(e.y-w.y1)<T)return['y',-1,w.y1];if(Math.abs(e.y-w.y2)<T)return['y',1,w.y2]}}return null};
  let missed=[];
@@ -1773,7 +1774,9 @@ buildRails();
     if(e.y>u.y1&&e.y<u.y2){if(Math.abs(e.x-u.x1)<T){f=['x',-1,u.x1];break}if(Math.abs(e.x-u.x2)<T){f=['x',1,u.x2];break}}
     if(e.x>u.x1&&e.x<u.x2){if(Math.abs(e.y-u.y1)<T){f=['y',-1,u.y1];break}if(Math.abs(e.y-u.y2)<T){f=['y',1,u.y2];break}}}}
   if(!f){missed.push(e.id);continue}
-  const [ax,sg,fc]=f,[W,H]=SZ[e.type],base=e.fl==='F'?FFZ:(inRoom(e.x+(ax==='x'?sg*0.4:0),e.y+(ax==='y'?sg*0.4:0))?0:(e.y<30.75?PKZ:GRD)),z=base+e.h,tip=`${e.id} · ${e.note}`;
+  {const px=e.x+(f[0]==='x'?f[1]*0.4:0),py=e.y+(f[0]==='y'?f[1]*0.4:0),rk=P.rooms[e.fl].find(r=>r.kind==='wet'&&(()=>{const xs=r.pts.map(p=>p[0]),ys=r.pts.map(p=>p[1]);return px>Math.min(...xs)&&px<Math.max(...xs)&&py>Math.min(...ys)&&py<Math.max(...ys)})());
+   if(rk&&rk.kind==='wet')f=[f[0],f[1],f[2]+f[1]*0.065];if(e.id==='BS-1')f=[f[0],f[1],f[2]+f[1]*0.05]}   // BS-1 sits on the back panel of the wardrobe's bedside opening   // toilets: the plate sits on the wall tiles, not under them
+  const [ax,sg,fc]=f,[W,H]=SZX[e.id]||SZ[e.type],base=e.fl==='F'?FFZ:(inRoom(e.x+(ax==='x'?sg*0.4:0),e.y+(ax==='y'?sg*0.4:0))?0:(e.y<30.75?PKZ:GRD)),z=base+e.h,tip=`${e.id} · ${e.note}`;
   // local helper: a box on the face, u along the wall, out = distance from the face, zz height
   const B=(u1,u2,o1,o2,z1,z2,mt,t)=>ax==='x'?box(fc+sg*o1<fc+sg*o2?fc+sg*o1:fc+sg*o2,fc+sg*o1<fc+sg*o2?fc+sg*o2:fc+sg*o1,e.y+u1,e.y+u2,z1,z2,mt,{cast:false,tip:t}):box(e.x+u1,e.x+u2,fc+sg*o1<fc+sg*o2?fc+sg*o1:fc+sg*o2,fc+sg*o1<fc+sg*o2?fc+sg*o2:fc+sg*o1,z1,z2,mt,{cast:false,tip:t});
   const pin=(u,zz,r)=>{const c=new THREE.Mesh(new THREE.CylinderGeometry(m(r),m(r),m(0.01),14),holeM);if(ax==='x'){c.rotation.z=Math.PI/2;c.position.set(mx(fc+sg*0.052),m(zz),m(e.y+u))}else{c.rotation.x=Math.PI/2;c.position.set(mx(e.x+u),m(zz),m(fc+sg*0.052))}scene.add(c);named(c,tip)};
@@ -1781,11 +1784,15 @@ buildRails();
   if(e.type==='DB'){B(-W/2,W/2,0,0.1,z-H/2,z+H/2,greyM,tip);B(-W/2+0.06,W/2-0.06,0.1,0.11,z-H/2+0.06,z+H/2-0.06,std({color:'#b9bec0',roughness:0.4}),tip+' · door');continue}
   if(e.type==='IP'){B(-W/2,W/2,0,0.1,z-H/2,z+H/2,greyM,tip);B(-W/2+0.04,W/2-0.04,0.1,0.11,z-H/2+0.04,z+H/2-0.04,std({color:'#8f9497',roughness:0.5}),tip+' · IP65 flap');continue}
   B(-W/2,W/2,0,0.04,z-H/2,z+H/2,plate,tip);
-  if(e.type==='SB'){for(let i=0;i<4;i++)sw(-W/2+0.1+i*(W-0.2)/3,z,0.1)}
+  if(e.type==='SB'){const fan=/fan/.test(e.note),vert=H>W;
+    if(vert){for(let i=0;i<3;i++)B(-0.08,0.08,0.045,0.06,z+H/2-0.14-i*0.17,z+H/2-0.02-i*0.17,plate,tip+' · switch');if(fan){const k=new THREE.Mesh(new THREE.CylinderGeometry(m(0.055),m(0.055),m(0.04),20),std({color:'#dcdcd6',roughness:0.4}));k.rotation[ax==='x'?'z':'x']=Math.PI/2;k.position.set(ax==='x'?mx(fc+sg*0.07):mx(e.x),m(z-H/2+0.1),ax==='x'?m(e.y):m(fc+sg*0.07));scene.add(k);named(k,tip+' · fan regulator')}}
+    else{const n=Math.max(2,Math.round((W-0.1)/0.13))-(fan?1:0);for(let i=0;i<n;i++)sw(-W/2+0.08+i*0.13,z,0.1);
+      if(fan){const k=new THREE.Mesh(new THREE.CylinderGeometry(m(0.055),m(0.055),m(0.04),20),std({color:'#dcdcd6',roughness:0.4}));k.rotation[ax==='x'?'z':'x']=Math.PI/2;const u=W/2-0.1;k.position.set(ax==='x'?mx(fc+sg*0.07):mx(e.x+u),m(z),ax==='x'?m(e.y+u):m(fc+sg*0.07));scene.add(k);named(k,tip+' · fan regulator')}}}
+  else if(e.type==='BS'&&H>W){for(const zz of [z+0.16,z+0.03])B(-0.08,0.08,0.045,0.06,zz-0.055,zz+0.055,plate,tip+' · switch');for(const [u,zz,rr] of [[0,z-0.09,0.02],[-0.05,z-0.16,0.016],[0.05,z-0.16,0.016]])pin(u,zz,rr)}
   else if(e.type==='BS'){sw(-W/2+0.08,z,0.08);sw(-W/2+0.19,z,0.08);for(const [u,zz,r] of [[0.12,z+0.05,0.022],[0.07,z-0.04,0.018],[0.17,z-0.04,0.018]])pin(u,zz,r)}
   else if(e.type==='GY'){sw(-0.05,z,0.09);const c=new THREE.Mesh(new THREE.SphereGeometry(m(0.025),10,8),redM);c.position.set(ax==='x'?mx(fc+sg*0.05):mx(e.x+0.07),m(z),ax==='x'?m(e.y+0.07):m(fc+sg*0.05));scene.add(c)}
   else if(e.type==='NT'){pin(0,z,0.03)}
-  else{const big=e.type!=='S6',r=big?0.03:0.02,d=big?0.075:0.055;pin(0,z+d,r*1.3);pin(-d,z-d*0.6,r);pin(d,z-d*0.6,r);if(e.type==='AC'){const c=new THREE.Mesh(new THREE.SphereGeometry(m(0.022),10,8),redM);c.position.set(ax==='x'?mx(fc+sg*0.05):mx(e.x+W/2-0.06),m(z+H/2-0.06),ax==='x'?m(e.y+W/2-0.06):m(fc+sg*0.05));scene.add(c)}}}
+  else{const big=e.type!=='S6',r=big?0.03:0.02,d=big?0.075:0.055,c=W/2-0.15;sw(-W/2+0.09,z,0.1);pin(c,z+d,r*1.3);pin(c-d,z-d*0.6,r);pin(c+d,z-d*0.6,r);if(e.type==='AC'){const c=new THREE.Mesh(new THREE.SphereGeometry(m(0.022),10,8),redM);c.position.set(ax==='x'?mx(fc+sg*0.05):mx(e.x+W/2-0.06),m(z+H/2-0.06),ax==='x'?m(e.y+W/2-0.06):m(fc+sg*0.05));scene.add(c)}}}
  CURFL='G';if(missed.length)console.info('electrical points not placed:',missed.join(','))}
 // parking board PB-1 on GW-04 (parking face, Y 29'9"), behind the car: one modular plate (switch row over a socket row, like a 12-module board) in a grey IP65 cover; EV-1 on its own; heights above the parking floor
 {const pts=(P.elec||[]).filter(e=>e.fl==='G'&&Math.abs(e.y-29.75)<0.05),y=29.75,wh=std({color:'#f4f4f1',roughness:0.35}),mod=std({color:'#ebebe7',roughness:0.4}),blk=std({color:'#2b2b2b',roughness:0.6});
