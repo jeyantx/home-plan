@@ -761,12 +761,17 @@ function setBlind(k){blinds.k=k;const ang=[0.12,0.75,1.4][k];for(const sl of bli
  // venetian blind on W-01: 2" faux-wood slats on a headrail, two ladder cords, a tilt wand; click it to tilt the slats (open, half, shut)
  {const w=P.openings.find(o=>o.id==='W-01'),x1=w.a-0.1,x2=w.b+0.1,yb=30.5+0.2,top=w.sill+w.h+0.15,bot=w.sill-0.05,pitch=0.15,n=Math.floor((top-0.2-bot)/pitch);
   const slatM=std({color:'#e9dcc6',roughness:0.6,normalMap:T.oak.normalMap,normalScale:new THREE.Vector2(0.2,0.2)}),tb='Venetian blind on W-01 · 2" faux-wood slats, tilt with the wand, pull up with the cord · click to tilt';
-  box(x1,x2,yb-0.1,yb+0.1,top-0.15,top,MAT.white,{tip:tb});box(x1,x2,yb-0.09,yb+0.09,bot-0.08,bot,slatM,{tip:tb});
+  box(x1,x2,yb-0.1,yb+0.1,top-0.15,top,MAT.white,{tip:tb});blinds.rail=box(x1,x2,yb-0.09,yb+0.09,bot-0.08,bot,slatM,{tip:tb+' · bottom rail'});Object.assign(blinds,{top,bot,pitch});
   const g=new THREE.BoxGeometry(m(x2-x1-0.04),m(0.012),m(0.165));blinds.slats=[];
   for(let i=0;i<n;i++){const me=new THREE.Mesh(g,slatM);me.position.set(mx((x1+x2)/2),m(top-0.2-i*pitch),m(yb));me.castShadow=me.receiveShadow=true;me.userData.keepUV=true;scene.add(me);named(me,tb);me.userData.blind=true;blinds.slats.push(me)}
-  for(const x of [x1+0.5,x2-0.5])box(x-0.005,x+0.005,yb-0.09,yb+0.09,bot,top-0.15,std({color:'#e6dccb',roughness:1}),{cast:false,tip:tb+' · ladder cord'});
-  cyl(x2-0.15,yb-0.12,top-2.6,top-0.15,0.02,std({color:'#e9dcc6',roughness:0.5}),{tip:tb+' · tilt wand'});
-  setBlind(1)}}
+  blinds.cords=[x1+0.5,x2-0.5].map(x=>box(x-0.005,x+0.005,yb-0.09,yb+0.09,bot,top-0.15,std({color:'#e6dccb',roughness:1}),{cast:false,tip:tb+' · ladder cord'}));
+  cyl(x2-0.15,yb-0.12,top-3.2,top-0.15,0.008,std({color:'#e6dccb',roughness:1}),{tip:tb+' · lift cord'});cyl(x2-0.15,yb-0.12,top-3.35,top-3.2,0.04,MAT.oak,{tip:tb+' · lift cord pull'});
+  poseBlind(1)}}
+// lift the blind with the cord: e = 1 pulled up (slats stacked under the headrail), 0 let down and tilted shut
+function poseBlind(e){const B=blinds;if(!B.slats.length)return;const n=B.slats.length,st=0.025,ang=1.4+(0.05-1.4)*e;
+  B.slats.forEach((sl,i)=>{const yd=B.top-0.2-i*B.pitch,yu=B.top-0.2-i*st;sl.position.y=m(yd+(yu-yd)*e);sl.rotation.x=ang});
+  const lb=B.top-0.2-(n-1)*st-0.1,bd=B.bot-0.04,by=bd+(lb-bd)*e;B.rail.position.y=m(by);
+  for(const c of B.cords){const L=B.top-0.15-(B.bot),Ln=B.top-0.15-(by+0.04);c.scale.y=Math.max(0.02,Ln/L);c.position.y=m(B.top-0.15-Ln/2)}}
 
 // ---------------- TOILET 1 (G-07): greige matte tiles to 7' (shower walls too), wall-hung WC, floating vanity ----------------
 function tileTex(base,grout,tw,th,seed){const t=canvasTex(1024,Math.round(1024*th/tw),(g,w,h)=>{const r=rng(seed);g.fillStyle=base;g.fillRect(0,0,w,h);
@@ -1297,14 +1302,13 @@ const gateAnim={open:1,target:1,last:0};
 // main door D-01: both teak leaves swing between shut (0) and the open pose (1)
 const doorAnim={open:1,target:1,last:0};
 // every door leaf, steel door, grill door and window sash: e = 0 shut, 1 open
-function poseCurt(e){for(const c of CURT){const a=c.c[0]+(c.o[0]-c.c[0])*e,b=c.c[1]+(c.o[1]-c.c[1])*e;c.me.scale.x=(b-a)/(c.o[1]-c.o[0]);if(c.axis==='y')c.me.position.z=m((a+b)/2);else c.me.position.x=mx((a+b)/2)}}
+function poseCurt(e){poseBlind(e);for(const c of CURT){const a=c.c[0]+(c.o[0]-c.c[0])*e,b=c.c[1]+(c.o[1]-c.c[1])*e;c.me.scale.x=(b-a)/(c.o[1]-c.o[0]);if(c.axis==='y')c.me.position.z=m((a+b)/2);else c.me.position.x=mx((a+b)/2)}}
 function poseOpen(e){for(const l of D01)l.piv.rotation.y=l.base+l.sgn*l.open*e;for(const q of WINS){if(q.kind==='swing')q.g.rotation.y=q.a*e;else q.g.position.copy(q.g.userData.p0||(q.g.userData.p0=q.g.position.clone())).addScaledVector(q.v,e)}}
 poseOpen(1);
 function setDoorOpen(v){doorAnim.target=v?1:0;doorAnim.last=0;const b=document.getElementById('allBtn');if(b){b.textContent=v?'Close all':'Open all';b.setAttribute('aria-pressed',!!v)}invalidate()}
 // curtains: drawn open (1) or shut (0), both stacks of a window meet in the middle
 const curtAnim={open:1,target:1,last:0};
-function setCurtOpen(v){curtAnim.target=v?1:0;curtAnim.last=0;setBlind(v?0:2);   // the W-01 venetian blind follows: slats open or shut
-  const b=document.getElementById('curtBtn');if(b){b.textContent=v?'Close curtains':'Open curtains';b.setAttribute('aria-pressed',!!v)}invalidate()}
+function setCurtOpen(v){curtAnim.target=v?1:0;curtAnim.last=0;const b=document.getElementById('curtBtn');if(b){b.textContent=v?'Close curtains':'Open curtains';b.setAttribute('aria-pressed',!!v)}invalidate()}
 function curtStep(now){if(curtAnim.open===curtAnim.target)return;const dt=curtAnim.last?Math.min(0.1,(now-curtAnim.last)/1000):0;curtAnim.last=now;
   const d=dt/1.6;curtAnim.open=curtAnim.target>curtAnim.open?Math.min(curtAnim.target,curtAnim.open+d):Math.max(curtAnim.target,curtAnim.open-d);
   const e=curtAnim.open*curtAnim.open*(3-2*curtAnim.open);poseCurt(e);renderer.shadowMap.needsUpdate=true;invalidate()}
