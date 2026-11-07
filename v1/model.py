@@ -93,7 +93,7 @@ OPENINGS = [
  ('D-02','G','GW-12', 9.5,12.5,'door','a','-', 7.0,0,'Bedroom 1 door, from living room'),
  ('D-03','G','GW-11', 14.5,17.0,'door','a','-', 7.0,0,'Toilet 1 door, from bedroom 1'),
  ('O-01','G','GW-13', 13.75,17.75,'arch',None,None, 7.0,0,'Arch from living room to open area, 4\' wide; ends at the FU-25 cupboard face'),
- ('W-12','G','GW-13', 5.5,11.5,'fold',None,None, 4.0,3.0,'Folding glass window, kitchen to living. Opens left and right; two 3\' venetian blinds with lift cords on the living side (like W-01)'),
+ ('W-12','G','GW-13', 5.5,11.5,'fold',None,None, 4.0,3.0,'Sliding glass window, kitchen to living: 2-track black aluminium, two 3\' clear-glass sashes, opens half; two 3\' venetian blinds with lift cords on the living side (like W-01)'),
  ('D-04','G','GW-16', 67.75,70.25,'door','a','-', 7.0,0,'Toilet 2 door, from stair hall, opens inward; hinged at its north end, so the leaf folds back over the shower area, clear of the basin'),
  ('D-05','G','GW-07', 74.25,77.25,'door','a','-', 7.0,0,'Garden door, stair hall to side garden; opens out, hinged at its north end, so the leaf folds back against the toilet-2 wall GW-06 and the way out to the garden stays clear'),
  ('D-06','G','GW-15', 10.5,13.5,'door','a','+', 7.0,0,'Bedroom 2 door, from stair hall'),

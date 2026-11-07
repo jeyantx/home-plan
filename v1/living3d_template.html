@@ -375,12 +375,16 @@ function buildOpening(o,w,horiz,s0,out=0){
        for(let u=u1-fw2+0.05;u+sc*0.6<=u2+fw2-0.05;u+=sc){boxAlong(horiz,w,u,u+sc*0.6,E[0],E[1],z2+0.012-0.12,z2+0.012,MAT.extTrim,{cast:false,tip:ft+' · VD-03 scalloped edge'});boxAlong(horiz,w,u+sc*0.12,u+sc*0.48,E[0],E[1],z2+0.012-0.18,z2-0.1,MAT.extTrim,{cast:false,tip:ft+' · VD-03 scalloped edge'})}
        boxAlong(horiz,w,u1-fw2,u2+fw2,R[0],R[1],z2+fw2,z2+fw2+0.1,MAT.redOxide,{cast:false,tip:'VD-03 · red oxide line over the sunshade'});}
       if(big){const L=vr(0.012,0.05);boxAlong(horiz,w,u1-0.012,u2+0.012,L[0],L[1],z2-0.04,z2+0.012,MAT.blackMetal,{cast:false,tip:'Drip edge, black'})}}
-  } else if(o.type==='fold'){
-    const z1=o.sill,z2=o.sill+o.h,n=4,v0=T*0.4;
-    for(let i=0;i<=n;i++){const u=Math.min(u2-0.07,Math.max(u1+0.07,u1+i*(u2-u1)/n));boxAlong(horiz,w,u-0.05,u+0.05,v0,v0+0.14,z1+0.09,z2-0.09,MAT.blackMetal,{tip})}
-    boxAlong(horiz,w,u1+0.012,u2-0.012,v0,v0+0.14,z1+0.012,z1+0.09,MAT.blackMetal,{tip});boxAlong(horiz,w,u1+0.012,u2-0.012,v0,v0+0.14,z2-0.09,z2-0.012,MAT.blackMetal,{tip});
-    const gl=boxAlong(horiz,w,u1+0.05,u2-0.05,v0+0.06,v0+0.08,z1+0.08,z2-0.08,MAT.glass,{tip,cast:false});glassMeshes.push(gl);
-    boxAlong(horiz,w,u1-0.1,u2+0.1,-0.15,T+0.05,z1-0.1,z1+0.012,MAT.oak,{tip:'Oak ledge under the folding glass'});
+  } else if(o.type==='fold'){   // W-12: 2-track sliding glass (black aluminium), two 3' sashes; the west sash slides behind the east one (opens half)
+    const z1=o.sill,z2=o.sill+o.h,v0=T*0.25,K=MAT.blackMetal,fr=0.09,mid=(u1+u2)/2;
+    boxAlong(horiz,w,u1+0.012,u2-0.012,v0,v0+0.2,z1+0.012,z1+0.07,K,{tip:tip+' · bottom track'});boxAlong(horiz,w,u1+0.012,u2-0.012,v0,v0+0.2,z2-0.07,z2-0.012,K,{tip:tip+' · top track'});
+    boxAlong(horiz,w,u1+0.012,u1+0.07,v0,v0+0.2,z1+0.07,z2-0.07,K,{tip});boxAlong(horiz,w,u2-0.07,u2-0.012,v0,v0+0.2,z1+0.07,z2-0.07,K,{tip});
+    const sash=(sa,sb,va)=>{const ms=[boxAlong(horiz,w,sa,sb,va,va+0.06,z1+0.07,z1+0.07+fr,K,{tip}),boxAlong(horiz,w,sa,sb,va,va+0.06,z2-0.07-fr,z2-0.07,K,{tip}),boxAlong(horiz,w,sa,sa+fr,va,va+0.06,z1+0.07,z2-0.07,K,{tip}),boxAlong(horiz,w,sb-fr,sb,va,va+0.06,z1+0.07,z2-0.07,K,{tip})];
+      const gl=boxAlong(horiz,w,sa+fr,sb-fr,va+0.02,va+0.04,z1+0.07+fr,z2-0.07-fr,MAT.glass,{tip,cast:false});glassMeshes.push(gl);ms.push(gl);
+      const hx=sa<mid-0.5?sb-0.2:sa+0.2;ms.push(boxAlong(horiz,w,hx-0.025,hx+0.025,va-0.05,va+0.11,(z1+z2)/2-0.3,(z1+z2)/2+0.3,K,{tip:tip+' · pull handle'}));return ms};
+    const gW=new THREE.Group();const msW=sash(u1+0.07,mid+0.05,v0+0.02);scene.add(gW);for(const q of msW)gW.add(q);sash(mid-0.05,u2-0.07,v0+0.11);
+    const d=along(horiz,w,mid-u1-0.1,0),d0=along(horiz,w,0,0);WINS.push({g:gW,kind:'slide',v:new THREE.Vector3(mx(d[0])-mx(d0[0]),0,m(d[1])-m(d0[1]))});
+    boxAlong(horiz,w,u1-0.1,u2+0.1,-0.15,T+0.05,z1-0.1,z1+0.012,MAT.oak,{tip:'Oak ledge under the sliding glass'});
   } else if(o.id==='D-13'||o.id==='D-14'){   // black MS safety door on the porch face of D-01 (two 2' leaves), grill door D-14 on the terrace face of D-12 (one leaf, hinged east); open out to 90 deg
     const tip=o.id+' · '+o.note,H=o.h-0.1,M=MAT.blackMetal,one=o.id==='D-14';
     for(const [hu,sg] of one?[[u1+0.05,1]]:[[u1+0.05,1],[u2-0.05,-1]]){const L=one?u2-u1-0.12:(u2-u1)/2-0.08,piv=new THREE.Group(),p=along(horiz,w,hu,-0.08);piv.position.set(mx(p[0]),m(ZOFF),m(p[1]));
