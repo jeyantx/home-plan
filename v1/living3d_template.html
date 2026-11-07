@@ -472,7 +472,7 @@ function tower(y1,y2,label,wallEnd){   // wallEnd: which end meets the room wall
   const a=wallEnd==='y1'?y1+0.005:y1+sideT, b=wallEnd==='y2'?y2-0.005:y2-sideT;      // clear span between wall and post
   if(wallEnd==='y1') box(tv.x1,tv.x2,y2-sideT,y2,0,BZ,MAT.white,{tip:t}); else box(tv.x1,tv.x2,y1,y1+sideT,0,BZ,MAT.white,{tip:t});
   box(tv.x1,tv.x2-backT,a,b,0,baseH,MAT.oak,{tip:'FU-05 · base cupboard, oak-veneer shutters'});
-  const mid=(a+b)/2;box(tv.x1-0.005,tv.x1,a+0.03,mid-0.02,0.12,baseH-0.06,MAT.oakDark,{cast:false,tip:'Shutter'});box(tv.x1-0.005,tv.x1,mid+0.02,b-0.03,0.12,baseH-0.06,MAT.oakDark,{cast:false,tip:'Shutter'});
+  const mid=(a+b)/2;
   box(tv.x2-backT,tv.x2,a,b,0,BZ,MAT.accent,{tip:t+' · niche back in accent paint'});
   for(const z of [3.3,5.0,6.7,8.2]){box(tv.x1+0.02,tv.x2-backT,a,b,z,z+0.11,MAT.oak,{tip:t});
     ledStrips.push(box(tv.x1+0.18,tv.x1+0.24,a+0.1,b-0.1,z-0.03,z,MAT.led,{cast:false,tip:'LED strip under the shelf'}))}
@@ -484,7 +484,7 @@ function tower(y1,y2,label,wallEnd){   // wallEnd: which end meets the room wall
       glassMeshes.push(box(fx+0.015,fx+0.025,u1+fw,u2-fw,z1+g+fw,z2-g-fw,MAT.glass,{cast:false,tip:tp}))}
     else box(fx,tv.x1,u1,u2,z1+g,z2-g,MAT.oak,{cast:false,tip:`FU-05 · ${label} · closed shutter, oak veneer`});
     const hu=u1<mid?u2-0.15:u1+0.15;box(fx-0.05,fx,hu-0.02,hu+0.02,(z1+z2)/2-0.3,(z1+z2)/2+0.3,MAT.blackMetal,{cast:false,tip:'Black handle'})}};
-  leaves(baseH,3.3,'glass');leaves(5.11,6.7,'glass');leaves(6.81,8.2,'closed');leaves(8.31,BZ,'closed');
+  leaves(0.1,baseH,'closed');leaves(baseH,3.3,'glass');leaves(5.11,6.7,'glass');leaves(6.81,8.2,'closed');leaves(8.31,BZ,'closed');
   const tl=new THREE.PointLight('#ffd7a3',0,m(7),2);tl.position.set(mx(tv.x1+0.4),m(5.8),m((y1+y2)/2));scene.add(tl);towerLights.push(tl);
   const r=rng(Math.round(y1*10));
   for(const z of [baseH,3.41,5.11]){let y=a+0.15;while(y<b-0.5){const k=r();
