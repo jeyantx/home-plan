@@ -388,6 +388,7 @@ function buildOpening(o,w,horiz,s0,out=0){
         const part=(w,hh,x,z,mt)=>{const q=new THREE.Mesh(new THREE.BoxGeometry(m(w),m(hh),m(mt===MAT.glass?0.03:th)),mt);q.position.set(m(sg*len/2+x),zc+m(z),0);q.castShadow=mt!==MAT.glass;piv.add(q);named(q,tip+(mt===MAT.glass?' · glass upper half':''));return q};
         part(L,H-gz2,0,(gz2+H)/2,mat);part(st,gz2-gz1,-L/2+st/2,(gz1+gz2)/2,mat);part(st,gz2-gz1,L/2-st/2,(gz1+gz2)/2,mat);
         glassMeshes.push(part(L-2*st,gz2-gz1,0,(gz1+gz2)/2,MAT.glass));}
+      if(o.type==='double'&&h==='a')for(const f of [1,-1]){const as=new THREE.Mesh(new THREE.BoxGeometry(m(0.16),m(o.h-0.14),m(0.03)),mat);as.position.set(m(len),m((o.h-0.14)/2+0.02),f*m(th/2+0.015));piv.add(as);named(as,o.id+' · meeting strip (covers the joint)')}   // astragal: a strip on one leaf laps over the joint, so no light shows through
       if(o.id==='D-01'){const sg=h==='a'?1:-1,pw=len*0.34;   // VD-05: four raised teak panels, both faces, brass knob
         for(const zz of [1.9,4.7])for(const xx of [-0.21,0.21])for(const f of [1,-1]){const pan=new THREE.Mesh(new THREE.BoxGeometry(m(pw),m(2.3),m(0.04)),MAT.oakDark);pan.position.set(m(sg*len/2+xx*len),m(zz),f*m(th/2+0.02));pan.castShadow=true;piv.add(pan);named(pan,'D-01 · VD-05 raised teak panel')}
         for(const f of [1,-1]){const kb=new THREE.Mesh(new THREE.SphereGeometry(m(0.13),20,14),MAT.brass);kb.position.set(m(sg*(len-0.35)),m(3.4),f*m(th/2+0.12));piv.add(kb);named(kb,'D-01 · brass door knob')}}
