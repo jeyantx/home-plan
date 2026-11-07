@@ -1010,10 +1010,10 @@ function setFinish(k){if(!KT[k])k='KT-1';const o=KT[k];finishMat(MAT.kLow,o.low)
  const wd=fuG['FU-34'],wy2=wd.y2,wl=7.55;
  cabRun('FU-34','Wardrobe with loft, oak veneer',wd.x1,X2-0.012,Y1+0.012,wy2,0,wl,'y+',[[14.0,16.08,'door'],[16.08,18.16,'door'],[18.16,20.238,'door']],MAT.oak,true);
  cabRun('FU-34','Wardrobe loft, oak veneer',wd.x1,X2-0.012,Y1+0.012,wy2,wl+0.012,BZ-0.005,'y+',[[14.0,16.08,'door'],[16.08,18.16,'door'],[18.16,20.238,'door']],MAT.oak,false);
- // dressing end of the long shelf FU-33: second drawer, framed mirror above the panel, linen stool
+ // dressing end of the long shelf FU-33: second drawer, linen stool; the framed mirror hangs above side table FU-32
  {const f3=fuG['FU-33'],d1=f3.y1+1.75,d2=f3.y2;
   box(f3.x1+0.098,f3.x1+0.1,d1,d2-0.1,1.66,1.68,MAT.oakDark,{cast:false,tip:'Drawer line'});box(f3.x1+0.06,f3.x1+0.1,(d1+d2)/2-0.25,(d1+d2)/2+0.25,1.86,1.9,MAT.blackMetal,{cast:false,tip:'Drawer pull'});
-  box(X2-ht-0.09,X2-0.012,d1+0.05,d2-0.05,3.55,6.4,MAT.oakDark,{tip:'Dressing mirror frame, oak'});box(X2-ht-0.1,X2-ht-0.09,d1+0.15,d2-0.15,3.65,6.3,MAT.mirror,{cast:false,tip:'Dressing mirror'});
+  {const f2=fuG['FU-32'];box(X2-ht-0.09,X2-0.012,f2.y1+0.05,f2.y2-0.05,3.55,6.4,MAT.oakDark,{tip:'Mirror frame, oak, above side table FU-32'});box(X2-ht-0.1,X2-ht-0.09,f2.y1+0.15,f2.y2-0.15,3.65,6.3,MAT.mirror,{cast:false,tip:'Mirror above side table FU-32'})}
   cyl(f3.x1-0.6,(d1+d2)/2,0,1.45,0.45,MAT.sofa,{tip:'Stool, mild-brown linen',rTop:0.45});}
 }
 
@@ -1762,7 +1762,7 @@ function applyOption(i){const o=OPTIONS[i];curOpt=i;
   </ul><h2>Bedroom 2 (G-12)</h2><ul>
   <li>Same design as bedroom 1: oak-look floor, light sage green walls, ceiling band with LED cove, 4 downlights, ceiling fan.</li>
   <li><b>Bed FU-31:</b> oak platform; headboard wall panel in grooved oak veneer runs across both floating side tables FU-32 and FU-33 (each with a drawer and a linen-shade lamp); linen pad, LED ledge, framed canvas.</li>
-  <li><b>Wardrobe FU-34</b> on GW-15 with loft, oak veneer, black handles. <b>FU-33</b> is one long floating oak shelf: side table with a lamp at the bed end, dressing table with a framed mirror and a linen stool at the other end (FU-35 merged into it).</li>
+  <li><b>Wardrobe FU-34</b> on GW-15 with loft, oak veneer, black handles. <b>FU-33</b> is one long floating oak shelf: side table with a lamp at the bed end, dressing table with a linen stool at the other end; framed mirror above side table FU-32 (FU-35 merged into it).</li>
   <li><b>Windows:</b> AC FU-46 centred above W-07, blowing across the bed; W-07 curtains on a wall track below it; W-08 is a 4' x 5' window (low sill) with curtains that stack at its sides.</li>
   </ul><h2>Toilet 2 (G-11)</h2><ul>
   <li>Same tiles as toilet 1: greige walls to 7' (shower walls too), anti-skid floor.</li>
