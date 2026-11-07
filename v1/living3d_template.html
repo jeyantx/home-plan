@@ -1679,13 +1679,6 @@ for(const f of P.furniture){ if(f.fl!=='G'||['FU-03.1','FU-03.2','FU-04','FU-05'
   for(const y of ys)cyl(x,y,Math.min(0,PKZ+Math.max(0,(y-PSY))/2.5*(-PKZ)),zs(y),0.06,MAT.blackMetal,{tip:T(f)});
   const a=[x,32.75,zs(32.75)],b=[x,PSY+2.5,zs(PSY+2.5)],c=[x,f.y2,2.75];
   for(const [p,q] of [[a,b],[b,c]]){const L=Math.hypot(q[1]-p[1],q[2]-p[2]),r=new THREE.Mesh(new THREE.CylinderGeometry(m(0.065),m(0.065),m(L),12),MAT.blackMetal);r.position.set(mx(x),m((p[2]+q[2])/2),m((p[1]+q[1])/2));r.rotation.x=Math.PI/2-Math.atan2(q[2]-p[2],q[1]-p[1]);r.castShadow=true;scene.add(r);named(r,T(f))}}
- // CD-06 arched display niche in GW-07 (inside face x 10.25): shown as a clay-lime recess with a stepped arch, granite base and one shelf, proud of the wall by a hair
- {const f=fuG['FU-94'],xf=10.25,y1=f.y1,y2=f.y2,yc=(y1+y2)/2,R=(y2-y1)/2,z0=3.0,zs=5.0;   // round-top recess: straight to 5', half-round to 6'
-  const arch=(r,ext)=>{const sh=new THREE.Shape();sh.moveTo(m(-r),m(-ext));sh.lineTo(m(r),m(-ext));sh.lineTo(m(r),m(zs-z0));sh.absarc(0,m(zs-z0),m(r),0,Math.PI,false);sh.lineTo(m(-r),m(-ext));return sh};
-  const outer=arch(R+0.12,0.0),inner=arch(R,0.0);outer.holes.push(new THREE.Path(inner.getPoints(48)));
-  for(const [shp,mt,dx,tp] of [[inner,niT,0.006,T(f)],[outer,std({color:'#c98a66',roughness:0.8}),0.012,T(f)+' · clay arch border']]){const mm=mt.clone();mm.side=THREE.DoubleSide;const me=new THREE.Mesh(new THREE.ShapeGeometry(shp,48),mm);me.rotation.y=Math.PI/2;me.position.set(mx(xf+dx),m(z0),m(yc));scene.add(me);named(me,tp)}
-  box(xf,xf+0.25,y1-0.12,y2+0.12,2.92,3.0,blackG,{tip:T(f)+' · granite base'});box(xf,xf+0.08,y1,y2,4.3,4.36,blackG,{tip:T(f)+' · stone shelf'});
-  cyl(xf+0.2,yc-0.4,3.0,3.8,0.12,MAT.accent,{tip:'Clay vase'});cyl(xf+0.2,yc+0.45,3.0,3.3,0.17,std({color:'#efe7da',roughness:0.6}),{tip:'Bowl'});box(xf+0.05,xf+0.3,yc-0.2,yc+0.25,4.36,4.62,std({color:'#7a5a40',roughness:0.8}),{tip:'Books'})}
  // CD-07 window seat under W-08: clay body with three oak shutters, black granite top, two cushions
  {const f=fuG['FU-95'];box(f.x1,f.x2,f.y1+0.05,f.y2,0,1.4,MAT.accent,{tip:T(f)});const n=3,w=(f.x2-f.x1)/n;
   for(let i=0;i<n;i++)box(f.x1+i*w+0.08,f.x1+(i+1)*w-0.08,f.y1+0.03,f.y1+0.06,0.2,1.25,MAT.oak,{tip:T(f)+' · storage shutter'});
