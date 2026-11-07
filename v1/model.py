@@ -105,7 +105,7 @@ OPENINGS = [
  ('W-06','G','GW-01', 61.0,65.0,'window',None,None, 2.0,3.25,'Kitchen window over the hob, 4\' x 2\', sill 3\'3", head 5\'3", so the chimney hood sits at the standard 2\'6" above the counter'),
  ('V-02','G','GW-18', 70.875,72.875,'vent',None,None, 1.5,6.0,'Toilet 2 ventilator over the WC platform, opens onto the bore court'),
  ('W-07','G','GW-07', 85.0,89.0,'window',None,None, 4.0,3.0,'Bedroom 2 side window to side garden'),
- ('W-08','G','GW-08', 10.75,19.25,'window',None,None, 5.0,2.0,'Bedroom 2 back picture window to the back garden, 8\'6" x 5\', low 2\' sill; replaces the back door D-10'),
+ ('W-08','G','GW-08', 13.0,17.0,'window',None,None, 5.0,2.0,'Bedroom 2 back window to the back garden, 4\' wide (same as W-07) x 5\', low 2\' sill; replaces the back door D-10'),
  ('GT-01','G','FRONT', 0.75,12.0,'gate',None,'+', 6.0,0,'Large gate, 11\'3", bi-fold double leaf (4 panels), folds inward over the level crest, east of the planter pillar'),
  ('GT-02','G','FRONT', 13.5,20.25,'gate',None,'+', 6.0,0,'Small gate, 6\'9", bi-fold double leaf (4 panels), folds inward over the level crest, west of the planter pillar'),
  ('D-07','F','FW-05', 10.5,13.5,'door','a','+', 7.0,0,'Bedroom 3 door, from the landing; opens into the bedroom, hinged at its east end so it folds back against FW-01, clear of the wardrobe FU-39'),
@@ -487,7 +487,7 @@ SPEC = {
 for _o in OPENINGS:
     if _o[5]=='window' and _o[0] not in SPEC: SPEC[_o[0]]='UPVC 3-track sliding: 2 glass + 1 mosquito mesh, MS safety grill, 1\'6" sunshade outside'
     if _o[5]=='vent' and _o[0] not in SPEC: SPEC[_o[0]]='Louvred glass ventilator with exhaust fan opening'
-SPEC['W-08']='Picture window: fixed glass centre (4\') with a UPVC sliding pane each side (2\'3") with mosquito mesh; slim black MS grill, the same as the other windows (AU-20; the invisible wire grill is dropped, as it is child-safe but not theft-proof); 1\'6" sunshade outside'
+SPEC['W-08']='Back window, 4\' wide: two UPVC casements (2\' each) with mosquito mesh; slim black MS grill, the same as the other windows (AU-20; the invisible wire grill is dropped, as it is child-safe but not theft-proof); 1\'6" sunshade outside'
 SPEC['V-03']='Louvred glass ventilator with exhaust fan opening'
 
 # ---------- store cupboard FU-25 as civil work (owner's queue item 3; inverter and battery at the foot of S-4) ----------
@@ -532,7 +532,7 @@ WINDOWS={
  'W-05':dict(type='WT-3',frame='WF-B',glass='WG-1',grill='GR-1',mesh='WM-1',why='the top vent lets hot air out all day'),
  'W-06':dict(type='WT-4',frame='WF-B',glass='WG-1',grill='GR-1',mesh='WM-2',why='no reaching over the flame; wind cannot blow out the burner'),
  'W-07':dict(type='WT-2',frame='WF-B',glass='WG-1',grill='GR-1',mesh='WM-2',why='opens fully onto the side garden'),
- 'W-08':dict(type='WT-2',frame='WF-B',glass='WG-1',grill='GR-1',mesh='WM-2',why='fixed 4\' centre for the view, casement sides open fully'),
+ 'W-08':dict(type='WT-2',frame='WF-B',glass='WG-1',grill='GR-1',mesh='WM-2',why='4\' wide like W-07; two casements open fully'),
  'W-10':dict(type='WT-2',frame='WF-B',glass='WG-3',grill='GR-1',mesh='WM-2',why='first floor, morning sun: heat-cut glass'),
  'W-11':dict(type='WT-2',frame='WF-B',glass='WG-1',grill='GR-1',mesh='WM-2',why='full air over the desk'),
  'W-12':dict(type='fold',frame='WF-B',glass='WG-1',grill=None,mesh=None,why='inside window, frame matches the others'),
@@ -544,7 +544,7 @@ WIN_NAMES={'WT-1':'3-track sliding (2 glass + 1 mesh)','WT-2':'casement, side-hu
  'WF-B':'black (anthracite) UPVC frame','WG-1':'clear 5 mm glass','WG-2':'clear glass, frosted lower half','WG-3':'heat-cut (solar control) glass','WG-4':'frosted glass','GR-1':'plain black MS bars, 12 mm at 5"','WM-1':'sliding mosquito mesh pane','WM-2':'pleated mosquito mesh'}
 for _k,_w in WINDOWS.items():
     _t=', '.join(WIN_NAMES[v] for v in (_w['type'],_w['frame'],_w['glass'],_w['grill'],_w['mesh']) if v)
-    if _k=='W-08': _t='Picture window: fixed glass centre (4\') with a casement each side (2\'3"), '+', '.join(WIN_NAMES[v] for v in (_w['frame'],_w['glass'],_w['grill'],_w['mesh']))
+    if _k=='W-08': _t='Back window, 4\' wide: two casements (2\' each), '+', '.join(WIN_NAMES[v] for v in (_w['frame'],_w['glass'],_w['grill'],_w['mesh']))
     SPEC[_k]=_t+'; '+_w['why']+'; outside: box frame WF-1 and scalloped sunshade on the front and back walls only'*( _k in ('W-01','W-08','W-11'))
 # underground tanks and pits: (code, name, shape, geometry, inside size note, covers, note)
 #   rect geometry = outer (x1,x2,y1,y2); circle geometry = (cx,cy,outer r); covers = list of (x1,x2,y1,y2) or (cx,cy,r)
