@@ -111,6 +111,7 @@ OPENINGS = [
  ('D-07','F','FW-05', 10.5,13.5,'door','a','+', 7.0,0,'Bedroom 3 door, from the landing; opens into the bedroom, hinged at its east end so it folds back against FW-01, clear of the wardrobe FU-39'),
  ('D-09','F','FW-01', 77.0,79.5,'door','b','-', 7.0,0,'Toilet 3 door, 2\'6", from the landing, at its south end (next to bedroom 3); opens into the toilet, hinged at its south end so it folds back against FW-07; leaves the north part of the landing free for the terrace door D-12'),
  ('V-03','F','FW-07', 5.75,7.25,'vent',None,None, 1.5,6.0,'Toilet 3 ventilator, 1\'6" x 1\'6" at 6\', between the WC and the basin, opening to the side garden; louvred glass'),
+ ('D-14','F','FW-02', 10.5,13.25,'door','a','-', 7.0,0,'Grill door on the terrace face of D-12, black MS, one 2\'9" leaf hinged at the east end, opens out onto the terrace to 90 deg against a floor stopper'),
  ('D-12','F','FW-02', 10.5,13.25,'door','a','+', 7.0,0,'Landing door to the open terrace, 2\'9" (in place of the old window W-09), east of the spiral stair; opens into the landing, hinged at its east end so it folds back against FW-01 (the toilet door D-09 is now at the south end, out of its way); 1" raised sill and a weather bar outside against rain'),
  ('W-10','F','FW-01', 88.5,92.5,'window',None,None, 4.0,3.0,'Bedroom 3 side window'),
  ('W-11','F','FW-04', 14.75,18.25,'window',None,None, 4.0,3.0,'Bedroom 3 back window, over the study desk'),
@@ -363,7 +364,7 @@ TAGPOS={'GW-01':(3.125,53.0),'GW-05':(20.625,51.0),'GW-07':(9.875,91.5),'BW-01':
         'FW-01':(9.875,94.0),'FW-03':(20.625,92.0),'FW-02':(18.4,73.5),'FW-04':(19.0,97.0),'FW-05':(18.0,80.06),'PW-03':(19.4,19.94),'PW-01':(5.0,15.69),'PW-05':(6.0,77.69),
         'GW-15':(18.4,80.44),'GW-14':(8.0,66.81),'GW-10':(13.94,34.6),'GW-09':(9.06,43.0),'BW-03':(1.19,98.0),'BW-07':(20.81,25.0),'BW-08':(20.81,100.5),'BW-02':(0.6,89.19)}
 OPENTAGOFF={'W-01':-0.75,'V-01':-0.75,'W-02':0.9,'W-04':-1.0,'W-05':-1.0,'W-06':-1.0,'V-02':-1.0,'W-07':-1.0,'W-08':0.8,'D-01':1.4,'D-13':-1.9,'D-02':-2.2,'D-03':-1.6,
-            'O-01':-0.8,'D-04':1.6,'D-05':-1.5,'D-06':1.7,'D-07':1.7,'D-08':-1.4,'D-09':-1.6,'D-12':-0.8,'W-10':-1.0,'W-11':0.8,'W-12':-0.85,'D-10':0.9}
+            'O-01':-0.8,'D-04':1.6,'D-05':-1.5,'D-06':1.7,'D-07':1.7,'D-08':-1.4,'D-09':-1.6,'D-12':-0.8,'D-14':1.3,'W-10':-1.0,'W-11':0.8,'W-12':-0.85,'D-10':0.9}
 SPC=(17.0,76.875); SPR=35/12   # ST-2 spiral: centre and outer radius (5'10" across)
 # ST-2: 21 risers of 6 4/7" (11'6" floor to floor), 20 oak treads of 25.5 deg + a 60 deg landing at the first floor (same total turn as before, so the top lands the same way).
 # Climbs anticlockwise (outer handrail on your right going up). Tread 1 starts on the 345 deg line (plan angle: 0 = west, 90 = south),
@@ -474,6 +475,7 @@ FURNITURE = [
 # door and window types (proposal)
 SPEC = {
  'D-01':'Teak wood, one 4\' leaf hinged on the east side; the steel door D-13 is in front of it',
+ 'D-14':'MS grill door, black powder-coat, same make as D-13: 1"x1" box frame, 1/2" square bars at 4", middle rail, 1\'6" sheet panel at the foot; one leaf, tower bolts and a lock',
  'D-13':'MS safety door, black powder-coat: 1"x1" box frame, 1/2" square bars at 4", middle rail, 1\'6" sheet panel at the foot; double leaf, centre joint in line with D-01; tower bolts top and bottom, a lock and floor stoppers',
  'D-02':'Flush door, hardwood frame', 'D-06':'Flush door, hardwood frame', 'D-07':'Flush door, hardwood frame',
  'D-03':'WPC waterproof door', 'D-04':'WPC waterproof door', 'D-08':'WPC waterproof door',
