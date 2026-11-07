@@ -605,7 +605,7 @@ function addPlant(px,py,hM,seed,tip){
  scene.add(plant);plant.traverse(o=>{if(o.isMesh){o.userData.keepUV=true;named(o,tip)}})}
 addPlant(11.3,56.95,1.5,1,'Bamboo plant in black pot · 5 ft');
 // sheer curtains, window length only (cheaper, neater, clear of the ACs): rod 6" above the 7' window head, curtain ends 6" below the 3' sill
-const WT=7.5,WB=2.5,WROD='Curtain rod, 6" above the window';
+const WT=7.2,WB=2.5,WROD='Curtain rod, 2" above the window';
 function curtain(y1,y2,xp=LX1+0.42,top=BZ,trackTip='Curtain track',axis='y',mat=null,ctip=null,bot=0.04){   // axis 'y': wall along plan y at x=xp; 'x': wall along plan x at y=xp
   const w=y2-y1,h=top-0.08-bot,segW=Math.round(w*14),segH=24;
   const g=new THREE.PlaneGeometry(m(w),m(h),segW,segH);const p=g.attributes.position;
