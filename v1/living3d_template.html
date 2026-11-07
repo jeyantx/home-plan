@@ -655,34 +655,32 @@ box(9.92,9.94,37.4,40.1,7.9,7.98,MAT.blackMetal,{cast:false,tip:'FU-44 · AC air
    g.fillStyle='#8a6a4f';g.beginPath();g.moveTo(0,h*0.78);g.bezierCurveTo(w*0.3,h*0.62,w*0.55,h*0.86,w,h*0.7);g.lineTo(w,h);g.lineTo(0,h);g.fill();
    for(let i=0;i<9000;i++){const v=(r()-.5)*0.06;g.fillStyle=v>0?`rgba(255,255,255,${v})`:`rgba(0,0,0,${-v})`;g.fillRect(r()*w,r()*h,2,2)}},1);t.repeat.set(1,1);
  const pl=new THREE.Mesh(new THREE.PlaneGeometry(m(ay2-ay1-0.2),m(az2-az1-0.2)),std({map:t,roughness:0.9}));pl.rotation.y=Math.PI/2;pl.position.set(mx(BX2-0.115),m((az1+az2)/2),m((ay1+ay2)/2));scene.add(pl);named(pl,'Framed art · earthy sun and horizon, textured canvas');pl.userData.keepUV=true;}
-// --- L-wardrobe FU-09.1 + FU-09.2 with loft: oak-veneer shutters, black J-profile handles, shadow-gap plinth
-{const t1=`FU-09.1 · Wardrobe, part 1 · oak veneer, loft above · ${fuG['FU-09.1'].note}`, t2=`FU-09.2 · Wardrobe, part 2 · oak veneer, loft above · ${fuG['FU-09.2'].note}`;
- const a=fuG['FU-09.1'],b=fuG['FU-09.2'],sh=0.06,pz=0.3,lz=7.55,gap=0.012;
- box(a.x1,a.x2,a.y1+0.012,a.y2-sh,pz,BZ-0.005,MAT.oak,{tip:t1});box(b.x1+sh,b.x2,b.y1,b.y2-0.012,pz,BZ-0.005,MAT.oak,{tip:t2});
- box(a.x1+0.06,a.x2,a.y1+0.012,a.y2-sh-0.06,0,pz,std({color:'#2a2622',roughness:0.8}),{tip:t1});box(b.x1+sh+0.06,b.x2,b.y1,b.y2-0.07,0,pz,std({color:'#2a2622',roughness:0.8}),{tip:t2});
- // 09.1 front faces +Y (into the room), one shutter x 17.25-18.917; 09.2 front faces -X, two shutters
- const doorsY=(x1,x2,y,n,tip)=>{const w=(x2-x1)/n;for(let i=0;i<n;i++){const u1=x1+i*w+gap,u2=x1+(i+1)*w-gap;
-   box(u1,u2,y-sh,y,pz+gap,lz-gap,MAT.oak,{tip:tip+' · shutter'});box(u1,u2,y-sh,y,lz+gap,BZ-0.03,MAT.oak,{tip:tip+' · loft shutter'});
-   const hx=i%2?u1+0.03:u2-0.07;box(hx,hx+0.04,y,y+0.05,3.0,5.6,MAT.blackMetal,{tip:'J-profile handle, black'})}};
- const doorsX=(y1,y2,x,n,tip)=>{const w=(y2-y1)/n;for(let i=0;i<n;i++){const u1=y1+i*w+gap,u2=y1+(i+1)*w-gap;
-   box(x,x+sh,u1,u2,pz+gap,lz-gap,MAT.oak,{tip:tip+' · shutter'});box(x,x+sh,u1,u2,lz+gap,BZ-0.03,MAT.oak,{tip:tip+' · loft shutter'});
-   const hy=i%2?u1+0.03:u2-0.07;box(x-0.05,x,hy,hy+0.04,3.0,5.6,MAT.blackMetal,{tip:'J-profile handle, black'})}};
- doorsY(a.x1+0.012,b.x1-0.012,a.y2,1,'FU-09.1 · Wardrobe');doorsX(b.y1+0.012,b.y2-0.012,b.x1,2,'FU-09.2 · Wardrobe');}
+// --- wardrobe FU-09.1 (straight rectangle on GW-05, loft) and its south column FU-09.2 by the bed head: bedside and accessory cut-outs; oak shutters, black J-profile handles, shadow-gap plinth
+{const a=fuG['FU-09.1'],b=fuG['FU-09.2'],sh=0.06,pz=0.3,lz=7.55,gap=0.012,x=a.x1,t1=`FU-09.1 · Wardrobe · oak veneer, loft above · ${a.note}`,t2=`FU-09.2 · ${b.name} · ${b.note}`,pl=std({color:'#2a2622',roughness:0.8});
+ box(x+sh,a.x2,a.y1+0.012,a.y2,pz,BZ-0.005,MAT.oak,{tip:t1});box(x+sh+0.06,a.x2,a.y1+0.012,b.y2-0.07,0,pz,pl,{tip:t1+' · plinth'});
+ const w=(a.y2-a.y1-0.012)/3;for(let i=0;i<3;i++){const u1=a.y1+0.012+i*w+gap,u2=a.y1+0.012+(i+1)*w-gap;
+  box(x,x+sh,u1,u2,pz+gap,lz-gap,MAT.oak,{tip:t1+' · shutter'});box(x,x+sh,u1,u2,lz+gap,BZ-0.03,MAT.oak,{tip:t1+' · loft shutter'});
+  const hy=i%2?u1+0.03:u2-0.07;box(x-0.05,x,hy,hy+0.04,3.0,5.6,MAT.blackMetal,{tip:'J-profile handle, black'})}
+ // FU-09.2: side panel by the bed, closed parts, two open cut-outs (back on the wall, warm LED strip in each)
+ const y1=b.y1,y2=b.y2-0.012,T=0.06;box(x,b.x2,y2-T,y2,0,BZ-0.005,MAT.oak,{tip:t2+' · side panel'});
+ const cut=[[1.75,2.9,'Bedside cut-out · phone, glasses, water at night; BS-1 charging point inside'],[3.9,6.4,'Accessory and make-up cut-out · one shelf']];
+ const solid=[[pz,1.75],[2.9,3.9],[6.4,lz],[lz,BZ-0.005]];
+ for(const [z1,z2] of solid){box(x+sh,b.x2,y1,y2-T,z1,z2,MAT.oak,{tip:t2});box(x,x+sh,y1+gap,y2-T-gap,z1+gap,z2-gap,MAT.oak,{tip:t2+' · shutter'});
+  if(z2<=lz&&z2-z1>0.5)box(x-0.05,x,y1+0.06,y1+0.1,(z1+z2)/2-0.25,(z1+z2)/2+0.25,MAT.blackMetal,{tip:'J-profile handle, black'})}
+ for(const [z1,z2,tp] of cut){box(x,b.x2,y1,y2-T,z1-0.06,z1,MAT.oak,{tip:t2+' · '+tp});box(x,b.x2,y1,y2-T,z2,z2+0.06,MAT.oak,{tip:t2+' · '+tp});box(b.x2-0.04,b.x2,y1,y2-T,z1,z2,MAT.oakDark,{cast:false,tip:t2+' · back'});
+  ledStrips.push(box(x+0.08,x+0.14,y1+0.06,y2-T-0.06,z2-0.03,z2,MAT.led,{cast:false,tip:'LED strip, warm white'}))}
+ box(x+0.06,b.x2-0.04,y1,y2-T,5.1,5.16,MAT.oak,{tip:t2+' · accessory shelf'});
+ box(x+0.35,x+0.42,y1+0.35,y1+0.75,1.75,2.05,MAT.screen,{tip:'Phone, charging'});cyl(x+0.6,y2-0.4,1.75,2.15,0.1,std({color:'#e9e4da',roughness:0.1,transparent:true,opacity:0.6}),{tip:'Water glass'});
+ cyl(x+0.5,y1+0.4,3.9,4.25,0.12,std({color:'#e9e4da',roughness:0.4}),{tip:'Powder box'});box(x+0.3,x+0.7,y1+0.7,y2-0.25,3.9,4.0,std({color:'#b49a80',roughness:0.7}),{tip:'Make-up tray'});
+ cyl(x+0.5,y1+0.45,5.16,5.5,0.1,std({color:'#cdbfa8',roughness:0.5}),{tip:'Perfume bottle'});cyl(x+0.55,y2-0.4,5.16,5.35,0.18,std({color:'#c9a96a',roughness:0.3,metalness:0.6}),{tip:'Jewellery bowl, brass'});}
 
-// full-length mirror on the south shutter of FU-09.2 (faces the room, east): a true reflection in the normal view, a silver mirror in Photo
+// full-length mirror on the south shutter of FU-09.1 (faces the room, east): a true reflection in the normal view, a silver mirror in Photo
 const mirrors=[];
-{const b=fuG['FU-09.2'],gap=0.012,w=(b.y2-b.y1-0.024)/2,u1=b.y1+0.012+w+gap,u2=b.y2-0.012-gap,yc=(u1+u2)/2,mw=1.17,z1=1.5,z2=6.5,x=b.x1-0.012,tm='FU-09.2 · full-length mirror, 1\'2" x 5\', on the south shutter';
+{const a=fuG['FU-09.1'],w=(a.y2-a.y1-0.012)/3,u1=a.y1+0.012+2*w,u2=a.y2,yc=(u1+u2)/2,mw=1.17,z1=1.5,z2=6.5,x=a.x1-0.012,tm='FU-09.1 · full-length mirror, 1\'2" x 5\', on the south shutter';
  box(x-0.02,x+0.001,yc-mw/2-0.06,yc+mw/2+0.06,z1-0.06,z2+0.06,MAT.blackMetal,{tip:tm+' · thin black frame'});
  const geo=new THREE.PlaneGeometry(m(mw),m(z2-z1));
  const rf=new Reflector(geo,{textureWidth:LITE?256:768,textureHeight:LITE?512:1536,color:'#c8ccce',clipBias:0.003});rf.rotation.y=Math.PI/2;rf.position.set(mx(x-0.025),m((z1+z2)/2),m(yc));scene.add(rf);named(rf,tm);
  const pm=new THREE.Mesh(geo,std({color:'#e8ecee',metalness:1,roughness:0.02}));pm.rotation.y=Math.PI/2;pm.position.copy(rf.position);pm.visible=false;scene.add(pm);named(pm,tm);mirrors.push([rf,pm])}
-// bedside table FU-101 between the bed head and the wardrobe: oak, one drawer, a small lamp
-{const f=fuG['FU-101'],t=`FU-101 · ${f.name} · ${f.note}`,h=1.83;
- box(f.x1,f.x2,f.y1,f.y2,h-0.1,h,MAT.oak,{round:0.02,tip:t});box(f.x1+0.04,f.x2-0.04,f.y1+0.04,f.y2-0.04,0.35,h-0.1,MAT.oak,{tip:t});
- box(f.x1+0.06,f.x1+0.08,f.y1+0.08,f.y2-0.08,1.25,h-0.16,MAT.oakDark,{cast:false,tip:t+' · drawer'});box(f.x1+0.03,f.x1+0.06,(f.y1+f.y2)/2-0.15,(f.y1+f.y2)/2+0.15,1.5,1.55,MAT.blackMetal,{cast:false,tip:'Drawer pull'});
- for(const [x,y] of [[f.x1+0.05,f.y1+0.05],[f.x2-0.12,f.y1+0.05],[f.x1+0.05,f.y2-0.12],[f.x2-0.12,f.y2-0.12]])box(x,x+0.07,y,y+0.07,0,0.35,MAT.blackMetal,{tip:t});
- const cx=(f.x1+f.x2)/2+0.1,cy=(f.y1+f.y2)/2;cyl(cx,cy,h,h+0.05,0.18,std({color:'#d9cdb8',roughness:0.6}),{tip:'Bedside lamp · ceramic base, linen shade'});
- cyl(cx,cy,h+0.05,h+0.75,0.06,std({color:'#d9cdb8',roughness:0.6}),{tip:'Bedside lamp'});cyl(cx,cy,h+0.75,h+1.15,0.32,MAT.paper,{tip:'Bedside lamp · linen shade',rTop:0.24})}
 
 // plant by the window: smaller bamboo
 addPlant(10.05,42.3,1.2,3,'Bamboo plant in black pot · 4 ft');
@@ -1760,7 +1758,7 @@ function applyOption(i){const o=OPTIONS[i];curOpt=i;
   </ul><h2>Bedroom 1 (G-05) and study corner (G-06)</h2><ul>
   <li><b>Floor, walls, ceiling:</b> same FT-5 ivory matt tile floor, light sage green walls and civil-work band with LED cove as the living room; 4 downlights in the band, one in the study corner; one ceiling fan.</li>
   <li><b>Bed FU-06:</b> low oak platform with a shadow-gap base. Headboard wall: oak-veneer panel with grooves to 3'4", a 4" oak ledge with an LED strip under it, a mild-brown linen pad. One framed canvas above.</li>
-  <li><b>Wardrobe FU-09.1 + FU-09.2:</b> L-shaped, floor to band, oak-veneer shutters with lofts, black J-profile handles, shadow-gap plinth.</li>
+  <li><b>Wardrobe FU-09.1 + FU-09.2:</b> one straight rectangle on the west wall, floor to band, oak shutters with loft, black J-profile handles; by the bed head a column with a bedside cut-out (phone, BS-1 charging) and an accessory and make-up cut-out with one shelf, both lit by warm LED strips.</li>
   <li><b>Window W-02:</b> light-brown sheer curtains; AC FU-44 above it. Small bamboo plant by the window.</li>
   <li><b>Study:</b> floating oak desk FU-10 on black steel legs, walnut-tone chair with a linen seat, open oak bookshelf FU-11, linen roman blind on W-01.</li>
   </ul><h2>Kitchen (G-08) and open area (G-09)</h2><ul>
