@@ -597,7 +597,19 @@ function curtain(y1,y2,xp=LX1+0.42,top=BZ,trackTip='Curtain track',axis='y',mat=
   const me=new THREE.Mesh(g,mat||MAT.curtain);if(axis==='y'){me.rotation.y=Math.PI/2;me.position.set(mx(xp),m(h/2+bot+ZOFF),m((y1+y2)/2))}else me.position.set(mx((y1+y2)/2),m(h/2+bot+ZOFF),m(xp));
   me.castShadow=true;me.receiveShadow=true;scene.add(me);
   if(mat){named(me,ctip||'Curtain');me.userData.keepUV=true}else{named(me,'Sheer curtain · crepe georgette, window length: rod 6" above the window, ends 6" below the sill');me.userData.curtain=true}
-  if(axis==='y')box(xp-0.06,xp+0.06,y1,y2,top-0.08,top-0.012,MAT.blackMetal,{tip:trackTip});else box(y1,y2,xp-0.06,xp+0.06,top-0.08,top-0.012,MAT.blackMetal,{tip:trackTip})}
+  if(mat){if(axis==='y')box(xp-0.06,xp+0.06,y1,y2,top-0.08,top-0.012,MAT.blackMetal,{tip:trackTip});else box(y1,y2,xp-0.06,xp+0.06,top-0.08,top-0.012,MAT.blackMetal,{tip:trackTip});return}
+  const k=[axis,xp.toFixed(2),top.toFixed(2),ZOFF].join('|');(RAILS[k]=RAILS[k]||{axis,xp,top,z:ZOFF,tip:trackTip,segs:[]}).segs.push([y1,y2])}
+// one continuous black curtain rail per window: joins the curtain stacks on the same line (gaps up to 9'), with wall brackets and round end caps, so the curtains can be drawn shut
+const RAILS={};
+function buildRails(){for(const R of Object.values(RAILS)){const sg=R.segs.sort((a,b)=>a[0]-b[0]),runs=[];
+  for(const q of sg){const l=runs[runs.length-1];if(l&&q[0]-l[1]<9)l[1]=Math.max(l[1],q[1]);else runs.push([...q])}
+  const z0=ZOFF;ZOFF=R.z;const zr=R.top-0.06,tip=R.tip+' · continuous rail, curtains slide fully open or shut';
+  for(const [a,b] of runs){const L=b-a+0.2,c=(a+b)/2,rod=new THREE.Mesh(new THREE.CylinderGeometry(m(0.04),m(0.04),m(L),16),MAT.blackMetal);rod.rotation[R.axis==='y'?'x':'z']=Math.PI/2;
+    rod.position.set(mx(R.axis==='y'?R.xp:c),m(zr+ZOFF),m(R.axis==='y'?c:R.xp));rod.castShadow=true;scene.add(rod);named(rod,tip);
+    for(const e of [a-0.1,b+0.1]){const ball=new THREE.Mesh(new THREE.SphereGeometry(m(0.07),16,12),MAT.blackMetal);ball.position.set(mx(R.axis==='y'?R.xp:e),m(zr+ZOFF),m(R.axis==='y'?e:R.xp));scene.add(ball);named(ball,'Rail end cap')}
+    const n=Math.max(2,Math.ceil((b-a)/4)+1);for(let i=0;i<n;i++){const u=a+0.15+(b-a-0.3)*i/(n-1),d=R.axis==='y'?Math.sign(R.xp-12):Math.sign(R.xp-60);
+      if(R.axis==='y')box(Math.min(R.xp,R.xp-d*0.42),Math.max(R.xp,R.xp-d*0.42),u-0.03,u+0.03,zr-0.03,zr+0.03,MAT.blackMetal,{tip:'Rail bracket'});else box(u-0.03,u+0.03,Math.min(R.xp,R.xp+0.42*(R.xp>60?1:-1)),Math.max(R.xp,R.xp+0.42*(R.xp>60?1:-1)),zr-0.03,zr+0.03,MAT.blackMetal,{tip:'Rail bracket'})}}
+  ZOFF=z0}}
 for(const o of P.openings.filter(o=>o.wall==='GW-01'&&o.type==='window'&&o.b<LY2&&o.a>LY1)){for(const [a,b] of [[o.a-1.3,o.a+0.25],[o.b-0.25,o.b+1.3]])curtain(a,b,LX1+0.42,WT,WROD,'y',null,null,WB)}
 function ceilingFan(cx,cy,rot){const hub=8.6;cyl(cx,cy,hub+0.3,CEIL,0.045,MAT.blackMetal,{tip:'Ceiling fan, 48", wood-finish blades'});cyl(cx,cy,hub,hub+0.35,0.3,MAT.blackMetal,{tip:'Ceiling fan'});
   const fan=new THREE.Group();fan.position.set(mx(cx),m(hub+0.1+ZOFF),m(cy));scene.add(fan);
@@ -1698,6 +1710,7 @@ for(const f of P.furniture){ if(f.fl!=='G'||['FU-03.1','FU-03.2','FU-04','FU-05'
 }
 scene.traverse(n=>{if(n.isMesh&&!n.userData.curtain&&!n.userData.keepUV) metreUV(n.geometry)});
 scene.updateMatrixWorld(true);   // wall positions ready for collision before the first frame
+buildRails();
 const SOLID=['FU-05','FU-06','FU-09','FU-11','FU-12','FU-13','FU-14','FU-15','FU-16','FU-17','FU-18','FU-25','FU-31','FU-34','FU-35'];   // FU-16 also covers FU-16.2
 scene.traverse(n=>{if(n.isMesh&&typeof n.userData.tip==='string'&&SOLID.some(k=>n.userData.tip.startsWith(k)))wallMeshes.push(n)});   // TV unit, bed, wardrobe, shelf, WC, vanity, shower glass are solid too
 
