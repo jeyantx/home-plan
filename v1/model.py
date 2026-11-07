@@ -400,7 +400,7 @@ FURNITURE = [
  ('FU-05','G','TV, showcase and bookshelf wall unit',18.917,20.25,46.75,58.25,'tvwall',None,'Living, 11\'6" x 1\'4", full height on GW-05, wall to wall: TV in the middle, showcase and book shelves on both sides'),
  ('FU-06','G','Queen bed',13.75,20.25,41.25,46.25,'bed','x2','Bedroom 1, 6\'6" x 5\', head to GW-05 (east-west), side against GW-12'),
   ('FU-09.1','G','Wardrobe',18.3333,20.25,35.375,39.6,'ward',None,'Bedroom 1, one straight rectangle on GW-05 (no L): 4\'3" x 1\'11", three oak shutters with loft, full-length mirror 1\'2" x 5\' on the south shutter'),
-  ('FU-09.2','G','Bedside and accessory niche column',18.3333,20.25,39.6,40.875,'ward',None,'Bedroom 1, south end of the wardrobe by the bed head, same depth and loft: bedside cut-out 1\'9" to 2\'11" for the phone at night (charging point BS-1 inside), accessory and make-up cut-out 3\'11" to 6\'5" with one shelf, closed oak shutters between'),
+  ('FU-09.2','G','Bedside and accessory niche column',18.3333,20.25,39.6,40.875,'ward',None,'Bedroom 1, south end of the wardrobe by the bed head, same depth and loft; the cut-outs are open on the front and on the bed side (south), all edges rounded: bedside cut-out 1\'9" to 2\'11" for the phone at night (charging point BS-1 inside), accessory and make-up cut-out 3\'11" to 6\'5" with one shelf, closed oak shutters between'),
  ('FU-10','G','Sewing machine table',10.0,13.25,30.6,32.25,'desk',None,'Study, under W-01: white top 3\'3" x 1\'8" at 2\'6" with a ruler strip on the front edge, black iron stand, foot pedal; Singer-type machine'),
   ('FU-11','G','Bookshelf',12.5,13.75,32.75,35.25,'shelf',None,'Study, on GW-10'),
  ('FU-12','G','Western WC',18.0,20.25,32.9,34.4,'wc','x2','Toilet 1, wall-mounted cistern'),
