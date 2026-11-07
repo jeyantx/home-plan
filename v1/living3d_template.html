@@ -1755,6 +1755,12 @@ for(const f of P.furniture){ if(f.fl!=='G'||['FU-01','FU-03.1','FU-03.2','FU-04'
 scene.traverse(n=>{if(n.isMesh&&!n.userData.curtain&&!n.userData.keepUV) metreUV(n.geometry)});
 scene.updateMatrixWorld(true);   // wall positions ready for collision before the first frame
 buildRails();
+// parking board on GW-04 (parking face, Y 29'9"), behind the car: IP65 sockets with grey flaps, the switch board, and the EV socket; heights above the parking floor
+for(const e of (P.elec||[]).filter(e=>e.fl==='G'&&Math.abs(e.y-29.75)<0.05)){const W=e.type==='SB'?0.55:0.3,H=e.type==='SB'?0.32:0.3,z=PKZ+e.h,t=`${e.id} · ${e.note}`,y=29.75;
+  box(e.x-W/2,e.x+W/2,y-0.06,y,z-H/2,z+H/2,std({color:'#f2f2ef',roughness:0.4}),{tip:t});
+  if(e.type==='SB'){for(let i=0;i<4;i++){const xx=e.x-W/2+0.08+i*(W-0.16)/3.2;box(xx,xx+0.09,y-0.075,y-0.06,z-0.08,z+0.08,std({color:'#e2e2de',roughness:0.4}),{cast:false,tip:t+' · switch'})}}
+  else{box(e.x-W/2+0.03,e.x+W/2-0.03,y-0.09,y-0.06,z-H/2+0.03,z+H/2-0.03,std({color:'#8f9497',roughness:0.5,transparent:true,opacity:0.85}),{cast:false,tip:t+' · IP65 flap'});
+    if(e.type==='S16'||e.type==='EV')box(e.x+W/2-0.07,e.x+W/2-0.04,y-0.1,y-0.09,z+H/2-0.07,z+H/2-0.04,std({color:'#d23b2b',emissive:'#d23b2b',emissiveIntensity:0.6}),{cast:false,tip:t+' · power light'})}}
 const SOLID=['FU-05','FU-06','FU-09','FU-11','FU-12','FU-13','FU-14','FU-15','FU-16','FU-17','FU-18','FU-25','FU-31','FU-34','FU-35'];   // FU-16 also covers FU-16.2
 scene.traverse(n=>{if(n.isMesh&&typeof n.userData.tip==='string'&&SOLID.some(k=>n.userData.tip.startsWith(k)))wallMeshes.push(n)});   // TV unit, bed, wardrobe, shelf, WC, vanity, shower glass are solid too
 
