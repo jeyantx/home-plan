@@ -85,7 +85,7 @@ canvas{display:block;width:100%;height:100%}
  </div>
  <div class="row hidden" id="optRow">
   <span class="lbl">Frame</span><div class="seg" id="ratioSeg"><button data-r="fill" title="Use the whole window">Fill</button><button data-r="16:9" title="Show the 3D view at 16:9">16:9</button><button data-r="4:3" title="Show the 3D view at 4:3">4:3</button><button data-r="1:1" title="Show the 3D view at 1:1">1:1</button><button data-r="4:5" title="Show the 3D view at 4:5 (portrait)">4:5</button><button data-r="3:4" title="Show the 3D view at 3:4 (portrait)">3:4</button><button data-r="9:16" title="Show the 3D view at 9:16 (portrait)">9:16</button></div>
-  <span class="lbl">Floor</span><div class="seg" id="tileSeg"><button data-t="oak" title="Light-oak wood-look planks, 8&quot; x 48&quot;">Oak</button><button data-t="ft1" title="FT-1: white speckled vitrified tile, 2' x 2'">FT-1 white</button><button data-t="ft2" title="FT-2: beige sand-texture vitrified tile, 2' x 2'">FT-2 beige</button></div>
+  <span class="lbl">Floor</span><select id="tileSel" title="Floor finish"><option value="oak">Oak planks</option><option value="ft1">FT-1 white speckle</option><option value="ft2">FT-2 beige sand</option><option value="ft3">FT-3 khaki cement</option><option value="ft4">FT-4 grey cement</option><option value="ft5">FT-5 ivory matt</option></select>
   <span class="lbl">Lens</span><div class="seg" id="lensSeg"><button data-f="60" title="Eye-like lens">60°</button><button data-f="75" title="Wide lens">75°</button><button data-f="90" title="Extra-wide lens, like a phone 0.5x camera">90°</button></div>
  </div>
 </header>
@@ -1878,13 +1878,13 @@ document.querySelectorAll('#lensSeg button').forEach(b=>b.onclick=()=>setLens(+b
 const animBtn=document.getElementById('animBtn');animBtn.onclick=()=>carAnim.on?stopAnim():startAnim();
 document.getElementById('gateBtn').onclick=()=>setGatesOpen(gateAnim.target?0:1);
 // floor tile choice: oak planks (as the option) or one of the two 2' x 2' vitrified tiles from photos, laid with thin grey joints
-const TILEIMG={ft1:'assets/textures/tiles/ft-1-white-speckle.jpg',ft2:'assets/textures/tiles/ft-2-beige-sand.jpg'},tileCache={};
-function setTile(k){document.querySelectorAll('#tileSeg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.t===k));try{localStorage.setItem('lr3d-tile',k)}catch(e){}
+const TILEIMG={ft1:'assets/textures/tiles/ft-1-white-speckle.jpg',ft2:'assets/textures/tiles/ft-2-beige-sand.jpg',ft3:'assets/textures/tiles/ft-3-khaki-cement.jpg',ft4:'assets/textures/tiles/ft-4-grey-cement.jpg',ft5:'assets/textures/tiles/ft-5-ivory-matt.jpg'},tileCache={};
+function setTile(k){document.getElementById('tileSel').value=TILEIMG[k]?k:'oak';try{localStorage.setItem('lr3d-tile',k)}catch(e){}
   if(k==='oak'||!TILEIMG[k]){applyOption(curOpt);invalidate();return}
-  const use=t=>{Object.assign(MAT.floor,{map:t,normalMap:null,roughnessMap:null,roughness:0.35});MAT.floor.color.set('#ffffff');MAT.floor.needsUpdate=true;MAT.skirt.color.set(k==='ft1'?'#d9d7d2':'#c9bba5');renderer.shadowMap.needsUpdate=true;invalidate()};
+  const use=t=>{Object.assign(MAT.floor,{map:t,normalMap:null,roughnessMap:null,roughness:0.35});MAT.floor.color.set('#ffffff');MAT.floor.needsUpdate=true;MAT.skirt.color.set({ft1:'#d9d7d2',ft2:'#c9bba5',ft3:'#bfb39c',ft4:'#a9a39b',ft5:'#e0d4c2'}[k]);renderer.shadowMap.needsUpdate=true;invalidate()};
   if(tileCache[k])return use(tileCache[k]);
   const im=new Image();im.onload=()=>{tileCache[k]=canvasTex(1024,1024,(g,w,h)=>{g.drawImage(im,0,0,w,h);g.fillStyle='rgba(120,115,108,0.55)';g.fillRect(0,0,w,3);g.fillRect(0,0,3,h)},m(2));use(tileCache[k])};im.src=TILEIMG[k]}
-document.querySelectorAll('#tileSeg button').forEach(b=>b.onclick=()=>setTile(b.dataset.t));
+document.getElementById('tileSel').onchange=e=>setTile(e.target.value);
 {let t='oak';try{t=localStorage.getItem('lr3d-tile')||'oak'}catch(e){}setTile(t)}
 document.getElementById('doorBtn').onclick=()=>setDoorOpen(doorAnim.target?0:1);
 const nb=document.getElementById('notesBtn');nb.onclick=()=>{const h=panel.classList.toggle('hidden');nb.setAttribute('aria-pressed',!h)};
