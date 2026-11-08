@@ -409,13 +409,13 @@ FURNITURE = [
  ('FU-16','G','Kitchen counter, back (modular)',5.5,8.6,64.625,66.625,'counter',None,'Kitchen, 3\'1" x 2\' on GW-14, with base drawers and the sink'),
  ('FU-16.2','G','Low counter, wet grinder and water',8.6,12.125,64.625,66.625,'counter',None,'Kitchen, 3\'6½" x 2\' on GW-14 up to the toilet 2 wall, top at 2\' from the floor: wet grinder at the sink end, water pots under the RO purifier at the other end'),
  ('FU-17','G','Breakfast counter',5.5,13.5,58.625,59.875,'counter2',None,'Kitchen, 8\' x 1\'3" on GW-13, under the folding glass W-12; joins the east counter with no gap, extended into the old fridge place, microwave at its west end'),
- ('FU-18','G','Fridge, double door',17.75,20.25,58.625,60.875,'fridge',None,'Open area, double door with the freezer on top, 605 x 606 x 1700 mm (downloaded model, archibase.net), on GW-05 at the north end of the FU-25 cupboard, flush with its face'),
+ ('FU-18','G','Fridge, double door',17.75,20.25,58.625,61.17,'fridge',None,'Open area, double door, 67 W x 68 D x 175 H cm (2\'2½" x 2\'2¾" x 5\'9"), in a 2\'6½" wide slot on GW-05 at the north end of the FU-25 cupboard: 2" air each side and at the back; 1\' clear above its top (to 6\'9") for a stabilizer, then the loft'),
  ('FU-19','G','Overhead cabinets, back',4.75,8.25,65.375,66.625,'over',None,'Kitchen, on GW-14 above the back counter and sink, glass doors on the unit above the sink, RO purifier below them (dashed)'),
  ('FU-68','G','Top storage, back',4.75,12.125,65.375,66.625,'over',None,'Kitchen, second row of cabinets on GW-14 from 7\' up to the ceiling, right along to the end of the low counter, over the RO purifier and the wet grinder (K-16 and K-18) (dashed)'),
  ('FU-69','G','Top storage, east',3.5,4.75,58.625,66.625,'over',None,'Kitchen, second row of cabinets on GW-01 from 7\' up to the ceiling, right across above the window and chimney (dashed)'),
  ('FU-19.2','G','Overhead shelves, east',3.5,4.75,65.0,66.625,'over',None,'Kitchen, corner unit above the east counter beside the window (dashed)'),
  ('FU-19.3','G','Overhead shelves, east',3.5,4.75,58.625,61.0,'over',None,'Kitchen, above the east counter beside the window, glass door (dashed)'),
- ('FU-25','G','Store cupboard, civil work',17.75,20.25,61.0,71.375,'store2',None,'Open area and stair hall, 10\'4½" x 2\'6", joined to the fridge FU-18 (1½" air gap for the fridge side), floor to 9\'4" on GW-05: four kadappa bays S-1 to S-4 (S-3 a 4\' tall-things bay with an adjustable shelf) with UPVC wood-look shutters and a loft above 7\'6"; inverter and battery at the foot of S-4 (see the Store tab)'),
+ ('FU-25','G','Store cupboard, civil work',17.75,20.25,61.25,71.375,'store2',None,'Open area and stair hall, 10\'1½" x 2\'6", joined to the fridge FU-18 (1½" air gap for the fridge side), floor to 9\'4" on GW-05: four kadappa bays S-1 to S-4 (S-3 a 4\' tall-things bay with an adjustable shelf) with UPVC wood-look shutters and a loft above 7\'6"; inverter and battery at the foot of S-4 (see the Store tab)'),
  ('FU-26.1','G','WC platform, 4" high',6.75,10.25,70.625,73.125,'plat',None,'Toilet 2, tiled platform in the south-east corner (GW-18 and GW-06): 3\'6" front to back (east-west, the way the user faces) x 2\'6" side to side, room to squat comfortably'),
  ('FU-26','G','Indian WC (Orissa pan)',7.05,8.97,71.145,72.605,'iwc',None,'Toilet 2, centred on the 4" platform FU-26.1 against the east wall GW-18, user faces west, V-02 above; health faucet on GW-06 on the left hand'),
  ('FU-57','G','Bucket, tap and health faucet',9.25,10.15,72.15,73.05,'bucket',None,'Toilet 2, on the front of the platform on the user\'s left, bib tap on GW-06; health faucet on GW-06 beside the pan'),
@@ -496,7 +496,7 @@ SPEC['V-03']='Louvred glass ventilator with exhaust fan opening'
 # a 3" brick plinth with a kadappa top keeps the floor dry when mopping. Shutters: UPVC wood-look (oak film), soft hinges, black J handles; loft shutters separate above 7'6".
 # heights in feet from the floor; contents are a starting plan, to be resized when the owner sends their item list.
 STORE=dict(fu='FU-25',plinth=0.25,loftz=7.5,top=9.33,depth=2.5,inner=2.25,
- bays=[dict(id='S-1',name='Grains and dry stock',y1=61.0,y2=63.375),dict(id='S-2',name='Vessels and appliances',y1=63.375,y2=65.375),
+ bays=[dict(id='S-1',name='Grains and dry stock',y1=61.25,y2=63.375),dict(id='S-2',name='Vessels and appliances',y1=63.375,y2=65.375),
        dict(id='S-3',name='Tall things, adjustable shelf',y1=65.375,y2=69.375,adjustable=True),dict(id='S-4',name='Inverter, battery and supplies',y1=69.375,y2=71.375,power=True)],
  # cells: id, bays it spans, bottom and top (feet from the floor), use. The slab on top of each cell is kadappa unless it is the loft line or the S-3 adjustable shelf.
  # S-1.1 (bottom) and S-1.4 (top) are wide cells across S-1 and S-2: the upright between those bays runs only from 2'3" to 5'6".
@@ -517,7 +517,7 @@ STORE=dict(fu='FU-25',plinth=0.25,loftz=7.5,top=9.33,depth=2.5,inner=2.25,
   dict(id='S-4.6',bays=('S-4',),z1=6.25,z2=7.5,use='Emergency lamp, spare fuses, paint and plumbing spares, warranty cards'),
  ],
  upright=0.125,shelf_t=1/12,
- loft=[('L-1','Suitcases and travel bags',61.0,64.708),('L-2','Festival and seasonal items',64.708,68.042),('L-3','Spare bedding, blankets, pillows',68.042,71.375)],
+ loft=[('L-1','Suitcases and travel bags',61.25,64.708),('L-2','Festival and seasonal items',64.708,68.042),('L-3','Spare bedding, blankets, pillows',68.042,71.375)],
  power=['16 A socket and its own 25 A MCB inside S-4 for the inverter; the inverter output runs to the main board (lights and fans on inverter)','Battery cable under 3\' long, inverter above the battery, both on kadappa (no wood under them)','Louvred UPVC shutter on S-4 below 2\'6" (vents top and bottom); lithium needs little air, but the inverter fan needs a path','The inverter display faces out at about 2\' high; open the S-4 lower shutter to read it or switch modes'],
  assumed='Owner\'s sizes: inverter 36 x 35 x 20 cm, battery 53 x 18 x 27.5 cm. The S-4 bay is 1\'10½" wide and 2\'3" deep inside. Battery space: plinth to the shelf at 1\'6" gives 1\'2" high, so the 10¾" battery has 3" over it. Inverter space: 1\'6" to 2\'6" gives 11" high for the 8" inverter. Both fit with air round them.',
  adjust='S-3 adjustable shelf: black powder-coated slotted steel strips (2 on each side wall, front and back) with slots every 2", screwed to the kadappa uprights; a pair of brackets per strip carries a 1" kadappa or 18 mm marine-ply shelf, 3\'10" x 2\'2". Lift it out and hook it in at any height from 1\' to 7\'. About ₹2–3k.',
@@ -739,11 +739,11 @@ ELEC_POINTS=[
  ('AC-0', 'G', 3.5, 54.6, 7.5, 'AC', 'C10', 'Living, spare AC point high on GW-01 (east wall), for a future split AC centred above the two windows W-04 and W-05 (between their heads and the ceiling band), blowing west down the hall: 16 A socket with switch and red light, own 4 mm² line pulled now'),
  # kitchen: 4 mm² lines, 16 A sockets 10" above the counter, none within 2' of the sink or beside the gas hob
  ('SB-3', 'G', 12.05, 58.625, 4.3, 'SB', 'C1', 'Kitchen, one plate on GW-13 just inside the arch side, west of the W-12 frame and above the microwave: kitchen downlights, under-cabinet LED strip, open-area light; 16 A socket with switch for the microwave FU-67 (old K-6)'),
- ('K-1', 'G', 3.5, 60.3, 3.67, 'S16', 'C5', 'Kitchen, east counter on GW-01 between the mixer FU-64 and the W-06 frame, one plate: 16 A + 2 x 6 A sockets with switches (mixer, kettle, phone/small appliance; old K-7 joined here)'),
+ ('K-1', 'G', 3.5, 60.3, 3.67, 'S16', 'C5', 'Kitchen, east counter on GW-01 between the mixer FU-64 and the W-06 frame: 16 A + 6 A sockets, each with its switch (mixer, kettle or a small appliance)'),
  ('K-2','G',3.5,62.65,6.75,'S16','C5','Kitchen, chimney FU-81: 6 A socket hidden behind the hood top'),
  ('K-3', 'G', 3.5, 65.6, 3.67, 'S16', 'C5', 'Kitchen, east counter south corner on GW-01: 16 A + 6 A sockets with switches (kettle or a future induction plate)'),
  ('K-4', 'G', 10.2, 66.625, 3.4, 'S16', 'C5', 'Kitchen, one plate on GW-14 above the low counter and the water pots, between the RO purifier and the wet grinder: 16 A for the wet grinder FU-65 and 6 A for the RO purifier FU-66, each with its switch (old K-5 joined here)'),
- ('K-8','G',20.25,59.75,6.0,'S16','C5','Fridge FU-18: 16 A socket on GW-05 just above the fridge top, easy to reach, not behind its hot back'),
+ ('K-8', 'G', 20.25, 59.75, 6.3, 'S16', 'C5', "Fridge FU-18: 16 A socket with switch on GW-05 in the 1' space above the fridge (for the stabilizer that sits on top), easy to reach, not behind its hot back"),
  # open area, stair hall, toilet 2, store cupboard
  ('SB-4', 'G', 12.125, 70.65, 4.0, 'SB', 'C1', 'Stair hall, on GW-16 just south of the toilet 2 door D-04 frame: toilet 2 light and exhaust, geyser (20 A switch with red light), stair hall light, spiral stair light'),
  ('S-6', 'G', 11.0, 73.5, 1.0, 'S6', 'C4', 'Stair hall, on GW-19 (south end wall of toilet 2), low and out of sight from the hall: 6 A socket with switch for the vacuum and mopping machine'),
@@ -800,7 +800,7 @@ ELEC_POINTS=[
 # face: (axis, side, coordinate) when the plate sits on furniture or a panel instead of the wall face
 ELEC_MODS={
  'SB-1':'sw,sw,sw,sw|sw,sw,sw,s6','SB-2':'sw,sw,sw,sw,sw,sw|reg,reg,sw,sw,sw','S-2':'sw,s16','S-3':'sw,s6','S-4':'sw,s6','S-5':'s6,s6','S-18':'s6','NT-2':'sw,s6,data','NT-5':'sw,s6,data','S-17':'sw,sw,sw|sw,s6,sw,s6',
- 'AC-0':'ind,sw,s16','SB-3':'sw,sw,sw|sw,s16','K-1':'sw,s16,sw,s6,sw,s6','K-2':'sw,s6','K-3':'sw,s16,sw,s6','K-4':'sw,s16,sw,s6','K-8':'sw,s16',
+ 'AC-0':'ind,sw,s16','SB-3':'sw,sw,sw|sw,s16','K-1':'sw,s16,sw,s6','K-2':'sw,s6','K-3':'sw,s16,sw,s6','K-4':'sw,s16,sw,s6','K-8':'sw,s16',
  'SB-4':'sw,sw,ind,sw|sw,sw','S-6':'sw,s6','S-7':'sw,s16','SB-5':'sw,sw,sw,sw,sw','GY-2':'ind,sw,s16','S-8':'sw,s6','SB-6':'sw,sw,reg|sw,sw,sw','BS-1':'sw,sw,sw,s6',
  'AC-1':'ind,sw,s16','S-9':'sw,s6','SB-7':'sw,sw,ind,sw|sw,sw,reg','GY-1':'ind,sw,s16','S-10':'sw,s6','S-11':'sw,s6,sw,s6,data','SB-9':'sw,sw,reg|sw,sw,sw,sw',
  'BS-4':'sw,sw,sw,s6,data','AC-2':'ind,sw,s16','S-19':'sw,s16','S-14':'sw,s16','SB-10':'sw,sw,sw,sw','SB-11':'sw,sw,ind,sw','GY-3':'ind,sw,s16','S-15':'sw,s6','SB-12':'sw,sw,reg|sw,sw,sw,sw',

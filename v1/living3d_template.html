@@ -871,8 +871,10 @@ function rackModel(r,Z,B,C){const st=std({color:'#c9ccd0',roughness:0.3,metalnes
   const pot=std({color:'#bfc3c7',roughness:0.25,metalness:0.85});C(r.x1+0.45,cy,Z+s1+0.02,Z+s1+0.9,0.32,pot);C(r.x2-0.45,cy,Z+s1+0.02,Z+s1+0.55,0.36,pot);C(r.x2-0.5,cy,Z+s1+0.6,Z+s1+1.3,0.28,pot);
   for(let k=0;k<5;k++)B(r.x1+0.4+k*0.28,r.x1+0.42+k*0.28,r.y1+0.3,r.y2-0.3,Z+s2+0.03,Z+s2+0.6,std({color:'#f2efe9',roughness:0.3}))}
 // downloaded appliance models (archibase.net, see 3d/ASSETS.md): front faces +z in the file, real size in metres, sitting on y = 0
-function placeAppliance(url,cx,cy,z,rotY,matFn,tip){new GLTFLoader().load(url+'?v=__BUILD__',g=>{const o=g.scene;o.traverse(n=>{if(n.isMesh){n.castShadow=n.receiveShadow=true;const mt=matFn(n);if(mt)n.material=mt;if(tip)named(n,tip);n.userData.keepUV=true}});
-  o.rotation.y=rotY;o.position.set(mx(cx),m(z),m(cy));scene.add(o);if(typeof renderer!=='undefined'&&renderer.shadowMap)renderer.shadowMap.needsUpdate=true;if(typeof invalidate==='function')invalidate()},undefined,e=>console.warn('appliance',url,e))}
+function placeAppliance(url,cx,cy,z,rotY,matFn,tip,fit){new GLTFLoader().load(url+'?v=__BUILD__',g=>{const o=g.scene;o.traverse(n=>{if(n.isMesh){n.castShadow=n.receiveShadow=true;const mt=matFn(n);if(mt)n.material=mt;if(tip)named(n,tip);n.userData.keepUV=true}});
+  o.rotation.y=rotY;o.position.set(mx(cx),m(z),m(cy));
+  if(fit){o.position.set(0,0,0);o.updateMatrixWorld(true);const b=new THREE.Box3().setFromObject(o),sz=b.getSize(new THREE.Vector3()),c=b.getCenter(new THREE.Vector3());   // fit: scale to the real size (plan x, plan y, height), bottom at z, centred on cx, cy
+    o.position.set(-c.x,-b.min.y,-c.z);const gr=new THREE.Group();gr.add(o);gr.scale.set(m(fit[0])/sz.x,m(fit[2])/sz.y,m(fit[1])/sz.z);gr.position.set(mx(cx),m(z),m(cy));scene.add(gr)}else scene.add(o);if(typeof renderer!=='undefined'&&renderer.shadowMap)renderer.shadowMap.needsUpdate=true;if(typeof invalidate==='function')invalidate()},undefined,e=>console.warn('appliance',url,e))}
 const APM={glass:std({color:'#0b0c0d',roughness:0.05,metalness:0.3}),black:std({color:'#161718',roughness:0.45,metalness:0.3}),enamel:std({color:'#2b2c2e',roughness:0.4,metalness:0.4}),
   brass:std({color:'#b08d57',roughness:0.35,metalness:0.8}),steel:std({color:'#c9ccd0',roughness:0.25,metalness:0.9}),white:std({color:'#f3f3f1',roughness:0.32,metalness:0.08}),
   grey:std({color:'#cfd2d5',roughness:0.4,metalness:0.2}),win:std({color:'#2b3a44',roughness:0.05,metalness:0.1,transparent:true,opacity:0.55})};
@@ -978,10 +980,10 @@ function cabRun(id,what,x1,x2,y1,y2,z1,z2,face,segs,mat,plinth){
  const mw=fuG['FU-67'];placeAppliance('assets/appliances/microwave.glb',(mw.x1+mw.x2)/2,(mw.y1+mw.y2)/2,KCH,Math.PI/2,mwMat,`FU-67 · Microwave oven · ${mw.note}`);   // front to the kitchen
  box(mw.x1+0.08,mw.x2-0.45,mw.y2-0.05,mw.y2-0.03,3.1,3.85,MAT.blackGlass,{cast:false,tip:'Microwave door, black glass'});
  // fridge FU-18 on GW-05, loft cabinets above it; tall store cupboard FU-25 south of it, floor to ceiling, oak with lofts
- const fr=fuG['FU-18'];{const ft=`FU-18 · ${fr.name} · ${fr.note}`,cx=fr.x2-0.05-1.09,cy=(fr.y1+fr.y2)/2;placeAppliance('assets/appliances/fridge.glb',cx,cy,0,Math.PI/2,fridgeMat,ft);   // front to the east (the open area)
-  box(cx-0.99,cx+0.99,cy-0.99,cy+0.99,0,5.58,new THREE.MeshBasicMaterial({visible:false}),{cast:false,tip:ft})}   // invisible, so you cannot walk through it
- box(fr.x1+0.08,fr.x1+0.12,fr.y2-0.35,fr.y2-0.3,2.6,4.6,MAT.blackMetal,{tip:'Fridge handle'});
- cabRun('FU-18','Loft above the fridge',fr.x1,fr.x2-0.012,fr.y1+0.012,fr.y2,6.3,CEIL-0.012,'x-',[[fr.y1+0.012,fr.y2,'door']],MAT.oak,false);
+ const FD=68/30.48,FW=67/30.48,FH=175/30.48;   // owner's fridge: 68 D x 67 W x 175 H cm
+ const fr=fuG['FU-18'];{const ft=`FU-18 · ${fr.name} · ${fr.note}`,cx=fr.x2-0.17-FD/2,cy=(fr.y1+fr.y2)/2;placeAppliance('assets/appliances/fridge.glb',cx,cy,0,Math.PI/2,fridgeMat,ft,[FD,FW,FH]);   // front to the east (the open area), 2" from the wall
+  box(cx-FD/2,cx+FD/2,cy-FW/2,cy+FW/2,0,FH,new THREE.MeshBasicMaterial({visible:false}),{cast:false,tip:ft})}   // invisible, so you cannot walk through it
+ cabRun('FU-18','Loft above the fridge (starts 1\' above the fridge top, room for a stabilizer)',fr.x1,fr.x2-0.012,fr.y1+0.012,fr.y2,FH+1.05,CEIL-0.012,'x-',[[fr.y1+0.012,fr.y2,'door']],MAT.oak,false);
  const cu=fuG['FU-25'],LZ=7.6;
  {const S=P.store,bays=S.bays,lz=S.loftz;
   cabRun('FU-25','Store cupboard, civil work: kadappa shelves, UPVC wood-look shutters',cu.x1,cu.x2-0.012,cu.y1,cu.y2,0,lz,'x-',bays.flatMap(b=>b.power?[[b.y1,b.y2,'door']]:[[b.y1,(b.y1+b.y2)/2,'door'],[(b.y1+b.y2)/2,b.y2,'door']]),MAT.oak,S.plinth);
