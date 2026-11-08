@@ -656,7 +656,7 @@ art(13.7,15.9,3.4,6.6,41,['#c8734a','#a6522f']);art(16.3,18.5,3.4,6.6,42,['#b960
 const BX1=9.25,BX2=20.25,BY1=35.375,BY2=46.375;   // bedroom 1 main rectangle; the study corner opens off its south-east side
 // ceiling band with cove pocket and LED, as in the living room
 bandSide(BX1,BX2,BY1,BY1+BW,'y+');bandSide(BX1,BX2,BY2-BW,BY2,'y-');
-bandSide(BX1,BX1+BW,BY1+BW,BY2-BW,'x+');bandSide(BX2-BW,BX2,BY1+BW,BY2-BW,'x-');
+bandSide(BX1,BX1+BW,BY1+BW,BY2-BW,'x+');bandSide(fuG['FU-09.1'].x1,BX2,BY1+BW,BY2-BW,'x-');   // west band as deep as the wardrobe, so the wardrobe top meets the band flush
 function downlight(x,y,z,tip){cyl(x,y,z-0.01,z+0.005,0.2,MAT.led,{tip:tip||'Recessed LED downlight in the band (warm white)'}).castShadow=false;
   const s=new THREE.SpotLight('#ffd7a3',0,m(16),0.75,0.6,2);s.position.set(mx(x),m(z-0.05+ZOFF),m(y));s.target.position.set(mx(x),m(ZOFF),m(y));scene.add(s,s.target);downs.push(s)}   // no shadow map: keeps the shader under the texture-unit limit
 for(const [x,y] of [[BX1+0.5,38.4],[BX1+0.5,44.6],[13.0,BY2-0.45],[16.6,BY1+0.45]]) downlight(x,y,BZ);
@@ -1033,7 +1033,8 @@ function setFinish(k){if(!KT[k])k='KT-1';const o=KT[k];finishMat(MAT.kLow,o.low)
 
 // ================= BEDROOM 2 (G-12): same Japandi warm-oak design as bedroom 1 =================
 {const X1=10.25,X2=20.25,Y1=80.625,Y2=94.375;
- bandSide(X1,X2,Y1,Y1+BW,'y+');bandSide(X1,X2,Y2-BW,Y2,'y-');bandSide(X1,X1+BW,Y1+BW,Y2-BW,'x+');bandSide(X2-BW,X2,Y1+BW,Y2-BW,'x-');
+ {const WB=fuG['FU-34'].y2;   // north band as deep as the wardrobe FU-34, so its top meets the band flush
+  bandSide(X1,X2,Y1,WB,'y+');bandSide(X1,X2,Y2-BW,Y2,'y-');bandSide(X1,X1+BW,WB,Y2-BW,'x+');bandSide(X2-BW,X2,WB,Y2-BW,'x-');}
  for(const [x,y] of [[X1+0.5,86.6],[X1+0.5,91.8],[16.6,Y2-0.45],[12.4,Y1+0.45]]) downlight(x,y,BZ);
  ceilingFan(15.6,87.5,0.7);
  {const hS=0.33,d=0.04,t='Tile skirting, 4"';
@@ -1098,7 +1099,8 @@ X_(()=>{CURFL='F';ZOFF=FFZ;P.walls.F.forEach(buildWall);
 // ================= BEDROOM 3 (F-05), its lobby (F-06) and TOILET 3 (F-07): same Japandi warm-oak design as bedrooms 1 and 2 =================
 X_(()=>{CURFL='F';ZOFF=FFZ;
 {const X1=10.25,X2=20.25,Y1=80.25,Y2=94.375,f2=id=>fuG2[id];
- tagAs(ROOF_F,()=>{bandSide(X1,X2,Y1,Y1+BW,'y+');bandSide(X1,X2,Y2-BW,Y2,'y-');bandSide(X1,X1+BW,Y1+BW,Y2-BW,'x+');bandSide(X2-BW,X2,Y1+BW,Y2-BW,'x-');
+ tagAs(ROOF_F,()=>{const WB=f2('FU-39').y2;   // north band as deep as the wardrobe FU-39
+  bandSide(X1,X2,Y1,WB,'y+');bandSide(X1,X2,Y2-BW,Y2,'y-');bandSide(X1,X1+BW,WB,Y2-BW,'x+');bandSide(X2-BW,X2,WB,Y2-BW,'x-');
   for(const [x,y] of [[X1+0.5,84.5],[X1+0.5,90.6],[17.4,Y1+1.8],[12.6,Y2-0.45]]) downlight(x,y,BZ);
   ceilingFan(15.1,87.3,0.3);});
  {const hS=0.33,d=0.04,t='Tile skirting, 4"';
