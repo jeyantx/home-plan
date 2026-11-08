@@ -787,7 +787,7 @@ ELEC_POINTS=[
  ('S-15', 'F', 6.95, 73.5, 4.5, 'S6', 'C11', 'Toilet 3, on FW-09 beside the mirror over the basin FU-42: 6 A socket with switch and a splash cover (IP44)'),
  ('SB-12', 'F', 14.0, 80.25, 4.0, 'SB', 'C11', 'Bedroom 3, inside at the D-07 latch, between the door frame and the wardrobe FU-39, one 2-row plate: room light and fan switch (both two-way with BS-6), fan step regulator; balcony light and 3 spare switches; no AC switch here, the AC has its own switch on AC-3'),
  ('BS-6', 'F', 20.25, 90.6, 2.5, 'BS', 'C11', 'Bedroom 3, bed head (south), above the side table FU-38 (phone and laptop on the table), clear of its lamp: room light and fan on/off (two-way with SB-12 at the door), a 6 A socket with its own switch and an Ethernet (RJ45, Cat6) port wired back to router B'),
- ('S-16', 'F', 16.5, 94.375, 2.75, 'S6', 'C11', 'Bedroom 3 desk FU-40: 2 x 6 A sockets with switches and a data point, just above the desk top'),
+ ('S-16', 'F', 16.5, 94.375, 2.75, 'S6', 'C11', 'Bedroom 3 desk FU-40: 2 x 6 A sockets with switches and an Ethernet (RJ45, Cat6) port wired to router B, just above the desk top'),
  ('AC-3', 'F', 10.25, 89.85, 7.5, 'AC', 'C14', 'Bedroom 3 AC FU-48: 16 A socket with switch and red light just south of the indoor unit, own 4 mm² line from DB-1'),
  ('S-20', 'F', 10.25, 91.4, 1.25, 'S16', 'C11', 'Bedroom 3, on FW-01 (east wall), south part, between the W-10 curtain and the reach of the open balcony door D-11, at 1\'3" like S-2 and S-19: 16 A socket with switch (heater, vacuum, iron)'),
  ('IP-3', 'F', 19.3, 95.125, 3.0, 'IP', 'C14', 'Balcony 3: IP65 isolator for the AC outdoor unit FU-49'),
