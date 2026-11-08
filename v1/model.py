@@ -762,7 +762,7 @@ ELEC_POINTS=[
  ('S-11', 'G', 9.25, 31.2, 2.75, 'S6', 'C3', 'Sewing table FU-10: 2 x 6 A sockets with switches for the machine and a lamp, and a data point (LAN), 3" above the table'),
  # bedroom 2
  ('SB-9', 'G', 13.95, 80.625, 4.0, 'SB', 'C1', 'Bedroom 2, inside at the D-06 latch, between the door frame and the (shortened) wardrobe FU-34, one 2-row plate: room light and fan switch (both two-way with BS-4), fan step regulator; window-seat reading light and 3 spare switches; no AC switch here, the AC has its own switch on AC-2'),
- ('BS-4', 'G', 20.25, 90.95, 2.5, 'BS', 'C1', 'Bedroom 2, bed head (south), above the side table FU-33 (phone on the table), clear of its lamp: room light and fan on/off (two-way with SB-9 at the door), and a 6 A socket with its own switch'),
+ ('BS-4', 'G', 20.25, 90.95, 2.5, 'BS', 'C1', 'Bedroom 2, bed head (south), above the side table FU-33 (phone and laptop on the table), clear of its lamp: room light and fan on/off (two-way with SB-9 at the door), a 6 A socket with its own switch and an Ethernet (RJ45, Cat6) port wired back to router A'),
  ('AC-2','G',10.25,88.9,7.5,'AC','C9','Bedroom 2 AC FU-46: 16 A socket beside the indoor unit, own 4 mm² line'),
  ('S-19', 'G', 10.25, 92.2, 1.25, 'S16', 'C4', 'Bedroom 2, on GW-07 (east wall) just north of the window seat FU-95, at sofa-socket height like S-2: 16 A socket with switch (heater, vacuum, a lamp or charger at the seat)'),
  # utility, bore court
@@ -803,7 +803,7 @@ ELEC_MODS={
  'AC-0':'ind,sw,s16','SB-3':'sw,sw,sw|sw,s16','K-1':'sw,s16,sw,s6,sw,s6','K-2':'sw,s6','K-3':'sw,s16,sw,s6','K-4':'sw,s16,sw,s6','K-8':'sw,s16',
  'SB-4':'sw,sw,ind,sw|sw,sw','S-6':'sw,s6','S-7':'sw,s16','SB-5':'sw,sw,sw,sw,sw','GY-2':'ind,sw,s16','S-8':'sw,s6','SB-6':'sw,sw,reg|sw,sw,sw','BS-1':'sw,sw,sw,s6',
  'AC-1':'ind,sw,s16','S-9':'sw,s6','SB-7':'sw,sw,ind,sw|sw,sw,reg','GY-1':'ind,sw,s16','S-10':'sw,s6','S-11':'sw,s6,sw,s6,data','SB-9':'sw,sw,reg|sw,sw,sw,sw',
- 'BS-4':'sw,sw,sw,s6','AC-2':'ind,sw,s16','S-19':'sw,s16','S-14':'sw,s16','SB-10':'sw,sw,sw,sw','SB-11':'sw,sw,ind,sw','GY-3':'ind,sw,s16','S-15':'sw,s6','SB-12':'sw,sw,reg|sw,sw,sw,sw','BS-5':'v:sw,sw,sw,s6',
+ 'BS-4':'sw,sw,sw,s6,data','AC-2':'ind,sw,s16','S-19':'sw,s16','S-14':'sw,s16','SB-10':'sw,sw,sw,sw','SB-11':'sw,sw,ind,sw','GY-3':'ind,sw,s16','S-15':'sw,s6','SB-12':'sw,sw,reg|sw,sw,sw,sw','BS-5':'v:sw,sw,sw,s6',
  'BS-6':'sw,sw,sw,s6','S-16':'sw,s6,sw,s6,data','AC-3':'ind,sw,s16','NT-1':'bell','NT-4':'data','IP-1':'sw,s16','IP-2':'sw,s16,sw,s16|sw,s6','IP-3':'ind,sw','IP-4':'sw,s16'}
 ELEC_FACE={'S-5':('x',-1,20.13),'S-18':('x',-1,20.13),'NT-2':('x',-1,20.15),'S-17':('x',-1,20.15)}
 ELEC_CIRCUITS=[
