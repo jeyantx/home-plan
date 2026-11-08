@@ -633,9 +633,9 @@ function buildRails(){for(const R of Object.values(RAILS)){const sg=R.segs.sort(
   }
   ZOFF=z0}}
 for(const o of P.openings.filter(o=>o.wall==='GW-01'&&o.type==='window'&&o.b<LY2&&o.a>LY1)){for(const [a,b] of [[o.a-1.3,o.a+0.25],[o.b-0.25,o.b+1.3]])curtain(a,b,LX1+0.22,WT,WROD,'y',null,null,WB)}
-function ceilingFan(cx,cy,rot){const hub=8.6;cyl(cx,cy,hub+0.3,CEIL,0.045,MAT.blackMetal,{tip:'Ceiling fan, 48", wood-finish blades'});cyl(cx,cy,hub,hub+0.35,0.3,MAT.blackMetal,{tip:'Ceiling fan'});
+function ceilingFan(cx,cy,rot,sc=1,name='Ceiling fan, 48", wood-finish blades'){const hub=8.6;cyl(cx,cy,hub+0.3,CEIL,0.045,MAT.blackMetal,{tip:name});cyl(cx,cy,hub,hub+0.35,0.3,MAT.blackMetal,{tip:'Ceiling fan'});
   const fan=new THREE.Group();fan.position.set(mx(cx),m(hub+0.1+ZOFF),m(cy));scene.add(fan);
-  for(let i=0;i<3;i++){const bl=new THREE.Mesh(new THREE.BoxGeometry(m(1.9),m(0.035),m(0.4)),MAT.oak);bl.position.set(m(1.25),0,0);const g=new THREE.Group();g.rotation.y=i*Math.PI*2/3+rot;g.add(bl);bl.castShadow=true;fan.add(g);named(bl,'Ceiling fan blade')}}
+  for(let i=0;i<3;i++){const bl=new THREE.Mesh(new THREE.BoxGeometry(m(1.9*sc),m(0.035),m(0.4*sc)),MAT.oak);bl.position.set(m(1.25*sc),0,0);const g=new THREE.Group();g.rotation.y=i*Math.PI*2/3+rot;g.add(bl);bl.castShadow=true;fan.add(g);named(bl,'Ceiling fan blade')}}
 ceilingFan(8.4,52.75,0.4);ceilingFan(15.3,52.75,1.1);   // two fans along the length of the hall, 6'11" apart
 function art(x1,x2,z1,z2,seed,palette){
   const fy=LY1;   // GW-12 face, frames hang facing into the living room
@@ -658,10 +658,11 @@ function downlight(x,y,z,tip){cyl(x,y,z-0.01,z+0.005,0.2,MAT.led,{tip:tip||'Rece
 for(const [x,y] of [[BX1+0.5,38.4],[BX1+0.5,44.6],[13.0,BY2-0.45],[16.6,BY1+0.45]]) downlight(x,y,BZ);
 downlight(11.5,34.0,CEIL,'Recessed LED downlight, study corner (warm white)');
 ceilingFan(14.6,41.4,0.3);
+ceilingFan(11.4,32.9,0.8,0.75,'Study ceiling fan, small 36", wood-finish blades (switch and regulator on SB-7)');   // small fan over the study corner
 {const hS=0.33,d=0.04,t='Tile skirting, 4"';   // skirting where the wall meets the floor (not behind the wardrobe)
  box(BX1,BX1+d,30.5,BY2,0,hS,MAT.skirt,{tip:t});box(BX1+d,BX1+0.25,BY2-d,BY2,0,hS,MAT.skirt,{tip:t});box(12.5,13.75,BY2-d,BY2,0,hS,MAT.skirt,{tip:t});
  box(13.75,14.5,BY1,BY1+d,0,hS,MAT.skirt,{tip:t});box(17.0,17.25,BY1,BY1+d,0,hS,MAT.skirt,{tip:t});box(BX1+d,12.5,30.5,30.5+d,0,hS,MAT.skirt,{tip:t});
- box(13.75-d,13.75,30.5+d,32.75,0,hS,MAT.skirt,{tip:t});}
+ box(13.75-d,13.75,30.5+d,35.0,0,hS,MAT.skirt,{tip:t});}   // study west wall GW-10, full length
 // curtains on W-02: wall-mounted track at 7'4", between the window head (7') and the AC (7'7"), so the AC stays clear
 for(const [a,b] of [[35.6,36.85],[40.35,41.6]]) curtain(a,b,9.4,WT,'Curtain rod, 6" above the window, below the AC (AC bottom at 7\'10")','y',null,null,WB);
 // AC indoor unit FU-44 above W-02
