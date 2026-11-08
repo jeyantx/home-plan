@@ -724,16 +724,17 @@ ELEC_POINTS=[
  # boards
  ('DB-1','G',9.25,33.5,5.0,'DB','-','Main distribution board, 16 ways, recessed in the study wall GW-03 (10 ft cable run from the EB meter FU-87): 63 A main switch, 100 mA RCCB for the lighting side, 30 mA RCCB for all sockets, wet areas and outside, one MCB per circuit; inverter changeover for C1 to C3'),
  ('DB-2', 'F', 14.92, 73.875, 5.0, 'DB', 'C11', 'First-floor sub-board, 8 ways, on the landing north wall FW-02 just west of SB-10, clear of the spiral stair and of the terrace door D-12 swing: its own 30 mA RCCB'),
+ ('NT-5', 'F', 14.92, 73.875, 6.55, 'NT', 'C11', 'Router B (mesh, D-Link 35.3 x 25.7 x 5.6 cm): on a small oak wall shelf 7\' up on the landing north wall FW-02, above the sub-board DB-2, clear of the spiral stair; 6 A socket with switch and a LAN port fed by its own 1" conduit from router A (wired link, full speed); covers bedroom 3, the landing, the terrace and, through the stair well, the stair hall and bedroom 2'),
  # entrance, foyer, living
  ('NT-1', 'G', 3.9, 40.5, 4.5, 'NT', 'C3', 'Door bell push on the porch face of GW-02, just east of the main door D-01/D-13 (the west side has no wall left beside W-02); chime in the foyer; video door phone can use the same conduit'),
  ('SB-1', 'G', 8.875, 41.6, 4.0, 'SB', 'C1', 'Foyer, beside the main door, one 2-row plate: foyer light, porch light, parking lights, gate pillar lamps, side passage lights (two-way with SB-4), spare; 6 A socket with switch (lamp, vacuum)'),
- ('SB-2','G',13.0,46.75,4.0,'SB','C1','Living, on GW-12 east of the bedroom 1 door: 2 downlight groups, band LED strip, fan 1 and fan 2 with plain step regulators, open-area light (two-way with SB-4)'),
+ ('SB-2', 'G', 13.05, 46.75, 4.0, 'SB', 'C1', 'Living, on GW-12 east of the bedroom 1 door: 2 downlight groups, band LED strip, fan 1 and fan 2 with plain step regulators, open-area light (two-way with SB-4)'),
  ('S-2', 'G', 3.5, 49.0, 1.25, 'S16', 'C3', 'Living, beside the 3-seat sofa arm: 16 A socket with switch (heater, vacuum, or a phone charger on the sofa side table)'),
  ('S-3', 'G', 3.5, 56.2, 1.25, 'S6', 'C3', 'Living, sofa corner: 6 A socket with switch for the floor lamp'),
  ('S-4', 'G', 10.6, 58.25, 1.25, 'S6', 'C3', 'Living, beside the 2-seat sofa: 6 A socket with switch'),
  ('S-5', 'G', 20.13, 52.5, 4.3, 'S6', 'C3', 'TV wall FU-05, on the centre panel behind the TV (hidden): 2 x 6 A sockets (TV, set-top box) on the inverter, switched from the S-17 plate on the shelf; HDMI and TV cable conduit to the console'),
  ('S-18', 'G', 20.13, 52.5, 1.43, 'S6', 'C3', 'TV wall FU-05, centre, inside the floating TV console (hidden, cable cut-out at its back): 6 A socket for the sound bar or anything added later, switched from the S-17 plate'),
- ('NT-2', 'G', 20.15, 56.75, 7.4, 'NT', 'C3', 'Wi-Fi router point inside the closed top cupboard of the FU-05 right tower (hidden behind the shutter): 6 A socket with switch + fibre/data conduit from the road; central, the wood does not block the signal'),
+ ('NT-2', 'G', 20.15, 56.75, 7.4, 'NT', 'C3', 'Router A (main, D-Link 35.3 x 25.7 x 5.6 cm, 4 antennas): lying flat inside the closed top cupboard of the FU-05 right tower (hidden; inside 3\' x 1\'3" x 1\'4", room for the antennas upright): 6 A socket with switch, fibre from the road and the LAN cable to router B; covers living, foyer, bedroom 1, study, kitchen, porch and the parking cameras'),
  ('S-17', 'G', 20.15, 56.75, 3.75, 'S6', 'C3', 'FU-05 right tower, open LED shelf (3\'5" to 5\'), one 2-row plate on the back panel: top row the 3 switches for the TV sockets S-5 (2) and the console socket S-18; bottom row 2 x 6 A sockets with switches (lamp, speaker, phone on the shelf)'),
  ('AC-0', 'G', 3.5, 54.6, 7.5, 'AC', 'C10', 'Living, spare AC point high on GW-01 (east wall), for a future split AC centred above the two windows W-04 and W-05 (between their heads and the ceiling band), blowing west down the hall: 16 A socket with switch and red light, own 4 mm² line pulled now'),
  # kitchen: 4 mm² lines, 16 A sockets 10" above the counter, none within 2' of the sink or beside the gas hob
@@ -800,7 +801,7 @@ ELEC_POINTS=[
 # plate layout (3D and the electrician): modules left to right, rows split by '|'; sw switch, ind indicator, reg fan regulator, s6 6 A socket, s16 16 A socket, data RJ45/TV/fibre, bell push; 'v' = vertical plate
 # face: (axis, side, coordinate) when the plate sits on furniture or a panel instead of the wall face
 ELEC_MODS={
- 'SB-1':'sw,sw,sw,sw|sw,sw,sw,s6','SB-2':'sw,sw,sw,sw,reg,reg','S-2':'sw,s16','S-3':'sw,s6','S-4':'sw,s6','S-5':'s6,s6','S-18':'s6','NT-2':'sw,s6,data','S-17':'sw,sw,sw|sw,s6,sw,s6',
+ 'SB-1':'sw,sw,sw,sw|sw,sw,sw,s6','SB-2':'sw,sw,sw,sw,reg,reg','S-2':'sw,s16','S-3':'sw,s6','S-4':'sw,s6','S-5':'s6,s6','S-18':'s6','NT-2':'sw,s6,data','NT-5':'sw,s6,data','S-17':'sw,sw,sw|sw,s6,sw,s6',
  'AC-0':'ind,sw,s16','SB-3':'sw,sw,sw|sw,s16','K-1':'sw,s16,sw,s6,sw,s6','K-2':'sw,s6','K-3':'sw,s16,sw,s6','K-4':'sw,s16,sw,s6','K-8':'sw,s16',
  'SB-4':'sw,sw,ind,sw|sw,sw','S-6':'sw,s6','S-7':'sw,s16','SB-5':'sw,sw,sw,sw,sw','GY-2':'ind,sw,s16','S-8':'sw,s6','SB-6':'sw,reg,ind,sw','BS-1':'sw,sw,s6','BS-2':'sw,sw,s6',
  'AC-1':'ind,sw,s16','S-9':'sw,s6','SB-7':'sw,sw,ind,sw','GY-1':'ind,sw,s16','S-10':'sw,s6','SB-8':'sw,reg','S-11':'sw,s6,sw,s6,data','SB-9':'v:sw,sw,ind,sw,reg','BS-3':'v:sw,sw,s6',

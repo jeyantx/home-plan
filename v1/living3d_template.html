@@ -72,18 +72,13 @@ canvas{display:block;width:100%;height:100%}
   <div class="seg cams" data-area="5"><button data-c="27">Spiral</button><button data-c="28">Landing</button><button data-c="29">Well</button><button data-c="26">ST-1</button></div>
   <div class="seg cams" data-area="6"><button data-c="28">Landing</button><button data-c="30">Bedroom 3</button><button data-c="23">Terrace</button><button data-c="31">Top</button></div>
   <span class="spacer"></span>
-  <button class="btn" id="tourBtn" aria-pressed="false" title="Walk through the whole house on a set path: gate, parking, porch, rooms, up the spiral stair, first floor, terrace and down the outside stair. Any key or click stops it.">Home tour</button>
-  <button class="btn" id="manBtn" aria-pressed="false" title="A 6' man walks up the spiral stair ST-2, one foot on each tread, to check head room and step size by eye. Click again to stop.">6' man on stair</button>
-  <button class="btn" id="man2Btn" aria-pressed="false" title="A 6' man walks along the east side passage, past the shifted pillars, and back. Click again to stop.">Man in side passage</button>
-  <button class="btn" id="allBtn" aria-pressed="true" title="Open or close every door, window and gate together">Close all</button>
-  <button class="btn" id="curtBtn" aria-pressed="true" title="Draw every window curtain shut or open">Close curtains</button>
-  <button class="btn" id="animBtn" aria-pressed="false" title="Watch the car come in from the road, reverse into its spot, wait, and drive out">Animate car parking</button>
   <button class="btn" id="photoBtn" aria-pressed="false" title="Ray-traced photo of the current view. Uses the graphics card heavily for about a minute, then stops by itself.">Photo</button>
   <button class="btn" id="saveBtn" title="Save the current image as PNG">Save</button>
   <button class="btn" id="notesBtn" aria-pressed="false">Notes</button>
-  <button class="btn" id="optBtn" aria-pressed="false" title="Show or hide the gate, colour, finish and lens options">Options ▾</button>
+  <button class="btn" id="optBtn" aria-pressed="false" title="Show or hide the tour, people, open/close, car animation, frame and lens options">Options ▾</button>
  </div>
  <div class="row hidden" id="optRow">
+  <span class="lbl">Show</span><button class="btn" id="tourBtn" aria-pressed="false" title="Walk through the whole house on a set path: gate, parking, porch, rooms, up the spiral stair, first floor, terrace and down the outside stair. Any key or click stops it.">Home tour</button><button class="btn" id="manBtn" aria-pressed="false" title="A 6' man walks up the spiral stair ST-2, one foot on each tread, to check head room and step size by eye. Click again to stop.">6' man on stair</button><button class="btn" id="man2Btn" aria-pressed="false" title="A 6' man walks along the east side passage, past the shifted pillars, and back. Click again to stop.">Man in side passage</button><button class="btn" id="allBtn" aria-pressed="true" title="Open or close every door, window and gate together">Close all</button><button class="btn" id="curtBtn" aria-pressed="true" title="Draw every window curtain shut or open">Close curtains</button><button class="btn" id="animBtn" aria-pressed="false" title="Watch the car come in from the road, reverse into its spot, wait, and drive out">Animate car parking</button>
   <span class="lbl">Frame</span><div class="seg" id="ratioSeg"><button data-r="fill" title="Use the whole window">Fill</button><button data-r="16:9" title="Show the 3D view at 16:9">16:9</button><button data-r="4:3" title="Show the 3D view at 4:3">4:3</button><button data-r="1:1" title="Show the 3D view at 1:1">1:1</button><button data-r="4:5" title="Show the 3D view at 4:5 (portrait)">4:5</button><button data-r="3:4" title="Show the 3D view at 3:4 (portrait)">3:4</button><button data-r="9:16" title="Show the 3D view at 9:16 (portrait)">9:16</button></div>
   <span class="lbl">Lens</span><div class="seg" id="lensSeg"><button data-f="60" title="Eye-like lens">60°</button><button data-f="75" title="Wide lens">75°</button><button data-f="90" title="Extra-wide lens, like a phone 0.5x camera">90°</button><button data-f="120" title="Ultra-wide lens: a whole room in one view (edges stretch)">120°</button></div>
  </div>
@@ -1781,9 +1776,15 @@ buildRails();
   const B=(u1,u2,o1,o2,z1,z2,mt,t)=>{const a=fc+sg*o1,b=fc+sg*o2;return ax==='x'?box(Math.min(a,b),Math.max(a,b),e.y+u1,e.y+u2,z1,z2,mt,{cast:false,tip:t}):box(e.x+u1,e.x+u2,Math.min(a,b),Math.max(a,b),z1,z2,mt,{cast:false,tip:t})};
   const disc=(u,zz,r,o,mt,t)=>{const c=new THREE.Mesh(new THREE.CylinderGeometry(m(r),m(r),m(0.012),18),mt);if(ax==='x'){c.rotation.z=Math.PI/2;c.position.set(mx(fc+sg*o),m(zz),m(e.y+u))}else{c.rotation.x=Math.PI/2;c.position.set(mx(e.x+u),m(zz),m(fc+sg*o))}scene.add(c);named(c,t);return c};
   if(e.type==='DB'){const W=1.25,H=1.45;B(-W/2,W/2,0,0.1,z-H/2,z+H/2,greyM,tip);B(-W/2+0.06,W/2-0.06,0.1,0.11,z-H/2+0.06,z+H/2-0.06,std({color:'#b9bec0',roughness:0.4}),tip+' · door');continue}
+  // real Indian modular sizes: switch, indicator, data 1 module; 6 A socket and fan regulator 2; 16 A socket 3. Plates 86 mm tall per row (2 rows 145, 3 rows 205),
+  // 2M 86, 3M 108, 4M 128, 6M 187, 8M 228 mm wide (the 12-module 2-row plate is 187 x 145 mm); empty places get blank modules, as fitted on site
   let spec=MODS[e.id]||defMods[e.type]||'sw',vert=spec.startsWith('v:');if(vert)spec=spec.slice(2);
-  const rows=spec.split('|').map(r=>r.split(',')),RH=0.3,pad=0.05;
-  let W,H;if(vert){W=0.26;H=rows[0].reduce((a,k)=>a+(k==='s6'?0.2:k==='s16'?0.26:k==='reg'?0.16:0.12),0)+2*pad}else{W=Math.max(...rows.map(r=>r.reduce((a,k)=>a+MW[k],0)))+2*pad;H=rows.length*RH+2*pad-0.02}
+  const MM=v=>v/304.8,MOD={sw:1,ind:1,reg:2,s6:2,s16:3,data:1,bell:1,blank:1};
+  let rows=spec.split('|').map(r=>r.split(','));
+  if(vert){const rr=[];let cur=[],n=0;for(const k of rows.flat()){if(n+MOD[k]>2&&cur.length){rr.push(cur);cur=[];n=0}cur.push(k);n+=MOD[k]}if(cur.length)rr.push(cur);rows=rr}   // vertical plate: 2 modules wide, rows stacked
+  const nM=Math.max(...rows.map(r=>r.reduce((a,k)=>a+MOD[k],0))),SM=[2,3,4,6,8].find(v=>v>=nM)||nM;
+  const WMM={2:86,3:108,4:128,6:187,8:228}[SM]||SM*26+20,HMM=[0,86,145,205,265][rows.length]||rows.length*60+25,W=MM(WMM),H=MM(HMM),pitch=MM((WMM-26)/SM),RH=MM((HMM-26)/rows.length);
+  rows=rows.map(r=>{const n=r.reduce((a,k)=>a+MOD[k],0);return r.concat(Array(SM-n).fill('blank'))});
   const out=e.type==='IP'?0.12:0.035;
   if(e.type==='IP'){B(-W/2-0.03,W/2+0.03,0,out,z-H/2-0.03,z+H/2+0.03,greyM,tip+' · IP65 box');B(-W/2-0.05,W/2+0.05,0,out+0.08,z+H/2+0.03,z+H/2+0.06,greyM,tip+' · hood')}
   B(-W/2,W/2,out-0.035,out,z-H/2,z+H/2,plate,tip);window.__elecPlates.push(e.id);
@@ -1793,9 +1794,15 @@ buildRails();
     else if(k==='reg'){B(u-w/2+0.008,u+w/2-0.008,o1,o2,zz-h/2,zz+h/2,modM,tip);disc(u,zz,0.05,o2+0.015,knobM,tip+' · fan regulator').scale.y=3}
     else if(k==='s6'||k==='s16'){B(u-w/2+0.008,u+w/2-0.008,o1,o2,zz-h/2,zz+h/2,modM,tip+(k==='s6'?' · 6 A socket':' · 16 A socket'));const big=k==='s16',r=big?0.026:0.018,d=big?0.06:0.042;disc(u,zz+d,r*1.3,o2+0.002,holeM,tip);disc(u-d,zz-d*0.6,r,o2+0.002,holeM,tip);disc(u+d,zz-d*0.6,r,o2+0.002,holeM,tip)}
     else if(k==='data'){B(u-w/2+0.008,u+w/2-0.008,o1,o2,zz-h/2,zz+h/2,modM,tip+' · data');B(u-0.022,u+0.022,o2,o2+0.004,zz-0.03,zz+0.02,holeM,tip+' · data')}
+    else if(k==='blank'){B(u-w/2+0.008,u+w/2-0.008,o1,o2,zz-h/2,zz+h/2,modM,tip+' · blank')}
     else if(k==='bell'){B(u-w/2,u+w/2,o1,o2,zz-h/2,zz+h/2,modM,tip);disc(u,zz,0.03,o2+0.006,std({color:'#c9a96a',metalness:0.6,roughness:0.3}),tip+' · bell push')}};
-  if(vert){let zt=z+H/2-pad;for(const k of rows[0]){const h=k==='s6'?0.2:k==='s16'?0.26:k==='reg'?0.16:0.12;mod(k,0,zt-h/2,W-2*pad,h-0.02);zt-=h}}
-  else rows.forEach((r,ri)=>{const rw=r.reduce((a,k)=>a+MW[k],0);let u=-rw/2;const zz=z+H/2-pad-RH/2-ri*RH;for(const k of r){mod(k,u+MW[k]/2,zz,MW[k],RH-0.06);u+=MW[k]}})}
+  rows.forEach((r,ri)=>{let u=-SM*pitch/2;const zz=z+H/2-MM(13)-RH/2-ri*RH;for(const k of r){const w=MOD[k]*pitch;mod(k,u+w/2,zz,w,RH-MM(4));u+=w}})}
+ // the two Wi-Fi routers (D-Link, 35.3 x 25.7 x 5.6 cm, four 18 cm antennas): A lying flat in the right-tower top cupboard, B on an oak wall shelf on the landing
+ const MM=v=>v/304.8,router=(cx,cy,zb,alongY,t)=>{const L=MM(353)/2,D=MM(257)/2,Hh=MM(56),bk=std({color:'#1d1e20',roughness:0.45}),[hx,hy]=alongY?[D,L]:[L,D];
+   box(cx-hx,cx+hx,cy-hy,cy+hy,zb,zb+Hh,bk,{tip:t});for(const s1 of [-1,1])for(const s2 of [-0.55,0.55]){const ax=alongY?cx+s1*D*0.9:cx+s2*L,ay=alongY?cy+s2*L:cy+s1*D*0.9;
+     const a=new THREE.Mesh(new THREE.CylinderGeometry(m(0.025),m(0.03),m(MM(180)),10),bk);a.position.set(mx(ax),m(zb+Hh+MM(90)+ZOFF),m(ay));a.rotation[alongY?'z':'x']=s2*0.25;scene.add(a);named(a,t+' · antenna')}};
+ {router(19.62,56.75,6.92,true,'Router A (main) · D-Link, lying flat in the right-tower top cupboard behind the closed shutter (NT-2)');
+  ZOFF=FFZ;box(14.35,15.49,73.875,74.75,6.86,6.93,MAT.oak,{tip:'Oak wall shelf for router B, 7 ft up'});router(14.92,74.31,6.93,false,'Router B (mesh) · D-Link, on the landing wall shelf above DB-2 (NT-5), wired to router A');ZOFF=0}
  CURFL='G';if(missed.length)console.info('electrical points not placed:',missed.join(','))}
 // parking board PB-1 on GW-04 (parking face, Y 29'9"), behind the car: one modular plate (switch row over a socket row, like a 12-module board) in a grey IP65 cover; EV-1 on its own; heights above the parking floor
 {const pts=(P.elec||[]).filter(e=>e.fl==='G'&&Math.abs(e.y-29.75)<0.05),y=29.75,wh=std({color:'#f4f4f1',roughness:0.35}),mod=std({color:'#ebebe7',roughness:0.4}),blk=std({color:'#2b2b2b',roughness:0.6});
