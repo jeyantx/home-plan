@@ -761,9 +761,9 @@ ELEC_POINTS=[
  ('S-10', 'G', 14.125, 32.2, 4.5, 'S6', 'C4', 'Toilet 1, beside the mirror (south of it): 6 A socket with switch and a splash cover (IP44)'),
  ('S-11', 'G', 9.25, 31.2, 2.75, 'S6', 'C3', 'Sewing table FU-10: 2 x 6 A sockets with switches for the machine and a lamp, and a data point (LAN), 3" above the table'),
  # bedroom 2
- ('SB-9', 'G', 13.83, 80.625, 4.0, 'SB', 'C1', 'Bedroom 2, inside at the D-06 latch, in the 4" strip between the door frame and the wardrobe FU-34, tall vertical plate: light, fan with step regulator, AC (20 A switch with red light), window-seat reading light, 3 spare switches'),
- ('BS-3', 'G', 20.25, 85.36, 2.5, 'BS', 'C1', 'Bedroom 2, bed head (north), in the gap between the mirror unit and the bed, vertical plate (the phone rests on the drawer unit top beside it): two-way light switch, fan on/off, 6 A socket with switch'),
- ('BS-4', 'G', 20.25, 90.95, 2.5, 'BS', 'C1', 'Bedroom 2, bed head (south), above the side table FU-33 (phone on the table), clear of its lamp: two-way light switch, 6 A socket with switch'),
+ ('SB-9', 'G', 13.83, 80.625, 4.0, 'SB', 'C1', 'Bedroom 2, inside at the D-06 latch, in the 4" strip between the door frame and the wardrobe FU-34, tall vertical plate: room light and fan switch (both two-way with BS-3 and BS-4), fan step regulator, window-seat reading light, 3 spare switches; no AC switch here, the AC has its own switch on AC-2'),
+ ('BS-3', 'G', 20.25, 85.36, 2.5, 'BS', 'C1', 'Bedroom 2, bed head (north), in the gap between the mirror unit and the bed, vertical plate (the phone rests on the drawer unit top beside it): room light and fan on/off (two-way with SB-9 at the door and the other bedside), and a 6 A socket with its own switch'),
+ ('BS-4', 'G', 20.25, 90.95, 2.5, 'BS', 'C1', 'Bedroom 2, bed head (south), above the side table FU-33 (phone on the table), clear of its lamp: room light and fan on/off (two-way with SB-9 at the door and the other bedside), and a 6 A socket with its own switch'),
  ('AC-2','G',10.25,88.9,7.5,'AC','C9','Bedroom 2 AC FU-46: 16 A socket beside the indoor unit, own 4 mm² line'),
  # utility, bore court
  ('S-14', 'G', 4.475, 67.375, 3.6, 'S16', 'C4', 'Bore court, centred over the washing machine FU-29 on GW-17, under the slab FU-83, so machine and socket read as one: 16 A socket with switch and a splash cover (IP44)'),
@@ -785,9 +785,9 @@ ELEC_POINTS=[
  ('SB-11', 'F', 10.25, 76.63, 4.0, 'SB', 'C11', 'Landing, on FW-01 at the toilet 3 door latch (north of D-09), past the end of the open terrace door D-12: 3-module plate: toilet 3 light, exhaust FU-62, geyser (20 A switch with red light)'),
  ('GY-3','F',2.125,75.7,6.75,'GY','C15','Toilet 3 geyser FU-60: 16 A socket with a splash cover, beside the geyser, out of the spray'),
  ('S-15', 'F', 6.95, 73.5, 4.5, 'S6', 'C11', 'Toilet 3, on FW-09 beside the mirror over the basin FU-42: 6 A socket with switch and a splash cover (IP44)'),
- ('SB-12', 'F', 14.0, 80.25, 4.0, 'SB', 'C11', 'Bedroom 3, inside at the D-07 latch, between the door frame and the wardrobe FU-39, one 2-row plate: light, fan with step regulator, AC (20 A switch with red light), balcony light, 3 spare switches'),
- ('BS-5', 'F', 20.25, 85.05, 2.5, 'BS', 'C11', 'Bedroom 3, bed head (north), in the gap between the mirror unit and the bed, vertical plate (the phone rests on the drawer unit top beside it): two-way light switch, fan on/off, 6 A socket with switch'),
- ('BS-6', 'F', 20.25, 90.6, 2.5, 'BS', 'C11', 'Bedroom 3, bed head (south), above the side table FU-38 (phone on the table), clear of its lamp: two-way light switch, 6 A socket with switch'),
+ ('SB-12', 'F', 14.0, 80.25, 4.0, 'SB', 'C11', 'Bedroom 3, inside at the D-07 latch, between the door frame and the wardrobe FU-39, one 2-row plate: room light and fan switch (both two-way with BS-5 and BS-6), fan step regulator; balcony light and 3 spare switches; no AC switch here, the AC has its own switch on AC-3'),
+ ('BS-5', 'F', 20.25, 85.05, 2.5, 'BS', 'C11', 'Bedroom 3, bed head (north), in the gap between the mirror unit and the bed, vertical plate (the phone rests on the drawer unit top beside it): room light and fan on/off (two-way with SB-12 at the door and the other bedside), and a 6 A socket with its own switch'),
+ ('BS-6', 'F', 20.25, 90.6, 2.5, 'BS', 'C11', 'Bedroom 3, bed head (south), above the side table FU-38 (phone on the table), clear of its lamp: room light and fan on/off (two-way with SB-12 at the door and the other bedside), and a 6 A socket with its own switch'),
  ('S-16', 'F', 16.5, 94.375, 2.75, 'S6', 'C11', 'Bedroom 3 desk FU-40: 2 x 6 A sockets with switches and a data point, just above the desk top'),
  ('AC-3','F',10.25,90.6,7.5,'AC','C14','Bedroom 3 AC FU-48: 16 A socket beside the indoor unit, own 4 mm² line from DB-1'),
  ('IP-3', 'F', 19.3, 95.125, 3.0, 'IP', 'C14', 'Balcony 3: IP65 isolator for the AC outdoor unit FU-49'),
@@ -802,8 +802,8 @@ ELEC_MODS={
  'SB-1':'sw,sw,sw,sw|sw,sw,sw,s6','SB-2':'sw,sw,sw,sw,sw,sw|reg,reg,sw,sw,sw','S-2':'sw,s16','S-3':'sw,s6','S-4':'sw,s6','S-5':'s6,s6','S-18':'s6','NT-2':'sw,s6,data','NT-5':'sw,s6,data','S-17':'sw,sw,sw|sw,s6,sw,s6',
  'AC-0':'ind,sw,s16','SB-3':'sw,sw,sw|sw,s16','K-1':'sw,s16,sw,s6,sw,s6','K-2':'sw,s6','K-3':'sw,s16,sw,s6','K-4':'sw,s16,sw,s6','K-8':'sw,s16',
  'SB-4':'sw,sw,ind,sw|sw,sw','S-6':'sw,s6','S-7':'sw,s16','SB-5':'sw,sw,sw,sw,sw','GY-2':'ind,sw,s16','S-8':'sw,s6','SB-6':'sw,sw,reg|sw,sw,sw','BS-1':'sw,sw,sw,s6',
- 'AC-1':'ind,sw,s16','S-9':'sw,s6','SB-7':'sw,sw,ind,sw|sw,sw,reg','GY-1':'ind,sw,s16','S-10':'sw,s6','S-11':'sw,s6,sw,s6,data','SB-9':'v:sw,sw,ind,sw,sw,reg,sw,sw,sw','BS-3':'v:sw,sw,sw,s6',
- 'BS-4':'sw,sw,sw,s6','AC-2':'ind,sw,s16','S-14':'sw,s16','SB-10':'sw,sw,sw,sw','SB-11':'sw,sw,ind,sw','GY-3':'ind,sw,s16','S-15':'sw,s6','SB-12':'sw,sw,reg,ind,sw|sw,sw,sw,sw','BS-5':'v:sw,sw,sw,s6',
+ 'AC-1':'ind,sw,s16','S-9':'sw,s6','SB-7':'sw,sw,ind,sw|sw,sw,reg','GY-1':'ind,sw,s16','S-10':'sw,s6','S-11':'sw,s6,sw,s6,data','SB-9':'v:sw,sw,reg,sw,sw,sw,sw','BS-3':'v:sw,sw,sw,s6',
+ 'BS-4':'sw,sw,sw,s6','AC-2':'ind,sw,s16','S-14':'sw,s16','SB-10':'sw,sw,sw,sw','SB-11':'sw,sw,ind,sw','GY-3':'ind,sw,s16','S-15':'sw,s6','SB-12':'sw,sw,reg|sw,sw,sw,sw','BS-5':'v:sw,sw,sw,s6',
  'BS-6':'sw,sw,sw,s6','S-16':'sw,s6,sw,s6,data','AC-3':'ind,sw,s16','NT-1':'bell','NT-4':'data','IP-1':'sw,s16','IP-2':'sw,s16,sw,s16|sw,s6','IP-3':'ind,sw','IP-4':'sw,s16'}
 ELEC_FACE={'S-5':('x',-1,20.13),'S-18':('x',-1,20.13),'NT-2':('x',-1,20.15),'S-17':('x',-1,20.15)}
 ELEC_CIRCUITS=[
