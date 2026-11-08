@@ -730,7 +730,7 @@ ELEC_POINTS=[
  ('SB-1', 'G', 8.875, 41.6, 4.0, 'SB', 'C1', 'Foyer, beside the main door, one 2-row plate: foyer light, porch light, parking lights, gate pillar lamps, side passage lights (two-way with SB-4), spare; 6 A socket with switch (lamp, vacuum)'),
  ('SB-2', 'G', 13.05, 46.75, 4.0, 'SB', 'C1', 'Living, on GW-12 east of the bedroom 1 door: 2 downlight groups, band LED strip, fan 1 and fan 2 with plain step regulators, open-area light (two-way with SB-4)'),
  ('S-2', 'G', 3.5, 49.0, 1.25, 'S16', 'C3', 'Living, beside the 3-seat sofa arm: 16 A socket with switch (heater, vacuum, or a phone charger on the sofa side table)'),
- ('S-3', 'G', 3.5, 56.2, 1.25, 'S6', 'C3', 'Living, sofa corner: 6 A socket with switch for the floor lamp'),
+ ('S-3', 'G', 3.5, 56.2, 1.25, 'S6', 'C3', 'Living, sofa corner: 6 A socket with switch (lamp, charger)'),
  ('S-4', 'G', 10.6, 58.25, 1.25, 'S6', 'C3', 'Living, beside the 2-seat sofa: 6 A socket with switch'),
  ('S-5', 'G', 20.13, 52.5, 4.3, 'S6', 'C3', 'TV wall FU-05, on the centre panel behind the TV (hidden): 2 x 6 A sockets (TV, set-top box) on the inverter, switched from the S-17 plate on the shelf; HDMI and TV cable conduit to the console'),
  ('S-18', 'G', 20.13, 52.5, 1.43, 'S6', 'C3', 'TV wall FU-05, centre, inside the floating TV console (hidden, cable cut-out at its back): 6 A socket for the sound bar or anything added later, switched from the S-17 plate'),

@@ -443,7 +443,10 @@ for(const [q,t] of floorPatches) slab(q,MAT.floor,0,t);
  box(LX1,LX1+d,LY1,LY2,0,hS,MAT.skirt,{tip:'Tile skirting, 4"'});
  // north side only along GW-12 (foyer side is open, D-02 doorway left clear); south side stops at arch O-01
  for(const [a,b] of [[8.875,9.5],[12.5,18.9]]) box(a,b,LY1,LY1+d,0,hS,MAT.skirt,{tip:'Tile skirting, 4"'});
- for(const [a,b] of [[LX1+d,13.75],[17.75,18.9]]) box(a,b,LY2-d,LY2,0,hS,MAT.skirt,{tip:'Tile skirting, 4"'});}
+ for(const [a,b] of [[LX1+d,13.75],[17.75,18.9]]) box(a,b,LY2-d,LY2,0,hS,MAT.skirt,{tip:'Tile skirting, 4"'});
+ // foyer G-03: east wall, both sides of the main door, and the west wall (GW-09)
+ box(LX1,LX1+d,41.25,LY1,0,hS,MAT.skirt,{tip:'Tile skirting, 4"'});box(LX1+d,4.1,41.25,41.25+d,0,hS,MAT.skirt,{tip:'Tile skirting, 4"'});box(8.4,8.875,41.25,41.25+d,0,hS,MAT.skirt,{tip:'Tile skirting, 4"'});
+ box(8.875-d,8.875,41.25+d,46.375,0,hS,MAT.skirt,{tip:'Tile skirting, 4"'});}
 for(const [a,b,c,d,z] of [[-30,0,0,130,NBZ],[21,60,0,130,NBZ],[0,21,106,130,NBZ],[-30,60,-80,-22,RDZ+0.4]]) box(a,b,c,d,z-0.05,z,MAT.grass,{cast:false});   // neighbours' ground (assumed 1' above the road), and beyond the road
 // our plot, filled up: gardens, side passage and back yard at GRD (2'6" above the road); the drive in front is built further down
 prism([[0.375,30.8],[2.75,30.8],[2.75,33.3],[20.625,33.3],[20.625,104.65],[1.375,105.6],[1.375,89.375],[0.375,89.375]],NBZ-0.05,GRD-0.004,MAT.grass,null);   // starts behind the porch steps, the plinth and the side-passage step, so no faces overlap
@@ -586,8 +589,7 @@ box(s2.x2-1.3,s2.x2-0.35,s2.y2-1.35,s2.y2-0.85,1.42,2.3,cushMat('#efe6d6'),{roun
  const nm=T.jute.normalMap.clone();nm.repeat.set(m(W)/0.27,m(H)/0.27);nm.needsUpdate=true;
  const rug=box(rx1,rx2,ry1,ry2,0,0.03,std({map:t,normalMap:nm,roughness:1}),{cast:false,tip:'Rug, two-tone: sofa-seat brown centre, dark-brown border · 5\'7" x 6\'7"'});
  rug.userData.keepUV=true;}
-const lampX=4.8,lampY=48.9;cyl(lampX,lampY,0,0.05,0.42,MAT.blackMetal,{tip:'Paper floor lamp'});cyl(lampX,lampY,0.05,4.4,0.025,MAT.blackMetal,{tip:'Paper floor lamp'});
-const shadeMesh=new THREE.Mesh(new THREE.SphereGeometry(m(0.72),32,24),MAT.paper);shadeMesh.position.set(mx(lampX),m(5.0),m(lampY));scene.add(shadeMesh);named(shadeMesh,'Paper floor lamp');
+const lampX=4.8,lampY=48.9;const shadeMesh={position:new THREE.Vector3(mx(lampX),m(5.0),m(lampY))};   // the paper floor lamp is removed (owner); its light stays off
 const lampLight=new THREE.PointLight('#ffc98a',0,m(16),2);lampLight.position.copy(shadeMesh.position);lampLight.castShadow=true;lampLight.shadow.mapSize.set(512,512);lampLight.shadow.bias=-0.002;shadeMesh.castShadow=false;scene.add(lampLight);
 // bamboo plant (3d/models/bamboo-plant.js); leaf instances baked into one mesh so Photo mode sees them too
 function addPlant(px,py,hM,seed,tip){
@@ -604,7 +606,6 @@ function addPlant(px,py,hM,seed,tip){
   const mat=c.material.clone();mat.vertexColors=true;const lm=new THREE.Mesh(g,mat);lm.name=c.name;lm.userData.tip=c.userData.tip;lm.castShadow=lm.receiveShadow=true;
   plant.remove(c);plant.add(lm)});
  scene.add(plant);plant.traverse(o=>{if(o.isMesh){o.userData.keepUV=true;named(o,tip)}})}
-addPlant(12.7,56.2,1.5,1,'Bamboo plant in black pot · 5 ft');   // clear of socket S-4
 // sheer curtains, window length only (cheaper, neater, clear of the ACs): rod 6" above the 7' window head, curtain ends 6" below the 3' sill
 const WT=7.2,WB=2.5,WROD='Curtain rod, 2" above the window';
 function curtain(y1,y2,xp=LX1+0.42,top=BZ,trackTip='Curtain track',axis='y',mat=null,ctip=null,bot=0.04){   // axis 'y': wall along plan y at x=xp; 'x': wall along plan x at y=xp
@@ -721,8 +722,6 @@ box(9.92,9.94,37.4,40.1,7.9,7.98,MAT.blackMetal,{cast:false,tip:'FU-44 · AC air
  box(x-0.02,x+0.001,yc-mw/2-0.06,yc+mw/2+0.06,z1-0.06,z2+0.06,MAT.blackMetal,{tip:tm+' · thin black frame'});
  softMirror(x-0.025,yc-mw/2,yc+mw/2,z1,z2,tm)}
 
-// plant by the window: smaller bamboo
-addPlant(10.1,44.7,1.2,3,'Bamboo plant in black pot · 4 ft');   // clear of socket S-9
 const blinds={slats:[],k:1,all:[]};
 function setBlind(k){blinds.k=k;const ang=[0.12,0.75,1.4][k];for(const sl of blinds.slats)sl.rotation.x=ang;if(typeof renderer!=='undefined'){renderer.shadowMap.needsUpdate=true;invalidate()}}
 // --- study corner G-06: sewing machine table FU-10 under W-01 (like the owner's photo), wooden chair, venetian blind
@@ -1145,8 +1144,6 @@ X_(()=>{CURFL='F';ZOFF=FFZ;
   const cx=(d.x1+d.x2)/2,cy=d.y1-0.75,W=MAT.sofaWood,tc='Study chair · walnut-tone oak, linen seat';
   for(const [lx,ly] of [[cx-0.75,cy-0.6],[cx+0.63,cy-0.6],[cx-0.75,cy+0.48],[cx+0.63,cy+0.48]]) box(lx,lx+0.12,ly,ly+0.12,0,1.5,W,{tip:tc});
   box(cx-0.8,cx+0.8,cy-0.65,cy+0.65,1.5,1.72,MAT.sofa,{round:0.08,tip:tc});box(cx-0.75,cx+0.75,cy-0.6,cy-0.48,1.72,2.9,W,{tip:tc});}
- // a small bamboo plant in the lobby corner
- {const plant=createBambooPlant(THREE,{seed:7,height:1.3});plant.position.set(mx(10.85),m(FFZ),m(84.1));scene.add(plant);plant.traverse(o=>{if(o.isMesh){o.userData.keepUV=true;named(o,'Bamboo plant in a black pot')}})}
 }
 // TOILET 3 (F-07), 6'4½" x 6'4½", on the terrace corner: greige tiles to 7', WC FU-41 on the south wall, basin FU-42 on the north wall, shower FU-43 in the north-east with rose and geyser FU-60 on the east wall, door D-09 in FW-01 (west) from the landing
 {const X1=2.125,X2=9.5,Y1=73.5,Y2=79.875,c=0.04,e=0.012,TZ=7.0,tw='Wall tile · greige matte porcelain, 2\' x 1\', to 7\'',f2=id=>fuG2[id],dr=P.openings.find(o=>o.id==='D-09');
@@ -1880,7 +1877,7 @@ function applyOption(i){const o=OPTIONS[i];curOpt=i;
   <li><b>Floor, walls, ceiling:</b> same FT-5 ivory matt tile floor, light sage green walls and civil-work band with LED cove as the living room; 4 downlights in the band, one in the study corner; one ceiling fan.</li>
   <li><b>Bed FU-06:</b> low oak platform with a shadow-gap base. Headboard wall: oak-veneer panel with grooves to 3'4", a 4" oak ledge with an LED strip under it, a mild-brown linen pad. One framed canvas above.</li>
   <li><b>Wardrobe FU-09.1 + FU-09.2:</b> one straight rectangle on the west wall, floor to band, oak shutters with loft, black J-profile handles; by the bed head a column with a bedside cut-out (phone, BS-1 charging) and an accessory and make-up cut-out with one shelf, both lit by warm LED strips.</li>
-  <li><b>Window W-02:</b> light-brown sheer curtains; AC FU-44 above it. Small bamboo plant by the window.</li>
+  <li><b>Window W-02:</b> light-brown sheer curtains; AC FU-44 above it.</li>
   <li><b>Study:</b> floating oak desk FU-10 on black steel legs, walnut-tone chair with a linen seat, linen roman blind on W-01.</li>
   </ul><h2>Kitchen (G-08) and open area (G-09)</h2><ul>
   <li><b>Cabinet finish:</b> pick with the Finish buttons. KT-1 oak base and cream wall cabinets, black granite top. KT-2 cream base and oak wall cabinets, white quartz top. KT-3 walnut base and cream wall cabinets, white quartz top. All with slim black handles and a dark shadow-gap plinth.</li>
@@ -1927,7 +1924,7 @@ function applyLight(mode){const day=mode==='day';curLight=mode;
   scene.background=day?(skyTex||new THREE.Color('#cfe3f6')):new THREE.Color('#0b1322');
   coveLights.forEach(l=>{l.visible=!day&&!photo;l.intensity=9});
   towerLights.forEach(l=>{l.visible=!day;l.intensity=photo?1.2:2.2});downs.forEach(s=>{s.visible=!day;s.intensity=22});
-  MAT.led.emissiveIntensity=day?0:(photo?14:3);MAT.paper.emissiveIntensity=day?0:(photo?3:1.6);lampLight.visible=!day;lampLight.intensity=photo?6:14;
+  MAT.led.emissiveIntensity=day?0:(photo?14:3);MAT.paper.emissiveIntensity=day?0:(photo?3:1.6);lampLight.visible=false;lampLight.intensity=photo?6:14;
   renderer.toneMappingExposure=photo?(day?2.6:1.5):(day?(gi?2.3:1.0):1.15);
   for(const l of NIGHT)l.visible=photo&&!day&&!coveLights.includes(l);for(const l of poolAll())l.visible=!day&&!photo;if(!day&&!photo)syncPool(true);   // normal view: the light pool; Photo: the real lights
   document.querySelectorAll('#lightSeg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.l===mode));
