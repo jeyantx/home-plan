@@ -729,11 +729,12 @@ ELEC_POINTS=[
  ('SB-1', 'G', 8.875, 41.6, 4.0, 'SB', 'C1', 'Foyer, beside the main door, one 2-row plate: foyer light, porch light, parking lights, gate pillar lamps, side passage lights (two-way with SB-4), spare; 6 A socket with switch (lamp, vacuum)'),
  ('SB-2','G',13.0,46.75,4.0,'SB','C1','Living, on GW-12 east of the bedroom 1 door: 2 downlight groups, band LED strip, fan 1 and fan 2 with plain step regulators, open-area light (two-way with SB-4)'),
  ('S-2', 'G', 3.5, 49.0, 1.25, 'S6', 'C3', 'Living, beside the 3-seat sofa arm: 6 A socket with switch (lamp, phone charger on the sofa side table)'),
- ('S-3', 'G', 3.5, 56.2, 1.0, 'S6', 'C3', 'Living, sofa corner: 6 A socket with switch for the floor lamp'),
+ ('S-3', 'G', 3.5, 56.2, 1.25, 'S6', 'C3', 'Living, sofa corner: 6 A socket with switch for the floor lamp'),
  ('S-4', 'G', 10.6, 58.25, 1.25, 'S6', 'C3', 'Living, beside the 2-seat sofa: 6 A socket with switch'),
- ('S-5', 'G', 20.13, 52.5, 1.35, 'S6', 'C3', 'TV wall FU-05, on the centre panel behind the floating TV console (hidden): 3 x 6 A sockets with switches (TV, set-top box, sound bar) on the inverter; HDMI and TV cable conduit up to the TV'),
+ ('S-5', 'G', 20.13, 52.5, 4.3, 'S6', 'C3', 'TV wall FU-05, on the centre panel behind the TV (hidden): 2 x 6 A sockets (TV, set-top box) on the inverter, switched from the S-17 plate on the shelf; HDMI and TV cable conduit to the console'),
+ ('S-18', 'G', 20.13, 54.4, 1.95, 'S6', 'C3', 'TV wall FU-05, on the centre panel just above the floating console, at its right end: 6 A socket for the sound bar or anything added later, switched from the S-17 plate'),
  ('NT-2', 'G', 20.15, 56.75, 7.4, 'NT', 'C3', 'Wi-Fi router point inside the closed top cupboard of the FU-05 right tower (hidden behind the shutter): 6 A socket with switch + fibre/data conduit from the road; central, the wood does not block the signal'),
- ('S-17', 'G', 20.15, 56.75, 3.75, 'S6', 'C3', 'FU-05 right tower, open LED shelf (3\'5" to 5\'): 2 x 6 A sockets with switches on the back panel, for a lamp, speaker or a phone charging on the shelf'),
+ ('S-17', 'G', 20.15, 56.75, 3.75, 'S6', 'C3', 'FU-05 right tower, open LED shelf (3\'5" to 5\'), one 2-row plate on the back panel: top row the 3 switches for the TV sockets S-5 (2) and the console socket S-18; bottom row 2 x 6 A sockets with switches (lamp, speaker, phone on the shelf)'),
  ('AC-0', 'G', 18.4, 58.25, 7.5, 'AC', 'C10', 'Living, spare AC point high on GW-13 (south wall) between the arch O-01 and the TV unit, for a future split AC blowing down the hall (16 A socket and its own 4 mm² line pulled now)'),
  # kitchen: 4 mm² lines, 16 A sockets 10" above the counter, none within 2' of the sink or beside the gas hob
  ('SB-3', 'G', 12.05, 58.625, 4.3, 'SB', 'C1', 'Kitchen, one plate on GW-13 just inside the arch side, west of the W-12 frame and above the microwave: kitchen downlights, under-cabinet LED strip, open-area light; 16 A socket with switch for the microwave FU-67 (old K-6)'),
@@ -799,13 +800,13 @@ ELEC_POINTS=[
 # plate layout (3D and the electrician): modules left to right, rows split by '|'; sw switch, ind indicator, reg fan regulator, s6 6 A socket, s16 16 A socket, data RJ45/TV/fibre, bell push; 'v' = vertical plate
 # face: (axis, side, coordinate) when the plate sits on furniture or a panel instead of the wall face
 ELEC_MODS={
- 'SB-1':'sw,sw,sw,sw|sw,sw,sw,s6','SB-2':'sw,sw,sw,sw,reg,reg','S-2':'sw,s6','S-3':'sw,s6','S-4':'sw,s6','S-5':'sw,s6,sw,s6,sw,s6','NT-2':'sw,s6,data','S-17':'sw,s6,sw,s6',
+ 'SB-1':'sw,sw,sw,sw|sw,sw,sw,s6','SB-2':'sw,sw,sw,sw,reg,reg','S-2':'sw,s6','S-3':'sw,s6','S-4':'sw,s6','S-5':'s6,s6','S-18':'s6','NT-2':'sw,s6,data','S-17':'sw,sw,sw|sw,s6,sw,s6',
  'AC-0':'ind,sw,s16','SB-3':'sw,sw,sw|sw,s16','K-1':'sw,s16,sw,s6,sw,s6','K-2':'sw,s6','K-3':'sw,s16,sw,s6','K-4':'sw,s16,sw,s6','K-8':'sw,s16',
  'SB-4':'sw,sw,ind,sw|sw,sw','S-6':'sw,s6','S-7':'sw,s16','SB-5':'sw,sw,sw,sw,sw','GY-2':'ind,sw,s16','S-8':'sw,s6','SB-6':'sw,reg,ind,sw','BS-1':'sw,sw,s6','BS-2':'sw,sw,s6',
  'AC-1':'ind,sw,s16','S-9':'sw,s6','SB-7':'sw,sw,ind,sw','GY-1':'ind,sw,s16','S-10':'sw,s6','SB-8':'sw,reg','S-11':'sw,s6,sw,s6,data','SB-9':'v:sw,sw,ind,sw,reg','BS-3':'v:sw,sw,s6',
  'BS-4':'sw,sw,s6','AC-2':'ind,sw,s16','S-14':'sw,s16','SB-10':'sw,sw,sw,sw','SB-11':'sw,sw,ind,sw','GY-3':'ind,sw,s16','S-15':'sw,s6','SB-12':'sw,reg,ind,sw,sw','BS-5':'v:sw,sw,s6',
  'BS-6':'sw,sw,s6','S-16':'sw,s6,sw,s6,data','AC-3':'ind,sw,s16','NT-1':'bell','NT-4':'data','IP-1':'sw,s16','IP-2':'sw,s16,sw,s16|sw,s6','IP-3':'ind,sw','IP-4':'sw,s16'}
-ELEC_FACE={'S-5':('x',-1,20.13),'NT-2':('x',-1,20.15),'S-17':('x',-1,20.15),'BS-2':('x',-1,20.13)}
+ELEC_FACE={'S-5':('x',-1,20.13),'S-18':('x',-1,20.13),'NT-2':('x',-1,20.15),'S-17':('x',-1,20.15),'BS-2':('x',-1,20.13)}
 ELEC_CIRCUITS=[
  ('C1','Ground-floor lights and fans, outside lights','6 A MCB','1.5 mm²','on inverter'),
  ('C2','Inverter input (S-7)','16 A MCB','2.5 mm²',''),
