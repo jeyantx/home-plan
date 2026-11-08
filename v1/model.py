@@ -431,7 +431,7 @@ FURNITURE = [
  ('FU-102','G','Full-length mirror',20.15,20.25,83.79,85.17,'mirror',None,'Bedroom 2, on GW-05 in the slim mirror unit, over the drawers FU-32: 1\'4" wide, from 2\' to 7\' above the floor'),
  ('FU-103','G','Accessory racks',19.75,20.25,82.54,83.75,'cab',None,'Bedroom 2, slim (6" deep), north side of the mirror, joined to the wardrobe FU-34: closed oak base to 2\', two open racks for accessories at 3\'7" and 5\'2", loft above 7\'7" like the wardrobe'),
  ('FU-33','G','Side table',18.85,20.25,90.75,92.25,'cab',None,'Bedroom 2, floating oak side table with a drawer and a lamp at the bed end, on GW-05'),
- ('FU-34','G','Sliding wardrobe with loft',14.0,20.25,80.625,82.5417,'ward',None,'Bedroom 2, 6\'3" x 1\'11", on GW-15; sliding shutters so the side table never blocks a door (AU-16, AU-17)'),
+ ('FU-34','G','Sliding wardrobe with loft',14.4,20.25,80.625,82.5417,'ward',None,'Bedroom 2, 5\'10" x 1\'11", on GW-15, 5" shorter at the door end to leave room for the switch board SB-9; three 1\'11" sliding shutters on two tracks (one bay opens at a time), 2\'11" clear in front to the bed (AU-16, AU-17)'),
  ('FU-36','F','Queen bed',13.75,20.25,85.25,90.25,'bed','x2','Bedroom 3, head to FW-03'),
  ('FU-37','F','Drawer unit under the mirror',19.75,20.25,83.38,84.84,'cab',None,'Bedroom 3, slim, part of the mirror unit joined to the wardrobe FU-39 (as bedroom 2): 3 drawers, 2\' high x 6" deep, oak veneer to match the wardrobe, black pulls'),
  ('FU-104','F','Full-length mirror',20.15,20.25,83.42,84.80,'mirror',None,'Bedroom 3, on FW-03 in the slim mirror unit, over the drawers FU-37: 1\'4" wide, from 2\' to 7\' above the floor'),
@@ -761,10 +761,10 @@ ELEC_POINTS=[
  ('S-10', 'G', 14.125, 32.2, 4.5, 'S6', 'C4', 'Toilet 1, beside the mirror (south of it): 6 A socket with switch and a splash cover (IP44)'),
  ('S-11', 'G', 9.25, 31.2, 2.75, 'S6', 'C3', 'Sewing table FU-10: 2 x 6 A sockets with switches for the machine and a lamp, and a data point (LAN), 3" above the table'),
  # bedroom 2
- ('SB-9', 'G', 13.83, 80.625, 4.0, 'SB', 'C1', 'Bedroom 2, inside at the D-06 latch, in the 4" strip between the door frame and the wardrobe FU-34, tall vertical plate: room light and fan switch (both two-way with BS-3 and BS-4), fan step regulator, window-seat reading light, 3 spare switches; no AC switch here, the AC has its own switch on AC-2'),
- ('BS-3', 'G', 20.25, 85.36, 2.5, 'BS', 'C1', 'Bedroom 2, bed head (north), in the gap between the mirror unit and the bed, vertical plate (the phone rests on the drawer unit top beside it): room light and fan on/off (two-way with SB-9 at the door and the other bedside), and a 6 A socket with its own switch'),
- ('BS-4', 'G', 20.25, 90.95, 2.5, 'BS', 'C1', 'Bedroom 2, bed head (south), above the side table FU-33 (phone on the table), clear of its lamp: room light and fan on/off (two-way with SB-9 at the door and the other bedside), and a 6 A socket with its own switch'),
+ ('SB-9', 'G', 13.95, 80.625, 4.0, 'SB', 'C1', 'Bedroom 2, inside at the D-06 latch, between the door frame and the (shortened) wardrobe FU-34, one 2-row plate: room light and fan switch (both two-way with BS-4), fan step regulator; window-seat reading light and 3 spare switches; no AC switch here, the AC has its own switch on AC-2'),
+ ('BS-4', 'G', 20.25, 90.95, 2.5, 'BS', 'C1', 'Bedroom 2, bed head (south), above the side table FU-33 (phone on the table), clear of its lamp: room light and fan on/off (two-way with SB-9 at the door), and a 6 A socket with its own switch'),
  ('AC-2','G',10.25,88.9,7.5,'AC','C9','Bedroom 2 AC FU-46: 16 A socket beside the indoor unit, own 4 mm² line'),
+ ('S-19', 'G', 10.25, 92.2, 1.25, 'S16', 'C4', 'Bedroom 2, on GW-07 (east wall) just north of the window seat FU-95, at sofa-socket height like S-2: 16 A socket with switch (heater, vacuum, a lamp or charger at the seat)'),
  # utility, bore court
  ('S-14', 'G', 4.475, 67.375, 3.6, 'S16', 'C4', 'Bore court, centred over the washing machine FU-29 on GW-17, under the slab FU-83, so machine and socket read as one: 16 A socket with switch and a splash cover (IP44)'),
  # outside: IP65 boxes with spring flaps, under a roof or overhang, 3'6" up, cables enter from below with a drip loop
@@ -802,8 +802,8 @@ ELEC_MODS={
  'SB-1':'sw,sw,sw,sw|sw,sw,sw,s6','SB-2':'sw,sw,sw,sw,sw,sw|reg,reg,sw,sw,sw','S-2':'sw,s16','S-3':'sw,s6','S-4':'sw,s6','S-5':'s6,s6','S-18':'s6','NT-2':'sw,s6,data','NT-5':'sw,s6,data','S-17':'sw,sw,sw|sw,s6,sw,s6',
  'AC-0':'ind,sw,s16','SB-3':'sw,sw,sw|sw,s16','K-1':'sw,s16,sw,s6,sw,s6','K-2':'sw,s6','K-3':'sw,s16,sw,s6','K-4':'sw,s16,sw,s6','K-8':'sw,s16',
  'SB-4':'sw,sw,ind,sw|sw,sw','S-6':'sw,s6','S-7':'sw,s16','SB-5':'sw,sw,sw,sw,sw','GY-2':'ind,sw,s16','S-8':'sw,s6','SB-6':'sw,sw,reg|sw,sw,sw','BS-1':'sw,sw,sw,s6',
- 'AC-1':'ind,sw,s16','S-9':'sw,s6','SB-7':'sw,sw,ind,sw|sw,sw,reg','GY-1':'ind,sw,s16','S-10':'sw,s6','S-11':'sw,s6,sw,s6,data','SB-9':'v:sw,sw,reg,sw,sw,sw,sw','BS-3':'v:sw,sw,sw,s6',
- 'BS-4':'sw,sw,sw,s6','AC-2':'ind,sw,s16','S-14':'sw,s16','SB-10':'sw,sw,sw,sw','SB-11':'sw,sw,ind,sw','GY-3':'ind,sw,s16','S-15':'sw,s6','SB-12':'sw,sw,reg|sw,sw,sw,sw','BS-5':'v:sw,sw,sw,s6',
+ 'AC-1':'ind,sw,s16','S-9':'sw,s6','SB-7':'sw,sw,ind,sw|sw,sw,reg','GY-1':'ind,sw,s16','S-10':'sw,s6','S-11':'sw,s6,sw,s6,data','SB-9':'sw,sw,reg|sw,sw,sw,sw',
+ 'BS-4':'sw,sw,sw,s6','AC-2':'ind,sw,s16','S-19':'sw,s16','S-14':'sw,s16','SB-10':'sw,sw,sw,sw','SB-11':'sw,sw,ind,sw','GY-3':'ind,sw,s16','S-15':'sw,s6','SB-12':'sw,sw,reg|sw,sw,sw,sw','BS-5':'v:sw,sw,sw,s6',
  'BS-6':'sw,sw,sw,s6','S-16':'sw,s6,sw,s6,data','AC-3':'ind,sw,s16','NT-1':'bell','NT-4':'data','IP-1':'sw,s16','IP-2':'sw,s16,sw,s16|sw,s6','IP-3':'ind,sw','IP-4':'sw,s16'}
 ELEC_FACE={'S-5':('x',-1,20.13),'S-18':('x',-1,20.13),'NT-2':('x',-1,20.15),'S-17':('x',-1,20.15)}
 ELEC_CIRCUITS=[

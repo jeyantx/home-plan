@@ -1033,7 +1033,7 @@ function setFinish(k){if(!KT[k])k='KT-1';const o=KT[k];finishMat(MAT.kLow,o.low)
  for(const [x,y] of [[X1+0.5,86.6],[X1+0.5,91.8],[16.6,Y2-0.45],[12.4,Y1+0.45]]) downlight(x,y,BZ);
  ceilingFan(15.6,87.5,0.7);
  {const hS=0.33,d=0.04,t='Tile skirting, 4"';
-  box(X1,X1+d,Y1,Y2,0,hS,MAT.skirt,{tip:t});box(X1+d,10.5,Y1,Y1+d,0,hS,MAT.skirt,{tip:t});box(13.5,14.0,Y1,Y1+d,0,hS,MAT.skirt,{tip:t});
+  box(X1,X1+d,Y1,Y2,0,hS,MAT.skirt,{tip:t});box(X1+d,10.5,Y1,Y1+d,0,hS,MAT.skirt,{tip:t});box(13.5,fuG['FU-34'].x1,Y1,Y1+d,0,hS,MAT.skirt,{tip:t});
   box(X1+d,X2,Y2-d,Y2,0,hS,MAT.skirt,{tip:t});box(X2-d,X2,81.96,83.0,0,hS,MAT.skirt,{tip:t});}
  // AC FU-46 on GW-07; W-07 curtains on a wall track below it; W-08 curtains from the band
  {const ac=fuG['FU-46'];box(10.262,ac.x2,ac.y1,ac.y2,7.83,8.78,std({color:'#f4f4f2',roughness:0.35}),{round:0.08,tip:`FU-46 · AC indoor unit, 1.5 ton split · ${ac.note}`});
@@ -1068,8 +1068,8 @@ function setFinish(k){if(!KT[k])k='KT-1';const o=KT[k];finishMat(MAT.kLow,o.low)
  const pl=new THREE.Mesh(new THREE.PlaneGeometry(m(ay2-ay1-0.2),m(az2-az1-0.2)),std({map:t,roughness:0.9}));pl.rotation.y=Math.PI/2;pl.position.set(mx(X2-0.115),m((az1+az2)/2),m((ay1+ay2)/2));scene.add(pl);named(pl,'Framed art · earthy hills and sun, textured canvas');pl.userData.keepUV=true;
  // wardrobe FU-34 with loft on GW-15 (front faces +y)
  const wd=fuG['FU-34'],wy2=wd.y2,wl=7.55;
- cabRun('FU-34','Wardrobe with loft, oak veneer',wd.x1,X2-0.012,Y1+0.012,wy2,0,wl,'y+',[[14.0,16.08,'door'],[16.08,18.16,'door'],[18.16,20.238,'door']],MAT.oak,true);
- cabRun('FU-34','Wardrobe loft, oak veneer',wd.x1,X2-0.012,Y1+0.012,wy2,wl+0.012,BZ-0.005,'y+',[[14.0,16.08,'door'],[16.08,18.16,'door'],[18.16,20.238,'door']],MAT.oak,false);
+ cabRun('FU-34','Wardrobe with loft, oak veneer',wd.x1,X2-0.012,Y1+0.012,wy2,0,wl,'y+',[0,1,2].map(i=>[wd.x1+i*(X2-0.012-wd.x1)/3,wd.x1+(i+1)*(X2-0.012-wd.x1)/3,'door']),MAT.oak,true);
+ cabRun('FU-34','Wardrobe loft, oak veneer',wd.x1,X2-0.012,Y1+0.012,wy2,wl+0.012,BZ-0.005,'y+',[0,1,2].map(i=>[wd.x1+i*(X2-0.012-wd.x1)/3,wd.x1+(i+1)*(X2-0.012-wd.x1)/3,'door']),MAT.oak,false);
  // slim mirror unit (6" deep) beside the wardrobe FU-34: racks FU-103, drawers FU-32, mirror FU-102
  mirrorUnit(box,cyl,fuG['FU-103'],fuG['FU-32'],fuG['FU-102'],X2,BZ);
 }
