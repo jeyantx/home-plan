@@ -380,7 +380,7 @@ CH_F_BACK_Y=98.6
 # id, floor, name, x1, x2, y1, y2, kind, side, note
 # side = which edge is the head (bed) / back (sofa, WC): 'x1','x2','y1','y2'. Y grows toward the back.
 FURNITURE = [
- ('FU-01','G','Shoe rack',7.25,8.5,35.25,38.25,'shelf',None,'Porch, on GW-03: open wooden shoe rack in walnut tone, 3\' long x 1\'3" deep x 2\'11" high, 4 open shelves and a top (keys, a small plant), open back (as the owner\'s photo); under the W-02 sill'),
+ ('FU-01','G','Shoe rack',7.25,8.5,35.25,38.25,'shelf',None,'Porch, on GW-03: open wooden shoe rack in walnut tone, 3\' long x 1\'3" deep x 2\'2" high, 3 open shelves and a top (keys, a small plant), open back (as the owner\'s photo); under the W-02 sill'),
  ('FU-90','G','Sunken doormat well (CD-02)',4.5,8.0,38.5,40.5,'mat',None,'Porch floor in front of D-13: 3\'6" x 2\', 3/4" deep, black granite edge, coir mat flush with the floor; nothing to trip on'),
  ('FU-91','G','Porch step handrail (CD-03)',3.05,3.2,32.75,40.35,'rail',None,'Black MS pipe 1 1/2" on posts, 2\'9" above the step noses, along the east side of the 3 porch steps and on along the whole open east edge of the porch to the main-door wall, on the porch side kerb; the steps get flamed (rough) granite treads with a 2" black granite edge strip'),
  ('FU-95','G','Window seat with storage (CD-07)',10.25,18.75,92.625,94.375,'seat',None,'Bedroom 2, under the picture window W-08: brick seat 1\'6" high x 1\'9" deep, black granite top, three storage bays with shutters below; 2\'7" clear to the bed foot'),

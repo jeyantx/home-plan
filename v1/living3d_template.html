@@ -85,7 +85,6 @@ canvas{display:block;width:100%;height:100%}
  </div>
  <div class="row hidden" id="optRow">
   <span class="lbl">Frame</span><div class="seg" id="ratioSeg"><button data-r="fill" title="Use the whole window">Fill</button><button data-r="16:9" title="Show the 3D view at 16:9">16:9</button><button data-r="4:3" title="Show the 3D view at 4:3">4:3</button><button data-r="1:1" title="Show the 3D view at 1:1">1:1</button><button data-r="4:5" title="Show the 3D view at 4:5 (portrait)">4:5</button><button data-r="3:4" title="Show the 3D view at 3:4 (portrait)">3:4</button><button data-r="9:16" title="Show the 3D view at 9:16 (portrait)">9:16</button></div>
-  <span class="lbl">Outside ceiling</span><div class="seg" id="ceilSeg"><button data-c="#f2efe8" title="Off-white">White</button><button data-c="#d9d6cf" title="Light grey">Grey</button><button data-c="#efe3cc" title="Cream">Cream</button><button data-c="#cdd6c3" title="Light sage, like the inside walls">Sage</button><button data-c="#e7c3a5" title="Light clay">Clay</button></div><input type="color" id="ceilPick" value="#f2efe8" title="Pick any colour for the porch, parking and side-passage ceilings" style="width:34px;height:26px;border:1px solid #ccc;border-radius:6px;padding:0;background:none">
   <span class="lbl">Lens</span><div class="seg" id="lensSeg"><button data-f="60" title="Eye-like lens">60°</button><button data-f="75" title="Wide lens">75°</button><button data-f="90" title="Extra-wide lens, like a phone 0.5x camera">90°</button></div>
  </div>
 </header>
@@ -189,7 +188,7 @@ function shade(hex,k){const c=new THREE.Color(hex);c.offsetHSL(0,0,k);return '#'
 const std=o=>new THREE.MeshStandardMaterial(o), phys=o=>new THREE.MeshPhysicalMaterial(o);
 const paintN=new THREE.Vector2(0.06,0.06);   // smooth emulsion over plaster: only a hint of texture
 const MAT={
-  extCeil:std({color:'#f2efe8',roughness:0.92,normalMap:T.paint.normalMap,normalScale:paintN}),   // outside soffits (porch, parking, side passage): picked in Options
+  extCeil:std({color:'#efe3cc',roughness:0.92,normalMap:T.paint.normalMap,normalScale:paintN}),   // outside ceilings (porch, parking, side passage, under balconies) and outside beams: cream, chosen
   ceiling:std({color:'#efd2bb',roughness:0.92,normalMap:T.paint.normalMap,normalScale:paintN}),
   otherFloor:std({map:stoneTiles('#e7e2da',5,2,2,2),roughness:0.6}),
   wallOut:std({color:'#ece6dc',roughness:0.95}),
@@ -1188,7 +1187,7 @@ function holeSlab(x1,x2,y1,y2,z1,z2,h,mat,tip){   // thick slab with a round hol
   const q=new THREE.Path();q.absarc(mx(h.x),-m(h.y),m(h.r),0,Math.PI*2,false);sh.holes.push(q);
   const g=new THREE.ExtrudeGeometry(sh,{depth:m(z2-z1),bevelEnabled:false,curveSegments:48});g.rotateX(-Math.PI/2);
   const me=new THREE.Mesh(g,mat);me.position.y=m(z1+ZOFF);me.castShadow=true;me.receiveShadow=true;scene.add(me);if(tip)named(me,tip);return me}   // open over the bore court X 2.75-6, Y 67.125-73.875
-X_(()=>{for(const [a,b,c,d] of slabParts) box(a,b,c,d,SLB,FFZ-0.05,MAT.extCeil,{tip:'RCC roof slab, ground floor (terrace floor above) · outside soffit paint (Options ▾ → Outside ceiling)'});
+X_(()=>{for(const [a,b,c,d] of slabParts) box(a,b,c,d,SLB,FFZ-0.05,MAT.extCeil,{tip:'RCC roof slab, ground floor (terrace floor above) · outside ceiling paint, cream'});
  holeSlab(9.5,21,73.75,95.125,SLB,FFZ-0.05,WELL,MAT.extCeil,'RCC slab over the stair hall and bedroom 2 · 6\' round hole for ST-2, edge beams round it');
  const fz1=SLB-0.012,fz2=FFZ,ft='Slab edge fascia';
  // floor band (civil, design A, stepped cornice): terracotta fascia over the slab edge, a cream lip on top (3" out) and a cream drip line under it (2½" out) that throws rain off the wall below
@@ -1729,10 +1728,10 @@ for(const f of P.furniture){ if(f.fl!=='G'||['FU-01','FU-03.1','FU-03.2','FU-04'
 {const all={...fuG,...Object.fromEntries(Object.entries(fuG2))},T=f=>`${f.id} · ${f.name} · ${f.note}`,blackG=std({color:'#2a2b2e',roughness:0.35}),niT=std({color:'#e9c9b0',roughness:0.7}),drainM=std({color:'#9a9893',roughness:0.35,metalness:0.7}),coir=std({color:'#8a6a4a',roughness:1});
  const onFl=(f,fn)=>{ZOFF=f.fl==='F'?FFZ:0;fn();ZOFF=0};
  // FU-01 open shoe rack (owner's photo): walnut-tone wood, two side panels, a top and 4 open shelves, open back; shoes on the shelves
- {const f=fuG['FU-01'],H=2.9,W=std({color:'#8a5a34',roughness:0.6}),tp=T(f),x1=f.x1,x2=f.x2-0.03;
+ {const f=fuG['FU-01'],H=2.15,W=std({color:'#8a5a34',roughness:0.6}),tp=T(f),x1=f.x1,x2=f.x2-0.03;
   for(const y of [f.y1,f.y2-0.06])box(x1,x2,y,y+0.06,0,H,W,{tip:tp+' · side panel'});box(x1-0.02,x2,f.y1,f.y2,H-0.06,H,W,{tip:tp+' · top'});
   const r=rng(14),shoeC=['#2b2b2b','#f2f0ea','#8a5a3c','#c9b9a0','#6f6a63','#e8d6c4'];
-  for(const z of [0.25,0.85,1.45,2.05]){box(x1+0.04,x2,f.y1+0.06,f.y2-0.06,z-0.05,z,W,{tip:tp+' · shelf'});
+  for(const z of [0.25,0.85,1.45]){box(x1+0.04,x2,f.y1+0.06,f.y2-0.06,z-0.05,z,W,{tip:tp+' · shelf'});
    let y=f.y1+0.12;while(y<f.y2-0.75){const c=std({color:shoeC[Math.floor(r()*shoeC.length)],roughness:0.7});for(const d of [0,0.32]){box(x1+0.15,x2-0.1,y+d,y+d+0.29,z,z+0.2,c,{round:0.09,tip:'Shoe'});box(x1+0.6,x2-0.1,y+d+0.02,y+d+0.27,z+0.15,z+0.36,c,{round:0.1,tip:'Shoe'});box(x1+0.15,x2-0.1,y+d,y+d+0.29,z,z+0.04,std({color:'#f4f2ee',roughness:0.8}),{tip:'Shoe sole'})}y+=0.72}}
   cyl(x1+0.6,f.y2-0.4,H,H+0.45,0.18,std({color:'#efe9dd',roughness:0.8}),{tip:'Small plant pot'});for(let i=0;i<7;i++)cyl(x1+0.6+(r()-0.5)*0.25,f.y2-0.4+(r()-0.5)*0.25,H+0.4,H+0.75+r()*0.2,0.1,std({color:'#4f7a3a',roughness:0.8}),{tip:'Plant'})}
  // CD-02 doormat well: black granite rim, coir mat flush with the porch floor
@@ -2008,10 +2007,6 @@ function setTile(k){
   if(tileCache[k])return use(tileCache[k]);
   const im=new Image();im.onload=()=>{tileCache[k]=canvasTex(1024,1024,(g,w,h)=>{g.drawImage(im,0,0,w,h);flattenTile(g,w,h);g.fillStyle='rgba(120,115,108,0.55)';g.fillRect(0,0,w,3);g.fillRect(0,0,3,h)},m(2));use(tileCache[k])};im.src=TILEIMG[k]}
 setTile('ft5');   // chosen floor: FT-5 ivory matt vitrified tile, 2' x 2'
-// outside ceiling colour (porch, parking, side passage soffits and beams), remembered in this browser
-function setCeil(c){MAT.extCeil.color.set(c);document.getElementById('ceilPick').value=c;document.querySelectorAll('#ceilSeg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.c===c));try{localStorage.setItem('lr3d-ceil',c)}catch(e){};if(photo&&pt)pt.updateMaterials();invalidate()}
-document.querySelectorAll('#ceilSeg button').forEach(b=>b.onclick=()=>setCeil(b.dataset.c));document.getElementById('ceilPick').oninput=e=>setCeil(e.target.value);
-{let c='#f2efe8';try{c=localStorage.getItem('lr3d-ceil')||c}catch(e){}setCeil(c)}
 document.getElementById('curtBtn').onclick=()=>setCurtOpen(curtAnim.target?0:1);
 document.getElementById('allBtn').onclick=()=>{const v=doorAnim.target?0:1;setDoorOpen(v);setGatesOpen(v)};
 const nb=document.getElementById('notesBtn');nb.onclick=()=>{const h=panel.classList.toggle('hidden');nb.setAttribute('aria-pressed',!h)};
