@@ -121,14 +121,14 @@ boxW(-6.5,23.5,58.4,67.45,-0.1,0,M.floor,room);
 const wallsG=new THREE.Group();   // walls left out so every unit can be seen
 {const w6=P.openings.find(o=>o.id==='W-06'),w12=P.openings.find(o=>o.id==='W-12'),H=10.0;
  // east wall GW-01 with window W-06
- boxW(2.95,3.5,58.25,61.0,0,H,M.wall,wallsG);boxW(2.95,3.5,65.0,67.0,0,H,M.wall,wallsG);boxW(2.95,3.5,61.0,65.0,0,w6.sill,M.wall,wallsG);boxW(2.95,3.5,61.0,65.0,w6.sill+w6.h,H,M.wall,wallsG);
- boxW(3.1,3.2,61.0,65.0,w6.sill,w6.sill+w6.h,M.glass,wallsG);
+ boxW(2.95,3.5,58.25,60.75,0,H,M.wall,wallsG);boxW(2.95,3.5,65.25,67.0,0,H,M.wall,wallsG);boxW(2.95,3.5,60.75,65.25,0,w6.sill,M.wall,wallsG);boxW(2.95,3.5,60.75,65.25,w6.sill+w6.h,H,M.wall,wallsG);
+ boxW(3.1,3.2,60.75,65.25,w6.sill,w6.sill+w6.h,M.glass,wallsG);
  // back wall (GW-17 / GW-14) and the low part of GW-13 under the folding window
  boxW(3.5,13.5,66.625,67.2,0,H,M.wall,wallsG);
  boxW(3.5,13.5,58.25,58.625,0,w12.sill,M.wall,wallsG);boxW(11.5,13.5,58.25,58.625,w12.sill,H,M.wall,wallsG);boxW(3.5,5.5,58.25,58.625,w12.sill,H,M.wall,wallsG);
  // backsplash tiles between the counter and the wall units
  const sp=(a,b,c,d,z1,z2)=>boxW(a,b,c,d,z1,z2,M.tile,wallsG);
- sp(3.5,3.53,58.637,61.0,K.KCH,K.KUP1);sp(3.5,3.53,61.0,65.0,K.KCH,w6.sill);sp(3.5,3.53,65.0,66.613,K.KCH,K.KUP1);sp(3.53,8.6,66.595,66.625,K.KCH,K.KUP1);sp(8.6,12.125,66.595,66.625,K.KLOW,K.KUP1);}
+ sp(3.5,3.53,58.637,60.75,K.KCH,K.KUP1);sp(3.5,3.53,60.75,65.25,K.KCH,w6.sill);sp(3.5,3.53,65.25,66.613,K.KCH,K.KUP1);sp(3.53,8.6,66.595,66.625,K.KCH,K.KUP1);sp(8.6,12.125,66.595,66.625,K.KLOW,K.KUP1);}
 // steel 2-tier utensil drying rack, 2' wide and 2'4" high: a 1'6" compartment for vessels and cookers below, an 8" one for plates on top, drip tray
 function rackModel(r,Z,B,C){const st=std({color:'#c9ccd0',roughness:0.3,metalness:0.9}),H=2.33,s1=0.12,s2=s1+1.5,cy=(r.y1+r.y2)/2;
   for(const [px,py] of [[r.x1+0.05,r.y1+0.05],[r.x2-0.05,r.y1+0.05],[r.x1+0.05,r.y2-0.05],[r.x2-0.05,r.y2-0.05]])C(px,py,Z,Z+H,0.03,st);
@@ -253,7 +253,7 @@ function contents(rec,f,pivot,add){const {m,fr}=rec,a=f.a,b=f.b,za=f.za,D=fr.D,a
 const runOf=new Map(),runKey=m=>m.face==='x+'?'E':m.face==='y+'?'F':'B';
 for(const m of K.modules){const n0=scene.children.length;buildModule(m);for(const o of scene.children.slice(n0))runOf.set(o,runKey(m))}
 // the blind corner wall unit behind K-12 (no front)
-boxW(3.512,4.75,65.0,66.613,K.KUP1R,K.KUP2,M.cream);
+boxW(3.512,4.75,65.25,66.613,K.KUP1R,K.KUP2,M.cream);
 // ---------------- appliances on and above the counters ----------------
 {const h=fu['FU-52'];placeAppliance('assets/appliances/cooktop.glb',(h.x1+h.x2)/2,(h.y1+h.y2)/2,K.KCH,-Math.PI/2,cookMat,null,'E');label('FU-52 · Gas stove (free-standing)',W((h.x1+h.x2)/2,(h.y1+h.y2)/2,K.KCH+0.75));
  {const r=fu['FU-80'];if(r){rackModel(r,K.KCH,(a,b,c,d,e,f,mt)=>boxW(a,b,c,d,e,f,mt),(x,y,z1,z2,rr,mt)=>cylW(x,y,z1,z2,rr,mt));label('FU-80 · Utensil drying rack',W((r.x1+r.x2)/2,(r.y1+r.y2)/2,K.KCH+1.95))}}

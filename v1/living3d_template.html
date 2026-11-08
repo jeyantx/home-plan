@@ -664,7 +664,7 @@ ceilingFan(11.4,32.9,0.8,0.75,'Study ceiling fan, small 36", wood-finish blades 
  box(13.75,14.5,BY1,BY1+d,0,hS,MAT.skirt,{tip:t});box(17.0,17.25,BY1,BY1+d,0,hS,MAT.skirt,{tip:t});box(BX1+d,12.5,30.5,30.5+d,0,hS,MAT.skirt,{tip:t});
  box(13.75-d,13.75,30.5+d,35.0,0,hS,MAT.skirt,{tip:t});}   // study west wall GW-10, full length
 // curtains on W-02: wall-mounted track at 7'4", between the window head (7') and the AC (7'7"), so the AC stays clear
-for(const [a,b] of [[35.6,36.85],[40.35,41.6]]) curtain(a,b,9.4,WT,'Curtain rod, 6" above the window, below the AC (AC bottom at 7\'10")','y',null,null,WB);
+for(const [a,b] of [[35.4,36.6],[40.6,41.85]]) curtain(a,b,9.4,WT,'Curtain rod, 6" above the window, below the AC (AC bottom at 7\'10")','y',null,null,WB);
 // AC indoor unit FU-44 above W-02
 box(9.262,9.92,37.1,40.1,7.83,8.78,std({color:'#f4f4f2',roughness:0.35}),{round:0.08,tip:'FU-44 · AC indoor unit, 1.5 ton split · above W-02, bottom at 7\'10"'});
 box(9.92,9.94,37.4,40.1,7.9,7.98,MAT.blackMetal,{cast:false,tip:'FU-44 · AC air outlet'});
@@ -933,8 +933,8 @@ function cabRun(id,what,x1,x2,y1,y2,z1,z2,face,segs,mat,plinth){
  box(X1,5.56,58.625,ky2,KCH-KTOP,KCH,MAT.kTop,{tip:'Counter top, 40 mm, east run'});box(5.56,8.6,bY-0.06,ky2,KCH-KTOP,KCH,MAT.kTop,{tip:'Counter top, 40 mm, back run'});
  // wall cabinets FU-19 (GW-14), FU-19.2 and FU-19.3 (GW-01, either side of W-06)
  cabRun('FU-19','Wall cabinets, back',4.69,8.25,ky2-1.25,ky2-0.012,P.kitchen.KUP1R,UPZ2,'y-',[[4.75,6.5,'door'],[6.5,8.25,'door']],MAT.kUp,false);   // K-12 spices and K-13 dish drainer, both from 5'3"; the RO purifier takes K-14's place
- cabRun('FU-19.2','Wall cabinets, east corner',X1+0.012,4.75,65.0,ky2-0.012,P.kitchen.KUP1R,UPZ2,'x+',[],MAT.kUp,false);   // blind corner behind FU-19
- cabRun('FU-19.3','Wall cabinets, east',X1+0.012,4.75,58.637,61.0,UPZ1,UPZ2,'x+',[[58.637,61.0,'glass']],MAT.kUp,false);
+ cabRun('FU-19.2','Wall cabinets, east corner',X1+0.012,4.75,65.25,ky2-0.012,P.kitchen.KUP1R,UPZ2,'x+',[],MAT.kUp,false);   // blind corner behind FU-19
+ cabRun('FU-19.3','Wall cabinets, east',X1+0.012,4.75,58.637,60.75,UPZ1,UPZ2,'x+',[[58.637,60.75,'glass']],MAT.kUp,false);
  // top row to the ceiling (FU-68 on GW-14, FU-69 on GW-01, right across above the window and chimney), with a black shadow line under it
  const TZ1=UPZ2+0.05,TZ2=CEIL-0.012;
  cabRun('FU-68','Top storage, back',4.75,12.125,ky2-1.25,ky2-0.012,TZ1,TZ2,'y-',[[4.75,6.5,'door'],[6.5,8.25,'door'],[8.25,9.875,'door'],[9.875,11.0,'door'],[11.0,12.125,'door']],MAT.kUp,false);   // K-16 and K-18 (over the RO and wet grinder)
@@ -945,7 +945,7 @@ function cabRun(id,what,x1,x2,y1,y2,z1,z2,face,segs,mat,plinth){
  const ul=new THREE.PointLight('#ffd7a3',0,m(9),2);ul.position.set(mx(6.0),m(4.2),m(65.0));scene.add(ul);towerLights.push(ul);
  // backsplash: cream 3" x 12" ceramic tiles between counter and wall cabinets; below the W-06 sill
  const st='Backsplash · cream 3" x 12" glazed tiles';
- tile(X1,X1+0.03,58.637,61.0,KCH,UPZ1,MAT.kSplash,st);tile(X1,X1+0.03,61.0,65.0,KCH,W06.sill,MAT.kSplash,st);tile(X1,X1+0.03,61.0,65.0,W06.sill+W06.h,UPZ2,MAT.kSplash,st);tile(X1,X1+0.03,65.0,ky2-0.042,KCH,UPZ1,MAT.kSplash,st);
+ tile(X1,X1+0.03,58.637,60.75,KCH,UPZ1,MAT.kSplash,st);tile(X1,X1+0.03,60.75,65.25,KCH,W06.sill,MAT.kSplash,st);tile(X1,X1+0.03,60.75,65.25,W06.sill+W06.h,UPZ2,MAT.kSplash,st);tile(X1,X1+0.03,65.25,ky2-0.042,KCH,UPZ1,MAT.kSplash,st);
  tile(X1+0.042,8.6,ky2-0.03,ky2,KCH,UPZ1,MAT.kSplash,st);tile(8.6,12.125,ky2-0.03,ky2,LOW,UPZ1,MAT.kSplash,st);
  // hob FU-52 under W-06; chimney hood at the standard 2'6" above the counter, just above the lowered window head, ducted straight out through GW-01
  const h=fuG['FU-52'],ht=`FU-52 · ${h.name} · ${h.note}`;placeAppliance('assets/appliances/cooktop.glb',(h.x1+h.x2)/2,(h.y1+h.y2)/2,KCH,-Math.PI/2,cookMat,ht);   // front to the west, length along the east run
@@ -1048,8 +1048,8 @@ function setFinish(k){if(!KT[k])k='KT-1';const o=KT[k];finishMat(MAT.kLow,o.low)
  // AC FU-46 on GW-07; W-07 curtains on a wall track below it; W-08 curtains from the band
  {const ac=fuG['FU-46'];box(10.262,ac.x2,ac.y1,ac.y2,7.83,8.78,std({color:'#f4f4f2',roughness:0.35}),{round:0.08,tip:`FU-46 · AC indoor unit, 1.5 ton split · ${ac.note}`});
   box(ac.x2,ac.x2+0.02,ac.y1+0.15,ac.y2-0.15,7.9,7.98,MAT.blackMetal,{cast:false,tip:'FU-46 · AC air outlet'});}
- for(const [a,b] of [[83.8,85.2],[88.8,90.2]]) curtain(a,b,10.45,WT,'Curtain rod, 6" above the window, below the AC (AC bottom at 7\'10")','y',null,null,WB);
- for(const [a,b] of [[11.9,12.9],[17.1,18.1]]) curtain(a,b,Y2-0.22,WT,WROD,'x',null,null,1.52);   // picture window W-08: curtains rest on the window seat FU-95: curtains stack at its ends; west stack kept short, clear of the dressing table
+ for(const [a,b] of [[83.55,84.95],[89.05,90.45]]) curtain(a,b,10.45,WT,'Curtain rod, 6" above the window, below the AC (AC bottom at 7\'10")','y',null,null,WB);
+ for(const [a,b] of [[11.65,12.65],[17.35,18.35]]) curtain(a,b,Y2-0.22,WT,WROD,'x',null,null,1.52);   // picture window W-08: curtains rest on the window seat FU-95: curtains stack at its ends; west stack kept short, clear of the dressing table
  // queen bed FU-31, headboard wall panel across both side tables, linen pad, ledge over the bed, art above
  const f=fuG['FU-31'],tip=`FU-31 · Queen bed · oak platform, 6'6" x 5' · ${f.note}`;
  box(f.x1+0.35,f.x2-0.2,f.y1+0.3,f.y2-0.3,0,0.32,MAT.plinth,{tip});
@@ -1115,8 +1115,8 @@ X_(()=>{CURFL='F';ZOFF=FFZ;
  {const ac=f2('FU-48');box(X1+0.012,ac.x2,ac.y1,ac.y2,7.83,8.78,std({color:'#f4f4f2',roughness:0.35}),{round:0.08,tip:`FU-48 · AC indoor unit, 1.5 ton split · ${ac.note}`});
   box(ac.x2,ac.x2+0.02,ac.y1+0.15,ac.y2-0.15,7.9,7.98,MAT.blackMetal,{cast:false,tip:'FU-48 · AC air outlet'});}
  // curtains: W-10 (FW-01) from the band, kept clear of the AC; beside the balcony door D-11 (FW-04)
- for(const [a,b] of [[84.5,86.0],[89.5,91.0]]) curtain(a,b,X1+0.22,WT,WROD,'y',null,null,WB);   // W-10 centred on the bed
- for(const [a,b] of [[13.9,14.7],[18.3,19.1]]) curtain(a,b,Y2-0.22,WT,'Curtain rod over the balcony door','x');   // door: full length, but from the rod, not the ceiling
+ for(const [a,b] of [[84.25,85.75],[89.75,91.15]]) curtain(a,b,X1+0.22,WT,WROD,'y',null,null,WB);   // W-10 centred on the bed
+ for(const [a,b] of [[13.85,14.45],[18.55,19.4]]) curtain(a,b,Y2-0.22,WT,'Curtain rod over the balcony door','x');   // door: full length, but from the rod, not the ceiling
  // queen bed FU-36, head to FW-03
  const f=f2('FU-36'),tip=`FU-36 · Queen bed · oak platform, 6'6" x 5' · ${f.note}`;
  box(f.x1+0.35,f.x2-0.2,f.y1+0.3,f.y2-0.3,0,0.32,MAT.plinth,{tip});
