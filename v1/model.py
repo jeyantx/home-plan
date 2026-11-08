@@ -801,10 +801,10 @@ ELEC_POINTS=[
 ELEC_MODS={
  'SB-1':'sw,sw,sw,sw|sw,sw,sw,s6','SB-2':'sw,sw,sw,sw,reg,reg|sw,sw,sw','S-2':'sw,s16','S-3':'sw,s6','S-4':'sw,s6','S-5':'s6,s6','S-18':'s6','NT-2':'sw,s6,data','NT-5':'sw,s6,data','S-17':'sw,sw,sw|sw,s6,sw,s6',
  'AC-0':'ind,sw,s16','SB-3':'sw,sw,sw|sw,s16','K-1':'sw,s16,sw,s6,sw,s6','K-2':'sw,s6','K-3':'sw,s16,sw,s6','K-4':'sw,s16,sw,s6','K-8':'sw,s16',
- 'SB-4':'sw,sw,ind,sw|sw,sw','S-6':'sw,s6','S-7':'sw,s16','SB-5':'sw,sw,sw,sw,sw','GY-2':'ind,sw,s16','S-8':'sw,s6','SB-6':'sw,reg,sw,sw,sw','BS-1':'sw,sw,s6',
- 'AC-1':'ind,sw,s16','S-9':'sw,s6','SB-7':'sw,sw,ind,sw|sw,reg','GY-1':'ind,sw,s16','S-10':'sw,s6','S-11':'sw,s6,sw,s6,data','SB-9':'v:sw,sw,ind,sw,reg,sw,sw,sw','BS-3':'v:sw,sw,s6',
- 'BS-4':'sw,sw,s6','AC-2':'ind,sw,s16','S-14':'sw,s16','SB-10':'sw,sw,sw,sw','SB-11':'sw,sw,ind,sw','GY-3':'ind,sw,s16','S-15':'sw,s6','SB-12':'sw,reg,ind,sw,sw|sw,sw,sw','BS-5':'v:sw,sw,s6',
- 'BS-6':'sw,sw,s6','S-16':'sw,s6,sw,s6,data','AC-3':'ind,sw,s16','NT-1':'bell','NT-4':'data','IP-1':'sw,s16','IP-2':'sw,s16,sw,s16|sw,s6','IP-3':'ind,sw','IP-4':'sw,s16'}
+ 'SB-4':'sw,sw,ind,sw|sw,sw','S-6':'sw,s6','S-7':'sw,s16','SB-5':'sw,sw,sw,sw,sw','GY-2':'ind,sw,s16','S-8':'sw,s6','SB-6':'sw,reg,sw,sw,sw','BS-1':'sw,sw,sw,s6',
+ 'AC-1':'ind,sw,s16','S-9':'sw,s6','SB-7':'sw,sw,ind,sw|sw,reg','GY-1':'ind,sw,s16','S-10':'sw,s6','S-11':'sw,s6,sw,s6,data','SB-9':'v:sw,sw,ind,sw,reg,sw,sw,sw','BS-3':'v:sw,sw,sw,s6',
+ 'BS-4':'sw,sw,sw,s6','AC-2':'ind,sw,s16','S-14':'sw,s16','SB-10':'sw,sw,sw,sw','SB-11':'sw,sw,ind,sw','GY-3':'ind,sw,s16','S-15':'sw,s6','SB-12':'sw,reg,ind,sw,sw|sw,sw,sw','BS-5':'v:sw,sw,sw,s6',
+ 'BS-6':'sw,sw,sw,s6','S-16':'sw,s6,sw,s6,data','AC-3':'ind,sw,s16','NT-1':'bell','NT-4':'data','IP-1':'sw,s16','IP-2':'sw,s16,sw,s16|sw,s6','IP-3':'ind,sw','IP-4':'sw,s16'}
 ELEC_FACE={'S-5':('x',-1,20.13),'S-18':('x',-1,20.13),'NT-2':('x',-1,20.15),'S-17':('x',-1,20.15)}
 ELEC_CIRCUITS=[
  ('C1','Ground-floor lights and fans, outside lights','6 A MCB','1.5 mm²','on inverter'),
