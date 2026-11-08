@@ -789,6 +789,7 @@ ELEC_POINTS=[
  ('BS-6', 'F', 20.25, 90.6, 2.5, 'BS', 'C11', 'Bedroom 3, bed head (south), above the side table FU-38 (phone and laptop on the table), clear of its lamp: room light and fan on/off (two-way with SB-12 at the door), a 6 A socket with its own switch and an Ethernet (RJ45, Cat6) port wired back to router B'),
  ('S-16', 'F', 16.5, 94.375, 2.75, 'S6', 'C11', 'Bedroom 3 desk FU-40: 2 x 6 A sockets with switches and a data point, just above the desk top'),
  ('AC-3', 'F', 10.25, 89.85, 7.5, 'AC', 'C14', 'Bedroom 3 AC FU-48: 16 A socket with switch and red light just south of the indoor unit, own 4 mm² line from DB-1'),
+ ('S-20', 'F', 10.25, 91.4, 1.25, 'S16', 'C11', 'Bedroom 3, on FW-01 (east wall), south part, between the W-10 curtain and the reach of the open balcony door D-11, at 1\'3" like S-2 and S-19: 16 A socket with switch (heater, vacuum, iron)'),
  ('IP-3', 'F', 19.3, 95.125, 3.0, 'IP', 'C14', 'Balcony 3: IP65 isolator for the AC outdoor unit FU-49'),
  ('LO-6','F',15.0,95.125,7.0,'LO','C11','Balcony 3 light, IP65, switched at SB-12'),
  ('LO-7','F',17.0,73.125,7.0,'LO','C11','Terrace: 2 bulkhead lights IP65 on FW-02 (X 15\', 19\'), switched at SB-10'),
@@ -803,7 +804,7 @@ ELEC_MODS={
  'SB-4':'sw,sw,ind,sw|sw,sw','S-6':'sw,s6','S-7':'sw,s16','SB-5':'sw,sw,sw,sw,sw','GY-2':'ind,sw,s16','S-8':'sw,s6','SB-6':'sw,sw,reg|sw,sw,sw','BS-1':'sw,sw,sw,s6',
  'AC-1':'ind,sw,s16','S-9':'sw,s6','SB-7':'sw,sw,ind,sw|sw,sw,reg','GY-1':'ind,sw,s16','S-10':'sw,s6','S-11':'sw,s6,sw,s6,data','SB-9':'sw,sw,reg|sw,sw,sw,sw',
  'BS-4':'sw,sw,sw,s6,data','AC-2':'ind,sw,s16','S-19':'sw,s16','S-14':'sw,s16','SB-10':'sw,sw,sw,sw','SB-11':'sw,sw,ind,sw','GY-3':'ind,sw,s16','S-15':'sw,s6','SB-12':'sw,sw,reg|sw,sw,sw,sw',
- 'BS-6':'sw,sw,sw,s6,data','S-16':'sw,s6,sw,s6,data','AC-3':'ind,sw,s16','NT-1':'bell','NT-4':'data','IP-1':'sw,s16','IP-2':'sw,s16,sw,s16|sw,s6','IP-3':'ind,sw','IP-4':'sw,s16'}
+ 'BS-6':'sw,sw,sw,s6,data','S-16':'sw,s6,sw,s6,data','AC-3':'ind,sw,s16','S-20':'sw,s16','NT-1':'bell','NT-4':'data','IP-1':'sw,s16','IP-2':'sw,s16,sw,s16|sw,s6','IP-3':'ind,sw','IP-4':'sw,s16'}
 ELEC_FACE={'S-5':('x',-1,20.13),'S-18':('x',-1,20.13),'NT-2':('x',-1,20.15),'S-17':('x',-1,20.15)}
 ELEC_CIRCUITS=[
  ('C1','Ground-floor lights and fans, outside lights','6 A MCB','1.5 mm²','on inverter'),
