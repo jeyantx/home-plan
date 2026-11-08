@@ -255,7 +255,7 @@ function roundSlab(x1,x2,y1,y2,z1,z2,cx,cy,R,mat,tip){const sh=new THREE.Shape()
 function softMirror(x,y1,y2,z1,z2,tip){const geo=new THREE.PlaneGeometry(m(y2-y1),m(z2-z1));
   const rf=new Reflector(geo,{textureWidth:LITE?96:220,textureHeight:LITE?240:560,color:'#9fa5a8',clipBias:0.001});rf.rotation.y=Math.PI/2;rf.position.set(mx(x),m((z1+z2)/2+ZOFF),m((y1+y2)/2));scene.add(rf);named(rf,tip);
   const rt=rf.getRenderTarget&&rf.getRenderTarget();if(rt){rt.texture.minFilter=rt.texture.magFilter=THREE.LinearFilter}
-  const pm=new THREE.Mesh(geo,std({color:'#d8dee0',metalness:1,roughness:0.15}));pm.rotation.y=Math.PI/2;pm.position.copy(rf.position);pm.visible=false;scene.add(pm);named(pm,tip);mirrors.push([rf,pm]);return rf}
+  const pm=new THREE.Mesh(geo,std({color:'#d8dee0',metalness:1,roughness:0.15}));pm.rotation.y=Math.PI/2;pm.position.copy(rf.position);pm.material.visible=false;scene.add(pm);named(pm,tip);mirrors.push([rf,pm]);return rf}   // photo-mode copy hidden by its material, so floor switches that show whole floors never bring it back
 function cyl(x,y,z1,z2,r,mat,o={}){const g=new THREE.CylinderGeometry(m(o.rTop??r),m(r),m(z2-z1),o.seg||32);const me=new THREE.Mesh(g,mat);me.position.set(mx(x),m((z1+z2)/2+ZOFF),m(y));me.castShadow=true;me.receiveShadow=true;scene.add(me);if(o.tip)named(me,o.tip);return me}
 // world-size UVs: every surface gets UVs in metres, so a texture's repeat = 1 / its real size
 function metreUV(geo){const p=geo.attributes.position,n=geo.attributes.normal;if(!p||!n)return;const uv=new Float32Array(p.count*2);
@@ -2022,7 +2022,7 @@ const nb=document.getElementById('notesBtn');nb.onclick=()=>{const h=panel.class
 
 // ---------------- photo mode: ray tracing with three-gpu-pathtracer (local copy) ----------------
 const photoBtn=document.getElementById('photoBtn');
-function setPhotoMaterials(on){for(const [rf,pm] of mirrors){rf.visible=!on;pm.visible=on}scene.traverse(n=>{if(!n.isMesh)return;if(n.userData.curtain)n.material=on?MAT.sheerPhoto:MAT.sheerRaster;if(glassMeshes.includes(n))n.material=on?MAT.glassPhoto:MAT.glassRaster})}
+function setPhotoMaterials(on){for(const [rf,pm] of mirrors){rf.material.visible=!on;pm.material.visible=on}scene.traverse(n=>{if(!n.isMesh)return;if(n.userData.curtain)n.material=on?MAT.sheerPhoto:MAT.sheerRaster;if(glassMeshes.includes(n))n.material=on?MAT.glassPhoto:MAT.glassRaster})}
 let building=false;
 async function rebuildPhoto(){if(!photo||!pt||building)return;building=true;statusEl.textContent='Preparing ray tracer…';
   await new Promise(r=>setTimeout(r,30));   // let the status message paint before the short blocking build
