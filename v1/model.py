@@ -785,9 +785,8 @@ ELEC_POINTS=[
  ('SB-11', 'F', 10.25, 76.63, 4.0, 'SB', 'C11', 'Landing, on FW-01 at the toilet 3 door latch (north of D-09), past the end of the open terrace door D-12: 3-module plate: toilet 3 light, exhaust FU-62, geyser (20 A switch with red light)'),
  ('GY-3','F',2.125,75.7,6.75,'GY','C15','Toilet 3 geyser FU-60: 16 A socket with a splash cover, beside the geyser, out of the spray'),
  ('S-15', 'F', 6.95, 73.5, 4.5, 'S6', 'C11', 'Toilet 3, on FW-09 beside the mirror over the basin FU-42: 6 A socket with switch and a splash cover (IP44)'),
- ('SB-12', 'F', 14.0, 80.25, 4.0, 'SB', 'C11', 'Bedroom 3, inside at the D-07 latch, between the door frame and the wardrobe FU-39, one 2-row plate: room light and fan switch (both two-way with BS-5 and BS-6), fan step regulator; balcony light and 3 spare switches; no AC switch here, the AC has its own switch on AC-3'),
- ('BS-5', 'F', 20.25, 85.05, 2.5, 'BS', 'C11', 'Bedroom 3, bed head (north), in the gap between the mirror unit and the bed, vertical plate (the phone rests on the drawer unit top beside it): room light and fan on/off (two-way with SB-12 at the door and the other bedside), and a 6 A socket with its own switch'),
- ('BS-6', 'F', 20.25, 90.6, 2.5, 'BS', 'C11', 'Bedroom 3, bed head (south), above the side table FU-38 (phone on the table), clear of its lamp: room light and fan on/off (two-way with SB-12 at the door and the other bedside), and a 6 A socket with its own switch'),
+ ('SB-12', 'F', 14.0, 80.25, 4.0, 'SB', 'C11', 'Bedroom 3, inside at the D-07 latch, between the door frame and the wardrobe FU-39, one 2-row plate: room light and fan switch (both two-way with BS-6), fan step regulator; balcony light and 3 spare switches; no AC switch here, the AC has its own switch on AC-3'),
+ ('BS-6', 'F', 20.25, 90.6, 2.5, 'BS', 'C11', 'Bedroom 3, bed head (south), above the side table FU-38 (phone and laptop on the table), clear of its lamp: room light and fan on/off (two-way with SB-12 at the door), a 6 A socket with its own switch and an Ethernet (RJ45, Cat6) port wired back to router B'),
  ('S-16', 'F', 16.5, 94.375, 2.75, 'S6', 'C11', 'Bedroom 3 desk FU-40: 2 x 6 A sockets with switches and a data point, just above the desk top'),
  ('AC-3','F',10.25,90.6,7.5,'AC','C14','Bedroom 3 AC FU-48: 16 A socket beside the indoor unit, own 4 mm² line from DB-1'),
  ('IP-3', 'F', 19.3, 95.125, 3.0, 'IP', 'C14', 'Balcony 3: IP65 isolator for the AC outdoor unit FU-49'),
@@ -803,8 +802,8 @@ ELEC_MODS={
  'AC-0':'ind,sw,s16','SB-3':'sw,sw,sw|sw,s16','K-1':'sw,s16,sw,s6,sw,s6','K-2':'sw,s6','K-3':'sw,s16,sw,s6','K-4':'sw,s16,sw,s6','K-8':'sw,s16',
  'SB-4':'sw,sw,ind,sw|sw,sw','S-6':'sw,s6','S-7':'sw,s16','SB-5':'sw,sw,sw,sw,sw','GY-2':'ind,sw,s16','S-8':'sw,s6','SB-6':'sw,sw,reg|sw,sw,sw','BS-1':'sw,sw,sw,s6',
  'AC-1':'ind,sw,s16','S-9':'sw,s6','SB-7':'sw,sw,ind,sw|sw,sw,reg','GY-1':'ind,sw,s16','S-10':'sw,s6','S-11':'sw,s6,sw,s6,data','SB-9':'sw,sw,reg|sw,sw,sw,sw',
- 'BS-4':'sw,sw,sw,s6,data','AC-2':'ind,sw,s16','S-19':'sw,s16','S-14':'sw,s16','SB-10':'sw,sw,sw,sw','SB-11':'sw,sw,ind,sw','GY-3':'ind,sw,s16','S-15':'sw,s6','SB-12':'sw,sw,reg|sw,sw,sw,sw','BS-5':'v:sw,sw,sw,s6',
- 'BS-6':'sw,sw,sw,s6','S-16':'sw,s6,sw,s6,data','AC-3':'ind,sw,s16','NT-1':'bell','NT-4':'data','IP-1':'sw,s16','IP-2':'sw,s16,sw,s16|sw,s6','IP-3':'ind,sw','IP-4':'sw,s16'}
+ 'BS-4':'sw,sw,sw,s6,data','AC-2':'ind,sw,s16','S-19':'sw,s16','S-14':'sw,s16','SB-10':'sw,sw,sw,sw','SB-11':'sw,sw,ind,sw','GY-3':'ind,sw,s16','S-15':'sw,s6','SB-12':'sw,sw,reg|sw,sw,sw,sw',
+ 'BS-6':'sw,sw,sw,s6,data','S-16':'sw,s6,sw,s6,data','AC-3':'ind,sw,s16','NT-1':'bell','NT-4':'data','IP-1':'sw,s16','IP-2':'sw,s16,sw,s16|sw,s6','IP-3':'ind,sw','IP-4':'sw,s16'}
 ELEC_FACE={'S-5':('x',-1,20.13),'S-18':('x',-1,20.13),'NT-2':('x',-1,20.15),'S-17':('x',-1,20.15)}
 ELEC_CIRCUITS=[
  ('C1','Ground-floor lights and fans, outside lights','6 A MCB','1.5 mm²','on inverter'),

@@ -253,7 +253,7 @@ function roundSlab(x1,x2,y1,y2,z1,z2,cx,cy,R,mat,tip){const sh=new THREE.Shape()
   const me=new THREE.Mesh(g,mat);me.rotation.x=-Math.PI/2;me.position.y=m(z1+ZOFF+0.012);me.castShadow=true;me.receiveShadow=true;scene.add(me);if(tip)named(me,tip);return me}
 // soft mirror: a real but low-resolution, slightly grey reflection (looks like a mirror, not a window into a second room); plan x of the glass face, facing the room on the -x side
 function softMirror(x,y1,y2,z1,z2,tip){const geo=new THREE.PlaneGeometry(m(y2-y1),m(z2-z1));
-  const rf=new Reflector(geo,{textureWidth:LITE?96:220,textureHeight:LITE?240:560,color:'#9fa5a8',clipBias:0.003});rf.rotation.y=Math.PI/2;rf.position.set(mx(x),m((z1+z2)/2+ZOFF),m((y1+y2)/2));scene.add(rf);named(rf,tip);
+  const rf=new Reflector(geo,{textureWidth:LITE?96:220,textureHeight:LITE?240:560,color:'#9fa5a8',clipBias:0.001});rf.rotation.y=Math.PI/2;rf.position.set(mx(x),m((z1+z2)/2+ZOFF),m((y1+y2)/2));scene.add(rf);named(rf,tip);
   const rt=rf.getRenderTarget&&rf.getRenderTarget();if(rt){rt.texture.minFilter=rt.texture.magFilter=THREE.LinearFilter}
   const pm=new THREE.Mesh(geo,std({color:'#d8dee0',metalness:1,roughness:0.15}));pm.rotation.y=Math.PI/2;pm.position.copy(rf.position);pm.visible=false;scene.add(pm);named(pm,tip);mirrors.push([rf,pm]);return rf}
 function cyl(x,y,z1,z2,r,mat,o={}){const g=new THREE.CylinderGeometry(m(o.rTop??r),m(r),m(z2-z1),o.seg||32);const me=new THREE.Mesh(g,mat);me.position.set(mx(x),m((z1+z2)/2+ZOFF),m(y));me.castShadow=true;me.receiveShadow=true;scene.add(me);if(o.tip)named(me,o.tip);return me}
@@ -509,7 +509,7 @@ function mirrorUnit(box,cyl,rk,dr,mr,X2,BZ){const x1=rk.x1,yA=rk.y1,yB=rk.y2,yC=
   const d=1.8/3;for(let i=0;i<3;i++){const z1=0.2+i*d;box(x1-0.012,x1,yB+0.06,yC-T-0.03,z1+0.02,z1+d-0.02,MAT.oak,{cast:false,tip:'Drawer front'});
    box(x1-0.05,x1-0.004,(yB+yC)/2-0.2,(yB+yC)/2+0.2,z1+d-0.14,z1+d-0.1,MAT.blackMetal,{cast:false,tip:'Drawer pull, black'})}
   cyl(x1+0.22,yB+0.35,2.0,2.3,0.09,std({color:'#e9e4da',roughness:0.4}),{tip:'Powder box'});box(x1+0.1,x1+0.17,yB+0.7,yC-0.2,2.0,2.03,MAT.blackMetal,{cast:false,tip:'Comb'});
-  box(X2-0.04,X2-0.012,mr.y1,mr.y2,2.0,7.55,MAT.oakDark,{cast:false,tip:'Mirror backing'});softMirror(X2-0.045,mr.y1+0.02,mr.y2-0.02,2.02,7.0,mr.id+' · Full-length mirror, 1\'4" x 5\' (2\' to 7\' up)')}
+  box(X2-0.06,X2-0.012,mr.y1,mr.y2,2.0,7.55,MAT.oakDark,{cast:false,tip:'Mirror backing'});softMirror(X2-0.075,mr.y1+0.02,mr.y2-0.02,2.02,7.0,mr.id+' · Full-length mirror, 1\'4" x 5\' (2\' to 7\' up)')}
 // ---------------- TV, showcase and book wall unit FU-05 (pieces butt together; no overlapping faces) ----------------
 const tv={x1:18.917,x2:20.25,y1:LY1,y2:LY2}, towerW=3.0, sideT=0.25, backT=0.1, baseH=1.6;   // wall to wall, 12'
 const towerLights=[];
