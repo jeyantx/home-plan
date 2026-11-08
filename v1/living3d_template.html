@@ -983,10 +983,18 @@ function cabRun(id,what,x1,x2,y1,y2,z1,z2,face,segs,mat,plinth){
  const FD=68/30.48,FW=67/30.48,FH=175/30.48;   // owner's fridge: 68 D x 67 W x 175 H cm
  const fr=fuG['FU-18'];{const ft=`FU-18 · ${fr.name} · ${fr.note}`,cx=fr.x2-0.17-FD/2,cy=(fr.y1+fr.y2)/2;placeAppliance('assets/appliances/fridge.glb',cx,cy,0,Math.PI/2,fridgeMat,ft,[FD,FW,FH]);   // front to the east (the open area), 2" from the wall
   box(cx-FD/2,cx+FD/2,cy-FW/2,cy+FW/2,0,FH,new THREE.MeshBasicMaterial({visible:false}),{cast:false,tip:ft})}   // invisible, so you cannot walk through it
- cabRun('FU-18','Loft above the fridge (starts 1\' above the fridge top, room for a stabilizer)',fr.x1,fr.x2-0.012,fr.y1+0.012,fr.y2,FH+1.05,CEIL-0.012,'x-',[[fr.y1+0.012,fr.y2,'door']],MAT.oak,false);
+ // the fridge bay is the north end of the store unit: full-height end panel on the north, same front line, loft on top
+ box(fr.x1,fr.x2-0.012,fr.y1,fr.y1+0.06,0,CEIL-0.012,MAT.oak,{tip:'FU-25 / FU-18 · end panel of the store unit, north side of the fridge bay'});
+ box(fr.x1,fr.x2-0.012,fr.y2,fuG['FU-25'].y1,0,CEIL-0.012,MAT.oak,{tip:'FU-25 / FU-18 · side panel between the fridge bay and the store bays'});
+ cabRun('FU-18','Loft above the fridge (starts 1\' above the fridge top, room for a stabilizer)',fr.x1,fr.x2-0.012,fr.y1+0.06,fr.y2,FH+1.05,CEIL-0.012,'x-',[[fr.y1+0.06,fr.y2,'door']],MAT.oak,false);
  const cu=fuG['FU-25'],LZ=7.6;
  {const S=P.store,bays=S.bays,lz=S.loftz;
-  cabRun('FU-25','Store cupboard, civil work: kadappa shelves, UPVC wood-look shutters',cu.x1,cu.x2-0.012,cu.y1,cu.y2,0,lz,'x-',bays.flatMap(b=>b.power?[[b.y1,b.y2,'door']]:[[b.y1,(b.y1+b.y2)/2,'door'],[(b.y1+b.y2)/2,b.y2,'door']]),MAT.oak,S.plinth);
+  // carcass, plinth, and one UPVC wood-look shutter per cell exactly as in the Store tab (two leaves on cells wider than 3'), black J handles
+  const ct='FU-25 · Store cupboard, civil work: kadappa shelves, UPVC wood-look shutters',g=0.012,SH=0.06;
+  box(cu.x1+SH,cu.x2-0.012,cu.y1,cu.y2,S.plinth,lz,MAT.oak,{tip:ct});box(cu.x1+SH+0.1,cu.x2-0.012,cu.y1,cu.y2,0,S.plinth,MAT.plinth,{tip:ct+' · plinth'});
+  for(const sh of S.shutters.filter(q=>!/^L-/.test(q.cell))){const t=`${ct} · shutter of cell ${sh.cell}`;box(cu.x1,cu.x1+SH,sh.y1+g,sh.y2-g,sh.z1+g,sh.z2-g,MAT.oak,{tip:t});
+   const hy=sh.hinge==='a'?sh.y2-0.1:sh.y1+0.06,hz=sh.z2-sh.z1>1.2?[Math.min(sh.z2-0.35,4.2)-0.35,Math.min(sh.z2-0.35,4.2)+0.35]:[(sh.z1+sh.z2)/2-0.15,(sh.z1+sh.z2)/2+0.15];
+   box(cu.x1-0.05,cu.x1,hy,hy+0.04,hz[0],hz[1],MAT.blackMetal,{cast:false,tip:'J-profile handle, black'})}
   cabRun('FU-25','Store cupboard, loft',cu.x1,cu.x2-0.012,cu.y1,cu.y2,lz+0.012,CEIL-0.012,'x-',S.loft.map(l=>[l[2],l[3],'door']),MAT.oak,false);
   const p=bays.find(b=>b.power),lv=std({color:'#3b2f25',roughness:0.8});   // louvres on the S-4 shutter below 2'6": air for the inverter
   for(let z=0.45;z<2.45;z+=0.17)box(cu.x1-0.03,cu.x1-0.005,p.y1+0.2,p.y2-0.2,z,z+0.05,lv,{cast:false,tip:`FU-25 · S-4 · louvred shutter for the inverter and battery · ${S.assumed}`})}

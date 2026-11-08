@@ -409,7 +409,7 @@ FURNITURE = [
  ('FU-16','G','Kitchen counter, back (modular)',5.5,8.6,64.625,66.625,'counter',None,'Kitchen, 3\'1" x 2\' on GW-14, with base drawers and the sink'),
  ('FU-16.2','G','Low counter, wet grinder and water',8.6,12.125,64.625,66.625,'counter',None,'Kitchen, 3\'6½" x 2\' on GW-14 up to the toilet 2 wall, top at 2\' from the floor: wet grinder at the sink end, water pots under the RO purifier at the other end'),
  ('FU-17','G','Breakfast counter',5.5,13.5,58.625,59.875,'counter2',None,'Kitchen, 8\' x 1\'3" on GW-13, under the folding glass W-12; joins the east counter with no gap, extended into the old fridge place, microwave at its west end'),
- ('FU-18','G','Fridge, double door',17.75,20.25,58.625,61.17,'fridge',None,'Open area, double door, 67 W x 68 D x 175 H cm (2\'2½" x 2\'2¾" x 5\'9"), in a 2\'6½" wide slot on GW-05 at the north end of the FU-25 cupboard: 2" air each side and at the back; 1\' clear above its top (to 6\'9") for a stabilizer, then the loft'),
+ ('FU-18','G','Fridge, double door',17.75,20.25,58.625,61.17,'fridge',None,'Open area, double door, 67 W x 68 D x 175 H cm (2\'2½" x 2\'2¾" x 5\'9"), in the fridge bay at the north end of the store cupboard FU-25 (one unit: same front line, end panel and loft), a 2\'6½" wide slot: 2" air each side and at the back; 1\' clear above its top (to 6\'9") for a stabilizer, then the loft'),
  ('FU-19','G','Overhead cabinets, back',4.75,8.25,65.375,66.625,'over',None,'Kitchen, on GW-14 above the back counter and sink, glass doors on the unit above the sink, RO purifier below them (dashed)'),
  ('FU-68','G','Top storage, back',4.75,12.125,65.375,66.625,'over',None,'Kitchen, second row of cabinets on GW-14 from 7\' up to the ceiling, right along to the end of the low counter, over the RO purifier and the wet grinder (K-16 and K-18) (dashed)'),
  ('FU-69','G','Top storage, east',3.5,4.75,58.625,66.625,'over',None,'Kitchen, second row of cabinets on GW-01 from 7\' up to the ceiling, right across above the window and chimney (dashed)'),
@@ -522,6 +522,18 @@ STORE=dict(fu='FU-25',plinth=0.25,loftz=7.5,top=9.33,depth=2.5,inner=2.25,
  assumed='Owner\'s sizes: inverter 36 x 35 x 20 cm, battery 53 x 18 x 27.5 cm. The S-4 bay is 1\'10½" wide and 2\'3" deep inside. Battery space: plinth to the shelf at 1\'6" gives 1\'2" high, so the 10¾" battery has 3" over it. Inverter space: 1\'6" to 2\'6" gives 11" high for the 8" inverter. Both fit with air round them.',
  adjust='S-3 adjustable shelf: black powder-coated slotted steel strips (2 on each side wall, front and back) with slots every 2", screwed to the kadappa uprights; a pair of brackets per strip carries a 1" kadappa or 18 mm marine-ply shelf, 3\'10" x 2\'2". Lift it out and hook it in at any height from 1\' to 7\'. About ₹2–3k.',
  cost='Kadappa uprights and shelves about 200 sq ft at ₹90–115: ₹18–23k; plinth and labour ₹6–8k; UPVC wood-look shutters about 90 sq ft at ₹500–650: ₹45–58k. Total about ₹70–90k (a full carpentry cupboard of this size is about ₹1.3–1.6 lakh).')
+
+# store shutters: one shutter per cell (two leaves when the cell is wider than 3'), louvred on the inverter and battery cells; the loft has its own; the fridge bay
+# (FU-18) is the north end of the same unit: open slot for the fridge, 1' stabilizer space, then a loft shutter on the fridge-top line
+def _store_shutters(S):
+    B={b['id']:b for b in S['bays']};out=[]
+    for c in S['cells']:
+        y1,y2=B[c['bays'][0]]['y1'],B[c['bays'][-1]]['y2'];n=2 if y2-y1>3 else 1
+        for k in range(n): out.append(dict(cell=c['id'],y1=y1+k*(y2-y1)/n,y2=y1+(k+1)*(y2-y1)/n,z1=c['z1'],z2=c['z2'],hinge='a' if (n==1 or k==0) else 'b',louvred=c['id'] in ('S-4.1','S-4.2')))
+    for L in S['loft']: out.append(dict(cell=L[0],y1=L[2],y2=L[3],z1=S['loftz'],z2=S['top'],hinge='a',louvred=False))
+    return out
+STORE['shutters']=_store_shutters(STORE)
+STORE['fridge']=dict(fu='FU-18',y1=58.625,y2=61.17,top=175/30.48,stab=1.0)
 
 # ---------- windows (chosen 2026-11-05 from window-catalogue.html): type, frame, glass, grill, mesh ----------
 # WT-1 3-track sliding, WT-2 casement (side-hung, opens out, grill inside), WT-3 sliding with a 1' top-hung vent, WT-4 fixed glass with an opening top pane, WT-5 louvre
