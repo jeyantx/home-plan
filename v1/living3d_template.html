@@ -1105,7 +1105,7 @@ X_(()=>{CURFL='F';ZOFF=FFZ;
  {const ac=f2('FU-48');box(X1+0.012,ac.x2,ac.y1,ac.y2,7.83,8.78,std({color:'#f4f4f2',roughness:0.35}),{round:0.08,tip:`FU-48 · AC indoor unit, 1.5 ton split · ${ac.note}`});
   box(ac.x2,ac.x2+0.02,ac.y1+0.15,ac.y2-0.15,7.9,7.98,MAT.blackMetal,{cast:false,tip:'FU-48 · AC air outlet'});}
  // curtains: W-10 (FW-01) from the band, kept clear of the AC; beside the balcony door D-11 (FW-04)
- for(const [a,b] of [[87.2,88.6],[92.45,92.95]]) curtain(a,b,X1+0.22,WT,WROD,'y',null,null,WB);
+ for(const [a,b] of [[84.5,86.0],[89.5,91.0]]) curtain(a,b,X1+0.22,WT,WROD,'y',null,null,WB);   // W-10 centred on the bed
  for(const [a,b] of [[13.9,14.7],[18.3,19.1]]) curtain(a,b,Y2-0.22,WT,'Curtain rod over the balcony door','x');   // door: full length, but from the rod, not the ceiling
  // queen bed FU-36, head to FW-03
  const f=f2('FU-36'),tip=`FU-36 · Queen bed · oak platform, 6'6" x 5' · ${f.note}`;
