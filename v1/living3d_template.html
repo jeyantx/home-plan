@@ -1068,8 +1068,9 @@ function setFinish(k){if(!KT[k])k='KT-1';const o=KT[k];finishMat(MAT.kLow,o.low)
  const pl=new THREE.Mesh(new THREE.PlaneGeometry(m(ay2-ay1-0.2),m(az2-az1-0.2)),std({map:t,roughness:0.9}));pl.rotation.y=Math.PI/2;pl.position.set(mx(X2-0.115),m((az1+az2)/2),m((ay1+ay2)/2));scene.add(pl);named(pl,'Framed art · earthy hills and sun, textured canvas');pl.userData.keepUV=true;
  // wardrobe FU-34 with loft on GW-15 (front faces +y)
  const wd=fuG['FU-34'],wy2=wd.y2,wl=7.55;
- cabRun('FU-34','Wardrobe with loft, oak veneer',wd.x1,X2-0.012,Y1+0.012,wy2,0,wl,'y+',[0,1,2].map(i=>[wd.x1+i*(X2-0.012-wd.x1)/3,wd.x1+(i+1)*(X2-0.012-wd.x1)/3,'door']),MAT.oak,true);
- cabRun('FU-34','Wardrobe loft, oak veneer',wd.x1,X2-0.012,Y1+0.012,wy2,wl+0.012,BZ-0.005,'y+',[0,1,2].map(i=>[wd.x1+i*(X2-0.012-wd.x1)/3,wd.x1+(i+1)*(X2-0.012-wd.x1)/3,'door']),MAT.oak,false);
+ cabRun('FU-34','Wardrobe with loft, oak veneer',wd.x1,wd.x2,Y1+0.012,wy2,0,wl,'y+',[0,1,2].map(i=>[wd.x1+i*(wd.x2-wd.x1)/3,wd.x1+(i+1)*(wd.x2-wd.x1)/3,'door']),MAT.oak,true);
+ box(wd.x2,X2-0.012,Y1+0.012,wy2,0,BZ-0.005,MAT.oak,{tip:'FU-34 · 6" corner filler, oak, in line with the mirror unit (keeps every shutter clear of the racks)'});
+ cabRun('FU-34','Wardrobe loft, oak veneer',wd.x1,wd.x2,Y1+0.012,wy2,wl+0.012,BZ-0.005,'y+',[0,1,2].map(i=>[wd.x1+i*(wd.x2-wd.x1)/3,wd.x1+(i+1)*(wd.x2-wd.x1)/3,'door']),MAT.oak,false);
  // slim mirror unit (6" deep) beside the wardrobe FU-34: racks FU-103, drawers FU-32, mirror FU-102
  mirrorUnit(box,cyl,fuG['FU-103'],fuG['FU-32'],fuG['FU-102'],X2,BZ);
 }
@@ -1133,9 +1134,10 @@ X_(()=>{CURFL='F';ZOFF=FFZ;
     g.globalAlpha=1;for(let i=0;i<9000;i++){const v=(r()-.5)*0.06;g.fillStyle=v>0?`rgba(255,255,255,${v})`:`rgba(0,0,0,${-v})`;g.fillRect(r()*w,r()*h,2,2)}},1);t.repeat.set(1,1);
   const pl=new THREE.Mesh(new THREE.PlaneGeometry(m(ay2-ay1-0.2),m(az2-az1-0.2)),std({map:t,roughness:0.9}));pl.rotation.y=Math.PI/2;pl.position.set(mx(X2-0.115),m(FFZ+(az1+az2)/2),m((ay1+ay2)/2));scene.add(pl);named(pl,'Framed art · four earthy blocks, textured canvas');pl.userData.keepUV=true;}
  // sliding wardrobe FU-39 with loft on FW-05, by the entrance
- {const wd=f2('FU-39'),sg=[[wd.x1,wd.x1+(X2-0.012-wd.x1)/3,'door'],[wd.x1+(X2-0.012-wd.x1)/3,wd.x1+2*(X2-0.012-wd.x1)/3,'door'],[wd.x1+2*(X2-0.012-wd.x1)/3,X2-0.012,'door']];
-  cabRun('FU-39','Sliding wardrobe, oak veneer',wd.x1,X2-0.012,Y1+0.012,wd.y2,0,7.55,'y+',sg,MAT.oak,true);
-  cabRun('FU-39','Wardrobe loft, oak veneer',wd.x1,X2-0.012,Y1+0.012,wd.y2,7.562,BZ-0.005,'y+',sg,MAT.oak,false);}
+ {const wd=f2('FU-39'),sg=[0,1,2].map(i=>[wd.x1+i*(wd.x2-wd.x1)/3,wd.x1+(i+1)*(wd.x2-wd.x1)/3,'door']);
+  box(wd.x2,X2-0.012,Y1+0.012,wd.y2,0,BZ-0.005,MAT.oak,{tip:'FU-39 · 6" corner filler, oak, in line with the mirror unit (keeps every shutter clear of the racks)'});
+  cabRun('FU-39','Sliding wardrobe, oak veneer',wd.x1,wd.x2,Y1+0.012,wd.y2,0,7.55,'y+',sg,MAT.oak,true);
+  cabRun('FU-39','Wardrobe loft, oak veneer',wd.x1,wd.x2,Y1+0.012,wd.y2,7.562,BZ-0.005,'y+',sg,MAT.oak,false);}
  // study desk FU-40 on FW-04 under W-11: floating oak top on black legs, chair in front (north)
  {const d=f2('FU-40'),tip=`FU-40 · Study desk · oak top on black steel legs · ${d.note}`;
   box(d.x1,d.x2,d.y1,d.y2-0.012,2.38,2.5,MAT.oak,{round:0.02,tip});
