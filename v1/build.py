@@ -424,10 +424,102 @@ def _elec_tab():   # Electrical tab: each floor drawn sideways (road on the left
             +'<section><h2>Circuits</h2><table class="t"><tr><th>Circuit</th><th>What</th><th>Breaker</th><th>Wire</th><th>Note</th></tr>'+circ+'</table></section>'
             +'<section><h2>All points</h2><table class="t"><tr><th>Code</th><th>Floor</th><th>Type</th><th>Height</th><th>Circuit</th><th>What</th></tr>'+rows+'</table></section>'
             +f'<section><h2>Cost</h2><p>{_h.escape(_mm.ELEC_COST)}</p></section>')
+def _section_tab():   # Section tab: long section A-A through the car ramp, porch steps, house, terrace and bedroom 3 block, heights from the road crown
+    import math
+    L=_mm.LEVELS;RP=_mm.RAMP;road=L['road'];hump=L['hump'];pk=L['parking'];fl=L['floor'];gd=L['garden']
+    FF=fl+_mm.FF_LEVEL;CE=fl+10.0;RF=FF+10.0;RT=RF+1.0;TK=RT+1.0+5.0;PSY=_mm.PORCH_STEPS_Y;PFY=PSY+2.5
+    yb,yc,yt,ez=RP['y_hump'],RP['y_crest'],RP['y_top'],RP['ease']
+    def ft(v):
+        i=int(round(v*12));return f"{i//12}'{i%12}\"" if i%12 else f"{i//12}'0\""
+    def ramp_z(y):
+        if y<=yb: return road+(hump-road)*max(0,y)/yb
+        if y<=yc: return hump
+        d=y-yc;m1=ez;m2=yt-yc-ez
+        if d<=m1: return hump+d/8
+        if d<=m2: return hump+m1/8+(d-m1)/4
+        return min(pk,hump+m1/8+(m2-m1)/4+(d-m2)/8)
+    def svg(y0,y1,z0,z1,k,inset):
+        W=(y1-y0)*k;H=(z1-z0)*k;ox,oy=60,30
+        X=lambda y:ox+(y-y0)*k;Z=lambda z:oy+(z1-z)*k
+        e=[f'<svg viewBox="0 0 {W+ox+150:.0f} {H+oy+70:.0f}" style="width:100%;max-width:{1300 if not inset else 1100}px;background:#f7f4ee;border:1px solid var(--line);border-radius:10px" font-family="system-ui,sans-serif">']
+        def poly(pts,fill,stroke='#3b3b3b',sw=1.2,op=1):
+            e.append(f'<polygon points="{" ".join(f"{X(a):.1f},{Z(b):.1f}" for a,b in pts)}" fill="{fill}" stroke="{stroke}" stroke-width="{sw}" fill-opacity="{op}"/>')
+        def rect(a,b,za,zb,fill,stroke='#3b3b3b'):
+            if b<y0 or a>y1: return
+            a=max(a,y0);b=min(b,y1);poly([(a,za),(b,za),(b,zb),(a,zb)],fill,stroke)
+        BW=' font-weight="700"'
+        def lab(y,z,t,anchor='middle',col='#3a3b3e',size=11,bold=False,dy=0):
+            if y0-1<=y<=y1+1: e.append(f'<text x="{X(y):.1f}" y="{Z(z)+dy:.1f}" font-size="{size}" text-anchor="{anchor}" fill="{col}"{BW if bold else ""}>{t}</text>')
+        last=[None]
+        def lev(z,t,col='#c0392b'):   # level tag on the right; tags closer than 13 px are pushed down so they never overlap
+            ty=Z(z)+4
+            if last[0] is not None and ty<last[0]+13: ty=last[0]+13
+            last[0]=ty
+            e.append(f'<line x1="{ox}" x2="{ox+W:.1f}" y1="{Z(z):.1f}" y2="{Z(z):.1f}" stroke="{col}" stroke-width="0.6" stroke-dasharray="4 4"/><line x1="{ox+W:.1f}" x2="{ox+W+6:.1f}" y1="{Z(z):.1f}" y2="{ty-4:.1f}" stroke="{col}" stroke-width="0.6"/><text x="{ox+W+8:.1f}" y="{ty:.1f}" font-size="11" fill="{col}">+{ft(z)} {t}</text>')
+        # ground: road, gate bevel, crest, ramp, parking, porch steps, house plinth; back garden
+        gp=[(y0,road-1.5),(y0,road)]+[(y/10,ramp_z(y/10)) for y in range(int(y0*10) if y0>0 else 0,int(min(yt,y1)*10)+1)]+[(min(PSY,y1),pk)]
+        if y1>PSY:
+            for i in range(3): gp+= [(PSY+i*2.5/3,pk+(i+1)*0.5),(PSY+(i+1)*2.5/3,pk+(i+1)*0.5)]
+            gp+=[(min(95.125,y1),fl)]
+            if y1>95.125: gp+=[(95.125,gd),(y1,gd)]
+        gp+=[(gp[-1][0],road-1.5)];poly(gp,'#d9cdb8','#7a6a55')
+        e.append(f'<rect x="{ox-40}" y="{Z(road):.1f}" width="{X(0)-ox+40:.1f}" height="{1.5*k:.1f}" fill="#8f8f8f"/>')
+        lab(-3 if y0<-2 else y0+1,road+0.3,'Road',col='#fff' if False else '#3a3b3e',bold=True)
+        # gate pillar and gate
+        rect(0.3,0.75,hump,hump+6.5,'#b7c4a5');lab(0.5,hump+6.9,'Gate')
+        if inset:
+            # dimensions on the ramp: slopes and angles
+            segs=[(yc,yc+ez,'1 in 8',8),(yc+ez,yt-ez,'1 in 4',4),(yt-ez,yt,'1 in 8',8)]
+            for a,b,t,n in segs:
+                za,zb=ramp_z(a),ramp_z(b);ang=math.degrees(math.atan(1/n))
+                lab((a+b)/2,(za+zb)/2+0.55,f'{t} · {ang:.1f}°',col='#1d5fa8',size=12,bold=True)
+            lab((0+yb)/2,hump-0.9,'bevel 6"',col='#1d5fa8',size=11)
+            lab((yb+yc)/2,hump+1.1,'level crest + drain',col='#1d5fa8',size=11)
+            lab(yt+3,pk+0.35,'level parking',col='#1d5fa8',size=12,bold=True)
+            lab(PSY+1.25,fl+0.9,'3 steps: 6" rise, 10" tread · 31°',col='#1d5fa8',size=12,bold=True)
+            for y,z,t in ((yt,pk,'+2\'0"'),(PFY,fl,'+3\'6"')):
+                if t: lab(y,z-0.55,t,col='#c0392b',size=11,bold=True)
+            # car outline (reversed in) and the porch, house front
+            rect(yt+3.0,yt+18.0,pk+0.6,pk+4.8,'#cfd8e3','#5b6b7c');lab(yt+10.5,pk+2.5,'car (VW Virtus, 4\'9" high)',size=11)
+            rect(29.0,29.75,pk,fl+10,'#b7c4a5');lab(29.4,fl+10.5,'study wall')
+            rect(19.75,40.5,CE,FF,'#c9c9c9');lab(30,CE+0.75,'roof slab over parking and porch (terrace above)',size=11)
+            rect(2.0,2.0,0,0,'#fff')
+            for z,t in sorted(((road,'road'),(hump,'gate bevel top'),(pk,'parking'),(fl,'house floor and porch'),(CE,'ceiling / slab bottom'),(FF,'terrace floor')),key=lambda q:-q[0]): lev(z,t)
+        else:
+            # house: floor, ground-floor slab, walls front and back, terrace, parapets, first-floor block, roof, tank, balconies
+            rect(19.75,95.125,CE,FF,'#c9c9c9');lab(57,CE+0.8,'ground-floor roof slab (open terrace on top)',size=11)
+            rect(29.75,30.5,fl,CE,'#b7c4a5');rect(94.375,95.125,fl,CE,'#b7c4a5')
+            rect(19.75,20.125,FF,FF+3,'#b7c4a5');lab(20,FF+3.5,'parapet 3\'')
+            rect(15.875,19.75,FF-0.5,FF,'#c9c9c9');lab(17.8,FF+0.5,'balcony 2',size=10)
+            rect(73.125,73.875,FF,RF,'#b7c4a5');rect(94.375,95.125,FF,RF,'#b7c4a5')
+            rect(73.125,95.125,RF,RT,'#c9c9c9');lab(84,RF+0.45,'roof slab',size=10)
+            rect(89.2,94.2,RT,RT+1,'#a9a9a9');rect(89.2,94.2,RT+1,TK,'#2f6f9f','#1d3f5f');lab(91.7,RT+3.5,'tank 2000 L',col='#fff',size=10)
+            rect(95.125,98.125,FF-0.5,FF,'#c9c9c9');rect(97.75,98.125,FF,FF+3,'#b7c4a5');lab(96.6,FF+3.5,'balcony 3',size=10)
+            lab(52,fl+4.5,'living · kitchen · stair hall',size=12);lab(84,fl+4.5,'bedroom 2',size=12);lab(84,FF+4.5,'bedroom 3',size=12);lab(48,FF+1.2,'open terrace',size=12)
+            lab(36,fl+1.0,'porch',size=10);lab(20,pk+3.5,'parking (car)',size=12);lab(100,gd+1.5,'back garden',size=11)
+            for z,t in sorted(((road,'road crown'),(pk,'parking'),(gd,'garden'),(fl,'house floor'),(CE,'ground-floor ceiling'),(FF,'terrace / first floor'),(FF+3,'parapet top'),(RF,'first-floor ceiling'),(RT,'roof top'),(TK,'tank top')),key=lambda q:-q[0]): lev(z,t)
+        # horizontal scale: feet from the road edge
+        step=2 if inset else 10
+        for y in range(int(math.ceil(y0/step)*step),int(y1)+1,step):
+            e.append(f'<line x1="{X(y):.1f}" x2="{X(y):.1f}" y1="{oy+H:.1f}" y2="{oy+H+6:.1f}" stroke="#5d646d"/><text x="{X(y):.1f}" y="{oy+H+20:.1f}" font-size="10" text-anchor="middle" fill="#5d646d">{y}\'</text>')
+        e.append(f'<text x="{ox}" y="{oy+H+40:.1f}" font-size="11" fill="#5d646d">feet from the road edge (north, road) → south (back)</text></svg>')
+        return ''.join(e)
+    big=svg(-6,106,-1.5,TK+1,11,False);ins=svg(-3,42,-1.5,FF+1.5,30,True)
+    st1=_mm.FF_LEVEL+(fl-hump);R=st1/27;ang=math.degrees(math.atan(R/(10/12)))
+    rows=[('Road crown (in front of the gate)',road),('Gate bevel top',hump),('Parking floor',pk),('Side and back garden',gd),('House floor, porch',fl),('Ground-floor ceiling (slab bottom)',CE),('Terrace and first-floor floor',FF),('Terrace parapet top',FF+3),('First-floor ceiling',RF),('Roof top',RT),('Water tank top',TK)]
+    tr=''.join(f'<tr><td>{n}</td><td>+{ft(z)}</td></tr>' for n,z in rows)
+    sl=''.join(f'<tr><td>{a}</td><td>{b}</td></tr>' for a,b in [('Gate bevel (road to crest)',f'6" rise over {ft(yb)}'),('Car ramp, start',f'1 in 8 ({math.degrees(math.atan(1/8)):.1f}°) for {ft(ez)}'),('Car ramp, middle',f'1 in 4 ({math.degrees(math.atan(1/4)):.1f}°) for {ft(yt-yc-2*ez)}'),('Car ramp, end',f'1 in 8 ({math.degrees(math.atan(1/8)):.1f}°) for {ft(ez)}'),('Porch steps (3)','6" rise, 10" tread, 31° pitch'),('Outside stair ST-1 (27 risers, gate to balcony 2)',f'{R*12:.1f}" rise, 10" tread, {ang:.0f}° pitch'),('Spiral stair ST-2 (21 risers)',f'{_mm.FF_LEVEL/21*12:.1f}" rise')])
+    return ('<section><h2>Section A-A (long section, road to back)</h2><p>Cut along the house from the road to the back garden, through the car ramp, the porch steps, the ground floor, the terrace and the bedroom 3 block. Heights are from the road crown in front of the gate, drawn to scale (horizontal and vertical the same).</p>'+big+'</section>'
+            +'<section><h2>Detail: gate, car ramp and porch steps</h2><p>Same section, front part enlarged, with the ramp slopes and angles.</p>'+ins+'</section>'
+            +'<section><h2>Levels</h2><table class="t"><tr><th>Level</th><th>Height from the road</th></tr>'+tr+'</table></section>'
+            +'<section><h2>Slopes and steps</h2><table class="t"><tr><th>Where</th><th>Slope / step</th></tr>'+sl+'</table></section>')
+
 _et=_elec_tab()
 if _et: _tabs.insert(0,('electrical','Electrical',_et))
 _st=_store_tab()
 if _st: _tabs.insert(0,('store','Store',_st))
+_sc=_section_tab()
+if _sc: _tabs.insert(0,('section','Section',_sc))
 _tabs.append(('credits','Credits','<section><h2>Credits</h2><p>Libraries, textures, the sky image and the downloaded 3D models used by this plan, with their sources and licences. Everything else (the plan, the drawings and the code-made models) was made for this house.</p></section>'+_md(open(ROOT+'3d/ASSETS.md').read())))
 def _btn(k,n): return f'<button role="tab" data-tab="{k}" aria-selected="false">{n}</button>'
 app=f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
