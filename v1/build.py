@@ -441,7 +441,7 @@ def _section_tab():   # Section tab: long section A-A through the car ramp, porc
     def svg(y0,y1,z0,z1,k,inset):
         W=(y1-y0)*k;H=(z1-z0)*k;ox,oy=70,30
         X=lambda y:ox+(y-y0)*k;Z=lambda z:oy+(z1-z)*k
-        e=[f'<svg class="pz" viewBox="0 0 {W+ox+150:.0f} {H+oy+70:.0f}" style="width:100%;max-width:{1300 if not inset else 1100}px;background:#f7f4ee;border:1px solid var(--line);border-radius:10px;cursor:grab;touch-action:none" font-family="system-ui,sans-serif">']
+        e=[f'<svg class="pz" viewBox="0 0 {W+ox+150:.0f} {H+oy+70:.0f}" preserveAspectRatio="xMidYMid meet" style="width:100%;height:100%;background:#f7f4ee;cursor:grab;touch-action:none;display:block" font-family="system-ui,sans-serif">']
         # height axes on both ends (feet above the road), so a height can be read without crossing the drawing
         stp=1 if inset else 2
         for zz in range(int(math.ceil(z0)),int(z1)+1):
@@ -520,24 +520,42 @@ def _section_tab():   # Section tab: long section A-A through the car ramp, porc
     rows=[('Road crown (in front of the gate)',road),('Gate bevel top',hump),('Parking floor',pk),('Side and back garden',gd),('House floor, porch',fl),('Ground-floor ceiling (slab bottom)',CE),('Terrace and first-floor floor',FF),('Terrace parapet top',FF+3),('First-floor ceiling',RF),('Roof top',RT),('Water tank top',TK)]
     tr=''.join(f'<tr><td>{n}</td><td>+{ft(z)}</td></tr>' for n,z in rows)
     sl=''.join(f'<tr><td>{a}</td><td>{b}</td></tr>' for a,b in [('Gate bevel (road to crest)',f'6" rise over {ft(yb)}'),('Car ramp, start',f'1 in 8 ({math.degrees(math.atan(1/8)):.1f}°) for {ft(ez)}'),('Car ramp, middle',f'1 in 4 ({math.degrees(math.atan(1/4)):.1f}°) for {ft(yt-yc-2*ez)}'),('Car ramp, end',f'1 in 8 ({math.degrees(math.atan(1/8)):.1f}°) for {ft(ez)}'),('Porch steps (3)','6" rise, 10" tread, 31° pitch'),('Outside stair ST-1 (27 risers, gate to balcony 2)',f'{R*12:.1f}" rise, 10" tread, {ang:.0f}° pitch'),('Spiral stair ST-2 (21 risers)',f'{_mm.FF_LEVEL/21*12:.1f}" rise')])
-    return ('<section><h2>Section A-A (long section, road to back)</h2><p>Cut along the house from the road to the back garden, through the car ramp, the porch steps, the ground floor, the terrace and the bedroom 3 block. Heights are from the road crown in front of the gate, drawn to scale (horizontal and vertical the same).</p>'+big+'</section>'
-            +'<section><h2>Detail: gate, car ramp and porch steps</h2><p>Same section, front part enlarged, with the ramp slopes and angles.</p>'+ins+'</section>'
-            +'<p style="color:#5d646d;font-size:13px">Scroll or pinch on a drawing to zoom, drag to move it, double-click to reset.</p>'
-            +'''<script>document.querySelectorAll('svg.pz').forEach(sv=>{const v0=sv.getAttribute('viewBox').split(' ').map(Number);let v=v0.slice(),drag=null;const set=()=>sv.setAttribute('viewBox',v.join(' '));
- const pt=e=>{const r=sv.getBoundingClientRect();return [v[0]+(e.clientX-r.left)/r.width*v[2],v[1]+(e.clientY-r.top)/r.height*v[3]]};
- sv.addEventListener('wheel',e=>{e.preventDefault();const k=e.deltaY<0?0.85:1/0.85,p=pt(e);v=[p[0]-(p[0]-v[0])*k,p[1]-(p[1]-v[1])*k,v[2]*k,v[3]*k];if(v[2]>v0[2]){v=v0.slice()}set()},{passive:false});
- sv.addEventListener('pointerdown',e=>{drag=[e.clientX,e.clientY,v[0],v[1]];sv.setPointerCapture(e.pointerId);sv.style.cursor='grabbing'});
- sv.addEventListener('pointermove',e=>{if(!drag)return;const r=sv.getBoundingClientRect();v[0]=drag[2]-(e.clientX-drag[0])/r.width*v[2];v[1]=drag[3]-(e.clientY-drag[1])/r.height*v[3];set()});
- sv.addEventListener('pointerup',()=>{drag=null;sv.style.cursor='grab'});sv.addEventListener('dblclick',()=>{v=v0.slice();set()})})</script>'''
-            +'<section><h2>Levels</h2><table class="t"><tr><th>Level</th><th>Height from the road</th></tr>'+tr+'</table></section>'
-            +'<section><h2>Slopes and steps</h2><table class="t"><tr><th>Where</th><th>Slope / step</th></tr>'+sl+'</table></section>')
+    css="html,body{margin:0;height:100%;background:#f7f4ee;font-family:system-ui,sans-serif;color:#1f2328}#bar{position:fixed;top:0;left:0;right:0;height:44px;display:flex;align-items:center;gap:8px;padding:0 12px;background:#fff;border-bottom:1px solid #ddd;z-index:2}#bar button{border:1px solid #ccc;background:#fff;border-radius:8px;padding:5px 10px;font-size:13px;cursor:pointer}#bar button[aria-pressed=true]{background:#2f6f4f;color:#fff;border-color:#2f6f4f}.v{position:fixed;top:44px;left:0;right:0;bottom:0;display:none}.v.on{display:block}.t{border-collapse:collapse;margin:16px;font-size:14px}.t td,.t th{border-bottom:1px solid #e3ddd2;padding:6px 14px;text-align:left}#tabs{overflow:auto;padding:8px 16px}#hint{color:#5d646d;font-size:12px;margin-left:auto}"
+    js=r"""const views=[...document.querySelectorAll('.v')],btns=[...document.querySelectorAll('[data-v]')];
+function show(k){views.forEach(v=>v.classList.toggle('on',v.id===k));btns.forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===k));document.querySelectorAll('.z').forEach(b=>b.disabled=k==='tables')}
+btns.forEach(b=>b.onclick=()=>show(b.dataset.v));
+const st=new Map();document.querySelectorAll('svg.pz').forEach(sv=>{const v0=sv.getAttribute('viewBox').split(' ').map(Number);st.set(sv,{v0,v:v0.slice()});
+ const set=()=>sv.setAttribute('viewBox',st.get(sv).v.join(' '));sv._set=set;
+ const pt=(x,y)=>{const r=sv.getBoundingClientRect(),S=st.get(sv),s=Math.max(S.v[2]/r.width,S.v[3]/r.height),ox=(r.width*s-S.v[2])/2,oy=(r.height*s-S.v[3])/2;return [S.v[0]-ox+(x-r.left)*s,S.v[1]-oy+(y-r.top)*s]};
+ sv._zoom=(k,x,y)=>{const S=st.get(sv),p=pt(x,y);S.v=[p[0]-(p[0]-S.v[0])*k,p[1]-(p[1]-S.v[1])*k,S.v[2]*k,S.v[3]*k];if(S.v[2]>S.v0[2]*1.5)S.v=S.v0.slice();set()};
+ sv.addEventListener('wheel',e=>{e.preventDefault();sv._zoom(Math.exp((e.ctrlKey?e.deltaY*2:e.deltaY)*0.0015),e.clientX,e.clientY)},{passive:false});
+ const P=new Map();let drag=null,pin=null;
+ sv.addEventListener('pointerdown',e=>{P.set(e.pointerId,{x:e.clientX,y:e.clientY});sv.setPointerCapture(e.pointerId);const S=st.get(sv);drag={x:e.clientX,y:e.clientY,v:S.v.slice()};if(P.size===2){const [a,b]=[...P.values()];pin=Math.hypot(a.x-b.x,a.y-b.y)}sv.style.cursor='grabbing'});
+ sv.addEventListener('pointermove',e=>{if(!P.has(e.pointerId))return;P.set(e.pointerId,{x:e.clientX,y:e.clientY});const S=st.get(sv);
+   if(P.size===2&&pin){const [a,b]=[...P.values()],d=Math.hypot(a.x-b.x,a.y-b.y);if(d>0){sv._zoom(pin/d,(a.x+b.x)/2,(a.y+b.y)/2);pin=d}return}
+   if(!drag)return;const r=sv.getBoundingClientRect(),s=Math.max(drag.v[2]/r.width,drag.v[3]/r.height);S.v[0]=drag.v[0]-(e.clientX-drag.x)*s;S.v[1]=drag.v[1]-(e.clientY-drag.y)*s;set()});
+ const up=e=>{P.delete(e.pointerId);if(P.size<2)pin=null;if(!P.size){drag=null;sv.style.cursor='grab'}};sv.addEventListener('pointerup',up);sv.addEventListener('pointercancel',up);
+ sv.addEventListener('dblclick',e=>sv._zoom(0.5,e.clientX,e.clientY))});
+const cur=()=>document.querySelector('.v.on svg');
+document.getElementById('zin').onclick=()=>{const sv=cur();if(sv){const r=sv.getBoundingClientRect();sv._zoom(0.7,r.left+r.width/2,r.top+r.height/2)}};
+document.getElementById('zout').onclick=()=>{const sv=cur();if(sv){const r=sv.getBoundingClientRect();sv._zoom(1/0.7,r.left+r.width/2,r.top+r.height/2)}};
+document.getElementById('fit').onclick=()=>{const sv=cur();if(sv){st.get(sv).v=st.get(sv).v0.slice();sv._set()}};
+document.getElementById('fs').onclick=()=>{document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen()};
+show('long');"""
+    return ('<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Section</title><style>'+css+'</style></head><body>'
+            +'<div id="bar"><button data-v="long">Long section</button><button data-v="ramp">Gate, ramp and steps</button><button data-v="tables">Levels and slopes</button>'
+            +'<button class="z" id="zin" title="Zoom in">+</button><button class="z" id="zout" title="Zoom out">−</button><button class="z" id="fit" title="Fit to screen">Fit</button><button id="fs" title="Full screen">⛶ Full screen</button>'
+            +'<span id="hint">scroll or pinch to zoom · drag to move · double-click to zoom in</span></div>'
+            +'<div class="v" id="long">'+big+'</div><div class="v" id="ramp">'+ins+'</div>'
+            +'<div class="v" id="tables"><div id="tabs"><h2>Levels (from the road crown)</h2><table class="t"><tr><th>Level</th><th>Height</th></tr>'+tr+'</table><h2>Slopes and steps</h2><table class="t"><tr><th>Where</th><th>Slope / step</th></tr>'+sl+'</table></div></div>'
+            +'<script>'+js+'</script></body></html>')
 
 _et=_elec_tab()
 if _et: _tabs.insert(0,('electrical','Electrical',_et))
 _st=_store_tab()
 if _st: _tabs.insert(0,('store','Store',_st))
 _sc=_section_tab()
-if _sc: _tabs.insert(0,('section','Section',_sc))
+if _sc: open(ROOT+'section.html','w').write(_sc)
 _tabs.append(('credits','Credits','<section><h2>Credits</h2><p>Libraries, textures, the sky image and the downloaded 3D models used by this plan, with their sources and licences. Everything else (the plan, the drawings and the code-made models) was made for this house.</p></section>'+_md(open(ROOT+'3d/ASSETS.md').read())))
 def _btn(k,n): return f'<button role="tab" data-tab="{k}" aria-selected="false">{n}</button>'
 app=f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
@@ -585,13 +603,14 @@ kbd{{display:inline-block;min-width:18px;text-align:center;font:600 11px/1.5 -ap
 @media (max-width:1000px){{.keys{{display:none!important}}}}
 @media (max-width:640px){{header{{flex-direction:column;align-items:stretch;gap:0}}h1{{margin:0 0 4px}}.doc{{padding:12px 10px 40px}}}}
 </style></head><body>
-<header><h1>Home Plan</h1><nav role="tablist">{_btn('3d','3D view')}{_btn('2d','2D plan')}{_btn('kitchen','Kitchen')}{''.join(_btn(k,n) for k,n,b in _tabs if b)}</nav>
+<header><h1>Home Plan</h1><nav role="tablist">{_btn('3d','3D view')}{_btn('2d','2D plan')}{_btn('kitchen','Kitchen')}{_btn('section','Section') if _sc else ''}{''.join(_btn(k,n) for k,n,b in _tabs if b)}</nav>
 <div class="keys" id="keys-3d" hidden><span><kbd>↑</kbd><kbd>↓</kbd> walk</span><span><kbd>←</kbd><kbd>→</kbd> turn</span><span><kbd>A</kbd><kbd>D</kbd> step sideways</span><span><kbd>W</kbd><kbd>S</kbd> look up / down</span><span><kbd>Q</kbd><kbd>E</kbd> lower / raise</span><span><kbd>Shift</kbd> faster</span><span>drag: look round</span><span>scroll: walk</span><span>right-drag: slide</span></div>
 <div class="keys" id="keys-kitchen" hidden><span>click a door or drawer: open / close</span><span><kbd>↑</kbd><kbd>↓</kbd> walk</span><span><kbd>←</kbd><kbd>→</kbd> turn</span><span><kbd>A</kbd><kbd>D</kbd> step sideways</span><span><kbd>W</kbd><kbd>S</kbd> look up / down</span><span><kbd>Q</kbd><kbd>E</kbd> lower / raise</span><span><kbd>Shift</kbd> faster</span><span>drag: turn round</span><span>scroll: zoom</span></div></header>
 <main>
 <div class="pane" id="p-3d"><iframe data-src="3d/living-room.html" title="3D view" allow="fullscreen"></iframe></div>
 <div class="pane" id="p-2d"><iframe data-src="plan-2d.html" title="2D plan"></iframe></div>
 <div class="pane" id="p-kitchen"><iframe data-src="3d/kitchen.html" title="Modular kitchen"></iframe></div>
+<div class="pane" id="p-section"><iframe data-src="section.html" title="Section" allow="fullscreen"></iframe></div>
 {''.join(f'<div class="pane" id="p-{k}"><div class="doc wide">{b}</div></div>' for k,n,b in _tabs if b)}
 </main>
 <script>
