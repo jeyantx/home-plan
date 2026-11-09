@@ -439,9 +439,18 @@ def _section_tab():   # Section tab: long section A-A through the car ramp, porc
         if d<=m2: return hump+m1/8+(d-m1)/4
         return min(pk,hump+m1/8+(m2-m1)/4+(d-m2)/8)
     def svg(y0,y1,z0,z1,k,inset):
-        W=(y1-y0)*k;H=(z1-z0)*k;ox,oy=60,30
+        W=(y1-y0)*k;H=(z1-z0)*k;ox,oy=70,30
         X=lambda y:ox+(y-y0)*k;Z=lambda z:oy+(z1-z)*k
-        e=[f'<svg viewBox="0 0 {W+ox+150:.0f} {H+oy+70:.0f}" style="width:100%;max-width:{1300 if not inset else 1100}px;background:#f7f4ee;border:1px solid var(--line);border-radius:10px" font-family="system-ui,sans-serif">']
+        e=[f'<svg class="pz" viewBox="0 0 {W+ox+150:.0f} {H+oy+70:.0f}" style="width:100%;max-width:{1300 if not inset else 1100}px;background:#f7f4ee;border:1px solid var(--line);border-radius:10px;cursor:grab;touch-action:none" font-family="system-ui,sans-serif">']
+        # height axes on both ends (feet above the road), so a height can be read without crossing the drawing
+        stp=1 if inset else 2
+        for zz in range(int(math.ceil(z0)),int(z1)+1):
+            if zz%stp: continue
+            for xa,anc,dx in ((ox,'end',-6),(ox+W,'start',6)):
+                e.append(f'<line x1="{xa:.1f}" x2="{xa+(-5 if anc=="end" else 5):.1f}" y1="{Z(zz):.1f}" y2="{Z(zz):.1f}" stroke="#5d646d"/>')
+                if anc=='end': e.append(f'<text x="{xa+dx:.1f}" y="{Z(zz)+3.5:.1f}" font-size="10" text-anchor="end" fill="#5d646d">{zz}\'</text>')
+        e.append(f'<line x1="{ox}" x2="{ox}" y1="{Z(z1):.1f}" y2="{Z(z0):.1f}" stroke="#5d646d"/><line x1="{ox+W:.1f}" x2="{ox+W:.1f}" y1="{Z(z1):.1f}" y2="{Z(z0):.1f}" stroke="#5d646d"/>')
+        e.append(f'<text x="{ox-34}" y="{Z(z1)-8:.1f}" font-size="10" fill="#5d646d">height</text>')
         def poly(pts,fill,stroke='#3b3b3b',sw=1.2,op=1):
             e.append(f'<polygon points="{" ".join(f"{X(a):.1f},{Z(b):.1f}" for a,b in pts)}" fill="{fill}" stroke="{stroke}" stroke-width="{sw}" fill-opacity="{op}"/>')
         def rect(a,b,za,zb,fill,stroke='#3b3b3b'):
@@ -450,6 +459,8 @@ def _section_tab():   # Section tab: long section A-A through the car ramp, porc
         BW=' font-weight="700"'
         def lab(y,z,t,anchor='middle',col='#3a3b3e',size=11,bold=False,dy=0):
             if y0-1<=y<=y1+1: e.append(f'<text x="{X(y):.1f}" y="{Z(z)+dy:.1f}" font-size="{size}" text-anchor="{anchor}" fill="{col}"{BW if bold else ""}>{t}</text>')
+        for zz in range(int(math.ceil(z0)),int(z1)+1):
+            if zz%stp==0: e.append(f'<text x="{ox+W-4:.1f}" y="{Z(zz)+3.5:.1f}" font-size="9" text-anchor="end" fill="#8a9098">{zz}\'</text>')
         last=[None]
         def lev(z,t,col='#c0392b'):   # level tag on the right; tags closer than 13 px are pushed down so they never overlap
             ty=Z(z)+4
@@ -511,6 +522,13 @@ def _section_tab():   # Section tab: long section A-A through the car ramp, porc
     sl=''.join(f'<tr><td>{a}</td><td>{b}</td></tr>' for a,b in [('Gate bevel (road to crest)',f'6" rise over {ft(yb)}'),('Car ramp, start',f'1 in 8 ({math.degrees(math.atan(1/8)):.1f}°) for {ft(ez)}'),('Car ramp, middle',f'1 in 4 ({math.degrees(math.atan(1/4)):.1f}°) for {ft(yt-yc-2*ez)}'),('Car ramp, end',f'1 in 8 ({math.degrees(math.atan(1/8)):.1f}°) for {ft(ez)}'),('Porch steps (3)','6" rise, 10" tread, 31° pitch'),('Outside stair ST-1 (27 risers, gate to balcony 2)',f'{R*12:.1f}" rise, 10" tread, {ang:.0f}° pitch'),('Spiral stair ST-2 (21 risers)',f'{_mm.FF_LEVEL/21*12:.1f}" rise')])
     return ('<section><h2>Section A-A (long section, road to back)</h2><p>Cut along the house from the road to the back garden, through the car ramp, the porch steps, the ground floor, the terrace and the bedroom 3 block. Heights are from the road crown in front of the gate, drawn to scale (horizontal and vertical the same).</p>'+big+'</section>'
             +'<section><h2>Detail: gate, car ramp and porch steps</h2><p>Same section, front part enlarged, with the ramp slopes and angles.</p>'+ins+'</section>'
+            +'<p style="color:#5d646d;font-size:13px">Scroll or pinch on a drawing to zoom, drag to move it, double-click to reset.</p>'
+            +'''<script>document.querySelectorAll('svg.pz').forEach(sv=>{const v0=sv.getAttribute('viewBox').split(' ').map(Number);let v=v0.slice(),drag=null;const set=()=>sv.setAttribute('viewBox',v.join(' '));
+ const pt=e=>{const r=sv.getBoundingClientRect();return [v[0]+(e.clientX-r.left)/r.width*v[2],v[1]+(e.clientY-r.top)/r.height*v[3]]};
+ sv.addEventListener('wheel',e=>{e.preventDefault();const k=e.deltaY<0?0.85:1/0.85,p=pt(e);v=[p[0]-(p[0]-v[0])*k,p[1]-(p[1]-v[1])*k,v[2]*k,v[3]*k];if(v[2]>v0[2]){v=v0.slice()}set()},{passive:false});
+ sv.addEventListener('pointerdown',e=>{drag=[e.clientX,e.clientY,v[0],v[1]];sv.setPointerCapture(e.pointerId);sv.style.cursor='grabbing'});
+ sv.addEventListener('pointermove',e=>{if(!drag)return;const r=sv.getBoundingClientRect();v[0]=drag[2]-(e.clientX-drag[0])/r.width*v[2];v[1]=drag[3]-(e.clientY-drag[1])/r.height*v[3];set()});
+ sv.addEventListener('pointerup',()=>{drag=null;sv.style.cursor='grab'});sv.addEventListener('dblclick',()=>{v=v0.slice();set()})})</script>'''
             +'<section><h2>Levels</h2><table class="t"><tr><th>Level</th><th>Height from the road</th></tr>'+tr+'</table></section>'
             +'<section><h2>Slopes and steps</h2><table class="t"><tr><th>Where</th><th>Slope / step</th></tr>'+sl+'</table></section>')
 
