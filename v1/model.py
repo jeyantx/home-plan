@@ -479,7 +479,7 @@ SPEC = {
  'D-13':'MS safety door, black powder-coat: 1"x1" box frame, 1/2" square bars at 4", middle rail, 1\'6" sheet panel at the foot; double leaf, centre joint in line with D-01; tower bolts top and bottom, a lock and floor stoppers',
  'D-02':'Flush door, hardwood frame', 'D-06':'Flush door, hardwood frame', 'D-07':'Flush door, hardwood frame',
  'D-03':'WPC waterproof door', 'D-04':'WPC waterproof door', 'D-08':'WPC waterproof door',
- 'D-05':'Steel or UPVC door, glass upper half; MS grill door D-15 outside',
+ 'D-05':'Solid steel or UPVC door, no glass (security); MS grill door D-15 outside',
  'D-15':'MS grill door, black powder-coat, same make as D-13 and D-14: box frame, 1/2" square bars at 4", middle rail, sheet panel at the foot; one leaf, tower bolts and a lock',
  'W-01':'UPVC sliding window; black grill; inside: venetian blind with 2" faux-wood slats that tilt (wand) and pull up (cord); outside box frame WF-1 with the scalloped sunshade, same as the other front windows',
  'D-09':'Steel or UPVC door, glass upper half, plus MS grill shutter',
