@@ -1640,7 +1640,7 @@ function vfrMats(){const P=(c,o={})=>new THREE.MeshPhysicalMaterial({color:c,rou
   box(cx-0.15,cx+0.15,wm.y2+0.25,wm.y2+0.5,CZ,CZ+0.012,MAT.blackMetal,{cast:false,tip:`${wm.id} · floor drain (trap) for the washing machine`})}}
 // bore court: slab over the washing machine FU-83 (high enough for a top-load machine) with a side wall on the passage side, bore pump panel FU-86; sump pump panel FU-85 and EB meter FU-87 on GW-04
 {const T=id=>{const f=fuG[id];return `${id} · ${f.name} · ${f.note}`},CZ=-0.97,SZ=CEIL+0.02,pg=std({color:'#c9ccd0',roughness:0.45,metalness:0.3});
- {const f=fuG['FU-83'];if(f){box(f.x1+0.05,f.x2,f.y1,f.y2,CZ+4.75,CZ+4.92,MAT.white,{tip:T('FU-83')});box(f.x1+0.05,f.x2,f.y2-0.05,f.y2,CZ+4.66,CZ+4.75,MAT.white,{tip:T('FU-83')+' · drip edge'});
+ {const f=fuG['FU-83'];if(f){box(f.x1+0.375,f.x2,f.y1,f.y2,CZ+4.75,CZ+4.92,MAT.white,{tip:T('FU-83')});box(f.x1+0.375,f.x2,f.y2-0.05,f.y2,CZ+4.66,CZ+4.75,MAT.white,{tip:T('FU-83')+' · drip edge'});   // slab starts at the side wall's inner face (no overlap, no flicker)
    box(f.x1,f.x1+0.375,f.y1,f.y2,CZ,CZ+4.92,MAT.extUp,{tip:T('FU-83')+' · side wall on the side-passage side, 4½" brick, plastered'})}}
  // wall boxes, 6" deep: FU-86 on GW-18 (wall along y, face toward -x), FU-85 on GW-04 (wall along x, face toward the parking, -y); EB meter FU-87 on the road face of the planter pillar (AU-27)
  for(const [id,z0,z1,z2] of [['FU-86',CZ,4.5,5.75],['FU-87',PKZ,4.4,6.0]]){const f=fuG[id];if(!f)continue;const alongY=(f.x2-f.x1)<(f.y2-f.y1),meter=id==='FU-87';
@@ -1749,10 +1749,12 @@ for(const f of P.furniture){ if(f.fl!=='G'||['FU-01','FU-03.1','FU-03.2','FU-04'
   for(const y of ys)cyl(x,y,Math.min(0,PKZ+Math.max(0,(y-PSY))/2.5*(-PKZ)),zs(y),0.06,MAT.blackMetal,{tip:T(f)});
   const a=[x,32.75,zs(32.75)],b=[x,PSY+2.5,zs(PSY+2.5)],c=[x,f.y2,2.75];
   for(const [p,q] of [[a,b],[b,c]]){const L=Math.hypot(q[1]-p[1],q[2]-p[2]),r=new THREE.Mesh(new THREE.CylinderGeometry(m(0.065),m(0.065),m(L),12),MAT.blackMetal);r.position.set(mx(x),m((p[2]+q[2])/2),m((p[1]+q[1])/2));r.rotation.x=Math.PI/2-Math.atan2(q[2]-p[2],q[1]-p[1]);r.castShadow=true;scene.add(r);named(r,T(f))}}
- // CD-07 window seat under W-08: clay body with three oak shutters, black granite top, two cushions
+ // CD-07 window seat under W-08: clay body, one storage box with a single lift-up oak lid, two cushions
  {const f=fuG['FU-95'];box(f.x1,f.x2,f.y1+0.05,f.y2,0,1.4,MAT.accent,{tip:T(f)});const n=3,w=(f.x2-f.x1)/n;
-  for(let i=0;i<n;i++)box(f.x1+i*w+0.08,f.x1+(i+1)*w-0.08,f.y1+0.03,f.y1+0.06,0.2,1.25,MAT.oak,{tip:T(f)+' · storage shutter'});
-  box(f.x1,f.x2,f.y1,f.y2,1.4,1.5,blackG,{tip:T(f)+' · black granite top'});
+  // one open box inside (no partitions) under a single oak lid that lifts up, hinged at the back; a finger slot at the front
+  box(f.x1,f.x2,f.y1,f.y2,1.4,1.5,MAT.oak,{tip:T(f)+' · lift-up lid, oak, hinged at the back (one storage box below, no partitions)'});
+  box(f.x1+(f.x2-f.x1)/2-0.4,f.x1+(f.x2-f.x1)/2+0.4,f.y1-0.005,f.y1+0.03,1.4,1.45,MAT.oakDark,{cast:false,tip:'Finger slot to lift the lid'});
+  for(const x of [f.x1+0.15,f.x2-0.35])box(x,x+0.2,f.y2-0.06,f.y2-0.02,1.47,1.51,MAT.blackMetal,{cast:false,tip:'Lid hinge (gas strut inside)'});
   for(const x of [f.x1+1.2,f.x2-2.9])box(x,x+2.2,f.y1+0.2,f.y2-0.1,1.5,1.75,std({color:'#e6dccb',roughness:1}),{tip:'Seat cushion, cotton'})}
  // CD-08 tiled shower niches, 3'6" to 4'8" up: tile-coloured recess, sloped granite base
  for(const id of ['FU-96','FU-97','FU-98']){const f=all[id],alongX=(f.x2-f.x1)>(f.y2-f.y1);onFl(f,()=>{
