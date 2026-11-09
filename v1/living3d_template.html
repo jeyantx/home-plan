@@ -401,7 +401,7 @@ function buildOpening(o,w,horiz,s0,out=0){
     const glassTop=/glass upper half/.test(P.spec[o.id]||'');
     const mat=o.id==='D-01'?MAT.teak:(['D-03','D-04','D-09'].includes(o.id)||glassTop?MAT.white:MAT.oak);
     const leaves=o.type==='double'?[[u1,(u1+u2)/2,'a'],[(u1+u2)/2,u2,'b']]:[[u1,u2,o.hinge||'a']];
-    const open={'D-01':1.15,'D-02':1.2,'D-03':1.2,'D-04':1.47,'D-05':1.45,'D-06':1.5,'D-07':1.57,'D-09':1.57,'D-12':1.57,'D-11':1.57}[o.id]||0;   // first-floor doors shown open too   // main door, bedroom 1 and toilet 1 doors shown open
+    const open=({'D-04':1.45})[o.id]||1.53;   // every door fully open (about 88°, leaf nearly against the wall); toilet 2 door stops at 83°, clear of the shower rose   // first-floor doors shown open too   // main door, bedroom 1 and toilet 1 doors shown open
     for(const [a,b,h,kind] of leaves){const len=b-a, hingeU=h==='a'?a:b, dbl=o.type==='double'&&kind!=='s';
       const leaf=new THREE.Mesh(new THREE.BoxGeometry(m(len-(dbl?0.03:0.24)),m(o.h-0.14),m(th)),mat);leaf.castShadow=true;leaf.receiveShadow=true;
       const piv=new THREE.Group();const p=along(horiz,w,hingeU,T/2);piv.position.set(mx(p[0]),m(ZOFF),m(p[1]));
