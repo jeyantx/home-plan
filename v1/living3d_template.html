@@ -382,15 +382,15 @@ function buildOpening(o,w,horiz,s0,out=0){
     for(let k=0;k<3;k++){const sa=u1+0.07+k*pw-(k?0.05:0),sb=u1+0.07+(k+1)*pw+(k<2?0.05:0),ms=sash(sa,sb,v0+0.02+k*0.09);
       if(k<2){const g=new THREE.Group();scene.add(g);for(const q of ms)g.add(q);WINS.push({g,kind:'slide',v:vec((2-k)*pw-0.05)})}}
     boxAlong(horiz,w,u1-0.1,u2+0.1,-0.15,T+0.05,z1-0.1,z1+0.012,MAT.oak,{tip:'Oak ledge under the sliding glass'});
-  } else if(o.id==='D-13'||o.id==='D-14'){   // black MS safety door on the porch face of D-01 (two 2' leaves), grill door D-14 on the terrace face of D-12 (one leaf, hinged east); open out to 90 deg
-    const tip=o.id+' · '+o.note,H=o.h-0.1,M=MAT.blackMetal,one=o.id==='D-14';
+  } else if(o.id==='D-13'||o.id==='D-14'||o.id==='D-15'){   // D-15: grill door on the garden face of D-05 (one leaf)   // black MS safety door on the porch face of D-01 (two 2' leaves), grill door D-14 on the terrace face of D-12 (one leaf, hinged east); open out to 90 deg
+    const tip=o.id+' · '+o.note,H=o.h-0.1,M=MAT.blackMetal,one=o.id!=='D-13';
     for(const [hu,sg] of one?[[u1+0.05,1]]:[[u1+0.05,1],[u2-0.05,-1]]){const L=one?u2-u1-0.12:(u2-u1)/2-0.08,piv=new THREE.Group(),p=along(horiz,w,hu,-0.08);piv.position.set(mx(p[0]),m(ZOFF),m(p[1]));
       const bx=(x1,x2,z1,z2,d)=>{const q=new THREE.Mesh(new THREE.BoxGeometry(m(Math.abs(x2-x1)),m(z2-z1),m(d)),M);q.position.set(m(sg*(x1+x2)/2),m((z1+z2)/2),0);q.castShadow=true;piv.add(q);named(q,tip);return q};
       bx(0,L,0.02,0.1,0.08);bx(0,L,H-0.08,H,0.08);bx(0,0.08,0.02,H,0.08);bx(L-0.08,L,0.02,H,0.08);bx(0,L,3.3,3.4,0.08);   // box frame and middle rail
       bx(0.08,L-0.08,0.1,1.5,0.02);   // sheet panel at the foot
       const n=Math.round((L-0.16)/0.33);for(let i=1;i<n;i++){const x=0.08+(L-0.16)*i/n;bx(x-0.021,x+0.021,1.5,H-0.08,0.042)}   // 1/2" square bars at about 4"
       if(sg<0||one){const lk=bx(one?L-0.35:0.1,one?L-0.1:0.35,3.1,3.6,0.14);lk.position.z=m(0.03)}   // lock box on the west leaf (D-14: at its free end)
-      piv.rotation.y=(horiz?Math.PI:-Math.PI/2)-sg*Math.PI/2*0.97;scene.add(piv);D01.push({piv,base:(horiz?Math.PI:-Math.PI/2),sgn:-sg,open:Math.PI/2*0.97})}
+      const dsg=horiz?-sg:sg;piv.rotation.y=(horiz?Math.PI:-Math.PI/2)+dsg*Math.PI/2*0.97;scene.add(piv);D01.push({piv,base:(horiz?Math.PI:-Math.PI/2),sgn:dsg,open:Math.PI/2*0.97})}   // opens outward on front/back and side walls
   } else if(o.type==='door'||o.type==='double'){
     const fr=0.25,th=0.13;
     if(o.id!=='D-01'){const q=horiz?[[o.a,w.y1],[o.b,w.y1],[o.b,w.y2],[o.a,w.y2]]:[[w.x1,o.a],[w.x2,o.a],[w.x2,o.b],[w.x1,o.b]];slab(q,MAT.floor,0,o.id+' · floor under the door')}

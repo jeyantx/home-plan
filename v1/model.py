@@ -95,7 +95,8 @@ OPENINGS = [
  ('O-01','G','GW-13', 13.75,17.75,'arch',None,None, 7.0,0,'Arch from living room to open area, 4\' wide; ends at the FU-25 cupboard face'),
  ('W-12','G','GW-13', 5.5,11.5,'fold',None,None, 4.0,3.0,'Sliding glass window, kitchen to living: 3-track black aluminium, three 2\' clear-glass sashes, two slide behind the third (opens two thirds); two 3\' venetian blinds with lift cords on the living side (like W-01)'),
  ('D-04','G','GW-16', 67.75,70.25,'door','a','-', 7.0,0,'Toilet 2 door, from stair hall, opens inward; hinged at its north end, so the leaf folds back over the shower area, clear of the basin'),
- ('D-05','G','GW-07', 74.25,77.25,'door','a','-', 7.0,0,'Garden door, stair hall to side garden; opens out, hinged at its north end, so the leaf folds back against the toilet-2 wall GW-06 and the way out to the garden stays clear'),
+ ('D-05','G','GW-07', 74.25,77.25,'door','a','+', 7.0,0,'Garden door, stair hall to side garden; opens in, hinged at its north end, so the leaf folds back along the toilet-2 end wall; switch board SB-5 at its south (latch) side'),
+ ('D-15','G','GW-07', 74.25,77.25,'door','a','-', 7.0,0,'Grill door on the garden face of D-05, black MS like D-14, one 3\' leaf hinged at the north end, opens out onto the D-05 landing to 90 deg'),
  ('D-06','G','GW-15', 10.5,13.5,'door','a','+', 7.0,0,'Bedroom 2 door, from stair hall'),
  ('W-01','G','GW-04', 10.0,13.0,'window',None,None, 4.0,3.0,'Study window to parking'),
  ('V-01','G','GW-04', 16.5,18.0,'vent',None,None, 1.5,6.0,'Toilet 1 ventilator'),
@@ -364,7 +365,7 @@ TAGPOS={'GW-01':(3.125,53.0),'GW-05':(20.625,51.0),'GW-07':(9.875,91.5),'BW-01':
         'FW-01':(9.875,94.0),'FW-03':(20.625,92.0),'FW-02':(18.4,73.5),'FW-04':(19.0,97.0),'FW-05':(18.0,80.06),'PW-03':(19.4,19.94),'PW-01':(5.0,15.69),'PW-05':(6.0,77.69),
         'GW-15':(18.4,80.44),'GW-14':(8.0,66.81),'GW-10':(13.94,34.6),'GW-09':(9.06,43.0),'BW-03':(1.19,98.0),'BW-07':(20.81,25.0),'BW-08':(20.81,100.5),'BW-02':(0.6,89.19)}
 OPENTAGOFF={'W-01':-0.75,'V-01':-0.75,'W-02':0.9,'W-04':-1.0,'W-05':-1.0,'W-06':-1.0,'V-02':-1.0,'W-07':-1.0,'W-08':0.8,'D-01':1.4,'D-13':-1.9,'D-02':-2.2,'D-03':-1.6,
-            'O-01':-0.8,'D-04':1.6,'D-05':-1.5,'D-06':1.7,'D-07':1.7,'D-08':-1.4,'D-09':-1.6,'D-12':-0.8,'D-14':1.3,'W-10':-1.0,'W-11':0.8,'W-12':-0.85,'D-10':0.9}
+            'O-01':-0.8,'D-04':1.6,'D-05':1.5,'D-15':-1.4,'D-06':1.7,'D-07':1.7,'D-08':-1.4,'D-09':-1.6,'D-12':-0.8,'D-14':1.3,'W-10':-1.0,'W-11':0.8,'W-12':-0.85,'D-10':0.9}
 SPC=(17.0,76.875); SPR=35/12   # ST-2 spiral: centre and outer radius (5'10" across)
 # ST-2: 21 risers of 6 4/7" (11'6" floor to floor), 20 oak treads of 25.5 deg + a 60 deg landing at the first floor (same total turn as before, so the top lands the same way).
 # Climbs anticlockwise (outer handrail on your right going up). Tread 1 starts on the 345 deg line (plan angle: 0 = west, 90 = south),
@@ -478,7 +479,8 @@ SPEC = {
  'D-13':'MS safety door, black powder-coat: 1"x1" box frame, 1/2" square bars at 4", middle rail, 1\'6" sheet panel at the foot; double leaf, centre joint in line with D-01; tower bolts top and bottom, a lock and floor stoppers',
  'D-02':'Flush door, hardwood frame', 'D-06':'Flush door, hardwood frame', 'D-07':'Flush door, hardwood frame',
  'D-03':'WPC waterproof door', 'D-04':'WPC waterproof door', 'D-08':'WPC waterproof door',
- 'D-05':'Steel or UPVC door, glass upper half, plus MS grill shutter',
+ 'D-05':'Steel or UPVC door, glass upper half; MS grill door D-15 outside',
+ 'D-15':'MS grill door, black powder-coat, same make as D-13 and D-14: box frame, 1/2" square bars at 4", middle rail, sheet panel at the foot; one leaf, tower bolts and a lock',
  'W-01':'UPVC sliding window; black grill; inside: venetian blind with 2" faux-wood slats that tilt (wand) and pull up (cord); outside box frame WF-1 with the scalloped sunshade, same as the other front windows',
  'D-09':'Steel or UPVC door, glass upper half, plus MS grill shutter',
  'O-01':'Plastered arch opening, no shutter',
@@ -760,7 +762,7 @@ ELEC_POINTS=[
  ('SB-4', 'G', 12.125, 70.65, 4.0, 'SB', 'C1', 'Stair hall, on GW-16 just south of the toilet 2 door D-04 frame: toilet 2 light and exhaust, geyser (20 A switch with red light), stair hall light, spiral stair light'),
  ('S-6', 'G', 11.0, 73.5, 1.0, 'S6', 'C4', 'Stair hall, on GW-19 (south end wall of toilet 2), low and out of sight from the hall: 6 A socket with switch for the vacuum and mopping machine'),
  ('S-7', 'G', 20.25, 70.4, 0.9, 'S16', 'C2', 'FU-25 cell S-4.1/S-4.2: inverter input, 16 A socket with switch on its own MCB, on the back wall GW-05 inside the cupboard (hidden by the shutter); inverter output cable back to DB-1'),
- ('SB-5','G',10.25,73.9,4.0,'SB','C1','Stair hall, beside the garden door D-05: side-garden lights (2), back-garden lights (2), bore-court and clothes-rack light, utility light'),
+ ('SB-5', 'G', 10.25, 77.75, 4.0, 'SB', 'C1', 'Stair hall, on GW-07 just south of the garden door D-05 (its latch side): side-garden lights (2), back-garden lights (2), bore-court and clothes-rack light, utility light'),
  ('GY-2','G',8.7,67.0,6.75,'GY','C8','Toilet 2 geyser FU-58: 16 A socket with a splash cover, 6\'9" up, out of the shower spray'),
  ('S-8', 'G', 10.0, 73.125, 4.5, 'S6', 'C4', 'Toilet 2, beside the mirror over the basin FU-27: 6 A socket with switch and a splash cover (IP44)'),
  # bedroom 1, study, toilet 1
