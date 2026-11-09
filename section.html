@@ -4,7 +4,7 @@ btns.forEach(b=>b.onclick=()=>show(b.dataset.v));
 const st=new Map();document.querySelectorAll('svg.pz').forEach(sv=>{const v0=sv.getAttribute('viewBox').split(' ').map(Number);st.set(sv,{v0,v:v0.slice()});
  const set=()=>sv.setAttribute('viewBox',st.get(sv).v.join(' '));sv._set=set;
  const pt=(x,y)=>{const r=sv.getBoundingClientRect(),S=st.get(sv),s=Math.max(S.v[2]/r.width,S.v[3]/r.height),ox=(r.width*s-S.v[2])/2,oy=(r.height*s-S.v[3])/2;return [S.v[0]-ox+(x-r.left)*s,S.v[1]-oy+(y-r.top)*s]};
- sv._zoom=(k,x,y)=>{const S=st.get(sv),p=pt(x,y);S.v=[p[0]-(p[0]-S.v[0])*k,p[1]-(p[1]-S.v[1])*k,S.v[2]*k,S.v[3]*k];if(S.v[2]>S.v0[2]*1.5)S.v=S.v0.slice();set()};
+ sv._zoom=(k,x,y)=>{const S=st.get(sv),lo=S.v0[2]/40,hi=S.v0[2]*1.5;k=Math.min(Math.max(k,lo/S.v[2]),hi/S.v[2]);if(Math.abs(k-1)<1e-4)return;const p=pt(x,y);S.v=[p[0]-(p[0]-S.v[0])*k,p[1]-(p[1]-S.v[1])*k,S.v[2]*k,S.v[3]*k];set()};   // smooth zoom, clamped between 40x in and 1.5x out (no jump back)
  sv.addEventListener('wheel',e=>{e.preventDefault();sv._zoom(Math.exp((e.ctrlKey?e.deltaY*2:e.deltaY)*0.0015),e.clientX,e.clientY)},{passive:false});
  const P=new Map();let drag=null,pin=null;
  sv.addEventListener('pointerdown',e=>{P.set(e.pointerId,{x:e.clientX,y:e.clientY});sv.setPointerCapture(e.pointerId);const S=st.get(sv);drag={x:e.clientX,y:e.clientY,v:S.v.slice()};if(P.size===2){const [a,b]=[...P.values()];pin=Math.hypot(a.x-b.x,a.y-b.y)}sv.style.cursor='grabbing'});
